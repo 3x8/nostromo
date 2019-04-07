@@ -1,4 +1,3 @@
-
 //#define MP6531
 #define FD6288
 
@@ -22,7 +21,7 @@ DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 int dead_time = 60;           // cpu cycles @ 48mhz
 
-char vehicle_mode = 2;                        // 1 = quad mode , 2 = crawler / thruster mode,  3 = rc car mode,  4 = like car mode but with auto reverse after stop
+char vehicle_mode = 1;                        // 1 = quad mode , 2 = crawler / thruster mode,  3 = rc car mode,  4 = like car mode but with auto reverse after stop
 
 int bi_direction = 1;
 char slow_decay = 1;                      // for complementary pwm , 0 for diode freewheeling
