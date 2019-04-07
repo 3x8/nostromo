@@ -40,6 +40,7 @@
 #include "main.h"
 #include "stm32f0xx_hal.h"
 #include "eeprom.h"
+#include "target.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -63,7 +64,7 @@ DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 /* Private variables ---------------------------------------------------------*/
 
 //#define MP6531
-#define FD6288
+//#define FD6288
 
 uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
 uint16_t VarDataTab[NB_OF_VAR] = {0, 0, 0};
@@ -287,25 +288,25 @@ void phaseB(int newPhase) {
 
 	if (newPhase == pwm) {
 		if(!slow_decay  || prop_brake_active){            // for future
-		LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_0, LL_GPIO_MODE_OUTPUT);
-		GPIOB->BRR = GPIO_PIN_0;
+		LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+		GPIOB->BRR = B_FET_LO_PIN;
 		}else{
-		LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_0, LL_GPIO_MODE_ALTERNATE); // low
+		LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE); // low
 		}
 		LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_9, LL_GPIO_MODE_ALTERNATE);  // high
 
 	}
 
 	if (newPhase == floating) {
-		LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_0, LL_GPIO_MODE_OUTPUT);
-		GPIOB->BRR = GPIO_PIN_0;
+		LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+		GPIOB->BRR = B_FET_LO_PIN;
 		LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_9, LL_GPIO_MODE_OUTPUT);
 		GPIOA->BRR = GPIO_PIN_9;
 	}
 
 	if (newPhase == lowside) {          // low mosfet on
-		LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_0, LL_GPIO_MODE_OUTPUT);
-		GPIOB->BSRR = GPIO_PIN_0;
+		LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+		GPIOB->BSRR = B_FET_LO_PIN;
 		LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_9, LL_GPIO_MODE_OUTPUT);
 		GPIOA->BRR = GPIO_PIN_9;
 	}

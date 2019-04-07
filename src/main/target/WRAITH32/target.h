@@ -1,5 +1,9 @@
 #pragma once
 
+
+//ToDo
+#define MP6531
+
 //ToDo
 #define MOTOR_NUM_PHASES            3
 #define MOTOR_NUM_COMMUTATION_STEPS 6
