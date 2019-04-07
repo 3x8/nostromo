@@ -556,7 +556,7 @@ void startMotor() {
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 	/* Turn On LED3 */
 		timestamp = TIM3->CNT;
-		GPIOA->BSRR = GPIO_PIN_15;
+		GPIOA->BSRR = LED_R_PIN;
 
 	if (compit > 200){
 		HAL_COMP_Stop_IT(&hcomp1);
@@ -1101,7 +1101,7 @@ int main(void)
 	while (1)
 	{
 
-GPIOA->BRR = GPIO_PIN_15;
+GPIOA->BRR = LED_R_PIN;
 count++;
 if (count > 100000){
 	count = 0;
@@ -1791,15 +1791,15 @@ static void MX_GPIO_Init(void)
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
 
   /**/
-  LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_15);
+  LL_GPIO_ResetOutputPin(LED_R_GPIO, LED_R_PIN);
 
   /**/
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_15;
+  GPIO_InitStruct.Pin =  LED_R_PIN;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  LL_GPIO_Init(LED_R_GPIO, &GPIO_InitStruct);
 
 }
 
