@@ -10,16 +10,18 @@ INCLUDE_DIRS  := $(SRC_DIR) \
 VPATH         := $(VPATH):$(TARGET_DIR)
 
 COMMON_SRC           = \
-                    $(TARGET_DIR_SRC) \
-                    main.c
+                    $(TARGET_DIR_SRC)
 
 VPATH               := $(VPATH):$(SRC_DIR)
 
-SPEED_OPTIMISED_SRC := ""
+SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
+                    $(TARGET_DIR_SRC) \
+                    main.c
+
 SIZE_OPTIMISED_SRC  := ""
 
 # check if target.mk supplied
-SRC                 := $(STARTUP_DIR)/$(STARTUP_SRC) $(COMMON_SRC) $(MCU_SRC) $(CMSIS_SRC) $(DRIVER_SRC)
+SRC                 := $(STARTUP_DIR)/$(STARTUP_SRC) $(COMMON_SRC) $(SPEED_OPTIMISED_SRC) $(MCU_SRC) $(CMSIS_SRC) $(DRIVER_SRC)
 
 #excludes
 SRC                 := $(filter-out ${MCU_EXCLUDES}, $(SRC))
