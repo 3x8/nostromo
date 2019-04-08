@@ -1,6 +1,5 @@
 #pragma once
 
-
 //ToDo
 #define MP6531
 // #define FD6288
@@ -8,7 +7,6 @@
 //ToDo
 #define MOTOR_NUM_PHASES            3
 #define MOTOR_NUM_COMMUTATION_STEPS 6
-
 
 // PA15 --- LED RED ,Ok
 #define LED0_GPIO       GPIOA
@@ -25,6 +23,7 @@
 #define LED2_PIN        LL_GPIO_PIN_4
 #define LED2_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
 
+//ToDo
 // PA10 --- Phase_A_HI
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    LL_GPIO_PIN_10
