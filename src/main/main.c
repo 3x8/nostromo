@@ -216,14 +216,6 @@ void loadEEpromConfig(){
 }
 
 
-int getAbsDif(int number1, int number2){
-  int result = number1 - number2;
-  if (result < 0) {
-    result = -result;
-  }
-  return result;
-}
-
 // phaseB qfnf051 , phase A qfp32
 #ifdef MP6531
 void phaseA(int newPhase)
