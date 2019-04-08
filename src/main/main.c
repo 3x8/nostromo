@@ -7,10 +7,8 @@ COMP_HandleTypeDef hcomp1;
 
 IWDG_HandleTypeDef hiwdg;
 
-TIM_HandleTypeDef htim1;
-TIM_HandleTypeDef htim2;
-TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim15;
+TIM_HandleTypeDef htim1, htim2, htim3, htim15;
+
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
@@ -20,7 +18,6 @@ uint16_t VarValue,VarDataTmp;
 uint32_t ee_status;
 
 // variables to use for eeprom function,  ie: EE_WriteVariable(VirtAddVarTab[EEvehiclemode],  vehicle_mode ;
-
 enum userVars {
   EEvehiclemode = 0,
   EEdirection = 1,
@@ -498,7 +495,7 @@ void startMotor() {
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   timestamp = TIM3->CNT;
-  LED_ON(LED0);
+  //LED_ON(LED0);
 
   if (compit > 200) {
     HAL_COMP_Stop_IT(&hcomp1);
@@ -635,7 +632,6 @@ void detectInput(){
     TIM15->PSC=1;
     TIM15->CNT = 0xffff;
 
-    LED_ON(LED1);
   }
   if ((smallestnumber > 100 )&&(smallestnumber < 400)) {
     multishot = 1;
@@ -699,6 +695,7 @@ void computeProshotDMA(){
           break;
         }else{
           if(tocheck > 47) {
+            LED_ON(LED1);
             newinput = tocheck;
             dshotcommand = 0;
           }
@@ -1651,10 +1648,7 @@ static void MX_TIM3_Init(void)
 
 }
 
-/* TIM15 init function */
-static void MX_TIM15_Init(void)
-{
-
+static void MX_TIM15_Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;
@@ -1700,11 +1694,8 @@ static void MX_TIM15_Init(void)
 
 }
 
-/**
- * Enable DMA controller clock
- */
-static void MX_DMA_Init(void)
-{
+
+static void MX_DMA_Init(void) {
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
 
@@ -1715,7 +1706,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel4_5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
-
 }
 
 void _Error_Handler(char * file, int line) {
