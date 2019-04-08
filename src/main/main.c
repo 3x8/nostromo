@@ -149,9 +149,8 @@ char servoPwm = 0;
 
 char inputSet = 0;
 
-/* USER CODE END PV */
 
-/* Private function prototypes -----------------------------------------------*/
+// prototypes
 void SystemClock_Config(void);
 
 static void MX_DMA_Init(void);
@@ -166,8 +165,6 @@ static void MX_IWDG_Init(void);
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 
-/* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
 long map(long x, long in_min, long in_max, long out_min, long out_max)
 {
   if (x < in_min) {
@@ -182,12 +179,10 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 
 
 void storeEEpromConfig(){
-
   EE_WriteVariable(VirtAddVarTab[EEvehiclemode], vehicle_mode);
   EE_WriteVariable(VirtAddVarTab[EEdirection], dir_reversed);
   EE_WriteVariable(VirtAddVarTab[EEbidirection], bi_direction);
   // EE_WriteVariable(VirtAddVarTab[EEbrake_on_stop], EEbrake_on_stop);
-
   // playEEpromSavedTune();
 }
 
@@ -315,59 +310,60 @@ void phaseA(int newPhase)
 }
 
 void comStep(int newStep) {
-
-  if (newStep == 1) {     //A-B
+	//A-B
+  if (newStep == 1) {
     phaseA(pwm);
     phaseB(lowside);
     phaseC(floating);
   }
-
-  if (newStep == 2) {     // C-B
+  // C-B
+  if (newStep == 2) {
     phaseA(floating);
     phaseB(lowside);
     phaseC(pwm);
   }
-
-  if (newStep == 3) {   // C-A
+  // C-A
+  if (newStep == 3) {
     phaseA(lowside);
     phaseB(floating);
     phaseC(pwm);
   }
-
-  if (newStep == 4) {    // B-A
+  // B-A
+  if (newStep == 4) {
     phaseA(lowside);
     phaseB(pwm);
     phaseC(floating);
   }
-
-  if (newStep == 5) {          // B-C
+  // B-C
+  if (newStep == 5) {
     phaseA(floating);
     phaseB(pwm);
     phaseC(lowside);
   }
-
-  if (newStep == 6) {       // A-C
+  // A-C
+  if (newStep == 6) {
     phaseA(pwm);
     phaseB(floating);
     phaseC(lowside);
   }
-
 }
 
-void allOff() {                   // coast
+void allOff() {
   phaseA(floating);
   phaseB(floating);
   phaseC(floating);
 }
 
-void fullBrake(){                     // full braking shorting all low sides
+void fullBrake() {
   phaseA(lowside);
   phaseB(lowside);
   phaseC(lowside);
 }
 
-void proBrake(){                    // duty cycle controls braking strength
-//	prop_brake_active = 1;       // will turn off lower fets so only high side is active
+// duty cycle controls braking strength
+// will turn off lower fets so only high side is active
+void proBrake() {
+//	prop_brake_active = 1;
   phaseA(pwm);
   phaseB(pwm);
   phaseC(pwm);
@@ -375,7 +371,6 @@ void proBrake(){                    // duty cycle controls braking strength
 
 
 void changeCompInput() {
-
 //	HAL_COMP_Stop_IT(&hcomp1);            // done in comparator routine
 
   if (step == 1 || step == 4) {   // c floating
@@ -410,7 +405,6 @@ void changeCompInput() {
 
 
 void commutate() {
-
   if (forward == 1) {
     step++;
     if (step > 6) {
@@ -436,47 +430,37 @@ void commutate() {
     }
   }
 
-
   if (input > 47) {
     comStep(step);
   }
   changeCompInput();
-//	zcfound = 0;
-//	falseAlarm = 0;
-//	compCount = 0;
-//	upcompCount = 0;
-//	TIM2->CNT = 0;
-//	TIM2->ARR = commutation_interval;
+// zcfound = 0;
+// falseAlarm = 0;
+// compCount = 0;
+// upcompCount = 0;
+// TIM2->CNT = 0;
+// TIM2->ARR = commutation_interval;
 }
 
 
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { // for forced commutation -- open loop
-
-  if (htim->Instance == TIM2)
-
-  {
-
+// for forced commutation -- open loop
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  if (htim->Instance == TIM2) {
   }
 }
 
 void startMotor() {
-
   char decaystate = slow_decay;
   sensorless = 0;
   if (running == 0) {
     HAL_COMP_Stop_IT(&hcomp1);
     slow_decay = 1;
 
-
     commutate();
     commutation_interval = tim2_start_arr- 3000;
     TIM3->CNT = 0;
     running = 1;
-    if (HAL_COMP_Start_IT(&hcomp1) != HAL_OK) {
-      /* Initialization Error */
-      Error_Handler();
-    }
+    while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
   }
 
   slow_decay = decaystate;    // return to normal
@@ -548,11 +532,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   lastzctime = thiszctime;
   bemf_counts++;
 
-
-  if (HAL_COMP_Start_IT(&hcomp1) != HAL_OK) {
-    /* Initialization Error */
-    Error_Handler();
-  }
+  while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 }
 
 void playStartupTune(){
@@ -963,27 +943,10 @@ int main(void)
 
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
-
   HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
-
 	//while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC1ConvertedValues, 2) != HAL_OK);
-
-
-
-
-  if(HAL_COMP_Start_IT(&hcomp1) != HAL_OK)
-  {
-    /* Initialization Error */
-    Error_Handler();
-  }
-  //
-
-  if(HAL_IWDG_Init(&hiwdg) != HAL_OK)
-  {
-    /* Initialization Error */
-    Error_Handler();
-  }
-
+  while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
+  while (HAL_IWDG_Init(&hiwdg) != HAL_OK);
 
   if (vehicle_mode == 1) {                    // quad single direction
     loadEEpromConfig();
@@ -1038,11 +1001,7 @@ int main(void)
 
     compit = 0;
 
-    if(HAL_IWDG_Refresh(&hiwdg) != HAL_OK)               // watchdog refresh
-    {
-      /* Refresh Error */
-      Error_Handler();
-    }
+    while (HAL_IWDG_Refresh(&hiwdg) != HAL_OK);
 
     control_loop_count++;
     if (control_loop_count > 1) {
@@ -1355,18 +1314,13 @@ int main(void)
 
 }
 
-/** System Clock Configuration
- */
-void SystemClock_Config(void)
-{
 
+void SystemClock_Config(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
 
-  /**Initializes the CPU, AHB and APB busses clocks
-   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSI14
-                                     |RCC_OSCILLATORTYPE_LSI;
+  // Initializes the CPU, AHB and APB busses clocks
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSI14 | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSI14State = RCC_HSI14_ON;
   RCC_OscInitStruct.HSICalibrationValue = 16;
@@ -1378,37 +1332,28 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
   while (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK);
 
-  /**Initializes the CPU, AHB and APB busses clocks
-   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                                |RCC_CLOCKTYPE_PCLK1;
+  // Initializes the CPU, AHB and APB busses clocks
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-
   while (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK);
 
-
-  /**Configure the Systick interrupt time
-   */
+  // Configure the Systick interrupt time
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
-  /**Configure the Systick
-   */
+  // Configure the Systick
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* SysTick_IRQn interrupt configuration */
+  // SysTick_IRQn interrupt configuration
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/* ADC init function */
-static void MX_ADC_Init(void)
-{
 
+static void MX_ADC_Init(void) {
   ADC_ChannelConfTypeDef sConfig;
 
-  /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-   */
+  // Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   hadc.Instance = ADC1;
   hadc.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc.Init.Resolution = ADC_RESOLUTION_12B;
@@ -1425,27 +1370,20 @@ static void MX_ADC_Init(void)
   hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   while (HAL_ADC_Init(&hadc) != HAL_OK);
 
-
-  /**Configure for the selected ADC regular channel to be converted.
-   */
+  // Configure for the selected ADC regular channel to be converted.
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
   while (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK);
 
 
-  /**Configure for the selected ADC regular channel to be converted.
-   */
+  // Configure for the selected ADC regular channel to be converted.
   sConfig.Channel = ADC_CHANNEL_6;
   while (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK);
-
-
 }
 
-/* COMP1 init function */
-static void MX_COMP1_Init(void)
-{
 
+static void MX_COMP1_Init(void) {
   hcomp1.Instance = COMP1;
   hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
   hcomp1.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
@@ -1456,27 +1394,19 @@ static void MX_COMP1_Init(void)
   hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
   hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
   while (HAL_COMP_Init(&hcomp1) != HAL_OK);
-
-
 }
 
-/* IWDG init function */
-static void MX_IWDG_Init(void)
-{
 
+static void MX_IWDG_Init(void) {
   hiwdg.Instance = IWDG;
   hiwdg.Init.Prescaler = IWDG_PRESCALER_16;
   hiwdg.Init.Window = IWDG_WINDOW_DISABLE;
   hiwdg.Init.Reload = 2000;
   while (HAL_IWDG_Init(&hiwdg) != HAL_OK);
-
-
 }
 
-/* TIM1 init function */
-static void MX_TIM1_Init(void)
-{
 
+static void MX_TIM1_Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_OC_InitTypeDef sConfigOC;
@@ -1528,9 +1458,7 @@ static void MX_TIM1_Init(void)
   HAL_TIM_MspPostInit(&htim1);
 }
 
-/* TIM2 init function */
-static void MX_TIM2_Init(void)
-{
+static void MX_TIM2_Init(void) {
 
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
@@ -1549,12 +1477,9 @@ static void MX_TIM2_Init(void)
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK);
-
 }
 
-/* TIM3 init function */
-static void MX_TIM3_Init(void)
-{
+static void MX_TIM3_Init(void) {
 
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
@@ -1616,9 +1541,4 @@ static void MX_DMA_Init(void) {
   // DMA1_Channel4_5_IRQn interrupt configuration
   HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
-}
-
-void _Error_Handler(char * file, int line) {
-  while(true) {
-  }
 }
