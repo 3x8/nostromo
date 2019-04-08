@@ -480,12 +480,10 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     return;
   }
   compit +=1;
-  while (TIM3->CNT - timestamp < filter_delay) {
-
-  }
+  while (TIM3->CNT - timestamp < filter_delay);
 
   if (rising) {
-    //	advancedivisor = advancedivisorup;
+    // advancedivisor = advancedivisorup;
     for (int i = 0; i < filter_level; i++) {
       if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_HIGH) {
         return;
@@ -494,7 +492,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
 
   }else{
-    //	advancedivisor = advancedivisordown;
+    // advancedivisor = advancedivisordown;
     for (int i = 0; i < filter_level; i++) {
       if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_LOW) {
         return;
@@ -510,7 +508,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   commutation_interval = (commutation_interval + thiszctime) / 2;           // TEST!   divide by two when tracking up down time independant
   bad_commutation = 0;
-//			}
+
   advance = commutation_interval / advancedivisor;
   waitTime = commutation_interval /2    - advance;
   blanktime = commutation_interval / 4;
@@ -567,17 +565,11 @@ void getADCs(){
   voltageraw = ADC1ConvertedValues[0];
   currentraw = ADC1ConvertedValues[1];
   //pot = ADC1ConvertedValues[2];
-
 }
 
-
-
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-{
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
   getADCs();
 }
-
 
 void detectInput(){
   smallestnumber = 20000;
@@ -592,7 +584,6 @@ void detectInput(){
 
     if((dma_buffer[j] - lastnumber) < smallestnumber) { // blank space
       smallestnumber = dma_buffer[j] - lastnumber;
-
     }
     lastnumber = dma_buffer[j];
   }
@@ -600,6 +591,7 @@ void detectInput(){
   if ((smallestnumber > 3)&&(smallestnumber < 22)) {
     dshot = 1;
   }
+
   if ((smallestnumber > 40 )&&(smallestnumber < 80)) {
     proshot = 1;
     TIM15->PSC=1;
@@ -628,7 +620,7 @@ void detectInput(){
     inputSet = 1;
 
     HAL_Delay(50);
-    //	playInputTune();
+    // playInputTune();
   }
   HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
 }
@@ -688,12 +680,11 @@ void computeProshotDMA(){
 }
 
 void computeMSInput(){
-
   int lastnumber = dma_buffer[0];
+
   for ( int j = 1; j < 2; j++) {
-
-    if(((dma_buffer[j] - lastnumber) < 1500) && ((dma_buffer[j] - lastnumber) > 0)) { // blank space
-
+    // blank space
+    if(((dma_buffer[j] - lastnumber) < 1500) && ((dma_buffer[j] - lastnumber) > 0)) {
       newinput = map((dma_buffer[j] - lastnumber),243,1200, 0, 2000);
       break;
     }
@@ -702,12 +693,11 @@ void computeMSInput(){
 }
 
 void computeOS125Input(){
-
   int lastnumber = dma_buffer[0];
-  for ( int j = 1; j < 2; j++) {
 
-    if(((dma_buffer[j] - lastnumber) < 12300) && ((dma_buffer[j] - lastnumber) > 0)) { // blank space
-
+  for (int j = 1; j < 2; j++) {
+    // blank space
+    if(((dma_buffer[j] - lastnumber) < 12300) && ((dma_buffer[j] - lastnumber) > 0)) {
       newinput = map((dma_buffer[j] - lastnumber),6500,12000, 0, 2000);
       break;
     }
@@ -716,12 +706,10 @@ void computeOS125Input(){
 }
 
 void computeOS42Input(){
-
   int lastnumber = dma_buffer[0];
   for ( int j = 1; j < 2; j++) {
-
-    if(((dma_buffer[j] - lastnumber) < 4500) && ((dma_buffer[j] - lastnumber) > 0)) { // blank space
-
+    // blank space
+    if(((dma_buffer[j] - lastnumber) < 4500) && ((dma_buffer[j] - lastnumber) > 0)) {
       newinput = map((dma_buffer[j] - lastnumber),2020, 4032, 0, 2000);
       break;
     }
@@ -729,16 +717,11 @@ void computeOS42Input(){
   }
 }
 
-
-
-
 void computeServoInput(){
-
   int lastnumber = dma_buffer[0];
   for ( int j = 1; j < 3; j++) {
-
-    if(((dma_buffer[j] - lastnumber) >1000 ) && ((dma_buffer[j] - lastnumber) < 2010)) { // blank space
-
+    // blank space
+    if(((dma_buffer[j] - lastnumber) >1000 ) && ((dma_buffer[j] - lastnumber) < 2010)) {
       newinput = map((dma_buffer[j] - lastnumber), 1090, 2000, 0, 2000);
       break;
     }
@@ -748,46 +731,41 @@ void computeServoInput(){
 
 
 void computeDshotDMA(){
-
   int lastnumber = dma_buffer[0];
+
   for ( int j = 1; j < input_buffer_size; j++) {
-
-    if(((dma_buffer[j] - lastnumber) > 50) && ((dma_buffer[j] - lastnumber) < 65000)) { // blank space
-
+    // blank space
+    if(((dma_buffer[j] - lastnumber) > 50) && ((dma_buffer[j] - lastnumber) < 65000)) {
       for (int i = 0; i < 16; i++) {
         dpulse[i] = ((dma_buffer[j + i*2 +1] - dma_buffer[j + i*2]) / 13) - 1;
       }
 
-      uint8_t calcCRC = ((dpulse[0]^dpulse[4]^dpulse[8])<<3
-                         |(dpulse[1]^dpulse[5]^dpulse[9])<<2
-                         |(dpulse[2]^dpulse[6]^dpulse[10])<<1
+      uint8_t calcCRC = ( (dpulse[0]^dpulse[4]^dpulse[8]) << 3
+                         |(dpulse[1]^dpulse[5]^dpulse[9]) << 2
+                         |(dpulse[2]^dpulse[6]^dpulse[10]) << 1
                          |(dpulse[3]^dpulse[7]^dpulse[11])
                          );
       uint8_t checkCRC = (dpulse[12]<<3 | dpulse[13]<<2 | dpulse[14]<<1 | dpulse[15]);
-      //
 
       int tocheck = (
-        dpulse[0]<<10 | dpulse[1]<<9 | dpulse[2]<<8 | dpulse[3]<<7
-          | dpulse[4]<<6 | dpulse[5]<<5 | dpulse[6]<<4 | dpulse[7]<<3
-          | dpulse[8]<<2 | dpulse[9]<<1 | dpulse[10]);
+            dpulse[0] << 10 | dpulse[1] << 9 | dpulse[2] << 8 | dpulse[3] << 7
+          | dpulse[4] << 6 | dpulse[5] << 5 | dpulse[6] << 4 | dpulse[7] << 3
+          | dpulse[8] << 2 | dpulse[9] << 1 | dpulse[10]);
 
       if(calcCRC == checkCRC) {
-
         if (tocheck > 47) {
           newinput = tocheck;
           dshotcommand = 0;
         }
       }
-      if ((tocheck <= 47)&& (tocheck > 0)) {
+      if ((tocheck <= 47) && (tocheck > 0)) {
         newinput = 0;
-        dshotcommand = tocheck;    //  todo
+        dshotcommand = tocheck;    // todo
       }
       if (tocheck == 0) {
         newinput = 0;
         dshotcommand = 0;
       }
-
-
 
       break;
     }
@@ -796,17 +774,17 @@ void computeDshotDMA(){
 }
 
 void transferComplete(){
-  //	TIM15->CNT = 1;
-//	compit = 0;
+// TIM15->CNT = 1;
+// compit = 0;
   signaltimeout = 0;
   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_3);
-
 
   if (inputSet == 1) {
     if (dshot == 1) {
       computeDshotDMA();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
     }
+
     if (proshot == 1) {
       computeProshotDMA();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 16);
@@ -815,39 +793,40 @@ void transferComplete(){
     if  (servoPwm == 1) {
       computeServoInput();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-
     }
+
     if  (multishot) {
       computeMSInput();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
 
     }
+
     if  (oneshot125) {
       computeOS125Input();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
 
     }
+
     if  (oneshot42) {
       computeOS42Input();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-
     }
   }
 }
 
 
-void changeDutyCycleWithSin(){
-
+void changeDutyCycleWithSin() {
   if (!rising) {
-    duty_cycle = (duty_cycle * sine_array[((TIM2->CNT*10)/TIM2->ARR)+9])/100;        // last ten elements in sin array
+    // last ten elements in sin array
+    duty_cycle = (duty_cycle * sine_array[((TIM2->CNT*10)/TIM2->ARR)+9])/100;
   }else{
-    duty_cycle = (duty_cycle * sine_array[(TIM2->CNT*10)/TIM2->ARR])/100;         // first ten elements in sin array
+    // first ten elements in sin array
+    duty_cycle = (duty_cycle * sine_array[(TIM2->CNT*10)/TIM2->ARR])/100;
   }
 
   TIM1->CCR1 = duty_cycle;
   TIM1->CCR2 = duty_cycle;
   TIM1->CCR3 = duty_cycle;
-
 }
 
 void zc_found_routine(){
