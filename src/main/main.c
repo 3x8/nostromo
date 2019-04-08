@@ -472,7 +472,7 @@ void startMotor() {
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   timestamp = TIM3->CNT;
-  //LED_ON(LED0);
+  LED_ON(LED0);
 
   if (compit > 200) {
     HAL_COMP_Stop_IT(&hcomp1);
@@ -634,9 +634,11 @@ void detectInput(){
 }
 
 void computeProshotDMA(){
+  //debug
+  LED_ON(LED1);
+
   int lastnumber = dma_buffer[0];
   for ( int j = 1; j < 9; j++) {
-
     if(((dma_buffer[j] - lastnumber) > 1500) && ((dma_buffer[j] - lastnumber) < 50000)) { // blank space
       if ((dma_buffer[j+7] - dma_buffer[j])<10000) {
         //			for ( int i = 0; i < 8; i+= 2){
@@ -648,10 +650,7 @@ void computeProshotDMA(){
         //			 propulse[i>>1] = ((dma_buffer[j+i+1] - dma_buffer[j+i]) - 46)*11>>6;
         //		}
         for (int i = 0; i < 4; i++) {
-
           propulse[i] = (((dma_buffer[j + i*2 +1] - dma_buffer[j + i*2])) - 23)/3;
-
-
         }
 
         calcCRC = ((propulse[0]^propulse[1]^propulse[2])<<3
@@ -661,14 +660,14 @@ void computeProshotDMA(){
         checkCRC = (propulse[3]<<3 | propulse[3]<<2 | propulse[3]<<1 | propulse[3]);
       }
 
-
       if (calcCRC == checkCRC) {
+        //debug
+        LED_ON(LED2);
         int tocheck = ((propulse[0]<<7 | propulse[1]<<3 | propulse[2]>>1));
         if (tocheck > 2047 || tocheck < 0) {
           break;
         }else{
           if(tocheck > 47) {
-            LED_ON(LED1);
             newinput = tocheck;
             dshotcommand = 0;
           }
@@ -967,6 +966,7 @@ int main(void) {
   while (true) {
     LED_OFF(LED0);
     LED_OFF(LED1);
+    LED_OFF(LED2);
 
     if (++count > 100000) {
       count = 0;
