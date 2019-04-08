@@ -3,26 +3,27 @@
 
 //ToDo
 #define MP6531
+// #define FD6288
 
 //ToDo
 #define MOTOR_NUM_PHASES            3
 #define MOTOR_NUM_COMMUTATION_STEPS 6
 
 
-// PB4 --- BLUE
-#define LED_B_GPIO       GPIOB
-#define LED_B_PIN        LL_GPIO_PIN_4
-#define LED_B_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
+// PA15 --- RED ,Ok
+#define LED0_GPIO       GPIOA
+#define LED0_PIN        LL_GPIO_PIN_15
+#define LED0_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOA
 
-// PB?? --- RED
-#define LED_R_GPIO       GPIOA
-#define LED_R_PIN        LL_GPIO_PIN_15
-#define LED_R_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
+// PB3 --- GREEN ,Ok
+#define LED1_GPIO       GPIOB
+#define LED1_PIN        LL_GPIO_PIN_3
+#define LED1_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
 
-// PB3 --- GREEN
-#define LED_G_GPIO       GPIOB
-#define LED_G_PIN        LL_GPIO_PIN_3
-#define LED_G_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
+// PB4 --- BLUE ,Ok
+#define LED2_GPIO       GPIOB
+#define LED2_PIN        LL_GPIO_PIN_4
+#define LED2_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
 
 // PA10 --- Phase_A_HI
 #define A_FET_HI_GPIO   GPIOA

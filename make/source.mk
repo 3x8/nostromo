@@ -17,7 +17,8 @@ VPATH               := $(VPATH):$(SRC_DIR)
 SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
                     $(TARGET_DIR_SRC) \
                     main.c \
-                    eeprom.c
+                    drivers/eeprom.c \
+                    drivers/led.c
 
 SIZE_OPTIMISED_SRC  := ""
 
