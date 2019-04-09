@@ -876,6 +876,9 @@ int main(void) {
 //  12: save Settings
 
       if (dshotcommand > 0) {
+        if (dshotcommand == 1) {
+          playStartupTune();
+        }
         if (dshotcommand == 2) {
           playInputTune();
         }
@@ -891,7 +894,6 @@ int main(void) {
         }
         if (dshotcommand == 8) {
           dir_reversed = 1;
-
         }
         if (dshotcommand == 9) {
           bi_direction = 0;
@@ -903,7 +905,6 @@ int main(void) {
           armed = 0;
         }
         if (dshotcommand == 12) {
-
           escConfig()->vehicle_mode = vehicle_mode;
           escConfig()->dir_reversed = dir_reversed;
           escConfig()->bi_direction = bi_direction;
