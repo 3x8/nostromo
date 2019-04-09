@@ -1356,3 +1356,9 @@ static void MX_DMA_Init(void) {
   HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
+
+// needed
+void _Error_Handler(char * file, int line) {
+  while(true) {
+  }
+}
