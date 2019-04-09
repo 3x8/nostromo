@@ -1,4 +1,4 @@
-#include "main.h"
+#include "eeprom.h"
 
 //ToDo move to target ???
 #define FLASH_PAGE_COUNT                64
