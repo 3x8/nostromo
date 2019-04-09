@@ -18,7 +18,7 @@ uint16_t slow_decay = 1;
 // apply full motor brake on stop
 uint16_t brake = 1;
 uint16_t start_power = 150;
-uint16_t prop_brake = 0, prop_brake_active = 0;
+uint16_t prop_brake, prop_brake_active;
 uint16_t prop_brake_strength = 300;
 
 int adjusted_input;
@@ -28,7 +28,7 @@ uint8_t calcCRC;
 uint8_t checkCRC;
 uint16_t error = 0;
 
-uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100,100, 100,95,95,95,90,90,80,80};
+uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
 uint16_t tempbrake = 0;
 
