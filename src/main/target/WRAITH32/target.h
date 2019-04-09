@@ -23,8 +23,7 @@
 #define LED2_PIN        LL_GPIO_PIN_4
 #define LED2_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
 
-//ToDo
-// PA10 --- Phase_A_HI
+// PA10 --- Phase_A_HI ,Ok
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    LL_GPIO_PIN_10
 
@@ -32,22 +31,23 @@
 #define B_FET_HI_GPIO   GPIOA
 #define B_FET_HI_PIN    LL_GPIO_PIN_9
 
-// PA8 --- Phase_C_HI
+// PA8 --- Phase_C_HI ,Ok
 #define C_FET_HI_GPIO   GPIOA
 #define C_FET_HI_PIN    LL_GPIO_PIN_8
 
-// PB1 --- Phase_A_LO
+// PB1 --- Phase_A_LO ,Ok
 #define A_FET_LO_GPIO   GPIOB
 #define A_FET_LO_PIN    LL_GPIO_PIN_1
 
-// PB0 --- Phase_B_LO
+// PB0 --- Phase_B_LO ,Ok
 #define B_FET_LO_GPIO   GPIOB
 #define B_FET_LO_PIN    LL_GPIO_PIN_0
 
-// PA7 --- Phase_C_LO
+// PA7 --- Phase_C_LO ,Ok
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    LL_GPIO_PIN_7
 
+//ToDo
 // Sequence number of ADC each particular channel (the order in which they are scanned)
 #define ADC_SEQ_TEMPERATURE       0
 #define ADC_SEQ_PHASE_A           1
