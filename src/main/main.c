@@ -7,48 +7,33 @@ IWDG_HandleTypeDef hiwdg;
 TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
-uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
-uint16_t VarDataTab[NB_OF_VAR] = {0, 0, 0};
-uint16_t VarValue,VarDataTmp;
+uint16_t step = 1;
+uint16_t dir_reversed = 0;
+// 1 = quad mode, 2 = crawler <-> thruster mode,  3 = rc car mode,  4 = car mode with auto reverse after stop
+uint16_t vehicle_mode = 1;
+uint16_t bi_direction = 0;
 
-uint32_t ee_status;
+// for complementary pwm , 0 for diode freewheeling
+uint16_t slow_decay = 1;
+// apply full motor brake on stop
+uint16_t brake = 1;
+uint16_t start_power = 150;
+uint16_t prop_brake = 0, prop_brake_active = 0;
+uint16_t prop_brake_strength = 300;
 
-// variables to use for eeprom function,  ie: EE_WriteVariable(VirtAddVarTab[EEvehiclemode],  vehicle_mode ;
-enum userVars {
-  EEvehiclemode = 0,
-  EEdirection = 1,
-  EEbidirection = 2,
-//	EEbrake_on_stop = 3
-};
-
-
-int dir_reversed = 0;   // global direction reversed set in eeprom
-int step = 1;
-
-char vehicle_mode = 1;                        // 1 = quad mode / eeprom load mode , 2 = crawler / thruster mode,  3 = rc car mode,  4 = like car mode but with auto reverse after stop
-
-int bi_direction = 0;
-char slow_decay = 1;                      // for complementary pwm , 0 for diode freewheeling
-int brake = 1;                          // apply full motor brake on stop
-int start_power = 150;
-char prop_brake = 0;
-int prop_brake_strength = 300;
-
-char prop_brake_active = 0;
 int adjusted_input;
 
 int dshotcommand = 0;
 uint8_t calcCRC;
 uint8_t checkCRC;
-char error = 0;
+uint16_t error = 0;
 
-int quietmode = 0;
-int sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100,100, 100,95,95,95,90,90,80,80};
+uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100,100, 100,95,95,95,90,90,80,80};
 
-int tempbrake = 0;
+uint16_t tempbrake = 0;
 
 // increase divisor to decrease advance
-char advancedivisor = 8;
+uint16_t advancedivisor = 8;
 //char advancedivisorup = 3;
 //char advancedivisordown = 3;
 
@@ -65,7 +50,6 @@ int filter_delay = 2;
 
 //debug
 int control_loop_count;
-
 
 int zctimeout = 0;
 // depends on speed of main loop
@@ -139,32 +123,6 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
     x = in_max;
   }
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-
-void storeEEpromConfig(){
-  EE_WriteVariable(VirtAddVarTab[EEvehiclemode], vehicle_mode);
-  EE_WriteVariable(VirtAddVarTab[EEdirection], dir_reversed);
-  EE_WriteVariable(VirtAddVarTab[EEbidirection], bi_direction);
-  // EE_WriteVariable(VirtAddVarTab[EEbrake_on_stop], EEbrake_on_stop);
-  // playEEpromSavedTune();
-}
-
-
-void loadEEpromConfig(){
-  EE_ReadVariable(VirtAddVarTab[EEvehiclemode], &VarDataTab[EEvehiclemode]);
-  EE_ReadVariable(VirtAddVarTab[EEdirection], &VarDataTab[EEdirection]);
-  EE_ReadVariable(VirtAddVarTab[EEbidirection], &VarDataTab[EEbidirection]);
-//	 EE_ReadVariable(VirtAddVarTab[EEbrake_on_stop], &VarDataTab[EEbrake_on_stop]);
-
-  if (VarDataTab[EEvehiclemode] == 0) {             // nothing in the eeprom
-    storeEEpromConfig();             // store default values
-  }else{
-    vehicle_mode = VarDataTab[EEvehiclemode];
-    dir_reversed = VarDataTab[EEdirection];
-    bi_direction = VarDataTab[EEbidirection];
-//	 brake = VarDataTab[EEbrake_on_stop];
-  }
 }
 
 
@@ -330,7 +288,6 @@ void proBrake() {
 
 
 void changeCompInput() {
-//	HAL_COMP_Stop_IT(&hcomp1);            // done in comparator routine
   // c floating
   if (step == 1 || step == 4) {
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
@@ -408,7 +365,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void startMotor() {
-  char decaystate = slow_decay;
+  uint16_t decaystate = slow_decay;
   sensorless = 0;
   if (running == 0) {
     HAL_COMP_Stop_IT(&hcomp1);
@@ -821,9 +778,12 @@ int main(void) {
   // configure the system clock
   SystemClock_Config();
 
-  HAL_FLASH_Unlock();
-  EE_Init();
-  // HAL_Delay(10);
+  configValidateOrReset();
+  configRead();
+
+  vehicle_mode = escConfig()->vehicle_mode;
+  dir_reversed = escConfig()->dir_reversed;
+  bi_direction = escConfig()->bi_direction;
 
   // initialize peripherals
   ledInit();
@@ -855,7 +815,7 @@ int main(void) {
   while (HAL_IWDG_Init(&hiwdg) != HAL_OK);
 
   if (vehicle_mode == 1) {                    // quad single direction
-    loadEEpromConfig();
+    //loadEEpromConfig();
   }
   if (vehicle_mode == 2) {                   // crawler or thruster
     bi_direction = 1;
@@ -943,9 +903,13 @@ int main(void) {
           armed = 0;
         }
         if (dshotcommand == 12) {
-          storeEEpromConfig();
-          while(1) { // resets esc as iwdg times out
-          }
+
+          escConfig()->vehicle_mode = vehicle_mode;
+          escConfig()->dir_reversed = dir_reversed;
+          escConfig()->bi_direction = bi_direction;
+          configWrite();
+          // reset esc, iwdg timeout
+          while(true);
         }
       }
 
