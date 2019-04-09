@@ -218,24 +218,24 @@ void phaseB(int newPhase)
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       GPIOB->BRR = B_FET_LO_PIN;
     }else{
-      LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE); // low
+      LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_9, LL_GPIO_MODE_ALTERNATE);  // high
+    LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
 
   }
 
   if (newPhase == floating) {
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     GPIOB->BRR = B_FET_LO_PIN;
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_9, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_9;
+    LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+    B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
   }
 
   if (newPhase == lowside) {          // low mosfet on
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     GPIOB->BSRR = B_FET_LO_PIN;
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_9, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_9;
+    LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+    B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
   }
 
 }
@@ -248,29 +248,29 @@ void phaseB(int newPhase)
 void phaseC(int newPhase)
 #endif
 {
-  if (newPhase == pwm) {  // pwm
+  if (newPhase == pwm) {
     if (!slow_decay || prop_brake_active) {
-      LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_7, LL_GPIO_MODE_OUTPUT);
-      GPIOA->BRR = GPIO_PIN_7;
+      LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+      C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
     }else{
-      LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_7, LL_GPIO_MODE_ALTERNATE);
+      LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_8, LL_GPIO_MODE_ALTERNATE);
+    LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
 
   }
 
-  if (newPhase == floating) {            // floating
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_7, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_7;
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_8, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_8;
+  if (newPhase == floating) {
+    LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+    C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
+    LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+    C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
   }
 
-  if (newPhase == lowside) {              // lowside
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_7, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BSRR = GPIO_PIN_7;
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_8, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_8;
+  if (newPhase == lowside) {
+    LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+    C_FET_LO_GPIO->BSRR = C_FET_LO_PIN;
+    LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+    C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
   }
 }
 
@@ -284,27 +284,27 @@ void phaseA(int newPhase)
 {
   if (newPhase == pwm) {
     if (!slow_decay || prop_brake_active) {
-      LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_1, LL_GPIO_MODE_OUTPUT);
-      GPIOB->BRR = GPIO_PIN_1;
+      LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+      A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
     }else{
-      LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_1, LL_GPIO_MODE_ALTERNATE);
+      LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_10, LL_GPIO_MODE_ALTERNATE);
+    LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
 
   }
 
   if (newPhase == floating) {
-    LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_1, LL_GPIO_MODE_OUTPUT);
-    GPIOB->BRR = GPIO_PIN_1;
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_10, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_10;
+    LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+    A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
+    LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+    A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
   }
 
   if (newPhase == lowside) {
-    LL_GPIO_SetPinMode(GPIOB, GPIO_PIN_1, LL_GPIO_MODE_OUTPUT);
-    GPIOB->BSRR = GPIO_PIN_1;
-    LL_GPIO_SetPinMode(GPIOA, GPIO_PIN_10, LL_GPIO_MODE_OUTPUT);
-    GPIOA->BRR = GPIO_PIN_10;
+    LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+    A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
+    LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+    A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
   }
 
 }
