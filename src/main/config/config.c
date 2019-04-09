@@ -6,8 +6,9 @@ master_t masterConfig;
 void configValidateOrReset(void) {
   if (eepromValid()) {
     return;
+  } else {
+    configReset();
   }
-  configReset();
 }
 
 void configReset(void) {
@@ -28,5 +29,5 @@ void configRead(void) {
 
 void configWrite(void) {
   eepromWrite();
-  eepromRead();
+  //eepromRead();
 }
