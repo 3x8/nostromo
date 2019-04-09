@@ -1,5 +1,7 @@
 #pragma once
 
+#include "main.h"
+
 #define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct escConfig_s {
