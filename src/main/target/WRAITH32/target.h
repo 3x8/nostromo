@@ -1,6 +1,9 @@
 #pragma once
 
 //ToDo
+#define DEAD_TIME 60
+
+//ToDo
 #define MP6531
 // #define FD6288
 

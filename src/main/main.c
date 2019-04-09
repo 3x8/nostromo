@@ -21,18 +21,9 @@ enum userVars {
 //	EEbrake_on_stop = 3
 };
 
-int dead_time = 60;           // change to 60 for qfn
 
 int dir_reversed = 0;   // global direction reversed set in eeprom
 int step = 1;
-int pot = 1000;
-
-int smoothedinput = 0;
-const int numReadings = 1000;     // the readings from the analog input
-int readIndex = 0;              // the index of the current reading
-int total = 0;
-char bad_commutation = 0;
-
 
 char vehicle_mode = 1;                        // 1 = quad mode / eeprom load mode , 2 = crawler / thruster mode,  3 = rc car mode,  4 = like car mode but with auto reverse after stop
 
@@ -42,7 +33,6 @@ int brake = 1;                          // apply full motor brake on stop
 int start_power = 150;
 char prop_brake = 0;
 int prop_brake_strength = 300;
-
 
 char prop_brake_active = 0;
 int adjusted_input;
@@ -55,23 +45,12 @@ char error = 0;
 int quietmode = 0;
 int sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100,100, 100,95,95,95,90,90,80,80};
 
-int count = 0;
-int compCount = 0;
-int upcompCount = 0;
-int falsecount = 0;
-int falseAlarm = 0;
-int comp_int_count = 0;
 int tempbrake = 0;
 
-int falsethreshold = 2;
-int upthiszctime = 0;
-int uplastzctime = 0;
-
-
-char advancedivisor = 8;                    // increase divisor to decrease advance,
-char advancedivisorup = 3;
-char advancedivisordown = 3;
-
+// increase divisor to decrease advance
+char advancedivisor = 8;
+//char advancedivisorup = 3;
+//char advancedivisordown = 3;
 
 int thiszctime = 0;
 int lastzctime = 0;
@@ -79,42 +58,31 @@ int sensorless = 0;
 int commutation_interval = 0;
 int advance = 0;                       // set proportianal to commutation time. with advance divisor
 int blanktime;
-int pwm_settle = 50;
-int demagtime = 5;
 int waitTime = 0;
 char filter_level = 1;
 char compit = 0;
 int filter_delay = 2;
 
-int filter_level_up = 8;
-int filter_level_down = 8;
-
-
-
-int inputcapture = 0;
-
+//debug
 int control_loop_count;
+
+
 int zctimeout = 0;
-int zc_timeout_threshold = 2000;   // depends on speed of main loop
+// depends on speed of main loop
+int zc_timeout_threshold = 2000;
 
 int signaltimeout = 0;
-
 int signal_timeout_threshold = 10000;
 
-int temp_step;
-int ROC = 1;
-
-int zcfound = 1;
-int threshold = 1;
-int upthreshold = 1;
 int tim2_start_arr = 9000;
-int startupcountdown = 0;
 
 int duty_cycle = 100;
 
+//ToDo enum
 int pwm = 1;
 int floating = 2;
 int lowside = 3;
+
 int bemf_counts;
 
 int forward = 1;
@@ -138,14 +106,12 @@ int currentraw = 0;
 uint32_t ADC1ConvertedValues[2] = {0,0};
 int timestamp;
 
-
 char dshot = 0;
 char proshot = 0;
 char multishot = 0;
 char oneshot42 = 0;
 char oneshot125 = 0;
 char servoPwm = 0;
-
 
 char inputSet = 0;
 
@@ -165,8 +131,7 @@ static void MX_IWDG_Init(void);
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 
-long map(long x, long in_min, long in_max, long out_min, long out_max)
-{
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
   if (x < in_min) {
     x = in_min;
   }
@@ -174,7 +139,6 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
     x = in_max;
   }
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-
 }
 
 
@@ -211,17 +175,15 @@ void phaseA(int newPhase)
 #ifdef FD6288
 void phaseB(int newPhase)
 #endif
-
 {
   if (newPhase == pwm) {
-    if(!slow_decay  || prop_brake_active) {            // for future
+    if(!slow_decay  || prop_brake_active) {
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
-    }else{
+    } else {
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-
   }
 
   if (newPhase == floating) {
@@ -231,7 +193,7 @@ void phaseB(int newPhase)
     B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
   }
 
-  if (newPhase == lowside) {          // low mosfet on
+  if (newPhase == lowside) {
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
@@ -252,11 +214,10 @@ void phaseC(int newPhase)
     if (!slow_decay || prop_brake_active) {
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
-    }else{
+    } else {
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-
   }
 
   if (newPhase == floating) {
@@ -286,11 +247,10 @@ void phaseA(int newPhase)
     if (!slow_decay || prop_brake_active) {
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
-    }else{
+    } else {
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-
   }
 
   if (newPhase == floating) {
@@ -363,7 +323,6 @@ void fullBrake() {
 // duty cycle controls braking strength
 // will turn off lower fets so only high side is active
 void proBrake() {
-//	prop_brake_active = 1;
   phaseA(pwm);
   phaseB(pwm);
   phaseC(pwm);
@@ -437,10 +396,6 @@ void commutate() {
     comStep(step);
   }
   changeCompInput();
-// zcfound = 0;
-// falseAlarm = 0;
-// compCount = 0;
-// upcompCount = 0;
 // TIM2->CNT = 0;
 // TIM2->ARR = commutation_interval;
 }
@@ -468,7 +423,6 @@ void startMotor() {
 
   slow_decay = decaystate;    // return to normal
   sensorless = 1;
-  startupcountdown =0;
   bemf_counts = 0;
 
 }
@@ -493,8 +447,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
       }
     }
 
-
-  }else{
+  } else {
     // advancedivisor = advancedivisordown;
     for (int i = 0; i < filter_level; i++) {
       if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_LOW) {
@@ -510,7 +463,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   zctimeout = 0;
 
   commutation_interval = (commutation_interval + thiszctime) / 2;           // TEST!   divide by two when tracking up down time independant
-  bad_commutation = 0;
 
   advance = commutation_interval / advancedivisor;
   waitTime = commutation_interval /2    - advance;
@@ -567,7 +519,6 @@ void playInputTune(){
 void getADCs(){
   voltageraw = ADC1ConvertedValues[0];
   currentraw = ADC1ConvertedValues[1];
-  //pot = ADC1ConvertedValues[2];
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
@@ -833,10 +784,7 @@ void changeDutyCycleWithSin() {
 }
 
 void zc_found_routine(){
-  zcfound = 1;
   zctimeout = 0;
-  compCount = 0;
-  upcompCount = 0;
 
   thiszctime = TIM3->CNT;
 
@@ -950,10 +898,6 @@ int main(void) {
     LED_OFF(LED1);
     LED_OFF(LED2);
 
-    if (++count > 100000) {
-      count = 0;
-    }
-
     compit = 0;
 
     while (HAL_IWDG_Refresh(&hiwdg) != HAL_OK);
@@ -1041,8 +985,6 @@ int main(void) {
           if (vehicle_mode != 3) {                // car mode requires throttle return to center before direction change
             prop_brake_active = 0;
           }
-
-          startupcountdown = 0;
           bemf_counts = 0;
         }
 
@@ -1073,7 +1015,6 @@ int main(void) {
         adjusted_input = newinput;
       }
 
-      //	if ((adjusted_input > 100)&&(startupcountdown>250)){
       if (adjusted_input > 2000) {
         adjusted_input = 2000;
       }
@@ -1159,11 +1100,11 @@ int main(void) {
       if(brake || tempbrake) {
         fullBrake();
         duty_cycle = 0;
-        //	HAL_COMP_Stop_IT(&hcomp1);
+        //HAL_COMP_Stop_IT(&hcomp1);
       }
 
       if(prop_brake && prop_brake_active) {
-        //	prop_brake_active = 1;
+        //prop_brake_active = 1;
         duty_cycle = prop_brake_strength;
         proBrake();
       }
@@ -1175,7 +1116,7 @@ int main(void) {
 
       if (commutation_interval > 30000) {
         HAL_COMP_Stop_IT(&hcomp1);
-        //	prop_brake_active = 0;
+        //prop_brake_active = 0;
       }
 
     }
@@ -1195,11 +1136,10 @@ int main(void) {
 
     if (started == 1) {
       if (running == 0) {
-        //		allOff();
-        upthreshold = 2;
-        threshold = 2;
-        zctimeout =0;
-        startMotor(); // safety on for input testing
+        //allOff();
+        zctimeout = 0;
+        // safety on for input testing
+        startMotor();
       }
     }
 
@@ -1211,8 +1151,7 @@ int main(void) {
 
     zctimeout++;                                            // move to started if
     if (zctimeout > zc_timeout_threshold) {
-      //		prop_brake_active = 0;
-      bad_commutation = 0;
+      //prop_brake_active = 0;
       sensorless = 0;
       HAL_COMP_Stop_IT(&hcomp1);
 
@@ -1359,7 +1298,7 @@ static void MX_TIM1_Init(void) {
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = dead_time;
+  sBreakDeadTimeConfig.DeadTime = DEAD_TIME;
   sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
   sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
