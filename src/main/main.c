@@ -216,7 +216,7 @@ void phaseB(int newPhase)
   if (newPhase == pwm) {
     if(!slow_decay  || prop_brake_active) {            // for future
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-      GPIOB->BRR = B_FET_LO_PIN;
+      B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
     }else{
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
@@ -226,14 +226,14 @@ void phaseB(int newPhase)
 
   if (newPhase == floating) {
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    GPIOB->BRR = B_FET_LO_PIN;
+    B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
   }
 
   if (newPhase == lowside) {          // low mosfet on
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    GPIOB->BSRR = B_FET_LO_PIN;
+    B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
   }
@@ -372,21 +372,22 @@ void proBrake() {
 
 void changeCompInput() {
 //	HAL_COMP_Stop_IT(&hcomp1);            // done in comparator routine
-
-  if (step == 1 || step == 4) {   // c floating
+  // c floating
+  if (step == 1 || step == 4) {
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
   }
-
-  if (step == 2 || step == 5) {     // a floating
+  // a floating
+  if (step == 2 || step == 5) {
 #ifdef MP6531
-    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;                      /// if f051k6  step 2 , 5 is dac 1 ( swap comp input)
+    /// if f051k6  step 2 , 5 is dac 1 ( swap comp input)
+    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
 #endif
 #ifdef FD6288
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
 #endif
   }
-
-  if (step == 3 || step == 6) {      // b floating
+  // b floating
+  if (step == 3 || step == 6) {
 #ifdef MP6531
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
 #endif
@@ -395,8 +396,10 @@ void changeCompInput() {
 #endif
   }
   if (rising) {
-    hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;   // polarity of comp output reversed
-  }else{                          // falling bemf
+    // polarity of comp output reversed
+    hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+  }else{
+    // falling bemf
     hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
   }
 
