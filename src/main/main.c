@@ -2,6 +2,7 @@
 
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
+
 COMP_HandleTypeDef hcomp1;
 
 TIM_HandleTypeDef htim1, htim2, htim3, htim15;
