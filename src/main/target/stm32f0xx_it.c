@@ -1,8 +1,5 @@
-//#include "stm32f0xx_hal.h"
-//#include "stm32f0xx.h"
 #include "stm32f0xx_it.h"
 
-// external
 extern void transferComplete();
 
 extern DMA_HandleTypeDef hdma_adc;
