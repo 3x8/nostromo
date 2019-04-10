@@ -9,7 +9,7 @@
 # Things that the user might override on the commandline
 #
 
-PROJECTNAME  := madmax
+PROJECTNAME  := nostromo
 
 # The target to build, see VALID_TARGETS below
 TARGET    ?= WRAITH32
