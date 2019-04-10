@@ -2,6 +2,10 @@
 
 extern ADC_HandleTypeDef hadc;
 extern COMP_HandleTypeDef hcomp1;
+extern TIM_HandleTypeDef htim1, htim2, htim3, htim15;
+
+extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 
 void systemClockConfig(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -93,4 +97,52 @@ void systemComparator1Init(void) {
   hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
   hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
   while (HAL_COMP_Init(&hcomp1) != HAL_OK);
+}
+
+void systemTimer1Init(void) {
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+  TIM_OC_InitTypeDef sConfigOC;
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
+
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
+  htim1.Init.Period = 999;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  while (HAL_TIM_Base_Init(&htim1) != HAL_OK);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  while (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK);
+
+  while (HAL_TIM_PWM_Init(&htim1) != HAL_OK);
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC4REF;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  while (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK);
+
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  while (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK);
+  while (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK);
+
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = DEAD_TIME;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  while (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK);
+
+  HAL_TIM_MspPostInit(&htim1);
 }
