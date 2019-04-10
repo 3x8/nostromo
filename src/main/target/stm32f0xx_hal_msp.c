@@ -42,7 +42,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) {
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc) {
   if(hadc->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_DISABLE();
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_VOLTAGE | LL_GPIO_PIN_6);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_VOLTAGE | GPIO_PIN_CURRENT);
     HAL_DMA_DeInit(hadc->DMA_Handle);
   }
 }

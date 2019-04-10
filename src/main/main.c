@@ -7,10 +7,11 @@ TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 uint16_t step = 1;
-uint16_t dir_reversed = 0;
+
 // 1 = quad mode, 2 = crawler <-> thruster mode,  3 = rc car mode,  4 = car mode with auto reverse after stop
 uint16_t vehicle_mode = 1;
 uint16_t bi_direction = 0;
+uint16_t dir_reversed = 0;
 
 // for complementary pwm , 0 for diode freewheeling
 uint16_t slow_decay = 1;
@@ -62,7 +63,7 @@ int tim2_start_arr = 9000;
 
 int duty_cycle = 100;
 
-//ToDo enum
+//1 enum
 int pwm = 1;
 int floating = 2;
 int lowside = 3;
