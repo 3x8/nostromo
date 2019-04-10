@@ -1,6 +1,6 @@
 # nostromo  ESC  GPLv3.0
 
 
-forked from:
-https://github.com/conuthead/f051bldc
-https://github.com/betaflight/betaflight-esc
+forked from: <br />
+https://github.com/conuthead/f051bldc <br />
+https://github.com/betaflight/betaflight-esc <br />
