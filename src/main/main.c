@@ -3,7 +3,7 @@
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
 COMP_HandleTypeDef hcomp1;
-IWDG_HandleTypeDef hiwdg;
+
 TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
@@ -26,7 +26,7 @@ int adjusted_input;
 int dshotcommand = 0;
 uint8_t calcCRC;
 uint8_t checkCRC;
-uint16_t error = 0;
+//uint16_t error = 0;
 
 uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
@@ -41,7 +41,8 @@ int thiszctime = 0;
 int lastzctime = 0;
 int sensorless = 0;
 int commutation_interval = 0;
-int advance = 0;                       // set proportianal to commutation time. with advance divisor
+// set proportianal to commutation time. with advance divisor
+int advance = 0;
 int blanktime;
 int waitTime = 0;
 char filter_level = 1;
@@ -110,7 +111,6 @@ static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM15_Init(void);
-static void MX_IWDG_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
@@ -295,7 +295,7 @@ void changeCompInput() {
   // a floating
   if (step == 2 || step == 5) {
 #ifdef MP6531
-    /// if f051k6  step 2 , 5 is dac 1 ( swap comp input)
+    // if f051k6  step 2 , 5 is dac 1 ( swap comp input)
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
 #endif
 #ifdef FD6288
@@ -390,7 +390,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   if (compit > 200) {
     HAL_COMP_Stop_IT(&hcomp1);
-    error = 1;
+    //error = 1;
     return;
   }
   compit +=1;
@@ -419,7 +419,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   zctimeout = 0;
 
-  commutation_interval = (commutation_interval + thiszctime) / 2;           // TEST!   divide by two when tracking up down time independant
+  // TEST!   divide by two when tracking up down time independant
+  commutation_interval = (commutation_interval + thiszctime) / 2;
 
   advance = commutation_interval / advancedivisor;
   waitTime = commutation_interval /2    - advance;
@@ -794,7 +795,8 @@ int main(void) {
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM15_Init();
-  MX_IWDG_Init();
+
+  watchdogInit(2000);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
@@ -812,7 +814,8 @@ int main(void) {
   HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
 	//while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC1ConvertedValues, 2) != HAL_OK);
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
-  while (HAL_IWDG_Init(&hiwdg) != HAL_OK);
+
+
 
   if (vehicle_mode == 1) {                    // quad single direction
     //loadEEpromConfig();
@@ -854,13 +857,13 @@ int main(void) {
 
   // main loop
   while (true) {
+    watchdogFeed();
+
     LED_OFF(LED0);
     LED_OFF(LED1);
     LED_OFF(LED2);
 
     compit = 0;
-
-    while (HAL_IWDG_Refresh(&hiwdg) != HAL_OK);
 
     control_loop_count++;
     if (control_loop_count > 1) {
@@ -1051,7 +1054,7 @@ int main(void) {
       input = 0;
       armed = 0;
       armedcount = 0;
-      error = 1;
+      //error = 1;
       //	  duty_cycle = 0;          //mid point
     }
 
@@ -1210,14 +1213,6 @@ static void MX_COMP1_Init(void) {
   while (HAL_COMP_Init(&hcomp1) != HAL_OK);
 }
 
-
-static void MX_IWDG_Init(void) {
-  hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_16;
-  hiwdg.Init.Window = IWDG_WINDOW_DISABLE;
-  hiwdg.Init.Reload = 2000;
-  while (HAL_IWDG_Init(&hiwdg) != HAL_OK);
-}
 
 
 static void MX_TIM1_Init(void) {

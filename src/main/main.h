@@ -19,6 +19,8 @@
 
 #include "drivers/led.h"
 #include "drivers/eeprom.h"
+#include "drivers/watchdog.h"
+
 #include "config/config.h"
 
 #include "target.h"
