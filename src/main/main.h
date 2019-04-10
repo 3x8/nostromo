@@ -20,6 +20,7 @@
 #include "drivers/led.h"
 #include "drivers/eeprom.h"
 #include "drivers/watchdog.h"
+#include "drivers/system.h"
 
 #include "config/config.h"
 
