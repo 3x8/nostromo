@@ -72,7 +72,7 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
        PA1     ------> COMP1_INP
        PA5     ------> COMP1_INM
      */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1|GPIO_PIN_5);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1 | GPIO_PIN_5);
   }
 
 }
@@ -80,22 +80,22 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(htim_base->Instance==TIM1) {
+  if(htim_base->Instance == TIM1) {
     __HAL_RCC_TIM1_CLK_ENABLE();
 
     HAL_NVIC_SetPriority(TIM1_CC_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);
   }
-  else if(htim_base->Instance==TIM2) {
+  else if(htim_base->Instance == TIM2) {
     __HAL_RCC_TIM2_CLK_ENABLE();
 
     HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
   }
-  else if(htim_base->Instance==TIM3) {
+  else if(htim_base->Instance == TIM3) {
     __HAL_RCC_TIM3_CLK_ENABLE();
   }
-  else if(htim_base->Instance==TIM15) {
+  else if(htim_base->Instance == TIM15) {
     __HAL_RCC_TIM15_CLK_ENABLE();
     /**TIM15 GPIO Configuration
        PA2     ------> TIM15_CH1
@@ -132,7 +132,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(htim->Instance==TIM1) {
+  if(htim->Instance == TIM1) {
     /**TIM1 GPIO Configuration
        PA7     ------> TIM1_CH1N
        PB0     ------> TIM1_CH2N
@@ -140,22 +140,29 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
        PA8     ------> TIM1_CH1
        PA9     ------> TIM1_CH2
        PA10     ------> TIM1_CH3
-       PA11     ------> TIM1_CH4
-     */
+       PA11     ------> TIM1_CH4 ???
+    */
 
-    GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = C_FET_LO_PIN;
+    HAL_GPIO_Init(C_FET_LO_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = C_FET_HI_PIN;
+    HAL_GPIO_Init(C_FET_HI_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = B_FET_HI_PIN;
+    HAL_GPIO_Init(B_FET_HI_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = A_FET_HI_PIN;
+    HAL_GPIO_Init(A_FET_HI_GPIO, &GPIO_InitStruct);
+    //GPIO_InitStruct.Pin = GPIO_PIN_11;
+    //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = B_FET_LO_PIN;
+    HAL_GPIO_Init(B_FET_LO_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = A_FET_LO_PIN;
+    HAL_GPIO_Init(A_FET_LO_GPIO, &GPIO_InitStruct);
   }
 }
 
