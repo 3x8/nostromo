@@ -15,7 +15,7 @@ void HAL_MspInit(void) {
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(hadc->Instance==ADC1) {
+  if(hadc->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_ENABLE();
 
     GPIO_InitStruct.Pin = GPIO_PIN_VOLTAGE | GPIO_PIN_CURRENT;
@@ -40,7 +40,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) {
 }
 
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc) {
-  if(hadc->Instance==ADC1) {
+  if(hadc->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_DISABLE();
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_VOLTAGE | LL_GPIO_PIN_6);
     HAL_DMA_DeInit(hadc->DMA_Handle);
@@ -50,7 +50,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc) {
 void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(hcomp->Instance==COMP1) {
+  if(hcomp->Instance == COMP1) {
     /**COMP1 GPIO Configuration
        PA1     ------> COMP1_INP
        PA5     ------> COMP1_INM
@@ -67,7 +67,7 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
 
 void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
 
-  if(hcomp->Instance==COMP1) {
+  if(hcomp->Instance == COMP1) {
     /**COMP1 GPIO Configuration
        PA1     ------> COMP1_INP
        PA5     ------> COMP1_INM
@@ -168,20 +168,20 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
 
-  if(htim_base->Instance==TIM1) {
+  if(htim_base->Instance == TIM1) {
     __HAL_RCC_TIM1_CLK_DISABLE();
 
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
   }
-  else if(htim_base->Instance==TIM2) {
+  else if(htim_base->Instance == TIM2) {
     __HAL_RCC_TIM2_CLK_DISABLE();
 
     HAL_NVIC_DisableIRQ(TIM2_IRQn);
   }
-  else if(htim_base->Instance==TIM3) {
+  else if(htim_base->Instance == TIM3) {
     __HAL_RCC_TIM3_CLK_DISABLE();
   }
-  else if(htim_base->Instance==TIM15) {
+  else if(htim_base->Instance == TIM15) {
     __HAL_RCC_TIM15_CLK_DISABLE();
 
     /**TIM15 GPIO Configuration
