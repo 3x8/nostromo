@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
 #include "main.h"
 
 void NMI_Handler(void);
@@ -16,7 +12,3 @@ void DMA1_Channel4_5_IRQHandler(void);
 void ADC1_COMP_IRQHandler(void);
 void TIM1_CC_IRQHandler(void);
 void TIM2_IRQHandler(void);
-
-#ifdef __cplusplus
-}
-#endif

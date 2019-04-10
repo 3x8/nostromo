@@ -2,9 +2,7 @@
 
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
-
 COMP_HandleTypeDef hcomp1;
-
 TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
@@ -103,8 +101,8 @@ char inputSet = 0;
 
 
 // prototypes
-static void MX_ADC_Init(void);
-static void MX_COMP1_Init(void);
+//static void MX_ADC_Init(void);
+//static void MX_COMP1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
@@ -782,9 +780,11 @@ int main(void) {
 
   ledInit();
   systemDmaInit();
+  systemAdcInit();
+  systemComparator1Init();
 
-  MX_ADC_Init();
-  MX_COMP1_Init();
+  //MX_ADC_Init();
+  //MX_COMP1_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -1125,51 +1125,7 @@ int main(void) {
   }
 }
 
-static void MX_ADC_Init(void) {
-  ADC_ChannelConfTypeDef sConfig;
 
-  // Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-  hadc.Instance = ADC1;
-  hadc.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
-  hadc.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
-  hadc.Init.EOCSelection = ADC_EOC_SEQ_CONV;
-  hadc.Init.LowPowerAutoWait = DISABLE;
-  hadc.Init.LowPowerAutoPowerOff = DISABLE;
-  hadc.Init.ContinuousConvMode = DISABLE;
-  hadc.Init.DiscontinuousConvMode = ENABLE;
-  hadc.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC4;
-  hadc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-  hadc.Init.DMAContinuousRequests = ENABLE;
-  hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
-  while (HAL_ADC_Init(&hadc) != HAL_OK);
-
-  // Configure for the selected ADC regular channel to be converted.
-  sConfig.Channel = ADC_CHANNEL_3;
-  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
-  sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
-  while (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK);
-
-
-  // Configure for the selected ADC regular channel to be converted.
-  sConfig.Channel = ADC_CHANNEL_6;
-  while (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK);
-}
-
-
-static void MX_COMP1_Init(void) {
-  hcomp1.Instance = COMP1;
-  hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
-  hcomp1.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
-  hcomp1.Init.Output = COMP_OUTPUT_NONE;
-  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
-  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_LOW;
-  hcomp1.Init.Mode = COMP_MODE_HIGHSPEED;
-  hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
-  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
-  while (HAL_COMP_Init(&hcomp1) != HAL_OK);
-}
 
 
 
@@ -1188,18 +1144,14 @@ static void MX_TIM1_Init(void) {
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   while (HAL_TIM_Base_Init(&htim1) != HAL_OK);
 
-
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
   while (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK);
 
-
   while (HAL_TIM_PWM_Init(&htim1) != HAL_OK);
-
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC4REF;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK);
-
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
@@ -1226,7 +1178,6 @@ static void MX_TIM1_Init(void) {
 }
 
 static void MX_TIM2_Init(void) {
-
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
@@ -1247,7 +1198,6 @@ static void MX_TIM2_Init(void) {
 }
 
 static void MX_TIM3_Init(void) {
-
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
@@ -1294,11 +1244,4 @@ static void MX_TIM15_Init(void) {
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
   while (HAL_TIM_IC_ConfigChannel(&htim15, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
-}
-
-
-// needed
-void _Error_Handler(char * file, int line) {
-  while(true) {
-  }
 }
