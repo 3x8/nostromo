@@ -22,6 +22,7 @@
 #include "drivers/watchdog.h"
 #include "drivers/system.h"
 #include "drivers/input.h"
+#include "drivers/motor.h"
 #include "config/config.h"
 
 #include "target.h"
