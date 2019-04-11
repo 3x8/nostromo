@@ -3,6 +3,9 @@
 uint32_t timestamp;
 uint16_t step = 1;
 
+uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
+
+
 extern COMP_HandleTypeDef hcomp1;
 extern TIM_HandleTypeDef htim1;
 
@@ -43,15 +46,10 @@ extern uint16_t start_power;
 extern uint16_t prop_brake, prop_brake_active;
 extern uint16_t prop_brake_strength;
 
-extern uint16_t sine_array[20];
-
 // increase divisor to decrease advance
 extern uint16_t advancedivisor;
 
-
 extern uint32_t input, newinput;
-
-
 
 
 // phaseB qfnf051 , phase A qfp32

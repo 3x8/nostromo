@@ -21,7 +21,6 @@ uint16_t start_power = 150;
 uint16_t prop_brake, prop_brake_active;
 uint16_t prop_brake_strength = 300;
 
-uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
 // increase divisor to decrease advance
 uint16_t advancedivisor = 8;
