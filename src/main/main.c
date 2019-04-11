@@ -210,7 +210,7 @@ void phaseA(int newPhase)
 
 }
 
-void comStep(int newStep) {
+void commutationStep(int newStep) {
 	//A-B
   if (newStep == 1) {
     phaseA(pwm);
@@ -277,22 +277,22 @@ void changeCompInput() {
   }
   // a floating
   if (step == 2 || step == 5) {
-#ifdef MP6531
     // if f051k6  step 2 , 5 is dac 1 ( swap comp input)
+    #ifdef MP6531
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
-#endif
-#ifdef FD6288
+    #endif
+    #ifdef FD6288
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
-#endif
+    #endif
   }
   // b floating
   if (step == 3 || step == 6) {
-#ifdef MP6531
+    #ifdef MP6531
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
-#endif
-#ifdef FD6288
+    #endif
+    #ifdef FD6288
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
-#endif
+    #endif
   }
   if (rising) {
     // polarity of comp output reversed
@@ -333,7 +333,7 @@ void commutate() {
   }
 
   if (input > 47) {
-    comStep(step);
+    commutationStep(step);
   }
   changeCompInput();
 // TIM2->CNT = 0;
@@ -429,7 +429,7 @@ void playStartupTune(){
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
-  comStep(2);
+  commutationStep(2);
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
@@ -444,7 +444,7 @@ void playInputTune(){
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
-  comStep(2);
+  commutationStep(2);
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
