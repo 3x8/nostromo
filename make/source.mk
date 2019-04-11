@@ -20,7 +20,8 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
                     drivers/led.c \
                     drivers/eeprom.c \
                     drivers/watchdog.c \
-										drivers/system.c \
+                    drivers/system.c \
+                    drivers/input.c \
                     config/config.c"
 
 SIZE_OPTIMISED_SRC  := ""

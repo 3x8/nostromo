@@ -21,6 +21,7 @@
 #include "drivers/eeprom.h"
 #include "drivers/watchdog.h"
 #include "drivers/system.h"
+#include "drivers/input.h"
 #include "config/config.h"
 
 #include "target.h"

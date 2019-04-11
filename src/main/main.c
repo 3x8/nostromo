@@ -8,6 +8,7 @@ DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 uint16_t step = 1;
 
+
 // 1 = quad mode, 2 = crawler <-> thruster mode,  3 = rc car mode,  4 = car mode with auto reverse after stop
 uint16_t vehicle_mode = 1;
 uint16_t bi_direction = 0;
@@ -21,18 +22,13 @@ uint16_t start_power = 150;
 uint16_t prop_brake, prop_brake_active;
 uint16_t prop_brake_strength = 300;
 
-int adjusted_input;
-
-int dshotcommand = 0;
-uint8_t calcCRC;
-uint8_t checkCRC;
-
 uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
 // increase divisor to decrease advance
 uint16_t advancedivisor = 8;
 //char advancedivisorup = 3;
 //char advancedivisordown = 3;
+
 
 int thiszctime = 0;
 int lastzctime = 0;
@@ -46,15 +42,12 @@ char filter_level = 1;
 char compit = 0;
 int filter_delay = 2;
 
-//debug
-int control_loop_count;
 
 int zctimeout = 0;
 // depends on speed of main loop
 int zc_timeout_threshold = 2000;
 
-int signaltimeout = 0;
-int signal_timeout_threshold = 10000;
+
 
 int tim2_start_arr = 9000;
 
@@ -74,39 +67,38 @@ int started = 0;
 char armed = 0;
 int armedcount = 0;
 
-int input_buffer_size = 64;
-int smallestnumber = 20000;
-uint32_t dma_buffer[64];
-int propulse[4] = {0,0,0,0};
-int dpulse[16] =  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-int input = 0;
-int newinput =0;
+
+
 
 int voltageraw = 0;
 int currentraw = 0;
 uint32_t ADC1ConvertedValues[2] = {0,0};
 int timestamp;
 
-char dshot = 0;
-char proshot = 0;
-char multishot = 0;
-char oneshot42 = 0;
-char oneshot125 = 0;
-char servoPwm = 0;
-
-char inputSet = 0;
 
 
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
-  if (x < in_min) {
-    x = in_min;
-  }
-  if (x > in_max) {
-    x = in_max;
-  }
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
+//ToDo input
+uint8_t dshotcommand, inputSet;
+uint8_t calcCRC, checkCRC;
+uint8_t dshot, proshot, multishot, oneshot42, oneshot125, servoPwm;
+
+uint32_t input_buffer_size = 64;
+
+uint32_t dma_buffer[64];
+uint32_t propulse[4];
+uint32_t dpulse[16];
+
+uint32_t input, newinput;
+
+uint32_t signaltimeout;
+uint32_t signal_timeout_threshold = 10000;
+
+uint32_t adjusted_input;
+
+
+
+
 
 
 // phaseB qfnf051 , phase A qfp32
@@ -211,7 +203,7 @@ void phaseA(int newPhase)
 }
 
 void commutationStep(int newStep) {
-	//A-B
+  //A-B
   if (newStep == 1) {
     phaseA(pwm);
     phaseB(lowside);
@@ -461,253 +453,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
   getADCs();
 }
 
-void detectInput(){
-  smallestnumber = 20000;
-  dshot = 0;
-  proshot = 0;
-  multishot = 0;
-  oneshot42 = 0;
-  oneshot125 = 0;
-  servoPwm = 0;
-  int lastnumber = dma_buffer[0];
-  for ( int j = 1; j < input_buffer_size; j++) {
-
-    if((dma_buffer[j] - lastnumber) < smallestnumber) { // blank space
-      smallestnumber = dma_buffer[j] - lastnumber;
-    }
-    lastnumber = dma_buffer[j];
-  }
-
-  if ((smallestnumber > 3)&&(smallestnumber < 22)) {
-    dshot = 1;
-  }
-
-  if ((smallestnumber > 40 )&&(smallestnumber < 80)) {
-    proshot = 1;
-    TIM15->PSC=1;
-    TIM15->CNT = 0xffff;
-
-  }
-  if ((smallestnumber > 100 )&&(smallestnumber < 400)) {
-    multishot = 1;
-  }
-//	if ((smallestnumber > 2000 )&&(smallestnumber < 3000)){
-//		oneshot42 = 1;
-//	}
-//	if ((smallestnumber > 3000 )&&(smallestnumber < 7000)){
-//		oneshot125 = 1;
-//	}
-  if (smallestnumber > 2000) {
-    servoPwm = 1;
-    TIM15->PSC = 47;
-    TIM15->CNT = 0xffff;
-  }
-
-  if (smallestnumber == 0) {
-    inputSet = 0;
-  }else{
-
-    inputSet = 1;
-
-    HAL_Delay(50);
-    // playInputTune();
-  }
-  HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
-}
-
-void computeProshotDMA() {
-  //debug
-  LED_ON(LED1);
-  LED_ON(LED2);
-
-  int lastnumber = dma_buffer[0];
-  for ( int j = 1; j < 9; j++) {
-    if(((dma_buffer[j] - lastnumber) > 1500) && ((dma_buffer[j] - lastnumber) < 50000)) { // blank space
-      if ((dma_buffer[j+7] - dma_buffer[j])<10000) {
-        //			for ( int i = 0; i < 8; i+= 2){
-        //
-        //			propulse[i>>1] =map((dma_buffer[j+i+1] - dma_buffer[j+i]),48, 141, 0, 15);
-        //			}
-
-        //		for ( int i = 0; i < 8; i+= 2){
-        //			 propulse[i>>1] = ((dma_buffer[j+i+1] - dma_buffer[j+i]) - 46)*11>>6;
-        //		}
-        for (int i = 0; i < 4; i++) {
-          propulse[i] = (((dma_buffer[j + i*2 +1] - dma_buffer[j + i*2])) - 23)/3;
-        }
-
-        calcCRC = ((propulse[0]^propulse[1]^propulse[2])<<3
-                   |(propulse[0]^propulse[1]^propulse[2])<<2
-                   |(propulse[0]^propulse[1]^propulse[2])<<1
-                   |(propulse[0]^propulse[1]^propulse[2]));
-        checkCRC = (propulse[3]<<3 | propulse[3]<<2 | propulse[3]<<1 | propulse[3]);
-      }
-
-      if (calcCRC == checkCRC) {
-        //debug
-        LED_OFF(LED1);
-        int tocheck = ((propulse[0]<<7 | propulse[1]<<3 | propulse[2]>>1));
-        if (tocheck > 2047 || tocheck < 0) {
-          break;
-        } else {
-          if(tocheck > 47) {
-            newinput = tocheck;
-            dshotcommand = 0;
-          }
-
-          if ((tocheck <= 47)&& (tocheck > 0)) {
-            newinput = 0;
-            dshotcommand = tocheck;  //  todo
-          }
-
-          if (tocheck == 0) {
-            newinput = 0;
-            dshotcommand = 0;
-          }
-        }
-      }
-      LED_OFF(LED2);
-      break;
-    }
-    lastnumber = dma_buffer[j];
-  }
-}
-
-void computeMSInput(){
-  int lastnumber = dma_buffer[0];
-
-  for ( int j = 1; j < 2; j++) {
-    // blank space
-    if(((dma_buffer[j] - lastnumber) < 1500) && ((dma_buffer[j] - lastnumber) > 0)) {
-      newinput = map((dma_buffer[j] - lastnumber),243,1200, 0, 2000);
-      break;
-    }
-    lastnumber = dma_buffer[j];
-  }
-}
-
-void computeOS125Input(){
-  int lastnumber = dma_buffer[0];
-
-  for (int j = 1; j < 2; j++) {
-    // blank space
-    if(((dma_buffer[j] - lastnumber) < 12300) && ((dma_buffer[j] - lastnumber) > 0)) {
-      newinput = map((dma_buffer[j] - lastnumber),6500,12000, 0, 2000);
-      break;
-    }
-    lastnumber = dma_buffer[j];
-  }
-}
-
-void computeOS42Input(){
-  int lastnumber = dma_buffer[0];
-  for ( int j = 1; j < 2; j++) {
-    // blank space
-    if(((dma_buffer[j] - lastnumber) < 4500) && ((dma_buffer[j] - lastnumber) > 0)) {
-      newinput = map((dma_buffer[j] - lastnumber),2020, 4032, 0, 2000);
-      break;
-    }
-    lastnumber = dma_buffer[j];
-  }
-}
-
-void computeServoInput(){
-  int lastnumber = dma_buffer[0];
-  for ( int j = 1; j < 3; j++) {
-    // blank space
-    if(((dma_buffer[j] - lastnumber) >1000 ) && ((dma_buffer[j] - lastnumber) < 2010)) {
-      newinput = map((dma_buffer[j] - lastnumber), 1090, 2000, 0, 2000);
-      break;
-    }
-    lastnumber = dma_buffer[j];
-  }
-}
-
-
-void computeDshotDMA(){
-  int lastnumber = dma_buffer[0];
-
-  for ( int j = 1; j < input_buffer_size; j++) {
-    // blank space
-    if(((dma_buffer[j] - lastnumber) > 50) && ((dma_buffer[j] - lastnumber) < 65000)) {
-      for (int i = 0; i < 16; i++) {
-        dpulse[i] = ((dma_buffer[j + i*2 +1] - dma_buffer[j + i*2]) / 13) - 1;
-      }
-
-      uint8_t calcCRC = ( (dpulse[0]^dpulse[4]^dpulse[8]) << 3
-                         |(dpulse[1]^dpulse[5]^dpulse[9]) << 2
-                         |(dpulse[2]^dpulse[6]^dpulse[10]) << 1
-                         |(dpulse[3]^dpulse[7]^dpulse[11])
-                         );
-      uint8_t checkCRC = (dpulse[12]<<3 | dpulse[13]<<2 | dpulse[14]<<1 | dpulse[15]);
-
-      int tocheck = (
-            dpulse[0] << 10 | dpulse[1] << 9 | dpulse[2] << 8 | dpulse[3] << 7
-          | dpulse[4] << 6 | dpulse[5] << 5 | dpulse[6] << 4 | dpulse[7] << 3
-          | dpulse[8] << 2 | dpulse[9] << 1 | dpulse[10]);
-
-      if(calcCRC == checkCRC) {
-        if (tocheck > 47) {
-          newinput = tocheck;
-          dshotcommand = 0;
-        }
-      }
-      if ((tocheck <= 47) && (tocheck > 0)) {
-        newinput = 0;
-        dshotcommand = tocheck;    // todo
-      }
-      if (tocheck == 0) {
-        newinput = 0;
-        dshotcommand = 0;
-      }
-
-      break;
-    }
-    lastnumber = dma_buffer[j];
-  }
-}
-
-void transferComplete(){
-// TIM15->CNT = 1;
-// compit = 0;
-  signaltimeout = 0;
-  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_3);
-
-  if (inputSet == 1) {
-    if (dshot == 1) {
-      computeDshotDMA();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
-    }
-
-    if (proshot == 1) {
-      computeProshotDMA();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 16);
-    }
-
-    if  (servoPwm == 1) {
-      computeServoInput();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-    }
-
-    if  (multishot) {
-      computeMSInput();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-
-    }
-
-    if  (oneshot125) {
-      computeOS125Input();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-
-    }
-
-    if  (oneshot42) {
-      computeOS42Input();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-    }
-  }
-}
-
 
 void changeDutyCycleWithSin() {
   if (!rising) {
@@ -785,7 +530,7 @@ int main(void) {
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
   while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64) != HAL_OK);
-	//while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC1ConvertedValues, 2) != HAL_OK);
+  //while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC1ConvertedValues, 2) != HAL_OK);
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 
 
@@ -839,135 +584,133 @@ int main(void) {
 
     compit = 0;
 
-    control_loop_count++;
-    if (control_loop_count > 1) {
-      control_loop_count = 0;
 
-//  1-5: beep (1= low freq. 5 = high freq.)
-//  6: ESC info request (FW Version and SN sent over the tlm wire)
-//  7: rotate in one direction
-//  8: rotate in the other direction
-//  9: 3d mode off
-//  10: 3d mode on
-//  11: ESC settings request (saved settings over the TLM wire) (planed but not there yet)
-//  12: save Settings
 
-      if (dshotcommand > 0) {
-        if (dshotcommand == 1) {
-          playStartupTune();
-        }
-        if (dshotcommand == 2) {
-          playInputTune();
-        }
-        if (dshotcommand == 21) {
-          forward =  dir_reversed;
-        }
-        if (dshotcommand == 20) {         // forward = 1 if dir_reversed = 0
-          forward = 1 - dir_reversed;
-        }
-        if (dshotcommand == 7) {
-          dir_reversed = 0;
+    //  1-5: beep (1= low freq. 5 = high freq.)
+    //  6: ESC info request (FW Version and SN sent over the tlm wire)
+    //  7: rotate in one direction
+    //  8: rotate in the other direction
+    //  9: 3d mode off
+    //  10: 3d mode on
+    //  11: ESC settings request (saved settings over the TLM wire) (planed but not there yet)
+    //  12: save Settings
 
-        }
-        if (dshotcommand == 8) {
-          dir_reversed = 1;
-        }
-        if (dshotcommand == 9) {
-          bi_direction = 0;
-          armed = 0;
-
-        }
-        if (dshotcommand == 10) {
-          bi_direction = 1;
-          armed = 0;
-        }
-        if (dshotcommand == 12) {
-          escConfig()->vehicle_mode = vehicle_mode;
-          escConfig()->dir_reversed = dir_reversed;
-          escConfig()->bi_direction = bi_direction;
-          configWrite();
-          // reset esc, iwdg timeout
-          while(true);
-        }
+    if (dshotcommand > 0) {
+      if (dshotcommand == 1) {
+        playStartupTune();
       }
-
-      if (bi_direction == 1 && (proshot == 0 && dshot == 0)) {
-        //char oldbrake = brake;
-        if ( newinput > 1100 ) {
-          if (forward == dir_reversed) {
-            adjusted_input = 0;
-            prop_brake_active = 1;
-            forward = 1 - dir_reversed;
-            //	HAL_Delay(1);
-          }
-
-          if (prop_brake_active == 0) {
-            adjusted_input = (newinput - 1050)*3;
-          }
-        }
-
-        if (newinput < 800) {
-          if (forward == (1 - dir_reversed)) {
-            prop_brake_active = 1;
-            adjusted_input = 0;
-            forward = dir_reversed;
-            //	HAL_Delay(1);
-          }
-
-          if (prop_brake_active == 0) {
-            adjusted_input = (800 - newinput) * 3;
-          }
-        }
-
-        if (zctimeout >= zc_timeout_threshold) {
-          //	adjusted_input = 0;
-          if (vehicle_mode != 3) {                // car mode requires throttle return to center before direction change
-            prop_brake_active = 0;
-          }
-          bemf_counts = 0;
-        }
-
-        if (newinput > 800 && newinput < 1100) {
-          adjusted_input = 0;
-          prop_brake_active = 0;
-        }
-
-      } else if((proshot || dshot ) && bi_direction) {
-        if ( newinput > 1097 ) {
-
-          if (forward == dir_reversed) {
-            forward = 1 - dir_reversed;
-            bemf_counts =0;
-          }
-          adjusted_input = (newinput - 1100) * 2 + 100;
-        } if ( newinput <= 1047 &&  newinput > 0) {
-          if(forward == (1 - dir_reversed)) {
-            bemf_counts =0;
-            forward = dir_reversed;
-          }
-          adjusted_input = (newinput - 90) * 2;
-        }
-        if ((newinput > 1047 && newinput < 1098 ) || newinput <= 120) {
-          adjusted_input = 0;
-        }
-      } else {
-        adjusted_input = newinput;
+      if (dshotcommand == 2) {
+        playInputTune();
       }
-
-      if (adjusted_input > 2000) {
-        adjusted_input = 2000;
+      if (dshotcommand == 21) {
+        forward =  dir_reversed;
       }
-
-      if (adjusted_input - input > 25) {
-        input = input + 5;
-      } else {
-        input = adjusted_input;
+      if (dshotcommand == 20) {           // forward = 1 if dir_reversed = 0
+        forward = 1 - dir_reversed;
       }
+      if (dshotcommand == 7) {
+        dir_reversed = 0;
 
-      if (adjusted_input <= input) {
-        input = adjusted_input;
+      }
+      if (dshotcommand == 8) {
+        dir_reversed = 1;
+      }
+      if (dshotcommand == 9) {
+        bi_direction = 0;
+        armed = 0;
+
+      }
+      if (dshotcommand == 10) {
+        bi_direction = 1;
+        armed = 0;
+      }
+      if (dshotcommand == 12) {
+        escConfig()->vehicle_mode = vehicle_mode;
+        escConfig()->dir_reversed = dir_reversed;
+        escConfig()->bi_direction = bi_direction;
+        configWrite();
+        // reset esc, iwdg timeout
+        while(true);
       }
     }
+
+    if (bi_direction == 1 && (proshot == 0 && dshot == 0)) {
+      //char oldbrake = brake;
+      if ( newinput > 1100 ) {
+        if (forward == dir_reversed) {
+          adjusted_input = 0;
+          prop_brake_active = 1;
+          forward = 1 - dir_reversed;
+          //	HAL_Delay(1);
+        }
+
+        if (prop_brake_active == 0) {
+          adjusted_input = (newinput - 1050)*3;
+        }
+      }
+
+      if (newinput < 800) {
+        if (forward == (1 - dir_reversed)) {
+          prop_brake_active = 1;
+          adjusted_input = 0;
+          forward = dir_reversed;
+          //	HAL_Delay(1);
+        }
+
+        if (prop_brake_active == 0) {
+          adjusted_input = (800 - newinput) * 3;
+        }
+      }
+
+      if (zctimeout >= zc_timeout_threshold) {
+        //	adjusted_input = 0;
+        if (vehicle_mode != 3) {                  // car mode requires throttle return to center before direction change
+          prop_brake_active = 0;
+        }
+        bemf_counts = 0;
+      }
+
+      if (newinput > 800 && newinput < 1100) {
+        adjusted_input = 0;
+        prop_brake_active = 0;
+      }
+
+    } else if((proshot || dshot ) && bi_direction) {
+      if ( newinput > 1097 ) {
+
+        if (forward == dir_reversed) {
+          forward = 1 - dir_reversed;
+          bemf_counts =0;
+        }
+        adjusted_input = (newinput - 1100) * 2 + 100;
+      } if ( newinput <= 1047 &&  newinput > 0) {
+        if(forward == (1 - dir_reversed)) {
+          bemf_counts =0;
+          forward = dir_reversed;
+        }
+        adjusted_input = (newinput - 90) * 2;
+      }
+      if ((newinput > 1047 && newinput < 1098 ) || newinput <= 120) {
+        adjusted_input = 0;
+      }
+    } else {
+      adjusted_input = newinput;
+    }
+
+    if (adjusted_input > 2000) {
+      adjusted_input = 2000;
+    }
+
+    if (adjusted_input - input > 25) {
+      input = input + 5;
+    } else {
+      input = adjusted_input;
+    }
+
+    if (adjusted_input <= input) {
+      input = adjusted_input;
+    }
+
 
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
     if (inputSet == 0) {
