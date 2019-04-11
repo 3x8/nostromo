@@ -515,9 +515,10 @@ void detectInput(){
   HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
 }
 
-void computeProshotDMA(){
+void computeProshotDMA() {
   //debug
   LED_ON(LED1);
+  LED_ON(LED2);
 
   int lastnumber = dma_buffer[0];
   for ( int j = 1; j < 9; j++) {
@@ -544,25 +545,28 @@ void computeProshotDMA(){
 
       if (calcCRC == checkCRC) {
         //debug
-        LED_ON(LED2);
+        LED_OFF(LED1);
         int tocheck = ((propulse[0]<<7 | propulse[1]<<3 | propulse[2]>>1));
         if (tocheck > 2047 || tocheck < 0) {
           break;
-        }else{
+        } else {
           if(tocheck > 47) {
             newinput = tocheck;
             dshotcommand = 0;
           }
+
           if ((tocheck <= 47)&& (tocheck > 0)) {
             newinput = 0;
             dshotcommand = tocheck;  //  todo
           }
+
           if (tocheck == 0) {
             newinput = 0;
             dshotcommand = 0;
           }
         }
       }
+      LED_OFF(LED2);
       break;
     }
     lastnumber = dma_buffer[j];
@@ -832,8 +836,6 @@ int main(void) {
     watchdogFeed();
 
     LED_OFF(LED0);
-    LED_OFF(LED1);
-    LED_OFF(LED2);
 
     compit = 0;
 
