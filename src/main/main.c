@@ -713,13 +713,14 @@ int main(void) {
 
 
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
+
     if (inputSet == 0) {
       HAL_Delay(10);
       detectInput();
     }
 
     if (!armed) {
-      if ((inputSet == 1)&&(input == 0)) {
+      if ((inputSet == 1) && (input == 0)) {
         armedcount++;
         HAL_Delay(1);
         if (armedcount > 1000) {
@@ -727,6 +728,7 @@ int main(void) {
           playInputTune();
         }
       }
+      
       if (input > 1) {
         armedcount = 0;
       }
