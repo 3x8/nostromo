@@ -26,11 +26,8 @@ int adjusted_input;
 int dshotcommand = 0;
 uint8_t calcCRC;
 uint8_t checkCRC;
-//uint16_t error = 0;
 
 uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
-
-uint16_t tempbrake = 0;
 
 // increase divisor to decrease advance
 uint16_t advancedivisor = 8;
@@ -376,7 +373,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   if (compit > 200) {
     HAL_COMP_Stop_IT(&hcomp1);
-    //error = 1;
     return;
   }
   compit +=1;
@@ -412,10 +408,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   waitTime = commutation_interval /2    - advance;
   blanktime = commutation_interval / 4;
 
-  if(tempbrake) {
-    HAL_COMP_Stop_IT(&hcomp1);
-    return;
-  }
   if (sensorless) {
     while (TIM3->CNT  < waitTime) {
     }
@@ -909,8 +901,6 @@ int main(void) {
 
           if (prop_brake_active == 0) {
             adjusted_input = (newinput - 1050)*3;
-            //	tempbrake = 0;
-            //	}
           }
         }
 
@@ -925,7 +915,6 @@ int main(void) {
           if (prop_brake_active == 0) {
             adjusted_input = (800 - newinput) * 3;
           }
-          //	tempbrake = 0;
         }
 
         if (zctimeout >= zc_timeout_threshold) {
@@ -1034,7 +1023,6 @@ int main(void) {
       input = 0;
       armed = 0;
       armedcount = 0;
-      //error = 1;
       //	  duty_cycle = 0;          //mid point
     }
 
@@ -1045,7 +1033,7 @@ int main(void) {
         allOff();
       }
       duty_cycle = 0;
-      if(brake || tempbrake) {
+      if(brake) {
         fullBrake();
         duty_cycle = 0;
         //HAL_COMP_Stop_IT(&hcomp1);
