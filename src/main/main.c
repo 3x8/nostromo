@@ -6,10 +6,6 @@ COMP_HandleTypeDef hcomp1;
 TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
-
-uint16_t bi_direction;
-uint16_t dir_reversed;
-
 // 1 for complementary pwm , 0 for diode freewheeling
 uint16_t slow_decay = 1;
 // apply full motor brake on stop
@@ -18,12 +14,10 @@ uint16_t start_power = 150;
 uint16_t prop_brake, prop_brake_active;
 uint16_t prop_brake_strength = 300;
 
-
 // increase divisor to decrease advance
 uint16_t advancedivisor = 8;
 //char advancedivisorup = 3;
 //char advancedivisordown = 3;
-
 
 uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
 // set proportianal to commutation time. with advance divisor
@@ -52,13 +46,9 @@ uint8_t started;
 uint8_t armed;
 uint32_t armedcount;
 
-
-
 uint32_t voltageraw;
 uint32_t currentraw;
 uint32_t ADC1ConvertedValues[2];
-
-
 
 //ToDo input
 uint8_t dshotcommand, inputSet;
@@ -79,14 +69,7 @@ uint32_t signal_timeout_threshold = 10000;
 uint32_t adjusted_input;
 
 
-
-
-
-
-
-
-
-
+//ToDo
 void getADCs(){
   voltageraw = ADC1ConvertedValues[0];
   currentraw = ADC1ConvertedValues[1];
@@ -137,12 +120,9 @@ int main(void) {
 
 
   //ToDo
-  dir_reversed = escConfig()->spinDirection;
-  bi_direction = escConfig()->mode3D;
 
 
-
-  if(bi_direction) {
+  if(escConfig()->mode3D) {
     newinput = 1001;
     //	start_power = 175;
   }
@@ -175,30 +155,28 @@ int main(void) {
       playInputTune();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
-      dir_reversed = 0;
+      escConfig()->spinDirection = 0;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
-      dir_reversed = 1;
+      escConfig()->spinDirection = 1;
       armed = 0;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
-      forward = 1 - dir_reversed;
+      forward = escConfig()->spinDirection;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
-      forward =  dir_reversed;
+      forward = !escConfig()->spinDirection;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
-      bi_direction = 0;
+      escConfig()->mode3D = 0;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
-      bi_direction = 1;
+      escConfig()->mode3D = 1;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_SAVE:
-      escConfig()->spinDirection = dir_reversed;
-      escConfig()->mode3D = bi_direction;
       configWrite();
       // reset esc, iwdg timeout
       while(true);
@@ -210,13 +188,13 @@ int main(void) {
 
 
 
-    if (bi_direction == 1 && (proshot == 0 && dshot == 0)) {
+    if (escConfig()->mode3D == 1 && (proshot == 0 && dshot == 0)) {
       //char oldbrake = brake;
       if ( newinput > 1100 ) {
-        if (forward == dir_reversed) {
+        if (forward == escConfig()->spinDirection) {
           adjusted_input = 0;
           prop_brake_active = 1;
-          forward = 1 - dir_reversed;
+          forward = 1 - escConfig()->spinDirection;
           //	HAL_Delay(1);
         }
 
@@ -226,10 +204,10 @@ int main(void) {
       }
 
       if (newinput < 800) {
-        if (forward == (1 - dir_reversed)) {
+        if (forward == (1 - escConfig()->spinDirection)) {
           prop_brake_active = 1;
           adjusted_input = 0;
-          forward = dir_reversed;
+          forward = escConfig()->spinDirection;
           //	HAL_Delay(1);
         }
 
@@ -248,18 +226,18 @@ int main(void) {
         prop_brake_active = 0;
       }
 
-    } else if((proshot || dshot ) && bi_direction) {
+    } else if((proshot || dshot ) && escConfig()->mode3D) {
       if ( newinput > 1097 ) {
 
-        if (forward == dir_reversed) {
-          forward = 1 - dir_reversed;
+        if (forward == escConfig()->spinDirection) {
+          forward = 1 - escConfig()->spinDirection;
           bemf_counts =0;
         }
         adjusted_input = (newinput - 1100) * 2 + 100;
       } if ( newinput <= 1047 &&  newinput > 0) {
-        if(forward == (1 - dir_reversed)) {
+        if(forward == (1 - escConfig()->spinDirection)) {
           bemf_counts =0;
-          forward = dir_reversed;
+          forward = escConfig()->spinDirection;
         }
         adjusted_input = (newinput - 90) * 2;
       }

@@ -5,11 +5,11 @@
 #define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct escConfig_s {
-  uint8_t spinDirection;
-  uint8_t mode3D;
-  uint8_t led0;
-  uint8_t led1;
-  uint8_t led2;
+  bool spinDirection;
+  bool mode3D;
+  bool led0;
+  bool led1;
+  bool led2;
 } escConfig_t;
 
 typedef struct master_s {
