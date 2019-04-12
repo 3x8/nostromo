@@ -14,7 +14,6 @@ extern uint32_t input, newinput;
 
 extern uint32_t signaltimeout;
 
-
 extern TIM_HandleTypeDef htim15;
 
 

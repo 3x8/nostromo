@@ -319,7 +319,6 @@ void startMotor() {
   slow_decay = decaystate;    // return to normal
   sensorless = 1;
   bemf_counts = 0;
-
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
@@ -361,7 +360,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   commutation_interval = (commutation_interval + thiszctime) / 2;
 
   advance = commutation_interval / advancedivisor;
-  waitTime = commutation_interval /2    - advance;
+  waitTime = commutation_interval / 2 - advance;
   blanktime = commutation_interval / 4;
 
   if (sensorless) {
@@ -400,9 +399,11 @@ void zc_found_routine() {
 
   thiszctime = TIM3->CNT;
 
+  //ToDo 
+  /*
   if (thiszctime < lastzctime) {
     lastzctime = lastzctime - 65535;
-  }
+  }*/
 
   if (thiszctime > lastzctime) {
     //if (((thiszctime - lastzctime) > (commutation_interval * 2)) || ((thiszctime - lastzctime < commutation_interval/2))){
