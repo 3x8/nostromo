@@ -120,7 +120,7 @@ int main(void) {
 
 
   //ToDo
-
+  forward = escConfig()->spinDirection;
 
   if(escConfig()->mode3D) {
     newinput = 1001;
