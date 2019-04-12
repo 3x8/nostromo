@@ -136,7 +136,7 @@ int main(void) {
     watchdogFeed();
 
     //debug
-    LED_OFF(LED0);
+    //LED_OFF(LED0);
 
     compit = 0;
 

@@ -112,7 +112,7 @@ void computeProshotDMA() {
       break;
     }
 
-    //lastnumber = dma_buffer[j];
+    lastnumber = dma_buffer[j];
   }
 }
 
@@ -226,7 +226,9 @@ void transferComplete() {
 
     if (proshot == 1) {
       computeProshotDMA();
+      //debug
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 16);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 8);
     }
 
     if (servoPwm == 1) {

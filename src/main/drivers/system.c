@@ -209,9 +209,12 @@ void systemTimer15Init(void) {
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK);
 
+  //debug
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_BOTHEDGE;
+  //sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
+  //sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 3;
   while (HAL_TIM_IC_ConfigChannel(&htim15, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
 }

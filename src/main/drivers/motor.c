@@ -322,7 +322,8 @@ void startMotor() {
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   timestamp = TIM3->CNT;
-  LED_ON(LED0);
+  //debug
+  //LED_ON(LED0);
 
   if (compit > 200) {
     HAL_COMP_Stop_IT(&hcomp1);
