@@ -137,8 +137,8 @@ int main(void) {
 
 
   //ToDo
-  dir_reversed = escConfig()->dir_reversed;
-  bi_direction = escConfig()->bi_direction;
+  dir_reversed = escConfig()->spinDirection;
+  bi_direction = escConfig()->mode3D;
 
 
 
@@ -176,9 +176,11 @@ int main(void) {
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       dir_reversed = 0;
+      armed = 0;
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       dir_reversed = 1;
+      armed = 0;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
       forward = 1 - dir_reversed;
@@ -195,8 +197,8 @@ int main(void) {
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_SAVE:
-      escConfig()->dir_reversed = dir_reversed;
-      escConfig()->bi_direction = bi_direction;
+      escConfig()->spinDirection = dir_reversed;
+      escConfig()->mode3D = bi_direction;
       configWrite();
       // reset esc, iwdg timeout
       while(true);

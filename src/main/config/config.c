@@ -16,8 +16,11 @@ void configReset(void) {
   masterConfig.version = EEPROM_CONF_VERSION;
 
   // assign default config
-  escConfig()->dir_reversed = 0;
-  escConfig()->bi_direction = 0;
+  escConfig()->spinDirection = 0;
+  escConfig()->mode3D = 0;
+  escConfig()->led0 = 0;
+  escConfig()->led1 = 0;
+  escConfig()->led2 = 0;
 
   eepromWrite();
 }
