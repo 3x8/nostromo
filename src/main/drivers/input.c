@@ -88,6 +88,9 @@ void computeProshotDMA() {
       }
 
       if (calcCRC == checkCRC) {
+        //debug
+        LED_ON(LED2);
+        
         int tocheck = ((propulse[0] << 7 | propulse[1] << 3 | propulse[2] >> 1));
         if (tocheck > 2047 || tocheck < 0) {
           break;
@@ -253,4 +256,5 @@ void transferComplete() {
 
   //debug
   LED_OFF(LED1);
+  LED_OFF(LED2);
 }
