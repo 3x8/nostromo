@@ -5,14 +5,14 @@ uint16_t step = 1;
 
 uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
+// set proportianal to commutation time. with advance divisor
+uint32_t advance = 0;
 
 extern COMP_HandleTypeDef hcomp1;
 extern TIM_HandleTypeDef htim1;
 
 
 extern uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
-// set proportianal to commutation time. with advance divisor
-extern uint32_t advance;
 extern uint32_t blanktime, waitTime, compit;
 extern uint32_t filter_level;
 extern uint32_t filter_delay;

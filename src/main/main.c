@@ -20,8 +20,7 @@ uint16_t advancedivisor = 8;
 //char advancedivisordown = 3;
 
 uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
-// set proportianal to commutation time. with advance divisor
-uint32_t advance = 0;
+
 uint32_t blanktime, waitTime, compit;
 uint32_t filter_level = 1;
 uint32_t filter_delay = 2;
@@ -121,7 +120,7 @@ int main(void) {
 
   //ToDo
   // 3D spinDirection and normalSpin  opposed
-  // what is normal ? 
+  // what is normal ?
   forward = escConfig()->spinDirection;
 
   if(escConfig()->mode3D) {
