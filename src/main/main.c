@@ -120,6 +120,8 @@ int main(void) {
 
 
   //ToDo
+  // 3D spinDirection and normalSpin  opposed
+  // what is normal ? 
   forward = escConfig()->spinDirection;
 
   if(escConfig()->mode3D) {
