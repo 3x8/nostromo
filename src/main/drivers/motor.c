@@ -8,12 +8,19 @@ uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 10
 // set proportianal to commutation time. with advance divisor
 uint32_t advance = 0;
 
+// increase divisor to decrease advance
+uint16_t advancedivisor = 8;
+//char advancedivisorup = 3;
+//char advancedivisordown = 3;
+
+uint32_t blanktime, waitTime, compit;
+
 extern COMP_HandleTypeDef hcomp1;
 extern TIM_HandleTypeDef htim1;
 
 
 extern uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
-extern uint32_t blanktime, waitTime, compit;
+//extern uint32_t blanktime, waitTime, compit;
 extern uint32_t filter_level;
 extern uint32_t filter_delay;
 
@@ -51,6 +58,9 @@ extern uint16_t advancedivisor;
 
 extern uint32_t input, newinput;
 
+void advanceDivisor() {
+    advancedivisor = map((commutation_interval),100,5000, 2, 20);
+}
 
 // phaseB qfnf051 , phase A qfp32
 #ifdef MP6531

@@ -1,5 +1,7 @@
 #include "main.h"
 
+extern uint32_t compit;
+
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
 COMP_HandleTypeDef hcomp1;
@@ -14,14 +16,9 @@ uint16_t start_power = 150;
 uint16_t prop_brake, prop_brake_active;
 uint16_t prop_brake_strength = 300;
 
-// increase divisor to decrease advance
-uint16_t advancedivisor = 8;
-//char advancedivisorup = 3;
-//char advancedivisordown = 3;
-
 uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
 
-uint32_t blanktime, waitTime, compit;
+
 uint32_t filter_level = 1;
 uint32_t filter_delay = 2;
 
@@ -156,11 +153,11 @@ int main(void) {
       playInputTune();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
-      escConfig()->spinDirection = 0;
+      escConfig()->spinDirection = 1;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
-      escConfig()->spinDirection = 1;
+      escConfig()->spinDirection = 0;
       armed = 0;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
@@ -195,7 +192,7 @@ int main(void) {
         if (forward == escConfig()->spinDirection) {
           adjusted_input = 0;
           prop_brake_active = 1;
-          forward = 1 - escConfig()->spinDirection;
+          forward = !escConfig()->spinDirection;
           //	HAL_Delay(1);
         }
 
@@ -205,7 +202,7 @@ int main(void) {
       }
 
       if (newinput < 800) {
-        if (forward == (1 - escConfig()->spinDirection)) {
+        if (forward == (!escConfig()->spinDirection)) {
           prop_brake_active = 1;
           adjusted_input = 0;
           forward = escConfig()->spinDirection;
@@ -231,12 +228,12 @@ int main(void) {
       if ( newinput > 1097 ) {
 
         if (forward == escConfig()->spinDirection) {
-          forward = 1 - escConfig()->spinDirection;
+          forward = !escConfig()->spinDirection;
           bemf_counts =0;
         }
         adjusted_input = (newinput - 1100) * 2 + 100;
       } if ( newinput <= 1047 &&  newinput > 0) {
-        if(forward == (1 - escConfig()->spinDirection)) {
+        if(forward == (!escConfig()->spinDirection)) {
           bemf_counts =0;
           forward = escConfig()->spinDirection;
         }
@@ -263,8 +260,7 @@ int main(void) {
       input = adjusted_input;
     }
 
-
-    advancedivisor = map((commutation_interval),100,5000, 2, 20);
+    advanceDivisor();
 
     if (inputSet == 0) {
       HAL_Delay(10);

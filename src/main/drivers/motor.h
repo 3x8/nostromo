@@ -6,6 +6,8 @@
 #include "stm32f0xx_hal_tim.h"
 #include "stm32f0xx_hal_comp.h"
 
+void advanceDivisor();
+
 void phaseA(uint8_t newPhase);
 void phaseB(uint8_t newPhase);
 void phaseC(uint8_t newPhase);
