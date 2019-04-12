@@ -16,7 +16,6 @@ void configReset(void) {
   masterConfig.version = EEPROM_CONF_VERSION;
 
   // assign default config
-  escConfig()->vehicle_mode = 1;
   escConfig()->dir_reversed = 0;
   escConfig()->bi_direction = 0;
 

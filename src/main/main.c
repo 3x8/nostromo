@@ -7,13 +7,10 @@ TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 
-
-// 1 = quad mode, 2 = crawler <-> thruster mode,  3 = rc car mode,  4 = car mode with auto reverse after stop
-uint16_t vehicle_mode = 1;
 uint16_t bi_direction;
 uint16_t dir_reversed;
 
-// for complementary pwm , 0 for diode freewheeling
+// 1 for complementary pwm , 0 for diode freewheeling
 uint16_t slow_decay = 1;
 // apply full motor brake on stop
 uint16_t brake = 1;
@@ -140,34 +137,10 @@ int main(void) {
 
 
   //ToDo
-  if (vehicle_mode == 1) {                    // quad single direction
-    vehicle_mode = escConfig()->vehicle_mode;
-    dir_reversed = escConfig()->dir_reversed;
-    bi_direction = escConfig()->bi_direction;
-  }
-  if (vehicle_mode == 2) {                   // crawler or thruster
-    bi_direction = 1;
-    slow_decay = 1;                       // for complementary pwm , 0 for diode freewheeling
-    brake = 1;                           // apply full motor brake on stop
-    start_power = 150;
+  dir_reversed = escConfig()->dir_reversed;
+  bi_direction = escConfig()->bi_direction;
 
-  }
-  if (vehicle_mode == 3) {                 // rc car 50 percent brake on reverse.
-    bi_direction = 1;
-    slow_decay = 0;                       // for complementary pwm , 0 for diode freewheeling
-    brake = 0;                           // apply full motor brake on stop
-    // start_power = 150;
-    prop_brake = 1;
-    prop_brake_strength = 900;
-  }
-  if (vehicle_mode == 4) {                 // rc car 50 percent brake on reverse.
-    bi_direction = 1;
-    slow_decay = 0;                         // for complementary pwm , 0 for diode freewheeling
-    brake = 0;                             // apply full motor brake on stop
-    // start_power = 150;
-    prop_brake = 1;
-    prop_brake_strength = 800;
-  }
+
 
   if(bi_direction) {
     newinput = 1001;
@@ -184,59 +157,56 @@ int main(void) {
   while (true) {
     watchdogFeed();
 
+    //debug
     LED_OFF(LED0);
 
     compit = 0;
 
-
-
-    //  1-5: beep (1= low freq. 5 = high freq.)
-    //  6: ESC info request (FW Version and SN sent over the tlm wire)
-    //  7: rotate in one direction
-    //  8: rotate in the other direction
-    //  9: 3d mode off
-    //  10: 3d mode on
-    //  11: ESC settings request (saved settings over the TLM wire) (planed but not there yet)
-    //  12: save Settings
-
-    if (dshotcommand > 0) {
-      if (dshotcommand == 1) {
-        playStartupTune();
-      }
-      if (dshotcommand == 2) {
-        playInputTune();
-      }
-      if (dshotcommand == 21) {
-        forward =  dir_reversed;
-      }
-      if (dshotcommand == 20) {           // forward = 1 if dir_reversed = 0
-        forward = 1 - dir_reversed;
-      }
-      if (dshotcommand == 7) {
-        dir_reversed = 0;
-
-      }
-      if (dshotcommand == 8) {
-        dir_reversed = 1;
-      }
-      if (dshotcommand == 9) {
-        bi_direction = 0;
-        armed = 0;
-
-      }
-      if (dshotcommand == 10) {
-        bi_direction = 1;
-        armed = 0;
-      }
-      if (dshotcommand == 12) {
-        escConfig()->vehicle_mode = vehicle_mode;
-        escConfig()->dir_reversed = dir_reversed;
-        escConfig()->bi_direction = bi_direction;
-        configWrite();
-        // reset esc, iwdg timeout
-        while(true);
-      }
+    //Todo lock for mottor running
+    switch (dshotcommand) {
+    case DSHOT_CMD_MOTOR_STOP:
+      //ToDo
+      //input = 0;
+      break;
+    case DSHOT_CMD_BEACON1:
+      playStartupTune();
+      break;
+    case DSHOT_CMD_BEACON2:
+      playInputTune();
+      break;
+    case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
+      dir_reversed = 0;
+      break;
+    case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
+      dir_reversed = 1;
+      break;
+    case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
+      forward = 1 - dir_reversed;
+      break;
+    case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
+      forward =  dir_reversed;
+      break;
+    case DSHOT_CMD_SETTING_3D_MODE_OFF:
+      bi_direction = 0;
+      armed = 0;
+      break;
+    case DSHOT_CMD_SETTING_3D_MODE_ON:
+      bi_direction = 1;
+      armed = 0;
+      break;
+    case DSHOT_CMD_SETTING_SAVE:
+      escConfig()->dir_reversed = dir_reversed;
+      escConfig()->bi_direction = bi_direction;
+      configWrite();
+      // reset esc, iwdg timeout
+      while(true);
+    default:
+      break;
     }
+
+
+
+
 
     if (bi_direction == 1 && (proshot == 0 && dshot == 0)) {
       //char oldbrake = brake;
@@ -267,10 +237,7 @@ int main(void) {
       }
 
       if (zctimeout >= zc_timeout_threshold) {
-        //	adjusted_input = 0;
-        if (vehicle_mode != 3) {                  // car mode requires throttle return to center before direction change
-          prop_brake_active = 0;
-        }
+        prop_brake_active = 0;
         bemf_counts = 0;
       }
 

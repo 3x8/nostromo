@@ -5,7 +5,6 @@
 #define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct escConfig_s {
-  uint16_t vehicle_mode;
   uint16_t dir_reversed;
   uint16_t bi_direction;
 } escConfig_t;
