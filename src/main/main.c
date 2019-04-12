@@ -16,7 +16,7 @@ uint16_t start_power = 150;
 uint16_t prop_brake, prop_brake_active;
 uint16_t prop_brake_strength = 300;
 
-uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
+uint32_t sensorless, commutation_interval;
 
 
 uint32_t filter_level = 1;
@@ -25,13 +25,10 @@ uint32_t filter_delay = 2;
 uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zc_timeout_threshold = 2000;
-uint32_t tim2_start_arr = 9000;
+
 uint32_t duty_cycle = 100;
 
-//ToDo enum
-uint8_t pwm = 1;
-uint8_t floating = 2;
-uint8_t lowside = 3;
+
 
 uint32_t bemf_counts;
 

@@ -3,6 +3,8 @@
 uint32_t timestamp;
 uint16_t step = 1;
 
+uint32_t thiszctime, lastzctime;
+
 uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
 // set proportianal to commutation time. with advance divisor
@@ -15,11 +17,15 @@ uint16_t advancedivisor = 8;
 
 uint32_t blanktime, waitTime, compit;
 
+
+uint32_t tim2_start_arr = 9000;
+
+
 extern COMP_HandleTypeDef hcomp1;
 extern TIM_HandleTypeDef htim1;
 
 
-extern uint32_t thiszctime, lastzctime, sensorless, commutation_interval;
+extern uint32_t sensorless, commutation_interval;
 //extern uint32_t blanktime, waitTime, compit;
 extern uint32_t filter_level;
 extern uint32_t filter_delay;
@@ -27,13 +33,9 @@ extern uint32_t filter_delay;
 extern uint32_t zctimeout;
 // depends on speed of main loop
 extern uint32_t zc_timeout_threshold;
-extern uint32_t tim2_start_arr;
 extern uint32_t duty_cycle;
 
-//ToDo enum
-extern uint8_t pwm;
-extern uint8_t floating;
-extern uint8_t lowside;
+
 
 extern uint32_t bemf_counts;
 

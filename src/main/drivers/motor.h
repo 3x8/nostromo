@@ -6,6 +6,12 @@
 #include "stm32f0xx_hal_tim.h"
 #include "stm32f0xx_hal_comp.h"
 
+typedef enum {
+  pwm = 1,
+  floating,
+  lowside
+} motorHbridgeStateEnum;
+
 void advanceDivisor();
 
 void phaseA(uint8_t newPhase);

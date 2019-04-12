@@ -2,17 +2,6 @@
 
 #include "main.h"
 
-void detectInput();
-void computeProshotDMA();
-void computeMSInput();
-void computeOS125Input();
-void computeOS42Input();
-void computeServoInput();
-void computeDshotDMA();
-void transferComplete();
-
-long map(long x, long in_min, long in_max, long out_min, long out_max);
-
 typedef enum {
     DSHOT_CMD_MOTOR_STOP = 0,
     DSHOT_CMD_BEACON1,
@@ -43,3 +32,15 @@ typedef enum {
     DSHOT_CMD_SIGNAL_LINE_CONTINUOUS_ERPM_TELEMETRY = 33,
     DSHOT_CMD_MAX = 47
 } dshotCommandsEnum;
+
+void detectInput();
+void transferComplete();
+
+void computeProshotDMA();
+void computeMSInput();
+void computeOS125Input();
+void computeOS42Input();
+void computeServoInput();
+void computeDshotDMA();
+
+long map(long x, long in_min, long in_max, long out_min, long out_max);
