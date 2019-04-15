@@ -22,7 +22,7 @@ uint32_t bemf_counts;
 extern bool motorBrakeActiveProportional;
 extern bool motorDirection;
 extern bool motorRunning;
-bool motorStarted;
+bool motorStartup;
 
 //ToDo input
 uint32_t input;
@@ -50,7 +50,7 @@ int main(void) {
   systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
-  
+
   watchdogInit(2000);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
@@ -181,7 +181,7 @@ int main(void) {
 
     if ((input > 47) && (inputArmed)) {
       motorBrakeActiveProportional = false;
-      motorStarted = true;
+      motorStartup = true;
 
       dutyCycle = input / 2 - 10;
 
@@ -213,7 +213,7 @@ int main(void) {
     inputDisarmCheck();
 
     if (input <= 47) {
-      motorStarted = false;
+      motorStartup = false;
 
       switch(escConfig()->motorBrakeState) {
         case BRAKE_FULL:
@@ -254,7 +254,7 @@ int main(void) {
       filter_level = 0;
     }
 
-    if (motorStarted) {
+    if (motorStartup) {
       if (!motorRunning) {
         zctimeout = 0;
         // safety on for input testing
@@ -268,7 +268,7 @@ int main(void) {
       zc_timeout_threshold = 2000;
     }
 
-    zctimeout++;                                            // move to motorStarted if
+    zctimeout++;                                            // move to motorStartup if
     if (zctimeout > zc_timeout_threshold) {
       sensorless = 0;
       HAL_COMP_Stop_IT(&hcomp1);
