@@ -18,6 +18,7 @@
 #include "stm32f0xx_ll_dma.h"
 
 #include "common/common.h"
+#include "drivers/adc.h"
 #include "drivers/led.h"
 #include "drivers/eeprom.h"
 #include "drivers/watchdog.h"

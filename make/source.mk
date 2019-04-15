@@ -18,6 +18,7 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
                     $(TARGET_DIR_SRC) \
                     main.c \
                     common/common.c \
+                    drivers/adc.c \
                     drivers/led.c \
                     drivers/eeprom.c \
                     drivers/watchdog.c \

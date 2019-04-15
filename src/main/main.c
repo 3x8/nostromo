@@ -1,7 +1,5 @@
 #include "main.h"
 
-extern uint32_t compit;
-
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
 COMP_HandleTypeDef hcomp1;
@@ -9,17 +7,15 @@ TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 
+//ToDo motor
+extern uint32_t compit;
 uint32_t sensorless, commutation_interval;
-
 uint32_t filter_level = 1;
 uint32_t filter_delay = 2;
-
 uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zc_timeout_threshold = 2000;
-
 uint32_t dutyCycle = 100;
-
 uint32_t bemf_counts;
 
 //ToDo motor
@@ -28,35 +24,17 @@ extern bool motorDirection;
 extern bool motorRunning;
 bool motorStarted;
 
-//ToDo ADC
-uint32_t voltageraw;
-uint32_t currentraw;
-uint32_t ADC1ConvertedValues[2];
-
 //ToDo input
 uint32_t input;
 uint32_t inputAdjusted;
-
 extern bool inputArmed;
 extern uint8_t imputCommandDshot;
 extern uint32_t inputDataNew;
 extern uint8_t  inputProtocol;
 extern uint32_t inputBufferDMA[64];
 
-
-//ToDo
-void getADCs(){
-  voltageraw = ADC1ConvertedValues[0];
-  currentraw = ADC1ConvertedValues[1];
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-  getADCs();
-}
-
-
-
-
+//ToDoADC
+extern uint32_t adcValue[2];
 
 int main(void) {
   HAL_Init();
@@ -89,7 +67,7 @@ int main(void) {
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
   while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
-  //while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC1ConvertedValues, 2) != HAL_OK);
+  adcInit();
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 
 
