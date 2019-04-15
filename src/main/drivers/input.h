@@ -31,7 +31,7 @@ typedef enum {
     DSHOT_CMD_SIGNAL_LINE_TELEMETRY_DISABLE = 32,
     DSHOT_CMD_SIGNAL_LINE_CONTINUOUS_ERPM_TELEMETRY = 33,
     DSHOT_CMD_MAX = 47
-} dshotCommandsEnum;
+} imputCommandDshotsEnum;
 
 typedef enum {
     AUTODETECT = 0,
@@ -42,6 +42,9 @@ typedef enum {
     DSHOT,
     PROSHOT
 } inputProtocolEnum;
+
+void inputArmCheck(void);
+void inputDisarmCheck(void);
 
 void inputDshotCommandRun(void);
 

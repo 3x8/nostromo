@@ -4,20 +4,53 @@ uint8_t inputProtocol;
 uint32_t inputTimeout;
 uint32_t inputTimeoutThreshold = 10000;
 uint32_t inputDataNew;
-uint32_t propulse[4], dpulse[16];
+uint8_t imputCommandDshot;
+bool inputArmed;
+uint32_t inputArmedCounter;
 
+uint32_t propulse[4], dpulse[16];
 uint32_t inputBufferDMA[64];
 uint32_t inputBufferSize = 64;
 
-extern uint8_t dshotCommand;
-extern TIM_HandleTypeDef htim15;
+extern uint32_t input;
 
-bool inputArmed;
+extern TIM_HandleTypeDef htim15;
 extern bool motorDirection;
 
 
+void inputArmCheck(void) {
+  if (!inputArmed) {
+    if ((inputProtocol != AUTODETECT) && (input == 0)) {
+      inputArmedCounter++;
+      HAL_Delay(1);
+      if (inputArmedCounter > 1000) {
+        inputArmed = true;
+        //debug
+        LED_ON(LED0);
+        motorInputTune();
+      }
+    }
+
+    if (input > 1) {
+      inputArmedCounter = 0;
+    }
+  }
+}
+
+void inputDisarmCheck(void) {
+  inputTimeout++;
+  if (inputTimeout > inputTimeoutThreshold ) {
+    input = 0;
+    inputArmed = false;
+    inputArmedCounter = 0;
+    //debug
+    LED_OFF(LED0);
+  }
+}
+
+
 void inputDshotCommandRun(void) {
-  switch (dshotCommand) {
+  switch (imputCommandDshot) {
   case DSHOT_CMD_MOTOR_STOP:
     //ToDo
     //input = 0;
@@ -58,8 +91,6 @@ void inputDshotCommandRun(void) {
     break;
   }
 }
-
-
 
 void inputCallbackDMA() {
   inputTimeout = 0;
@@ -178,17 +209,17 @@ void inputProshot() {
         } else {
           if(tocheck > 47) {
             inputDataNew = tocheck;
-            dshotCommand = 0;
+            imputCommandDshot = 0;
           }
 
           if ((tocheck <= 47)&& (tocheck > 0)) {
             inputDataNew = 0;
-            dshotCommand = tocheck;  //  todo
+            imputCommandDshot = tocheck;  //  todo
           }
 
           if (tocheck == 0) {
             inputDataNew = 0;
-            dshotCommand = 0;
+            imputCommandDshot = 0;
           }
         }
       }
@@ -276,16 +307,16 @@ void inputDshot() {
       if(calcCRC == checkCRC) {
         if (tocheck > 47) {
           inputDataNew = tocheck;
-          dshotCommand = 0;
+          imputCommandDshot = 0;
         }
       }
       if ((tocheck <= 47) && (tocheck > 0)) {
         inputDataNew = 0;
-        dshotCommand = tocheck;    // todo
+        imputCommandDshot = tocheck;    // todo
       }
       if (tocheck == 0) {
         inputDataNew = 0;
-        dshotCommand = 0;
+        imputCommandDshot = 0;
       }
 
       break;

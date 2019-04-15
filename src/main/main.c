@@ -33,11 +33,14 @@ uint32_t voltageraw;
 uint32_t currentraw;
 uint32_t ADC1ConvertedValues[2];
 
-
 //ToDo input
-uint8_t dshotCommand;
 uint32_t input;
 uint32_t inputAdjusted;
+
+extern bool inputArmed;
+//extern uint32_t inputArmedCounter;
+
+extern uint8_t imputCommandDshot;
 
 extern uint32_t inputDataNew;
 extern uint32_t inputTimeout;
@@ -45,8 +48,6 @@ extern uint8_t  inputProtocol;
 extern uint32_t inputTimeoutThreshold;
 extern uint32_t inputBufferDMA[64];
 extern uint32_t inputBufferSize;
-extern bool inputArmed;
-uint32_t inputArmedCounter;
 
 
 //ToDo
@@ -205,22 +206,7 @@ int main(void) {
       inputDetectProtocol();
     }
 
-    if (!inputArmed) {
-      if ((inputProtocol != AUTODETECT) && (input == 0)) {
-        inputArmedCounter++;
-        HAL_Delay(1);
-        if (inputArmedCounter > 1000) {
-          inputArmed = true;
-          //debug
-          LED_ON(LED0);
-          motorInputTune();
-        }
-      }
-
-      if (input > 1) {
-        inputArmedCounter = 0;
-      }
-    }
+    inputArmCheck();
 
     if ((input > 47) && (inputArmed)) {
       motorBrakeActiveProportional = false;
@@ -253,14 +239,7 @@ int main(void) {
       }
     }
 
-    inputTimeout++;
-    if (inputTimeout > inputTimeoutThreshold ) {
-      input = 0;
-      inputArmed = false;
-      inputArmedCounter = 0;
-      //debug
-      LED_OFF(LED0);
-    }
+    inputDisarmCheck();
 
     if (input <= 47) {
       motorStarted = false;
