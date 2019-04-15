@@ -95,10 +95,6 @@ int main(void) {
 
     compit = 0;
 
-    if (!motorRunning) {
-      inputDshotCommandRun();
-    }
-
     if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
       if ( inputDataNew > 1100 ) {
         if (motorDirection == escConfig()->motorDirection) {
@@ -214,6 +210,10 @@ int main(void) {
 
     if (input <= 47) {
       motorStartup = false;
+
+      if (!motorRunning) {
+        inputDshotCommandRun();
+      }
 
       switch(escConfig()->motorBrakeState) {
         case BRAKE_FULL:
