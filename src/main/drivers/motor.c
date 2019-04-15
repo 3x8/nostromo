@@ -39,7 +39,7 @@ extern uint32_t duty_cycle;
 
 extern uint32_t bemf_counts;
 
-extern uint8_t forward;
+extern uint8_t motorDirection;
 extern uint8_t rising;
 extern uint8_t running;
 extern uint8_t started;
@@ -262,7 +262,7 @@ void changeCompInput() {
 
 
 void commutate() {
-  if (forward == 1) {
+  if (motorDirection == 1) {
     step++;
     if (step > 6) {
       step = 1;
@@ -274,7 +274,7 @@ void commutate() {
       rising = 0;
     }
   }
-  if (forward == 0) {
+  if (motorDirection == 0) {
     step--;
     if (step < 1) {
       step = 6;

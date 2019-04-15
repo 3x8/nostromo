@@ -30,7 +30,7 @@ uint32_t duty_cycle = 100;
 
 uint32_t bemf_counts;
 
-uint8_t forward = 1;
+uint8_t motorDirection = 1;
 uint8_t rising = 1;
 uint8_t running;
 uint8_t started;
@@ -107,7 +107,7 @@ int main(void) {
   //ToDo
   // 3D motorDirection and normalSpin  opposed
   // what is normal ?
-  forward = escConfig()->motorDirection;
+  motorDirection = escConfig()->motorDirection;
 
   if(escConfig()->motor3Dmode) {
     inputDataNew = 1001;
@@ -150,10 +150,10 @@ int main(void) {
       inputArmed = false;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
-      forward = escConfig()->motorDirection;
+      motorDirection = escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
-      forward = !escConfig()->motorDirection;
+      motorDirection = !escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
@@ -174,10 +174,10 @@ int main(void) {
     if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
       //char oldbrake = brake;
       if ( inputDataNew > 1100 ) {
-        if (forward == escConfig()->motorDirection) {
+        if (motorDirection == escConfig()->motorDirection) {
           inputAdjusted = 0;
           prop_brake_active = 1;
-          forward = !escConfig()->motorDirection;
+          motorDirection = !escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
@@ -187,10 +187,10 @@ int main(void) {
       }
 
       if (inputDataNew < 800) {
-        if (forward == (!escConfig()->motorDirection)) {
+        if (motorDirection == (!escConfig()->motorDirection)) {
           prop_brake_active = 1;
           inputAdjusted = 0;
-          forward = escConfig()->motorDirection;
+          motorDirection = escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
@@ -211,15 +211,15 @@ int main(void) {
     } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
       if ( inputDataNew > 1097 ) {
 
-        if (forward == escConfig()->motorDirection) {
-          forward = !escConfig()->motorDirection;
+        if (motorDirection == escConfig()->motorDirection) {
+          motorDirection = !escConfig()->motorDirection;
           bemf_counts =0;
         }
         inputAdjusted = (inputDataNew - 1100) * 2 + 100;
       } if ( inputDataNew <= 1047 &&  inputDataNew > 0) {
-        if(forward == (!escConfig()->motorDirection)) {
+        if(motorDirection == (!escConfig()->motorDirection)) {
           bemf_counts =0;
-          forward = escConfig()->motorDirection;
+          motorDirection = escConfig()->motorDirection;
         }
         inputAdjusted = (inputDataNew - 90) * 2;
       }
