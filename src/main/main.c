@@ -42,6 +42,7 @@ int main(void) {
   configRead();
 
   ledInit();
+
   systemDmaInit();
   systemAdcInit();
   systemComparator1Init();
@@ -49,6 +50,7 @@ int main(void) {
   systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
+  
   watchdogInit(2000);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
