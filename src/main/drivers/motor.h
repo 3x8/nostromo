@@ -12,15 +12,21 @@ typedef enum {
   lowside
 } motorHbridgeStateEnum;
 
+typedef enum {
+  BRAKE_OFF = 0,
+  BRAKE_PROPORTIONAL,
+  BRAKE_FULL
+} motorBrakeStateEnum;
+
 void advanceDivisor();
 
 void phaseA(uint8_t newPhase);
 void phaseB(uint8_t newPhase);
 void phaseC(uint8_t newPhase);
 void commutationStep(uint8_t newStep);
-void allOff();
-void fullBrake();
-void proBrake();
+void motorBrakeOff();
+void motorBrakeFull();
+void motorBrakeProportional();
 void changeCompInput();
 void commutate();
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);

@@ -37,22 +37,18 @@ extern uint32_t duty_cycle;
 
 extern uint32_t bemf_counts;
 
-extern uint8_t motorDirection;
-extern uint8_t rising;
-extern uint8_t running;
-extern uint8_t started;
+bool motorDirection = 1;
+bool motorRisingBEMF = 1;
+bool motorRunning;
+
 
 extern bool inputArmed;
 extern uint32_t inputArmedCounter;
 
 
 // for complementary pwm , 0 for diode freewheeling
-uint16_t motorSlowDecay = 1;;
-// apply full motor motorBrakeFull on stop
-uint16_t motorBrakeFull  = 1;
-extern uint16_t motorStartPower;
-extern uint16_t motorBrakeProportional, motorBrakeProportionalActive;
-extern uint16_t motorBrakeProportionalStrength;
+bool motorSlowDecay = true;
+bool motorBrakeActiveProportional = true;
 
 // increase divisor to decrease advance
 extern uint16_t advancedivisor;
@@ -72,7 +68,7 @@ void phaseB(uint8_t newPhase)
 #endif
 {
   if (newPhase == pwm) {
-    if(!motorSlowDecay  || motorBrakeProportionalActive) {
+    if(!motorSlowDecay  || motorBrakeActiveProportional) {
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
     } else {
@@ -106,7 +102,7 @@ void phaseC(uint8_t newPhase)
 #endif
 {
   if (newPhase == pwm) {
-    if (!motorSlowDecay || motorBrakeProportionalActive) {
+    if (!motorSlowDecay || motorBrakeActiveProportional) {
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
     } else {
@@ -139,7 +135,7 @@ void phaseA(uint8_t newPhase)
 #endif
 {
   if (newPhase == pwm) {
-    if (!motorSlowDecay || motorBrakeProportionalActive) {
+    if (!motorSlowDecay || motorBrakeActiveProportional) {
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
     } else {
@@ -203,13 +199,13 @@ void commutationStep(uint8_t newStep) {
   }
 }
 
-void allOff() {
+void motorBrakeOff() {
   phaseA(floating);
   phaseB(floating);
   phaseC(floating);
 }
 
-void fullBrake() {
+void motorBrakeFull() {
   phaseA(lowside);
   phaseB(lowside);
   phaseC(lowside);
@@ -217,7 +213,7 @@ void fullBrake() {
 
 // duty cycle controls braking strength
 // will turn off lower fets so only high side is active
-void proBrake() {
+void motorBrakeProportional() {
   phaseA(pwm);
   phaseB(pwm);
   phaseC(pwm);
@@ -248,7 +244,7 @@ void changeCompInput() {
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
     #endif
   }
-  if (rising) {
+  if (motorRisingBEMF) {
     // polarity of comp output reversed
     hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   }else{
@@ -267,10 +263,10 @@ void commutate() {
       step = 1;
     }
     if (step == 1 || step == 3 || step == 5) {
-      rising = 1;                                // is back emf rising or falling
+      motorRisingBEMF = 1;                                // is back emf motorRisingBEMF or falling
     }
     if (step == 2 || step == 4 || step == 6) {
-      rising = 0;
+      motorRisingBEMF = 0;
     }
   }
   if (motorDirection == 0) {
@@ -279,10 +275,10 @@ void commutate() {
       step = 6;
     }
     if (step == 1 || step == 3 || step == 5) {
-      rising = 0;
+      motorRisingBEMF = 0;
     }
     if (step == 2 || step == 4 || step == 6) {
-      rising = 1;
+      motorRisingBEMF = 1;
     }
   }
 
@@ -304,14 +300,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 void startMotor() {
   uint16_t decaystate = motorSlowDecay;
   sensorless = 0;
-  if (running == 0) {
+  if (!motorRunning) {
     HAL_COMP_Stop_IT(&hcomp1);
     motorSlowDecay = 1;
 
     commutate();
     commutation_interval = tim2_start_arr- 3000;
     TIM3->CNT = 0;
-    running = 1;
+    motorRunning = true;
     while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
   }
 
@@ -332,7 +328,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   compit +=1;
   while (TIM3->CNT - timestamp < filter_delay);
 
-  if (rising) {
+  if (motorRisingBEMF) {
     // advancedivisor = advancedivisorup;
     for (int i = 0; i < filter_level; i++) {
       if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_HIGH) {
@@ -380,7 +376,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
 
 void changeDutyCycleWithSin() {
-  if (!rising) {
+  if (!motorRisingBEMF) {
     // last ten elements in sin array
     duty_cycle = (duty_cycle * sine_array[((TIM2->CNT*10)/TIM2->ARR)+9])/100;
   }else{
@@ -436,7 +432,7 @@ void playStartupTune() {
   HAL_Delay(100);
   TIM1->PSC = 25;
   HAL_Delay(100);
-  allOff();
+  motorBrakeOff();
   TIM1->PSC = 0;
 }
 
@@ -449,6 +445,6 @@ void playInputTune() {
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
-  allOff();
+  motorBrakeOff();
   TIM1->PSC = 0;
 }

@@ -43,6 +43,8 @@ typedef enum {
     PROSHOT
 } inputProtocolEnum;
 
+void inputDshotCommandRun(void);
+
 void inputCallbackDMA();
 void inputDetectProtocol();
 

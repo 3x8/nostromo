@@ -12,6 +12,54 @@ uint32_t inputBufferSize = 64;
 extern uint8_t dshotCommand;
 extern TIM_HandleTypeDef htim15;
 
+bool inputArmed;
+extern bool motorDirection;
+
+
+void inputDshotCommandRun(void) {
+  switch (dshotCommand) {
+  case DSHOT_CMD_MOTOR_STOP:
+    //ToDo
+    //input = 0;
+    break;
+  case DSHOT_CMD_BEACON1:
+    playStartupTune();
+    break;
+  case DSHOT_CMD_BEACON2:
+    playInputTune();
+    break;
+  case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
+    escConfig()->motorDirection = 1;
+    inputArmed = false;
+    break;
+  case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
+    escConfig()->motorDirection = 0;
+    inputArmed = false;
+    break;
+  case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
+    motorDirection = escConfig()->motorDirection;
+    break;
+  case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
+    motorDirection = !escConfig()->motorDirection;
+    break;
+  case DSHOT_CMD_SETTING_3D_MODE_OFF:
+    escConfig()->motor3Dmode = 0;
+    inputArmed = false;
+    break;
+  case DSHOT_CMD_SETTING_3D_MODE_ON:
+    escConfig()->motor3Dmode = 1;
+    inputArmed = false;
+    break;
+  case DSHOT_CMD_SETTING_SAVE:
+    configWrite();
+    // reset esc, iwdg timeout
+    while(true);
+  default:
+    break;
+  }
+}
+
+
 
 void inputCallbackDMA() {
   inputTimeout = 0;
