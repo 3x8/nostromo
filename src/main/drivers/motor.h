@@ -7,9 +7,9 @@
 #include "stm32f0xx_hal_comp.h"
 
 typedef enum {
-  pwm = 1,
-  floating,
-  lowside
+  HBRIDGE_PWM = 1,
+  HBRIDGE_FLOATING,
+  HBRIDGE_LOWSIDE
 } motorHbridgeStateEnum;
 
 typedef enum {
@@ -20,19 +20,19 @@ typedef enum {
 
 void advanceDivisor();
 
-void phaseA(uint8_t newPhase);
-void phaseB(uint8_t newPhase);
-void phaseC(uint8_t newPhase);
-void commutationStep(uint8_t newStep);
+void motorPhaseA(uint8_t newPhase);
+void motorPhaseB(uint8_t newPhase);
+void motorPhaseC(uint8_t newPhase);
+void motorCommutationStep(uint8_t newStep);
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();
-void changeCompInput();
-void commutate();
+void motorChangeCompInput();
+void motorCommutate();
+void motorStart();
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-void startMotor();
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp);
-void changeDutyCycleWithSin();
+void motorChangeDutyCycleWithSin();
 void zc_found_routine();
-void playStartupTune();
-void playInputTune();
+void motorStartupTune();
+void motorInputTune();

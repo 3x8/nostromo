@@ -23,10 +23,10 @@ void inputDshotCommandRun(void) {
     //input = 0;
     break;
   case DSHOT_CMD_BEACON1:
-    playStartupTune();
+    motorStartupTune();
     break;
   case DSHOT_CMD_BEACON2:
-    playInputTune();
+    motorInputTune();
     break;
   case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
     escConfig()->motorDirection = 1;

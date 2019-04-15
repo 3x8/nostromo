@@ -18,7 +18,7 @@ uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zc_timeout_threshold = 2000;
 
-uint32_t duty_cycle = 100;
+uint32_t dutyCycle = 100;
 
 uint32_t bemf_counts;
 
@@ -90,7 +90,7 @@ int main(void) {
   HAL_TIM_Base_Start(&htim3);
 
   // HAL_Delay(500);
-  playStartupTune();
+  motorStartupTune();
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
   while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
@@ -213,7 +213,7 @@ int main(void) {
           inputArmed = true;
           //debug
           LED_ON(LED0);
-          playInputTune();
+          motorInputTune();
         }
       }
 
@@ -226,30 +226,30 @@ int main(void) {
       motorBrakeActiveProportional = false;
       motorStarted = true;
 
-      duty_cycle = input / 2 - 10;
+      dutyCycle = input / 2 - 10;
 
       if (bemf_counts < 15) {
-        if(duty_cycle < 70) {
-          duty_cycle=70;
+        if(dutyCycle < 70) {
+          dutyCycle=70;
         }
-        if (duty_cycle > 400) {
-          duty_cycle=400;
+        if (dutyCycle > 400) {
+          dutyCycle=400;
         }
       }
 
       if (motorRunning) {
-        if (duty_cycle > 998 ) {                                          // safety!!!
-          duty_cycle = 998;
+        if (dutyCycle > 998 ) {                                          // safety!!!
+          dutyCycle = 998;
         }
-        if (duty_cycle < 44) {
-          duty_cycle = 44;
+        if (dutyCycle < 44) {
+          dutyCycle = 44;
         }
 
         // set duty cycle to 50 out of 768 to start.
-        TIM1->CCR1 = duty_cycle;
-        TIM1->CCR2 = duty_cycle;
-        TIM1->CCR3 = duty_cycle;
-        //	TIM1->CCR4 = duty_cycle;
+        TIM1->CCR1 = dutyCycle;
+        TIM1->CCR2 = dutyCycle;
+        TIM1->CCR3 = dutyCycle;
+        //TIM1->CCR4 = dutyCycle;
       }
     }
 
@@ -268,24 +268,23 @@ int main(void) {
       switch(escConfig()->motorBrakeState) {
         case BRAKE_FULL:
           motorBrakeFull();
-          duty_cycle = 0;
+          dutyCycle = 0;
           break;
         case BRAKE_PROPORTIONAL:
           if(motorBrakeActiveProportional) {
-            duty_cycle = escConfig()->motorBrakeProportionalStrength;
+            dutyCycle = escConfig()->motorBrakeProportionalStrength;
             motorBrakeProportional();
           }
           break;
         case BRAKE_OFF:
             motorBrakeOff();
-            duty_cycle = 0;
+            dutyCycle = 0;
           break;
       }
 
-      // set duty cycle to 50 out of 768 to start.
-      TIM1->CCR1 = duty_cycle;
-      TIM1->CCR2 = duty_cycle;
-      TIM1->CCR3 = duty_cycle;
+      TIM1->CCR1 = dutyCycle;
+      TIM1->CCR2 = dutyCycle;
+      TIM1->CCR3 = dutyCycle;
 
       if (commutation_interval > 30000) {
         HAL_COMP_Stop_IT(&hcomp1);
@@ -300,7 +299,7 @@ int main(void) {
       filter_delay = 3;
     }
 
-    if(commutation_interval < 200 && duty_cycle > 500) {
+    if(commutation_interval < 200 && dutyCycle > 500) {
       filter_delay = 1;
       filter_level = 0;
     }
@@ -309,11 +308,11 @@ int main(void) {
       if (!motorRunning) {
         zctimeout = 0;
         // safety on for input testing
-        startMotor();
+        motorStart();
       }
     }
 
-    if (duty_cycle < 300) {
+    if (dutyCycle < 300) {
       zc_timeout_threshold = 4000;
     }else{
       zc_timeout_threshold = 2000;
@@ -327,7 +326,7 @@ int main(void) {
       motorRunning = false;
       //		commutation_interval = 0;
       zctimeout = zc_timeout_threshold + 1;
-      duty_cycle = 0;
+      dutyCycle = 0;
     }
   }
 }

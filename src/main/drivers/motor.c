@@ -26,14 +26,13 @@ extern TIM_HandleTypeDef htim1;
 
 
 extern uint32_t sensorless, commutation_interval;
-//extern uint32_t blanktime, waitTime, compit;
 extern uint32_t filter_level;
 extern uint32_t filter_delay;
 
 extern uint32_t zctimeout;
 // depends on speed of main loop
 extern uint32_t zc_timeout_threshold;
-extern uint32_t duty_cycle;
+extern uint32_t dutyCycle;
 
 extern uint32_t bemf_counts;
 
@@ -41,12 +40,11 @@ bool motorDirection = 1;
 bool motorRisingBEMF = 1;
 bool motorRunning;
 
-
 extern bool inputArmed;
 extern uint32_t inputArmedCounter;
 
 
-// for complementary pwm , 0 for diode freewheeling
+// 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
 bool motorSlowDecay = true;
 bool motorBrakeActiveProportional = true;
 
@@ -59,15 +57,15 @@ void advanceDivisor() {
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
 }
 
-// phaseB qfnf051 , phase A qfp32
+// motorPhaseB qfnf051 , phase A qfp32
 #ifdef MP6531
-void phaseA(uint8_t newPhase)
+void motorPhaseA(uint8_t newPhase)
 #endif
 #ifdef FD6288
-void phaseB(uint8_t newPhase)
+void motorPhaseB(uint8_t newPhase)
 #endif
 {
-  if (newPhase == pwm) {
+  if (newPhase == HBRIDGE_PWM) {
     if(!motorSlowDecay  || motorBrakeActiveProportional) {
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
@@ -77,14 +75,14 @@ void phaseB(uint8_t newPhase)
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
   }
 
-  if (newPhase == floating) {
+  if (newPhase == HBRIDGE_FLOATING) {
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
   }
 
-  if (newPhase == lowside) {
+  if (newPhase == HBRIDGE_LOWSIDE) {
     LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
@@ -95,13 +93,13 @@ void phaseB(uint8_t newPhase)
 
 // phase c qfn , phase b qfp
 #ifdef MP6531
-void phaseB(uint8_t newPhase)
+void motorPhaseB(uint8_t newPhase)
 #endif
 #ifdef FD6288
-void phaseC(uint8_t newPhase)
+void motorPhaseC(uint8_t newPhase)
 #endif
 {
-  if (newPhase == pwm) {
+  if (newPhase == HBRIDGE_PWM) {
     if (!motorSlowDecay || motorBrakeActiveProportional) {
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
@@ -111,14 +109,14 @@ void phaseC(uint8_t newPhase)
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
   }
 
-  if (newPhase == floating) {
+  if (newPhase == HBRIDGE_FLOATING) {
     LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
   }
 
-  if (newPhase == lowside) {
+  if (newPhase == HBRIDGE_LOWSIDE) {
     LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     C_FET_LO_GPIO->BSRR = C_FET_LO_PIN;
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
@@ -126,15 +124,15 @@ void phaseC(uint8_t newPhase)
   }
 }
 
-// phaseA qfn , phase C qfp
+// motorPhaseA qfn , phase C qfp
 #ifdef MP6531
-void phaseC(uint8_t newPhase)
+void motorPhaseC(uint8_t newPhase)
 #endif
 #ifdef FD6288
-void phaseA(uint8_t newPhase)
+void motorPhaseA(uint8_t newPhase)
 #endif
 {
-  if (newPhase == pwm) {
+  if (newPhase == HBRIDGE_PWM) {
     if (!motorSlowDecay || motorBrakeActiveProportional) {
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
@@ -144,14 +142,14 @@ void phaseA(uint8_t newPhase)
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
   }
 
-  if (newPhase == floating) {
+  if (newPhase == HBRIDGE_FLOATING) {
     LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
   }
 
-  if (newPhase == lowside) {
+  if (newPhase == HBRIDGE_LOWSIDE) {
     LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
     A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
@@ -160,67 +158,67 @@ void phaseA(uint8_t newPhase)
 
 }
 
-void commutationStep(uint8_t newStep) {
+void motorCommutationStep(uint8_t newStep) {
   //A-B
   if (newStep == 1) {
-    phaseA(pwm);
-    phaseB(lowside);
-    phaseC(floating);
+    motorPhaseA(HBRIDGE_PWM);
+    motorPhaseB(HBRIDGE_LOWSIDE);
+    motorPhaseC(HBRIDGE_FLOATING);
   }
   // C-B
   if (newStep == 2) {
-    phaseA(floating);
-    phaseB(lowside);
-    phaseC(pwm);
+    motorPhaseA(HBRIDGE_FLOATING);
+    motorPhaseB(HBRIDGE_LOWSIDE);
+    motorPhaseC(HBRIDGE_PWM);
   }
   // C-A
   if (newStep == 3) {
-    phaseA(lowside);
-    phaseB(floating);
-    phaseC(pwm);
+    motorPhaseA(HBRIDGE_LOWSIDE);
+    motorPhaseB(HBRIDGE_FLOATING);
+    motorPhaseC(HBRIDGE_PWM);
   }
   // B-A
   if (newStep == 4) {
-    phaseA(lowside);
-    phaseB(pwm);
-    phaseC(floating);
+    motorPhaseA(HBRIDGE_LOWSIDE);
+    motorPhaseB(HBRIDGE_PWM);
+    motorPhaseC(HBRIDGE_FLOATING);
   }
   // B-C
   if (newStep == 5) {
-    phaseA(floating);
-    phaseB(pwm);
-    phaseC(lowside);
+    motorPhaseA(HBRIDGE_FLOATING);
+    motorPhaseB(HBRIDGE_PWM);
+    motorPhaseC(HBRIDGE_LOWSIDE);
   }
   // A-C
   if (newStep == 6) {
-    phaseA(pwm);
-    phaseB(floating);
-    phaseC(lowside);
+    motorPhaseA(HBRIDGE_PWM);
+    motorPhaseB(HBRIDGE_FLOATING);
+    motorPhaseC(HBRIDGE_LOWSIDE);
   }
 }
 
 void motorBrakeOff() {
-  phaseA(floating);
-  phaseB(floating);
-  phaseC(floating);
+  motorPhaseA(HBRIDGE_FLOATING);
+  motorPhaseB(HBRIDGE_FLOATING);
+  motorPhaseC(HBRIDGE_FLOATING);
 }
 
 void motorBrakeFull() {
-  phaseA(lowside);
-  phaseB(lowside);
-  phaseC(lowside);
+  motorPhaseA(HBRIDGE_LOWSIDE);
+  motorPhaseB(HBRIDGE_LOWSIDE);
+  motorPhaseC(HBRIDGE_LOWSIDE);
 }
 
 // duty cycle controls braking strength
 // will turn off lower fets so only high side is active
 void motorBrakeProportional() {
-  phaseA(pwm);
-  phaseB(pwm);
-  phaseC(pwm);
+  motorPhaseA(HBRIDGE_PWM);
+  motorPhaseB(HBRIDGE_PWM);
+  motorPhaseC(HBRIDGE_PWM);
 }
 
 
-void changeCompInput() {
+void motorChangeCompInput() {
   // c floating
   if (step == 1 || step == 4) {
     hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
@@ -256,7 +254,7 @@ void changeCompInput() {
 }
 
 
-void commutate() {
+void motorCommutate() {
   if (motorDirection == 1) {
     step++;
     if (step > 6) {
@@ -283,9 +281,9 @@ void commutate() {
   }
 
   if (input > 47) {
-    commutationStep(step);
+    motorCommutationStep(step);
   }
-  changeCompInput();
+  motorChangeCompInput();
 // TIM2->CNT = 0;
 // TIM2->ARR = commutation_interval;
 }
@@ -297,14 +295,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   }
 }
 
-void startMotor() {
+void motorStart() {
   uint16_t decaystate = motorSlowDecay;
   sensorless = 0;
   if (!motorRunning) {
     HAL_COMP_Stop_IT(&hcomp1);
     motorSlowDecay = 1;
 
-    commutate();
+    motorCommutate();
     commutation_interval = tim2_start_arr- 3000;
     TIM3->CNT = 0;
     motorRunning = true;
@@ -363,7 +361,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
 
     compit = 0;
-    commutate();
+    motorCommutate();
     while (TIM3->CNT  < waitTime + blanktime) {
     }
   }
@@ -375,18 +373,18 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 }
 
 
-void changeDutyCycleWithSin() {
+void motorChangeDutyCycleWithSin() {
   if (!motorRisingBEMF) {
     // last ten elements in sin array
-    duty_cycle = (duty_cycle * sine_array[((TIM2->CNT*10)/TIM2->ARR)+9])/100;
+    dutyCycle = (dutyCycle * sine_array[((TIM2->CNT*10)/TIM2->ARR)+9])/100;
   }else{
     // first ten elements in sin array
-    duty_cycle = (duty_cycle * sine_array[(TIM2->CNT*10)/TIM2->ARR])/100;
+    dutyCycle = (dutyCycle * sine_array[(TIM2->CNT*10)/TIM2->ARR])/100;
   }
 
-  TIM1->CCR1 = duty_cycle;
-  TIM1->CCR2 = duty_cycle;
-  TIM1->CCR3 = duty_cycle;
+  TIM1->CCR1 = dutyCycle;
+  TIM1->CCR2 = dutyCycle;
+  TIM1->CCR3 = dutyCycle;
 }
 
 void zc_found_routine() {
@@ -413,7 +411,7 @@ void zc_found_routine() {
   if (sensorless) {
     while (TIM3->CNT - thiszctime < waitTime) {
     }
-    commutate();
+    motorCommutate();
     while (TIM3->CNT - thiszctime < waitTime + blanktime) {
     }
   }
@@ -421,12 +419,12 @@ void zc_found_routine() {
   lastzctime = thiszctime;
 }
 
-void playStartupTune() {
+void motorStartupTune() {
   TIM1->PSC = 75;
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
-  commutationStep(2);
+  motorCommutationStep(2);
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
@@ -436,12 +434,12 @@ void playStartupTune() {
   TIM1->PSC = 0;
 }
 
-void playInputTune() {
+void motorInputTune() {
   TIM1->PSC = 100;
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
-  commutationStep(2);
+  motorCommutationStep(2);
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
