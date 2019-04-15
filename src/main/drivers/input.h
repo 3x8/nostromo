@@ -33,12 +33,22 @@ typedef enum {
     DSHOT_CMD_MAX = 47
 } dshotCommandsEnum;
 
-void detectInput();
-void transferComplete();
+typedef enum {
+    AUTODETECT = 0,
+    SERVOPWM,
+    ONESHOT42,
+    ONESHOT125,
+    MULTISHOT,
+    DSHOT,
+    PROSHOT
+} inputProtocolEnum;
 
-void computeProshotDMA();
-void computeMSInput();
-void computeOS125Input();
-void computeOS42Input();
-void computeServoInput();
-void computeDshotDMA();
+void inputCallbackDMA();
+void inputDetectProtocol();
+
+void inputProshot();
+void inputMultishot();
+void inputOneshot125();
+void inputOneshot42();
+void inputServoPwm();
+void inputDshot();

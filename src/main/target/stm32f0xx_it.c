@@ -1,6 +1,6 @@
 #include "stm32f0xx_it.h"
 
-extern void transferComplete();
+extern void inputCallbackDMA();
 
 extern DMA_HandleTypeDef hdma_adc;
 extern ADC_HandleTypeDef hadc;
@@ -38,7 +38,7 @@ void DMA1_Channel1_IRQHandler(void) {
 // This function handles DMA1 channel 4 and 5 interrupts.
 void DMA1_Channel4_5_IRQHandler(void) {
   HAL_DMA_IRQHandler(&hdma_tim15_ch1_up_trig_com);
-  transferComplete();
+  inputCallbackDMA();
 }
 
 // This function handles ADC and COMP interrupts (COMP interrupts through EXTI lines 21 and 22).

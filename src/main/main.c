@@ -45,7 +45,6 @@ uint32_t ADC1ConvertedValues[2];
 
 //ToDo input
 uint8_t dshotcommand, inputSet;
-uint8_t calcCRC, checkCRC;
 uint8_t dshot, proshot, multishot, oneshot42, oneshot125, servoPwm;
 
 uint32_t input_buffer_size = 64;
@@ -261,7 +260,7 @@ int main(void) {
 
     if (inputSet == 0) {
       HAL_Delay(10);
-      detectInput();
+      inputDetectProtocol();
     }
 
     if (!armed) {
