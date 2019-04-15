@@ -28,15 +28,13 @@ uint32_t zc_timeout_threshold = 2000;
 
 uint32_t duty_cycle = 100;
 
-
-
 uint32_t bemf_counts;
 
 uint8_t forward = 1;
 uint8_t rising = 1;
 uint8_t running;
 uint8_t started;
-uint8_t armed;
+uint8_t inputArmed;
 uint32_t armedcount;
 
 uint32_t voltageraw;
@@ -45,20 +43,15 @@ uint32_t ADC1ConvertedValues[2];
 
 //ToDo input
 uint8_t dshotcommand;
+uint32_t input;
+uint32_t adjusted_input;
 
-uint32_t input_buffer_size = 64;
-
-uint32_t dma_buffer[64];
-uint32_t propulse[4];
-uint32_t dpulse[16];
-
-uint32_t input, newinput;
-
+extern uint32_t inputDataNew;
 extern uint32_t inputTimeout;
 extern uint8_t inputProtocol;
 extern uint32_t inputTimeoutThreshold;
-
-uint32_t adjusted_input;
+extern uint32_t inputBufferDMA[64];
+extern uint32_t inputBufferSize;
 
 
 //ToDo
@@ -105,7 +98,7 @@ int main(void) {
   playStartupTune();
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
-  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
   //while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC1ConvertedValues, 2) != HAL_OK);
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 
@@ -117,7 +110,7 @@ int main(void) {
   forward = escConfig()->motorDirection;
 
   if(escConfig()->motor3Dmode) {
-    newinput = 1001;
+    inputDataNew = 1001;
     //	start_power = 175;
   }
 
@@ -150,11 +143,11 @@ int main(void) {
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = 1;
-      armed = 0;
+      inputArmed = false;
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       escConfig()->motorDirection = 0;
-      armed = 0;
+      inputArmed = false;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
       forward = escConfig()->motorDirection;
@@ -164,11 +157,11 @@ int main(void) {
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
-      armed = 0;
+      inputArmed = false;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
       escConfig()->motor3Dmode = 1;
-      armed = 0;
+      inputArmed = false;
       break;
     case DSHOT_CMD_SETTING_SAVE:
       configWrite();
@@ -180,7 +173,7 @@ int main(void) {
 
     if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
       //char oldbrake = brake;
-      if ( newinput > 1100 ) {
+      if ( inputDataNew > 1100 ) {
         if (forward == escConfig()->motorDirection) {
           adjusted_input = 0;
           prop_brake_active = 1;
@@ -189,11 +182,11 @@ int main(void) {
         }
 
         if (prop_brake_active == 0) {
-          adjusted_input = (newinput - 1050)*3;
+          adjusted_input = (inputDataNew - 1050)*3;
         }
       }
 
-      if (newinput < 800) {
+      if (inputDataNew < 800) {
         if (forward == (!escConfig()->motorDirection)) {
           prop_brake_active = 1;
           adjusted_input = 0;
@@ -202,7 +195,7 @@ int main(void) {
         }
 
         if (prop_brake_active == 0) {
-          adjusted_input = (800 - newinput) * 3;
+          adjusted_input = (800 - inputDataNew) * 3;
         }
       }
 
@@ -211,30 +204,30 @@ int main(void) {
         bemf_counts = 0;
       }
 
-      if (newinput > 800 && newinput < 1100) {
+      if (inputDataNew > 800 && inputDataNew < 1100) {
         adjusted_input = 0;
         prop_brake_active = 0;
       }
     } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
-      if ( newinput > 1097 ) {
+      if ( inputDataNew > 1097 ) {
 
         if (forward == escConfig()->motorDirection) {
           forward = !escConfig()->motorDirection;
           bemf_counts =0;
         }
-        adjusted_input = (newinput - 1100) * 2 + 100;
-      } if ( newinput <= 1047 &&  newinput > 0) {
+        adjusted_input = (inputDataNew - 1100) * 2 + 100;
+      } if ( inputDataNew <= 1047 &&  inputDataNew > 0) {
         if(forward == (!escConfig()->motorDirection)) {
           bemf_counts =0;
           forward = escConfig()->motorDirection;
         }
-        adjusted_input = (newinput - 90) * 2;
+        adjusted_input = (inputDataNew - 90) * 2;
       }
-      if ((newinput > 1047 && newinput < 1098 ) || newinput <= 120) {
+      if ((inputDataNew > 1047 && inputDataNew < 1098 ) || inputDataNew <= 120) {
         adjusted_input = 0;
       }
     } else {
-      adjusted_input = newinput;
+      adjusted_input = inputDataNew;
     }
 
     if (adjusted_input > 2000) {
@@ -258,12 +251,14 @@ int main(void) {
       inputDetectProtocol();
     }
 
-    if (!armed) {
+    if (!inputArmed) {
       if ((inputProtocol != AUTODETECT) && (input == 0)) {
         armedcount++;
         HAL_Delay(1);
         if (armedcount > 1000) {
-          armed = 1;
+          inputArmed = true;
+          //debug
+          LED_ON(LED0);
           playInputTune();
         }
       }
@@ -273,7 +268,7 @@ int main(void) {
       }
     }
 
-    if ((input > 47) && (armed == 1)) {
+    if ((input > 47) && (inputArmed)) {
       prop_brake_active = 0;
       started = 1;
 
@@ -307,9 +302,10 @@ int main(void) {
     inputTimeout++;
     if (inputTimeout > inputTimeoutThreshold ) {
       input = 0;
-      armed = 0;
+      inputArmed = false;
       armedcount = 0;
-      //	  duty_cycle = 0;          //mid point
+      //debug
+      LED_OFF(LED0);
     }
 
     if (input <= 47) {

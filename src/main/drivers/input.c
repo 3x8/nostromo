@@ -5,14 +5,12 @@ extern uint8_t dshotcommand;
 uint8_t inputProtocol;
 uint32_t inputTimeout;
 uint32_t inputTimeoutThreshold = 10000;
+uint32_t inputDataNew;
+uint32_t propulse[4], dpulse[16];
 
-extern uint32_t input_buffer_size;
+uint32_t inputBufferDMA[64];
+uint32_t inputBufferSize = 64;
 
-extern uint32_t dma_buffer[64];
-extern uint32_t propulse[4];
-extern uint32_t dpulse[16];
-
-extern uint32_t input, newinput;
 
 extern TIM_HandleTypeDef htim15;
 
@@ -28,29 +26,29 @@ void inputCallbackDMA() {
   switch (inputProtocol) {
     case DSHOT:
       inputDshot();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
+      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
       break;
     case PROSHOT:
       inputProshot();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 16);
+      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16);
       //debug
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 8);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8);
       break;
     case SERVOPWM:
       inputServoPwm();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
+      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       break;
     case MULTISHOT:
       inputMultishot();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
+      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       break;
     case ONESHOT125:
       inputOneshot125();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
+      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       break;
     case ONESHOT42:
       inputOneshot42();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
+      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       break;
   }
 
@@ -63,13 +61,13 @@ void inputCallbackDMA() {
 void inputDetectProtocol() {
   uint32_t smallestnumber = 20000;
 
-  int lastnumber = dma_buffer[0];
+  int lastnumber = inputBufferDMA[0];
 
-  for ( int j = 1; j < input_buffer_size; j++) {
-    if((dma_buffer[j] - lastnumber) < smallestnumber) { // blank space
-      smallestnumber = dma_buffer[j] - lastnumber;
+  for ( int j = 1; j < inputBufferSize; j++) {
+    if((inputBufferDMA[j] - lastnumber) < smallestnumber) { // blank space
+      smallestnumber = inputBufferDMA[j] - lastnumber;
     }
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 
   if ((smallestnumber > 3)&&(smallestnumber < 22)) {
@@ -102,19 +100,19 @@ void inputDetectProtocol() {
   } else {
     HAL_Delay(50);
   }
-  HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
+  HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
 }
 
 void inputProshot() {
   uint8_t calcCRC, checkCRC;
-  uint32_t lastnumber = dma_buffer[0];
+  uint32_t lastnumber = inputBufferDMA[0];
 
   for (int j = 1; j < 9; j++) {
-    if (((dma_buffer[j] - lastnumber) > 1500) && ((dma_buffer[j] - lastnumber) < 50000)) { // blank space
-      if ((dma_buffer[j+7] - dma_buffer[j]) < 10000) {
+    if (((inputBufferDMA[j] - lastnumber) > 1500) && ((inputBufferDMA[j] - lastnumber) < 50000)) { // blank space
+      if ((inputBufferDMA[j+7] - inputBufferDMA[j]) < 10000) {
 
         for (int i = 0; i < 4; i++) {
-          propulse[i] = (((dma_buffer[j + i*2 + 1] - dma_buffer[j + i*2])) - 23)/3;
+          propulse[i] = (((inputBufferDMA[j + i*2 + 1] - inputBufferDMA[j + i*2])) - 23)/3;
         }
 
         calcCRC = ((propulse[0]^propulse[1]^propulse[2]) << 3
@@ -133,17 +131,17 @@ void inputProshot() {
           break;
         } else {
           if(tocheck > 47) {
-            newinput = tocheck;
+            inputDataNew = tocheck;
             dshotcommand = 0;
           }
 
           if ((tocheck <= 47)&& (tocheck > 0)) {
-            newinput = 0;
+            inputDataNew = 0;
             dshotcommand = tocheck;  //  todo
           }
 
           if (tocheck == 0) {
-            newinput = 0;
+            inputDataNew = 0;
             dshotcommand = 0;
           }
         }
@@ -151,70 +149,70 @@ void inputProshot() {
       break;
     }
 
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 }
 
 void inputMultishot() {
-  int lastnumber = dma_buffer[0];
+  int lastnumber = inputBufferDMA[0];
 
   for (int j = 1; j < 2; j++) {
     // blank space
-    if(((dma_buffer[j] - lastnumber) < 1500) && ((dma_buffer[j] - lastnumber) > 0)) {
-      newinput = map((dma_buffer[j] - lastnumber),243,1200, 0, 2000);
+    if(((inputBufferDMA[j] - lastnumber) < 1500) && ((inputBufferDMA[j] - lastnumber) > 0)) {
+      inputDataNew = map((inputBufferDMA[j] - lastnumber),243,1200, 0, 2000);
       break;
     }
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 }
 
 void inputOneshot125() {
-  int lastnumber = dma_buffer[0];
+  int lastnumber = inputBufferDMA[0];
 
   for (int j = 1; j < 2; j++) {
     // blank space
-    if(((dma_buffer[j] - lastnumber) < 12300) && ((dma_buffer[j] - lastnumber) > 0)) {
-      newinput = map((dma_buffer[j] - lastnumber),6500,12000, 0, 2000);
+    if(((inputBufferDMA[j] - lastnumber) < 12300) && ((inputBufferDMA[j] - lastnumber) > 0)) {
+      inputDataNew = map((inputBufferDMA[j] - lastnumber),6500,12000, 0, 2000);
       break;
     }
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 }
 
 void inputOneshot42() {
-  int lastnumber = dma_buffer[0];
+  int lastnumber = inputBufferDMA[0];
   for (int j = 1; j < 2; j++) {
     // blank space
-    if(((dma_buffer[j] - lastnumber) < 4500) && ((dma_buffer[j] - lastnumber) > 0)) {
-      newinput = map((dma_buffer[j] - lastnumber),2020, 4032, 0, 2000);
+    if(((inputBufferDMA[j] - lastnumber) < 4500) && ((inputBufferDMA[j] - lastnumber) > 0)) {
+      inputDataNew = map((inputBufferDMA[j] - lastnumber),2020, 4032, 0, 2000);
       break;
     }
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 }
 
 void inputServoPwm() {
-  int lastnumber = dma_buffer[0];
+  int lastnumber = inputBufferDMA[0];
   for (int j = 1; j < 3; j++) {
     // blank space
-    if(((dma_buffer[j] - lastnumber) >1000 ) && ((dma_buffer[j] - lastnumber) < 2010)) {
-      newinput = map((dma_buffer[j] - lastnumber), 1090, 2000, 0, 2000);
+    if(((inputBufferDMA[j] - lastnumber) >1000 ) && ((inputBufferDMA[j] - lastnumber) < 2010)) {
+      inputDataNew = map((inputBufferDMA[j] - lastnumber), 1090, 2000, 0, 2000);
       break;
     }
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 }
 
 
 void inputDshot() {
   uint8_t calcCRC, checkCRC;
-  int lastnumber = dma_buffer[0];
+  int lastnumber = inputBufferDMA[0];
 
-  for (int j = 1; j < input_buffer_size; j++) {
+  for (int j = 1; j < inputBufferSize; j++) {
     // blank space
-    if (((dma_buffer[j] - lastnumber) > 50) && ((dma_buffer[j] - lastnumber) < 65000)) {
+    if (((inputBufferDMA[j] - lastnumber) > 50) && ((inputBufferDMA[j] - lastnumber) < 65000)) {
       for (int i = 0; i < 16; i++) {
-        dpulse[i] = ((dma_buffer[j + i*2 +1] - dma_buffer[j + i*2]) / 13) - 1;
+        dpulse[i] = ((inputBufferDMA[j + i*2 +1] - inputBufferDMA[j + i*2]) / 13) - 1;
       }
 
       calcCRC = ( (dpulse[0]^dpulse[4]^dpulse[8]) << 3
@@ -231,21 +229,21 @@ void inputDshot() {
 
       if(calcCRC == checkCRC) {
         if (tocheck > 47) {
-          newinput = tocheck;
+          inputDataNew = tocheck;
           dshotcommand = 0;
         }
       }
       if ((tocheck <= 47) && (tocheck > 0)) {
-        newinput = 0;
+        inputDataNew = 0;
         dshotcommand = tocheck;    // todo
       }
       if (tocheck == 0) {
-        newinput = 0;
+        inputDataNew = 0;
         dshotcommand = 0;
       }
 
       break;
     }
-    lastnumber = dma_buffer[j];
+    lastnumber = inputBufferDMA[j];
   }
 }

@@ -43,7 +43,7 @@ extern uint8_t forward;
 extern uint8_t rising;
 extern uint8_t running;
 extern uint8_t started;
-extern uint8_t armed;
+extern bool inputArmed;
 extern uint32_t armedcount;
 
 
@@ -58,7 +58,7 @@ extern uint16_t prop_brake_strength;
 // increase divisor to decrease advance
 extern uint16_t advancedivisor;
 
-extern uint32_t input, newinput;
+extern uint32_t input, inputDataNew;
 
 void advanceDivisor() {
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
@@ -399,7 +399,7 @@ void zc_found_routine() {
 
   thiszctime = TIM3->CNT;
 
-  //ToDo 
+  //ToDo
   /*
   if (thiszctime < lastzctime) {
     lastzctime = lastzctime - 65535;
