@@ -2,7 +2,7 @@
 
 extern uint8_t dshotcommand, inputSet;
 
-uint8_t inputProtocol
+//uint8_t inputProtocol;
 extern uint8_t dshot, proshot, multishot, oneshot42, oneshot125, servoPwm;
 
 extern uint32_t input_buffer_size;
