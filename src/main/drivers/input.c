@@ -1,7 +1,5 @@
 #include "input.h"
 
-extern uint8_t dshotcommand;
-
 uint8_t inputProtocol;
 uint32_t inputTimeout;
 uint32_t inputTimeoutThreshold = 10000;
@@ -11,7 +9,7 @@ uint32_t propulse[4], dpulse[16];
 uint32_t inputBufferDMA[64];
 uint32_t inputBufferSize = 64;
 
-
+extern uint8_t dshotCommand;
 extern TIM_HandleTypeDef htim15;
 
 
@@ -132,17 +130,17 @@ void inputProshot() {
         } else {
           if(tocheck > 47) {
             inputDataNew = tocheck;
-            dshotcommand = 0;
+            dshotCommand = 0;
           }
 
           if ((tocheck <= 47)&& (tocheck > 0)) {
             inputDataNew = 0;
-            dshotcommand = tocheck;  //  todo
+            dshotCommand = tocheck;  //  todo
           }
 
           if (tocheck == 0) {
             inputDataNew = 0;
-            dshotcommand = 0;
+            dshotCommand = 0;
           }
         }
       }
@@ -230,16 +228,16 @@ void inputDshot() {
       if(calcCRC == checkCRC) {
         if (tocheck > 47) {
           inputDataNew = tocheck;
-          dshotcommand = 0;
+          dshotCommand = 0;
         }
       }
       if ((tocheck <= 47) && (tocheck > 0)) {
         inputDataNew = 0;
-        dshotcommand = tocheck;    // todo
+        dshotCommand = tocheck;    // todo
       }
       if (tocheck == 0) {
         inputDataNew = 0;
-        dshotcommand = 0;
+        dshotCommand = 0;
       }
 
       break;

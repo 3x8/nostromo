@@ -42,9 +42,9 @@ uint32_t currentraw;
 uint32_t ADC1ConvertedValues[2];
 
 //ToDo input
-uint8_t dshotcommand;
+uint8_t dshotCommand;
 uint32_t input;
-uint32_t adjusted_input;
+uint32_t inputAdjusted;
 
 extern uint32_t inputDataNew;
 extern uint32_t inputTimeout;
@@ -130,7 +130,7 @@ int main(void) {
     compit = 0;
 
     //Todo lock for mottor running
-    switch (dshotcommand) {
+    switch (dshotCommand) {
     case DSHOT_CMD_MOTOR_STOP:
       //ToDo
       //input = 0;
@@ -175,27 +175,27 @@ int main(void) {
       //char oldbrake = brake;
       if ( inputDataNew > 1100 ) {
         if (forward == escConfig()->motorDirection) {
-          adjusted_input = 0;
+          inputAdjusted = 0;
           prop_brake_active = 1;
           forward = !escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
         if (prop_brake_active == 0) {
-          adjusted_input = (inputDataNew - 1050)*3;
+          inputAdjusted = (inputDataNew - 1050)*3;
         }
       }
 
       if (inputDataNew < 800) {
         if (forward == (!escConfig()->motorDirection)) {
           prop_brake_active = 1;
-          adjusted_input = 0;
+          inputAdjusted = 0;
           forward = escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
         if (prop_brake_active == 0) {
-          adjusted_input = (800 - inputDataNew) * 3;
+          inputAdjusted = (800 - inputDataNew) * 3;
         }
       }
 
@@ -205,7 +205,7 @@ int main(void) {
       }
 
       if (inputDataNew > 800 && inputDataNew < 1100) {
-        adjusted_input = 0;
+        inputAdjusted = 0;
         prop_brake_active = 0;
       }
     } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
@@ -215,33 +215,33 @@ int main(void) {
           forward = !escConfig()->motorDirection;
           bemf_counts =0;
         }
-        adjusted_input = (inputDataNew - 1100) * 2 + 100;
+        inputAdjusted = (inputDataNew - 1100) * 2 + 100;
       } if ( inputDataNew <= 1047 &&  inputDataNew > 0) {
         if(forward == (!escConfig()->motorDirection)) {
           bemf_counts =0;
           forward = escConfig()->motorDirection;
         }
-        adjusted_input = (inputDataNew - 90) * 2;
+        inputAdjusted = (inputDataNew - 90) * 2;
       }
       if ((inputDataNew > 1047 && inputDataNew < 1098 ) || inputDataNew <= 120) {
-        adjusted_input = 0;
+        inputAdjusted = 0;
       }
     } else {
-      adjusted_input = inputDataNew;
+      inputAdjusted = inputDataNew;
     }
 
-    if (adjusted_input > 2000) {
-      adjusted_input = 2000;
+    if (inputAdjusted > 2000) {
+      inputAdjusted = 2000;
     }
 
-    if (adjusted_input - input > 25) {
+    if (inputAdjusted - input > 25) {
       input = input + 5;
     } else {
-      input = adjusted_input;
+      input = inputAdjusted;
     }
 
-    if (adjusted_input <= input) {
-      input = adjusted_input;
+    if (inputAdjusted <= input) {
+      input = inputAdjusted;
     }
 
     advanceDivisor();
