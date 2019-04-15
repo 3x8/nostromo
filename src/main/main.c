@@ -113,11 +113,11 @@ int main(void) {
 
 
   //ToDo
-  // 3D spinDirection and normalSpin  opposed
+  // 3D motorDirection and normalSpin  opposed
   // what is normal ?
-  forward = escConfig()->spinDirection;
+  forward = escConfig()->motorDirection;
 
-  if(escConfig()->mode3D) {
+  if(escConfig()->motor3Dmode) {
     newinput = 1001;
     //	start_power = 175;
   }
@@ -150,25 +150,25 @@ int main(void) {
       playInputTune();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
-      escConfig()->spinDirection = 1;
+      escConfig()->motorDirection = 1;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
-      escConfig()->spinDirection = 0;
+      escConfig()->motorDirection = 0;
       armed = 0;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
-      forward = escConfig()->spinDirection;
+      forward = escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
-      forward = !escConfig()->spinDirection;
+      forward = !escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
-      escConfig()->mode3D = 0;
+      escConfig()->motor3Dmode = 0;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
-      escConfig()->mode3D = 1;
+      escConfig()->motor3Dmode = 1;
       armed = 0;
       break;
     case DSHOT_CMD_SETTING_SAVE:
@@ -183,13 +183,13 @@ int main(void) {
 
 
 
-    if (escConfig()->mode3D == 1 && (proshot == 0 && dshot == 0)) {
+    if (escConfig()->motor3Dmode == 1 && (proshot == 0 && dshot == 0)) {
       //char oldbrake = brake;
       if ( newinput > 1100 ) {
-        if (forward == escConfig()->spinDirection) {
+        if (forward == escConfig()->motorDirection) {
           adjusted_input = 0;
           prop_brake_active = 1;
-          forward = !escConfig()->spinDirection;
+          forward = !escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
@@ -199,10 +199,10 @@ int main(void) {
       }
 
       if (newinput < 800) {
-        if (forward == (!escConfig()->spinDirection)) {
+        if (forward == (!escConfig()->motorDirection)) {
           prop_brake_active = 1;
           adjusted_input = 0;
-          forward = escConfig()->spinDirection;
+          forward = escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
@@ -221,18 +221,18 @@ int main(void) {
         prop_brake_active = 0;
       }
 
-    } else if((proshot || dshot ) && escConfig()->mode3D) {
+    } else if((proshot || dshot ) && escConfig()->motor3Dmode) {
       if ( newinput > 1097 ) {
 
-        if (forward == escConfig()->spinDirection) {
-          forward = !escConfig()->spinDirection;
+        if (forward == escConfig()->motorDirection) {
+          forward = !escConfig()->motorDirection;
           bemf_counts =0;
         }
         adjusted_input = (newinput - 1100) * 2 + 100;
       } if ( newinput <= 1047 &&  newinput > 0) {
-        if(forward == (!escConfig()->spinDirection)) {
+        if(forward == (!escConfig()->motorDirection)) {
           bemf_counts =0;
-          forward = escConfig()->spinDirection;
+          forward = escConfig()->motorDirection;
         }
         adjusted_input = (newinput - 90) * 2;
       }

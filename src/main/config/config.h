@@ -5,8 +5,8 @@
 #define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct escConfig_s {
-  bool spinDirection;
-  bool mode3D;
+  bool motorDirection;
+  bool motor3Dmode;
   bool led0;
   bool led1;
   bool led2;

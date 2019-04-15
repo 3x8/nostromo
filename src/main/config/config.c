@@ -16,8 +16,8 @@ void configReset(void) {
   masterConfig.version = EEPROM_CONF_VERSION;
 
   // assign default config
-  escConfig()->spinDirection = 1;
-  escConfig()->mode3D = 0;
+  escConfig()->motorDirection = 1;
+  escConfig()->motor3Dmode = 0;
   escConfig()->led0 = 0;
   escConfig()->led1 = 0;
   escConfig()->led2 = 0;
