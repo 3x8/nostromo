@@ -12,15 +12,13 @@ uint32_t propulse[4], dpulse[16];
 uint32_t inputBufferDMA[64];
 uint32_t inputBufferSize = 64;
 
-extern uint32_t input;
-
 extern TIM_HandleTypeDef htim15;
 extern bool motorDirection;
 
 
 void inputArmCheck(void) {
   if (!inputArmed) {
-    if ((inputProtocol != AUTODETECT) && (input == 0)) {
+    if ((inputProtocol != AUTODETECT) && (inputDataNew == 0)) {
       inputArmedCounter++;
       HAL_Delay(1);
       if (inputArmedCounter > 1000) {
@@ -31,7 +29,7 @@ void inputArmCheck(void) {
       }
     }
 
-    if (input > 1) {
+    if (inputDataNew > 1) {
       inputArmedCounter = 0;
     }
   }
@@ -40,7 +38,7 @@ void inputArmCheck(void) {
 void inputDisarmCheck(void) {
   inputTimeout++;
   if (inputTimeout > inputTimeoutThreshold ) {
-    input = 0;
+    inputDataNew = 0;
     inputArmed = false;
     inputArmedCounter = 0;
     //debug
@@ -53,7 +51,7 @@ void inputDshotCommandRun(void) {
   switch (imputCommandDshot) {
   case DSHOT_CMD_MOTOR_STOP:
     //ToDo
-    //input = 0;
+    //inputDataNew = 0;
     break;
   case DSHOT_CMD_BEACON1:
     motorStartupTune();
