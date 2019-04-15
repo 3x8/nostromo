@@ -5,7 +5,6 @@ uint32_t adcCurrentRaw;
 uint32_t adcValue[2];
 extern ADC_HandleTypeDef hadc;
 
-
 void adcInit(void) {
   while (HAL_ADC_Start_DMA(&hadc, (uint32_t*)adcValue, 2) != HAL_OK);
 }
