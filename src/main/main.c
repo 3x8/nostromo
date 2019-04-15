@@ -7,7 +7,7 @@ TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
 
-//ToDo motor
+//ToDo rest
 extern uint32_t compit;
 uint32_t sensorless, commutation_interval;
 uint32_t filter_level = 1;
@@ -33,8 +33,6 @@ extern uint32_t inputDataNew;
 extern uint8_t  inputProtocol;
 extern uint32_t inputBufferDMA[64];
 
-//ToDoADC
-extern uint32_t adcValue[2];
 
 int main(void) {
   HAL_Init();
