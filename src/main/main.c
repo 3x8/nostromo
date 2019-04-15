@@ -38,16 +38,10 @@ uint32_t input;
 uint32_t inputAdjusted;
 
 extern bool inputArmed;
-//extern uint32_t inputArmedCounter;
-
 extern uint8_t imputCommandDshot;
-
 extern uint32_t inputDataNew;
-extern uint32_t inputTimeout;
 extern uint8_t  inputProtocol;
-extern uint32_t inputTimeoutThreshold;
 extern uint32_t inputBufferDMA[64];
-extern uint32_t inputBufferSize;
 
 
 //ToDo
