@@ -44,8 +44,7 @@ uint32_t currentraw;
 uint32_t ADC1ConvertedValues[2];
 
 //ToDo input
-uint8_t dshotcommand, inputSet;
-uint8_t dshot, proshot, multishot, oneshot42, oneshot125, servoPwm;
+uint8_t dshotcommand;
 
 uint32_t input_buffer_size = 64;
 
@@ -55,8 +54,9 @@ uint32_t dpulse[16];
 
 uint32_t input, newinput;
 
-uint32_t signaltimeout;
-uint32_t signal_timeout_threshold = 10000;
+extern uint32_t inputTimeout;
+extern uint8_t inputProtocol;
+extern uint32_t inputTimeoutThreshold;
 
 uint32_t adjusted_input;
 
@@ -178,11 +178,7 @@ int main(void) {
       break;
     }
 
-
-
-
-
-    if (escConfig()->motor3Dmode == 1 && (proshot == 0 && dshot == 0)) {
+    if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
       //char oldbrake = brake;
       if ( newinput > 1100 ) {
         if (forward == escConfig()->motorDirection) {
@@ -219,8 +215,7 @@ int main(void) {
         adjusted_input = 0;
         prop_brake_active = 0;
       }
-
-    } else if((proshot || dshot ) && escConfig()->motor3Dmode) {
+    } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
       if ( newinput > 1097 ) {
 
         if (forward == escConfig()->motorDirection) {
@@ -258,13 +253,13 @@ int main(void) {
 
     advanceDivisor();
 
-    if (inputSet == 0) {
+    if (inputProtocol == AUTODETECT) {
       HAL_Delay(10);
       inputDetectProtocol();
     }
 
     if (!armed) {
-      if ((inputSet == 1) && (input == 0)) {
+      if ((inputProtocol != AUTODETECT) && (input == 0)) {
         armedcount++;
         HAL_Delay(1);
         if (armedcount > 1000) {
@@ -309,8 +304,8 @@ int main(void) {
       }
     }
 
-    signaltimeout++;
-    if (signaltimeout > signal_timeout_threshold ) {
+    inputTimeout++;
+    if (inputTimeout > inputTimeoutThreshold ) {
       input = 0;
       armed = 0;
       armedcount = 0;

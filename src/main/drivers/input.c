@@ -1,9 +1,10 @@
 #include "input.h"
 
-extern uint8_t dshotcommand, inputSet;
+extern uint8_t dshotcommand;
 
-//uint8_t inputProtocol;
-extern uint8_t dshot, proshot, multishot, oneshot42, oneshot125, servoPwm;
+uint8_t inputProtocol;
+uint32_t inputTimeout;
+uint32_t inputTimeoutThreshold = 10000;
 
 extern uint32_t input_buffer_size;
 
@@ -13,50 +14,44 @@ extern uint32_t dpulse[16];
 
 extern uint32_t input, newinput;
 
-extern uint32_t signaltimeout;
-
 extern TIM_HandleTypeDef htim15;
 
 
 void inputCallbackDMA() {
+  inputTimeout = 0;
+
   //debug
   LED_ON(LED1);
 
-  signaltimeout = 0;
   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_3);
 
-  if (inputSet == 1) {
-    if (dshot == 1) {
+  switch (inputProtocol) {
+    case DSHOT:
       inputDshot();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
-    }
-
-    if (proshot == 1) {
+      break;
+    case PROSHOT:
       inputProshot();
-      //debug
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 16);
+      //debug
       //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 8);
-    }
-
-    if (servoPwm == 1) {
+      break;
+    case SERVOPWM:
       inputServoPwm();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-    }
-
-    if (multishot) {
+      break;
+    case MULTISHOT:
       inputMultishot();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-    }
-
-    if (oneshot125) {
+      break;
+    case ONESHOT125:
       inputOneshot125();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-    }
-
-    if (oneshot42) {
+      break;
+    case ONESHOT42:
       inputOneshot42();
       HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 3);
-    }
+      break;
   }
 
   //debug
@@ -67,12 +62,7 @@ void inputCallbackDMA() {
 
 void inputDetectProtocol() {
   uint32_t smallestnumber = 20000;
-  dshot = 0;
-  proshot = 0;
-  multishot = 0;
-  oneshot42 = 0;
-  oneshot125 = 0;
-  servoPwm = 0;
+
   int lastnumber = dma_buffer[0];
 
   for ( int j = 1; j < input_buffer_size; j++) {
@@ -83,36 +73,34 @@ void inputDetectProtocol() {
   }
 
   if ((smallestnumber > 3)&&(smallestnumber < 22)) {
-    dshot = 1;
+    inputProtocol = DSHOT;
   }
 
   if ((smallestnumber > 40 )&&(smallestnumber < 80)) {
-    proshot = 1;
+    inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0xffff;
   }
 
   if ((smallestnumber > 100 )&&(smallestnumber < 400)) {
-    multishot = 1;
+    inputProtocol = MULTISHOT;
   }
-//	if ((smallestnumber > 2000 )&&(smallestnumber < 3000)){
-//		oneshot42 = 1;
-//	}
-//	if ((smallestnumber > 3000 )&&(smallestnumber < 7000)){
-//		oneshot125 = 1;
-//	}
+  //if ((smallestnumber > 2000 )&&(smallestnumber < 3000)){
+  //  inputProtocol = ONESHOT42;
+  //}
+  //if ((smallestnumber > 3000 )&&(smallestnumber < 7000)){
+  //  inputProtocol = ONESHOT125;
+  //}
   if (smallestnumber > 2000) {
-    servoPwm = 1;
+    inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
   }
 
   if (smallestnumber == 0) {
-    inputSet = 0;
+    inputProtocol = AUTODETECT;
   } else {
-    inputSet = 1;
     HAL_Delay(50);
-    // playInputTune();
   }
   HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, dma_buffer, 64);
 }
@@ -230,10 +218,10 @@ void inputDshot() {
       }
 
       calcCRC = ( (dpulse[0]^dpulse[4]^dpulse[8]) << 3
-                          |(dpulse[1]^dpulse[5]^dpulse[9]) << 2
-                          |(dpulse[2]^dpulse[6]^dpulse[10]) << 1
-                          |(dpulse[3]^dpulse[7]^dpulse[11])
-                          );
+                  |(dpulse[1]^dpulse[5]^dpulse[9]) << 2
+                  |(dpulse[2]^dpulse[6]^dpulse[10]) << 1
+                  |(dpulse[3]^dpulse[7]^dpulse[11])
+                  );
       checkCRC = (dpulse[12]<<3 | dpulse[13]<<2 | dpulse[14]<<1 | dpulse[15]);
 
       int tocheck = (
