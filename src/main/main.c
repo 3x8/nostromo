@@ -93,7 +93,6 @@ int main(void) {
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 
 
-
   //ToDo
   // 3D motorDirection and normalSpin  opposed
   // what is normal ?
