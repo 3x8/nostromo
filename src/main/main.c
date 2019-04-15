@@ -8,13 +8,12 @@ COMP_HandleTypeDef hcomp1;
 TIM_HandleTypeDef htim1, htim2, htim3, htim15;
 DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
 
-// 1 for complementary pwm , 0 for diode freewheeling
-uint16_t slow_decay = 1;
-// apply full motor brake on stop
-uint16_t brake = 1;
-uint16_t start_power = 150;
-uint16_t prop_brake, prop_brake_active;
-uint16_t prop_brake_strength = 300;
+
+// apply full motor motorBrakeFull on stop
+extern uint16_t motorBrakeFull;
+uint16_t motorStartPower = 150;
+uint16_t motorBrakeProportional, motorBrakeProportionalActive;
+uint16_t motorBrakeProportionalStrength = 300;
 
 uint32_t sensorless, commutation_interval;
 
@@ -35,7 +34,7 @@ uint8_t rising = 1;
 uint8_t running;
 uint8_t started;
 uint8_t inputArmed;
-uint32_t armedcount;
+uint32_t inputArmedCounter;
 
 uint32_t voltageraw;
 uint32_t currentraw;
@@ -111,7 +110,7 @@ int main(void) {
 
   if(escConfig()->motor3Dmode) {
     inputDataNew = 1001;
-    //	start_power = 175;
+    //	motorStartPower = 175;
   }
 
   // set duty cycle to 50 out of 768 to start.
@@ -172,41 +171,41 @@ int main(void) {
     }
 
     if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
-      //char oldbrake = brake;
+      //char oldbrake = motorBrakeFull;
       if ( inputDataNew > 1100 ) {
         if (motorDirection == escConfig()->motorDirection) {
           inputAdjusted = 0;
-          prop_brake_active = 1;
+          motorBrakeProportionalActive = 1;
           motorDirection = !escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
-        if (prop_brake_active == 0) {
+        if (motorBrakeProportionalActive == 0) {
           inputAdjusted = (inputDataNew - 1050)*3;
         }
       }
 
       if (inputDataNew < 800) {
         if (motorDirection == (!escConfig()->motorDirection)) {
-          prop_brake_active = 1;
+          motorBrakeProportionalActive = 1;
           inputAdjusted = 0;
           motorDirection = escConfig()->motorDirection;
           //	HAL_Delay(1);
         }
 
-        if (prop_brake_active == 0) {
+        if (motorBrakeProportionalActive == 0) {
           inputAdjusted = (800 - inputDataNew) * 3;
         }
       }
 
       if (zctimeout >= zc_timeout_threshold) {
-        prop_brake_active = 0;
+        motorBrakeProportionalActive = 0;
         bemf_counts = 0;
       }
 
       if (inputDataNew > 800 && inputDataNew < 1100) {
         inputAdjusted = 0;
-        prop_brake_active = 0;
+        motorBrakeProportionalActive = 0;
       }
     } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
       if ( inputDataNew > 1097 ) {
@@ -253,9 +252,9 @@ int main(void) {
 
     if (!inputArmed) {
       if ((inputProtocol != AUTODETECT) && (input == 0)) {
-        armedcount++;
+        inputArmedCounter++;
         HAL_Delay(1);
-        if (armedcount > 1000) {
+        if (inputArmedCounter > 1000) {
           inputArmed = true;
           //debug
           LED_ON(LED0);
@@ -264,12 +263,12 @@ int main(void) {
       }
 
       if (input > 1) {
-        armedcount = 0;
+        inputArmedCounter = 0;
       }
     }
 
     if ((input > 47) && (inputArmed)) {
-      prop_brake_active = 0;
+      motorBrakeProportionalActive = 0;
       started = 1;
 
       duty_cycle = input / 2 - 10;
@@ -303,7 +302,7 @@ int main(void) {
     if (inputTimeout > inputTimeoutThreshold ) {
       input = 0;
       inputArmed = false;
-      armedcount = 0;
+      inputArmedCounter = 0;
       //debug
       LED_OFF(LED0);
     }
@@ -311,19 +310,19 @@ int main(void) {
     if (input <= 47) {
       //	sensorless = 0;
       started = 0;
-      if ( !brake && !prop_brake_active) {
+      if ( !motorBrakeFull && !motorBrakeProportionalActive) {
         allOff();
       }
       duty_cycle = 0;
-      if(brake) {
+      if(motorBrakeFull) {
         fullBrake();
         duty_cycle = 0;
         //HAL_COMP_Stop_IT(&hcomp1);
       }
 
-      if(prop_brake && prop_brake_active) {
-        //prop_brake_active = 1;
-        duty_cycle = prop_brake_strength;
+      if(motorBrakeProportional && motorBrakeProportionalActive) {
+        //motorBrakeProportionalActive = 1;
+        duty_cycle = motorBrakeProportionalStrength;
         proBrake();
       }
 
@@ -334,7 +333,7 @@ int main(void) {
 
       if (commutation_interval > 30000) {
         HAL_COMP_Stop_IT(&hcomp1);
-        //prop_brake_active = 0;
+        //motorBrakeProportionalActive = 0;
       }
 
     }
@@ -369,7 +368,7 @@ int main(void) {
 
     zctimeout++;                                            // move to started if
     if (zctimeout > zc_timeout_threshold) {
-      //prop_brake_active = 0;
+      //motorBrakeProportionalActive = 0;
       sensorless = 0;
       HAL_COMP_Stop_IT(&hcomp1);
 

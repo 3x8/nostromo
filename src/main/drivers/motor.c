@@ -35,25 +35,24 @@ extern uint32_t zctimeout;
 extern uint32_t zc_timeout_threshold;
 extern uint32_t duty_cycle;
 
-
-
 extern uint32_t bemf_counts;
 
 extern uint8_t motorDirection;
 extern uint8_t rising;
 extern uint8_t running;
 extern uint8_t started;
+
 extern bool inputArmed;
-extern uint32_t armedcount;
+extern uint32_t inputArmedCounter;
 
 
 // for complementary pwm , 0 for diode freewheeling
-extern uint16_t slow_decay;
-// apply full motor brake on stop
-extern uint16_t brake;
-extern uint16_t start_power;
-extern uint16_t prop_brake, prop_brake_active;
-extern uint16_t prop_brake_strength;
+uint16_t motorSlowDecay = 1;;
+// apply full motor motorBrakeFull on stop
+uint16_t motorBrakeFull  = 1;
+extern uint16_t motorStartPower;
+extern uint16_t motorBrakeProportional, motorBrakeProportionalActive;
+extern uint16_t motorBrakeProportionalStrength;
 
 // increase divisor to decrease advance
 extern uint16_t advancedivisor;
@@ -73,7 +72,7 @@ void phaseB(uint8_t newPhase)
 #endif
 {
   if (newPhase == pwm) {
-    if(!slow_decay  || prop_brake_active) {
+    if(!motorSlowDecay  || motorBrakeProportionalActive) {
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
     } else {
@@ -107,7 +106,7 @@ void phaseC(uint8_t newPhase)
 #endif
 {
   if (newPhase == pwm) {
-    if (!slow_decay || prop_brake_active) {
+    if (!motorSlowDecay || motorBrakeProportionalActive) {
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
     } else {
@@ -140,7 +139,7 @@ void phaseA(uint8_t newPhase)
 #endif
 {
   if (newPhase == pwm) {
-    if (!slow_decay || prop_brake_active) {
+    if (!motorSlowDecay || motorBrakeProportionalActive) {
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
     } else {
@@ -303,11 +302,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void startMotor() {
-  uint16_t decaystate = slow_decay;
+  uint16_t decaystate = motorSlowDecay;
   sensorless = 0;
   if (running == 0) {
     HAL_COMP_Stop_IT(&hcomp1);
-    slow_decay = 1;
+    motorSlowDecay = 1;
 
     commutate();
     commutation_interval = tim2_start_arr- 3000;
@@ -316,7 +315,7 @@ void startMotor() {
     while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
   }
 
-  slow_decay = decaystate;    // return to normal
+  motorSlowDecay = decaystate;    // return to normal
   sensorless = 1;
   bemf_counts = 0;
 }
