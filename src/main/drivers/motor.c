@@ -5,13 +5,12 @@ uint16_t step = 1;
 
 uint32_t thiszctime, lastzctime;
 
-uint16_t sine_array[20] = {80, 80, 90, 90, 95, 95,95, 100, 100,100, 100, 100, 100, 95, 95, 95, 90, 90, 80, 80};
 
 // set proportianal to commutation time. with advance divisor
 uint32_t advance = 0;
 
 // increase divisor to decrease advance
-uint16_t advancedivisor = 8;
+uint16_t advancedivisor = 3;
 //char advancedivisorup = 3;
 //char advancedivisordown = 3;
 
@@ -53,6 +52,8 @@ extern uint32_t input, inputDataNew;
 
 void advanceDivisor() {
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
+    //advancedivisor = 2;
+
 }
 
 // motorPhaseB qfnf051 , phase A qfp32
@@ -370,20 +371,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 }
 
-
-void motorChangeDutyCycleWithSin() {
-  if (!motorRisingBEMF) {
-    // last ten elements in sin array
-    dutyCycle = (dutyCycle * sine_array[((TIM2->CNT*10)/TIM2->ARR)+9])/100;
-  }else{
-    // first ten elements in sin array
-    dutyCycle = (dutyCycle * sine_array[(TIM2->CNT*10)/TIM2->ARR])/100;
-  }
-
-  TIM1->CCR1 = dutyCycle;
-  TIM1->CCR2 = dutyCycle;
-  TIM1->CCR3 = dutyCycle;
-}
 
 void zc_found_routine() {
   zctimeout = 0;
