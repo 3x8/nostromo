@@ -44,6 +44,7 @@ typedef enum {
 } inputProtocolEnum;
 
 void inputArmCheck(void);
+void inputDisarm(void);
 void inputDisarmCheck(void);
 
 void inputDshotCommandRun(void);

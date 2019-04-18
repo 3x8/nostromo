@@ -93,6 +93,18 @@ int main(void) {
     //debug
     //LED_OFF(LED0);
 
+    advanceDivisor();
+
+    if (inputProtocol == AUTODETECT) {
+      inputDisarm();
+      //HAL_Delay(10);
+      //inputDetectProtocol();
+    } else {
+      inputArmCheck();
+      inputDisarmCheck();
+    }
+
+
     compit = 0;
 
     if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
@@ -166,14 +178,9 @@ int main(void) {
       input = inputAdjusted;
     }
 
-    advanceDivisor();
+    //advanceDivisor();
 
-    if (inputProtocol == AUTODETECT) {
-      HAL_Delay(10);
-      inputDetectProtocol();
-    }
 
-    inputArmCheck();
 
     if ((input > 47) && (inputArmed)) {
       motorBrakeActiveProportional = false;
@@ -206,7 +213,7 @@ int main(void) {
       }
     }
 
-    inputDisarmCheck();
+
 
     if (input <= 47) {
       motorStartup = false;

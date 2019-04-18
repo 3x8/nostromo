@@ -52,8 +52,6 @@ extern uint32_t input, inputDataNew;
 
 void advanceDivisor() {
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
-    //advancedivisor = 2;
-
 }
 
 // motorPhaseB qfnf051 , phase A qfp32
