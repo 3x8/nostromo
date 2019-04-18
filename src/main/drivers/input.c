@@ -36,7 +36,7 @@ void inputArmCheck(void) {
 }
 
 void inputDisarm(void) {
-  //inputDataNew = 0;
+  inputDataNew = 0;
   inputArmed = false;
   inputArmedCounter = 0;
 }
