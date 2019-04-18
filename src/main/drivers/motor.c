@@ -48,8 +48,6 @@ extern uint32_t inputArmedCounter;
 bool motorSlowDecay = true;
 bool motorBrakeActiveProportional = true;
 
-// increase divisor to decrease advance
-extern uint16_t advancedivisor;
 
 extern uint32_t input, inputDataNew;
 
