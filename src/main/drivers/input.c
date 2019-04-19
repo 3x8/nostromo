@@ -20,7 +20,7 @@ void inputArmCheck(void) {
   if (!inputArmed) {
     if ((inputProtocol != AUTODETECT) && (inputDataNew == 0)) {
       inputArmCounter++;
-      //HAL_Delay(1);
+      HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //debug
@@ -35,15 +35,15 @@ void inputDisarm(void) {
   inputArmed = false;
   inputArmCounter = 0;
 
-  inputDataNew = 0;
+  //inputDataNew = 0;
   inputTimeoutCounter = 0;
 
   inputProtocol = AUTODETECT;
-  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
 }
 
 void inputDisarmCheck(void) {
-  if (inputArmed) {
+  //if (inputArmed) {
     inputTimeoutCounter++;
     if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
       inputDisarm();
@@ -51,7 +51,7 @@ void inputDisarmCheck(void) {
       LED_OFF(RED);
     }
 
-  }
+  //}
 
 }
 
@@ -132,7 +132,7 @@ void inputCallbackDMA() {
     case SERVOPWM:
       inputServoPwm();
       //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
       break;
     /* case MULTISHOT:
       inputMultishot();
@@ -150,7 +150,7 @@ void inputCallbackDMA() {
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;*/
     default:
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,64) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,16) != HAL_OK);
       break;
   }
 
@@ -193,13 +193,13 @@ void inputDetectProtocol() {
   }
   if ((smallestnumber > 3000 )&&(smallestnumber < 7000)){
     inputProtocol = ONESHOT125;
-  }
+  }*/
   if (smallestnumber > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
-  } */
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
+  }
 
   /*
   if (smallestnumber == 0) {
@@ -211,7 +211,7 @@ void inputDetectProtocol() {
   if (inputProtocol == AUTODETECT) {
     //debug
     HAL_Delay(1);
-    HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
+    HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16);
   }
 }
 
