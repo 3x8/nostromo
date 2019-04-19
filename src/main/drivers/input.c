@@ -99,119 +99,64 @@ void inputDshotCommandRun(void) {
 }
 
 void inputCallbackDMA() {
-  //inputTimeoutCounter = 0;
-
-  //debug
-  //LED_ON(GREEN);
-
-  // ToDo what is this ???
-  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_3);
-
   switch (inputProtocol) {
      case AUTODETECT:
       //debug
       LED_ON(BLUE);
       inputDetectProtocol();
       LED_OFF(BLUE);
-      //while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
       break;
-    /* case DSHOT:
-      inputDshot();
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
-      break; */
     case PROSHOT:
       //debug
       LED_ON(GREEN);
       inputProshot();
       LED_OFF(GREEN);
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16);
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
       break;
     case SERVOPWM:
       inputServoPwm();
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
       break;
-    /* case MULTISHOT:
-      inputMultishot();
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
-      break;
-    case ONESHOT125:
-      inputOneshot125();
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
-      break;
-    case ONESHOT42:
-      inputOneshot42();
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
-      break;*/
     default:
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,16) != HAL_OK);
       break;
   }
 
-  //debug
-  //LED_OFF(GREEN);
-  //LED_OFF(BLUE);
 }
 
 
 void inputDetectProtocol() {
+  //ToDo
+  inputBufferSize = 16;
   uint32_t smallestnumber = 20000;
-
   uint32_t lastnumber = inputBufferDMA[0];
 
-  for ( int j = 1; j < inputBufferSize; j++) {
-    if((inputBufferDMA[j] - lastnumber) < smallestnumber) { // blank space
-      smallestnumber = inputBufferDMA[j] - lastnumber;
+  for ( int i = 1; i < inputBufferSize; i++) {
+    if((inputBufferDMA[i + 1] - inputBufferDMA[i]) < smallestnumber) {
+      smallestnumber = inputBufferDMA[i] - lastnumber;
     }
-    lastnumber = inputBufferDMA[j];
+    lastnumber = inputBufferDMA[i];
   }
-
-  /*
-  if ((smallestnumber > 3)&&(smallestnumber < 22)) {
-    inputProtocol = DSHOT;
-  } */
 
   if ((smallestnumber > 40 )&&(smallestnumber < 80)) {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0xffff;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
+    return;
   }
 
-  /*
-  if ((smallestnumber > 100 )&&(smallestnumber < 400)) {
-    inputProtocol = MULTISHOT;
-  }
-  if ((smallestnumber > 2000 )&&(smallestnumber < 3000)){
-    inputProtocol = ONESHOT42;
-  }
-  if ((smallestnumber > 3000 )&&(smallestnumber < 7000)){
-    inputProtocol = ONESHOT125;
-  }*/
   if (smallestnumber > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
+    return;
   }
 
-  /*
-  if (smallestnumber == 0) {
-    inputProtocol = AUTODETECT;
-  } else {
-    HAL_Delay(50);
-  }*/
-
+  // default
   if (inputProtocol == AUTODETECT) {
-    //debug
-    HAL_Delay(1);
-    HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
   }
 }
 
