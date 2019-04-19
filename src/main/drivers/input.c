@@ -154,8 +154,9 @@ void inputDetectProtocol() {
   if ((inputPulseWidthMin > 40 )&&(inputPulseWidthMin < 80)) {
     //inputProtocol = PROSHOT;
     TIM15->PSC = 1;
-    TIM15->CNT = 0xffff;
-    //while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
+    //TIM15->CNT = 0xffff;
+    TIM15->CNT = 0x0;
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
     return;
   }
 
