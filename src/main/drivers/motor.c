@@ -40,7 +40,7 @@ bool motorRisingBEMF = 1;
 bool motorRunning;
 
 extern bool inputArmed;
-extern uint32_t inputArmedCounter;
+extern uint32_t inputArmCounter;
 
 
 // 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
@@ -314,7 +314,7 @@ void motorStart() {
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   timestamp = TIM3->CNT;
   //debug
-  //LED_ON(LED0);
+  //LED_ON(RED);
 
   if (compit > 200) {
     HAL_COMP_Stop_IT(&hcomp1);

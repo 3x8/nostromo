@@ -1,12 +1,12 @@
 #include "input.h"
 
 uint8_t inputProtocol;
-uint32_t inputTimeout;
-uint32_t inputTimeoutThreshold = 10000;
 uint32_t inputDataNew;
 uint8_t imputCommandDshot;
+
 bool inputArmed;
-uint32_t inputArmedCounter;
+uint32_t inputArmCounter;
+uint32_t inputTimeoutCounter;
 
 uint32_t propulse[4], dpulse[16];
 uint32_t inputBufferDMA[64];
@@ -19,35 +19,40 @@ extern bool motorDirection;
 void inputArmCheck(void) {
   if (!inputArmed) {
     if ((inputProtocol != AUTODETECT) && (inputDataNew == 0)) {
-      inputArmedCounter++;
-      HAL_Delay(1);
-      if (inputArmedCounter > 1000) {
+      inputArmCounter++;
+      //HAL_Delay(1);
+      if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //debug
-        LED_ON(LED0);
+        //LED_ON(RED);
         motorInputTune();
       }
-    }
-
-    if (inputDataNew != 0) {
-      inputArmedCounter = 0;
     }
   }
 }
 
 void inputDisarm(void) {
-  inputDataNew = 0;
   inputArmed = false;
-  inputArmedCounter = 0;
+  inputArmCounter = 0;
+
+  inputDataNew = 0;
+  inputTimeoutCounter = 0;
+
+  inputProtocol = AUTODETECT;
+  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
 }
 
 void inputDisarmCheck(void) {
-  inputTimeout++;
-  if (inputTimeout > inputTimeoutThreshold ) {
-    inputDisarm();
-    //debug
-    LED_OFF(LED0);
+  if (inputArmed) {
+    inputTimeoutCounter++;
+    if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
+      inputDisarm();
+      //debug
+      //LED_OFF(RED);
+    }
+
   }
+
 }
 
 void inputDshotCommandRun(void) {
@@ -94,50 +99,64 @@ void inputDshotCommandRun(void) {
 }
 
 void inputCallbackDMA() {
-  inputTimeout = 0;
+  //inputTimeoutCounter = 0;
 
   //debug
-  LED_ON(LED1);
+  //LED_ON(GREEN);
 
   // ToDo what is this ???
   //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_3);
 
   switch (inputProtocol) {
      case AUTODETECT:
+      //debug
+      LED_ON(BLUE);
       inputDetectProtocol();
+      LED_OFF(BLUE);
+      //while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
       //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
       break;
     /* case DSHOT:
       inputDshot();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
       break; */
     case PROSHOT:
-      inputProshot();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16);
       //debug
-      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8);
+      LED_ON(GREEN);
+      inputProshot();
+      LED_OFF(GREEN);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
       break;
     case SERVOPWM:
+      //debug
+      LED_ON(RED);
       inputServoPwm();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      LED_OFF(RED);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;
     /* case MULTISHOT:
       inputMultishot();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;
     case ONESHOT125:
       inputOneshot125();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;
     case ONESHOT42:
       inputOneshot42();
-      HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;*/
   }
 
   //debug
-  LED_OFF(LED1);
-  LED_OFF(LED2);
+  //LED_OFF(GREEN);
+  //LED_OFF(BLUE);
 }
 
 
@@ -162,6 +181,7 @@ void inputDetectProtocol() {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0xffff;
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
   }
 
   /*
@@ -178,15 +198,19 @@ void inputDetectProtocol() {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
   }
 
+  /*
   if (smallestnumber == 0) {
     inputProtocol = AUTODETECT;
   } else {
     HAL_Delay(50);
-  }
+  }*/
 
-  HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
+  if (inputProtocol == AUTODETECT) {
+    HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
+  }
 }
 
 void inputProshot() {
@@ -210,7 +234,9 @@ void inputProshot() {
 
       if (calcCRC == checkCRC) {
         //debug
-        LED_ON(LED2);
+        //LED_ON(BLUE);
+
+        inputTimeoutCounter = 0;
 
         int tocheck = ((propulse[0] << 7 | propulse[1] << 3 | propulse[2] >> 1));
         if (tocheck > 2047 || tocheck < 0) {
@@ -283,7 +309,9 @@ void inputServoPwm() {
     // blank space
     if(((inputBufferDMA[j] - lastnumber) >1000 ) && ((inputBufferDMA[j] - lastnumber) < 2010)) {
       inputDataNew = map((inputBufferDMA[j] - lastnumber), 1090, 2000, 0, 2000);
-      break;
+      inputTimeoutCounter = 0;
+      //break;
+      return;
     }
     lastnumber = inputBufferDMA[j];
   }

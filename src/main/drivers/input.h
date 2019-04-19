@@ -2,6 +2,9 @@
 
 #include "main.h"
 
+#define INPUT_ARM_COUNTER_THRESHOLD  1000
+#define INPUT_TIMEOUT_COUNTER_THRESHOLD  10000
+
 typedef enum {
     DSHOT_CMD_MOTOR_STOP = 0,
     DSHOT_CMD_BEACON1,

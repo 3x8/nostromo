@@ -35,6 +35,7 @@ extern uint32_t inputBufferDMA[64];
 
 
 int main(void) {
+
   HAL_Init();
   systemClockConfig();
 
@@ -71,6 +72,8 @@ int main(void) {
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 
 
+
+
   //ToDo
   // 3D motorDirection and normalSpin  opposed
   // what is normal ?
@@ -91,199 +94,212 @@ int main(void) {
     watchdogFeed();
 
     //debug
-    //LED_OFF(LED0);
-
-    advanceDivisor();
+    //LED_OFF(RED);
 
     if (inputProtocol == AUTODETECT) {
-      inputDisarm();
-      //HAL_Delay(10);
-      //inputDetectProtocol();
+
+      HAL_Delay(10);
+
     } else {
       inputArmCheck();
       inputDisarmCheck();
-    }
+
+      if (inputArmed) {
+        advanceDivisor();
 
 
-    compit = 0;
+        compit = 0;
 
-    if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
-      if ( inputDataNew > 1100 ) {
-        if (motorDirection == escConfig()->motorDirection) {
-          inputAdjusted = 0;
-          motorBrakeActiveProportional = true;
-          motorDirection = !escConfig()->motorDirection;
-        }
+        if ((escConfig()->motor3Dmode == 1) && ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT))) {
+          if ( inputDataNew > 1100 ) {
+            if (motorDirection == escConfig()->motorDirection) {
+              inputAdjusted = 0;
+              motorBrakeActiveProportional = true;
+              motorDirection = !escConfig()->motorDirection;
+            }
 
-        if (!motorBrakeActiveProportional) {
-          inputAdjusted = (inputDataNew - 1050)*3;
-        }
-      }
-
-      if (inputDataNew < 800) {
-        if (motorDirection == (!escConfig()->motorDirection)) {
-          motorBrakeActiveProportional = true;
-          inputAdjusted = 0;
-          motorDirection = escConfig()->motorDirection;
-          //	HAL_Delay(1);
-        }
-
-        if (!motorBrakeActiveProportional) {
-          inputAdjusted = (800 - inputDataNew) * 3;
-        }
-      }
-
-      if (zctimeout >= zc_timeout_threshold) {
-        motorBrakeActiveProportional = false;
-        bemf_counts = 0;
-      }
-
-      if (inputDataNew > 800 && inputDataNew < 1100) {
-        inputAdjusted = 0;
-        motorBrakeActiveProportional = false;
-      }
-    } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
-      if ( inputDataNew > 1097 ) {
-
-        if (motorDirection == escConfig()->motorDirection) {
-          motorDirection = !escConfig()->motorDirection;
-          bemf_counts =0;
-        }
-        inputAdjusted = (inputDataNew - 1100) * 2 + 100;
-      } if ( inputDataNew <= 1047 &&  inputDataNew > 0) {
-        if(motorDirection == (!escConfig()->motorDirection)) {
-          bemf_counts =0;
-          motorDirection = escConfig()->motorDirection;
-        }
-        inputAdjusted = (inputDataNew - 90) * 2;
-      }
-      if ((inputDataNew > 1047 && inputDataNew < 1098 ) || inputDataNew <= 120) {
-        inputAdjusted = 0;
-      }
-    } else {
-      inputAdjusted = inputDataNew;
-    }
-
-    if (inputAdjusted > 2000) {
-      inputAdjusted = 2000;
-    }
-
-    if (inputAdjusted - input > 25) {
-      input = input + 5;
-    } else {
-      input = inputAdjusted;
-    }
-
-    if (inputAdjusted <= input) {
-      input = inputAdjusted;
-    }
-
-    //advanceDivisor();
-
-
-
-    if ((input > 47) && (inputArmed)) {
-      motorBrakeActiveProportional = false;
-      motorStartup = true;
-
-      dutyCycle = input / 2 - 10;
-
-      if (bemf_counts < 15) {
-        if(dutyCycle < 70) {
-          dutyCycle=70;
-        }
-        if (dutyCycle > 400) {
-          dutyCycle=400;
-        }
-      }
-
-      if (motorRunning) {
-        if (dutyCycle > 998 ) {                                          // safety!!!
-          dutyCycle = 998;
-        }
-        if (dutyCycle < 44) {
-          dutyCycle = 44;
-        }
-
-        // set duty cycle to 50 out of 768 to start.
-        TIM1->CCR1 = dutyCycle;
-        TIM1->CCR2 = dutyCycle;
-        TIM1->CCR3 = dutyCycle;
-        //TIM1->CCR4 = dutyCycle;
-      }
-    }
-
-
-
-    if (input <= 47) {
-      motorStartup = false;
-
-      if (!motorRunning) {
-        inputDshotCommandRun();
-      }
-
-      switch(escConfig()->motorBrakeState) {
-        case BRAKE_FULL:
-          motorBrakeFull();
-          dutyCycle = 0;
-          break;
-        case BRAKE_PROPORTIONAL:
-          if(motorBrakeActiveProportional) {
-            dutyCycle = escConfig()->motorBrakeProportionalStrength;
-            motorBrakeProportional();
+            if (!motorBrakeActiveProportional) {
+              inputAdjusted = (inputDataNew - 1050)*3;
+            }
           }
-          break;
-        case BRAKE_OFF:
-            motorBrakeOff();
-            dutyCycle = 0;
-          break;
+
+          if (inputDataNew < 800) {
+            if (motorDirection == (!escConfig()->motorDirection)) {
+              motorBrakeActiveProportional = true;
+              inputAdjusted = 0;
+              motorDirection = escConfig()->motorDirection;
+              //	HAL_Delay(1);
+            }
+
+            if (!motorBrakeActiveProportional) {
+              inputAdjusted = (800 - inputDataNew) * 3;
+            }
+          }
+
+          if (zctimeout >= zc_timeout_threshold) {
+            motorBrakeActiveProportional = false;
+            bemf_counts = 0;
+          }
+
+          if (inputDataNew > 800 && inputDataNew < 1100) {
+            inputAdjusted = 0;
+            motorBrakeActiveProportional = false;
+          }
+        } else if(((inputProtocol == PROSHOT) || (inputProtocol == DSHOT) ) && escConfig()->motor3Dmode) {
+          if ( inputDataNew > 1097 ) {
+
+            if (motorDirection == escConfig()->motorDirection) {
+              motorDirection = !escConfig()->motorDirection;
+              bemf_counts =0;
+            }
+            inputAdjusted = (inputDataNew - 1100) * 2 + 100;
+          } if ( inputDataNew <= 1047 &&  inputDataNew > 0) {
+            if(motorDirection == (!escConfig()->motorDirection)) {
+              bemf_counts =0;
+              motorDirection = escConfig()->motorDirection;
+            }
+            inputAdjusted = (inputDataNew - 90) * 2;
+          }
+          if ((inputDataNew > 1047 && inputDataNew < 1098 ) || inputDataNew <= 120) {
+            inputAdjusted = 0;
+          }
+        } else {
+          inputAdjusted = inputDataNew;
+        }
+
+        if (inputAdjusted > 2000) {
+          inputAdjusted = 2000;
+        }
+
+        if (inputAdjusted - input > 25) {
+          input = input + 5;
+        } else {
+          input = inputAdjusted;
+        }
+
+        if (inputAdjusted <= input) {
+          input = inputAdjusted;
+        }
+
+        //advanceDivisor();
+
+
+
+        if ((input > 47) && (inputArmed)) {
+          motorBrakeActiveProportional = false;
+          motorStartup = true;
+
+          dutyCycle = input / 2 - 10;
+
+          if (bemf_counts < 15) {
+            if(dutyCycle < 70) {
+              dutyCycle=70;
+            }
+            if (dutyCycle > 400) {
+              dutyCycle=400;
+            }
+          }
+
+          if (motorRunning) {
+            if (dutyCycle > 998 ) {                                          // safety!!!
+              dutyCycle = 998;
+            }
+            if (dutyCycle < 44) {
+              dutyCycle = 44;
+            }
+
+            // set duty cycle to 50 out of 768 to start.
+            TIM1->CCR1 = dutyCycle;
+            TIM1->CCR2 = dutyCycle;
+            TIM1->CCR3 = dutyCycle;
+            //TIM1->CCR4 = dutyCycle;
+          }
+        }
+
+
+
+        if (input <= 47) {
+          motorStartup = false;
+
+          if (!motorRunning) {
+            inputDshotCommandRun();
+          }
+
+          switch(escConfig()->motorBrakeState) {
+            case BRAKE_FULL:
+              motorBrakeFull();
+              dutyCycle = 0;
+              break;
+            case BRAKE_PROPORTIONAL:
+              if(motorBrakeActiveProportional) {
+                dutyCycle = escConfig()->motorBrakeProportionalStrength;
+                motorBrakeProportional();
+              }
+              break;
+            case BRAKE_OFF:
+                motorBrakeOff();
+                dutyCycle = 0;
+              break;
+          }
+
+          TIM1->CCR1 = dutyCycle;
+          TIM1->CCR2 = dutyCycle;
+          TIM1->CCR3 = dutyCycle;
+
+          if (commutation_interval > 30000) {
+            HAL_COMP_Stop_IT(&hcomp1);
+          }
+        }
+
+        if (bemf_counts < 100 || commutation_interval > 10000) {
+          filter_delay = 15;
+          filter_level = 10;
+        } else {
+          filter_level = 3;
+          filter_delay = 3;
+        }
+
+        if(commutation_interval < 200 && dutyCycle > 500) {
+          filter_delay = 1;
+          filter_level = 0;
+        }
+
+        if (motorStartup) {
+          if (!motorRunning) {
+            zctimeout = 0;
+            // safety on for input testing
+            motorStart();
+          }
+        }
+
+        if (dutyCycle < 300) {
+          zc_timeout_threshold = 4000;
+        }else{
+          zc_timeout_threshold = 2000;
+        }
+
+        zctimeout++;                                            // move to motorStartup if
+        if (zctimeout > zc_timeout_threshold) {
+          sensorless = 0;
+          HAL_COMP_Stop_IT(&hcomp1);
+
+          motorRunning = false;
+          //		commutation_interval = 0;
+          zctimeout = zc_timeout_threshold + 1;
+          dutyCycle = 0;
+        }
+
+
+
+
+
+
+
+
       }
-
-      TIM1->CCR1 = dutyCycle;
-      TIM1->CCR2 = dutyCycle;
-      TIM1->CCR3 = dutyCycle;
-
-      if (commutation_interval > 30000) {
-        HAL_COMP_Stop_IT(&hcomp1);
-      }
     }
 
-    if (bemf_counts < 100 || commutation_interval > 10000) {
-      filter_delay = 15;
-      filter_level = 10;
-    } else {
-      filter_level = 3;
-      filter_delay = 3;
-    }
 
-    if(commutation_interval < 200 && dutyCycle > 500) {
-      filter_delay = 1;
-      filter_level = 0;
-    }
 
-    if (motorStartup) {
-      if (!motorRunning) {
-        zctimeout = 0;
-        // safety on for input testing
-        motorStart();
-      }
-    }
-
-    if (dutyCycle < 300) {
-      zc_timeout_threshold = 4000;
-    }else{
-      zc_timeout_threshold = 2000;
-    }
-
-    zctimeout++;                                            // move to motorStartup if
-    if (zctimeout > zc_timeout_threshold) {
-      sensorless = 0;
-      HAL_COMP_Stop_IT(&hcomp1);
-
-      motorRunning = false;
-      //		commutation_interval = 0;
-      zctimeout = zc_timeout_threshold + 1;
-      dutyCycle = 0;
-    }
   }
 }
