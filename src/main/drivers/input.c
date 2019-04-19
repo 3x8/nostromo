@@ -165,7 +165,7 @@ void inputDetectProtocol() {
   if (inputPulseWidthMin > 2000) {
     //inputProtocol = SERVOPWM;
     //TIM15->PSC = 1;
-    TIM15->PSC = 48;
+    TIM15->PSC = 47;
     //TIM15->CNT = 0xffff;
     TIM15->CNT = 0x0;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
