@@ -79,6 +79,7 @@ int main(void) {
   // what is normal ?
   motorDirection = escConfig()->motorDirection;
 
+
   if(escConfig()->motor3Dmode) {
     inputDataNew = 1001;
   }

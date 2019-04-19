@@ -24,7 +24,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //debug
-        //LED_ON(RED);
+        LED_ON(RED);
         motorInputTune();
       }
     }
@@ -48,7 +48,7 @@ void inputDisarmCheck(void) {
     if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
       inputDisarm();
       //debug
-      //LED_OFF(RED);
+      LED_OFF(RED);
     }
 
   }
@@ -130,10 +130,7 @@ void inputCallbackDMA() {
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
       break;
     case SERVOPWM:
-      //debug
-      LED_ON(RED);
       inputServoPwm();
-      LED_OFF(RED);
       //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;
@@ -152,6 +149,9 @@ void inputCallbackDMA() {
       //HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3);
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
       break;*/
+    default:
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,64) != HAL_OK);
+      break;
   }
 
   //debug
@@ -193,13 +193,13 @@ void inputDetectProtocol() {
   }
   if ((smallestnumber > 3000 )&&(smallestnumber < 7000)){
     inputProtocol = ONESHOT125;
-  } */
+  }
   if (smallestnumber > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 3) != HAL_OK);
-  }
+  } */
 
   /*
   if (smallestnumber == 0) {
@@ -209,6 +209,8 @@ void inputDetectProtocol() {
   }*/
 
   if (inputProtocol == AUTODETECT) {
+    //debug
+    HAL_Delay(1);
     HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64);
   }
 }
