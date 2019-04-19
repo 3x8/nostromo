@@ -1,5 +1,8 @@
 #include "input.h"
 
+uint32_t inputPulseWidthMin = 20000;
+uint32_t timeTest0,timeTest1,timeTest2,timeTest3,timeTest4,timeTest5,timeTest6,timeTest7;
+
 uint8_t inputProtocol;
 uint32_t inputDataNew;
 uint8_t imputCommandDshot;
@@ -126,27 +129,37 @@ void inputCallbackDMA() {
 
 
 void inputDetectProtocol() {
-  //ToDo
-  inputBufferSize = 16;
-  uint32_t smallestnumber = 20000;
-  uint32_t lastnumber = inputBufferDMA[0];
+  inputPulseWidthMin = 20000;
 
-  for ( int i = 1; i < inputBufferSize; i++) {
-    if((inputBufferDMA[i + 1] - inputBufferDMA[i]) < smallestnumber) {
-      smallestnumber = inputBufferDMA[i] - lastnumber;
+  //ToDo
+  inputBufferSize = 8;
+  uint32_t inputPulseWidthBuff;
+  //uint32_t inputPulseWidthMin = 20000;
+
+  timeTest0 = inputBufferDMA[1] - inputBufferDMA[0];
+  timeTest1 = inputBufferDMA[2] - inputBufferDMA[1];
+  timeTest2 = inputBufferDMA[3] - inputBufferDMA[2];
+  timeTest3 = inputBufferDMA[4] - inputBufferDMA[3];
+  timeTest4 = inputBufferDMA[5] - inputBufferDMA[4];
+  timeTest5 = inputBufferDMA[6] - inputBufferDMA[5];
+  timeTest6 = inputBufferDMA[7] - inputBufferDMA[6];
+
+  for (int i = 0; i < inputBufferSize; i++) {
+    inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+    if(inputPulseWidthBuff < inputPulseWidthMin) {
+      inputPulseWidthMin = inputPulseWidthBuff;
     }
-    lastnumber = inputBufferDMA[i];
   }
 
-  if ((smallestnumber > 40 )&&(smallestnumber < 80)) {
-    inputProtocol = PROSHOT;
+  if ((inputPulseWidthMin > 40 )&&(inputPulseWidthMin < 80)) {
+    //inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0xffff;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
+    //while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
     return;
   }
 
-  if (smallestnumber > 2000) {
+  if (inputPulseWidthMin > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
@@ -156,7 +169,7 @@ void inputDetectProtocol() {
 
   // default
   if (inputProtocol == AUTODETECT) {
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
   }
 }
 
