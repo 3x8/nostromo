@@ -151,7 +151,7 @@ void inputDetectProtocol() {
     }
   }
 
-  if ((inputPulseWidthMin > 40 )&&(inputPulseWidthMin < 80)) {
+  if ((inputPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (inputPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     //inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     //TIM15->CNT = 0xffff;
@@ -161,9 +161,11 @@ void inputDetectProtocol() {
   }
 
   if (inputPulseWidthMin > 2000) {
-    inputProtocol = SERVOPWM;
-    TIM15->PSC = 47;
-    TIM15->CNT = 0xffff;
+    //inputProtocol = SERVOPWM;
+    TIM15->PSC = 1;
+    //TIM15->PSC = 47;
+    //TIM15->CNT = 0xffff;
+    TIM15->CNT = 0x0;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
     return;
   }
