@@ -43,6 +43,9 @@ void inputDisarm(void) {
   inputTimeoutCounter = 0;
 
   inputProtocol = AUTODETECT;
+  TIM15->PSC = 1;
+  TIM15->CNT = 0x0;
+  inputBufferSize = 8;
   while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
 }
 
@@ -112,22 +115,22 @@ void inputCallbackDMA() {
       LED_ON(GREEN);
       inputProshot();
       LED_OFF(GREEN);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
       break;
     case SERVOPWM:
       //debug
       LED_ON(BLUE);
       inputServoPwm();
       LED_OFF(BLUE);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
       break;
-    default:
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,8) != HAL_OK);
-      break;
+    /*default:
+      inputBufferSize = 8;
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,inputBufferSize) != HAL_OK);
+      break;*/
   }
 
 }
-
 
 void inputDetectProtocol() {
   //inputPulseWidthMin = 20000;
@@ -158,7 +161,7 @@ void inputDetectProtocol() {
     TIM15->PSC = 1;
     TIM15->CNT = 0x0;
     inputBufferSize = 8;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
     return;
   }
 
@@ -167,13 +170,16 @@ void inputDetectProtocol() {
     TIM15->PSC = 47;
     TIM15->CNT = 0x0;
     inputBufferSize = 2;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 2) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
     return;
   }
 
   // default
   if (inputProtocol == AUTODETECT) {
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 8) != HAL_OK);
+    TIM15->PSC = 1;
+    TIM15->CNT = 0x0;
+    inputBufferSize = 8;
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
   }
 }
 
