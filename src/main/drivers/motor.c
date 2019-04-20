@@ -39,7 +39,7 @@ bool motorDirection = 1;
 bool motorRisingBEMF = 1;
 bool motorRunning;
 
-extern bool inputArmed;
+extern uint8_t inputArmed;
 extern uint32_t inputArmCounter;
 
 

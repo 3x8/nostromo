@@ -27,7 +27,7 @@ bool motorStartup;
 //ToDo input
 uint32_t input;
 uint32_t inputAdjusted;
-extern bool inputArmed;
+extern uint8_t inputArmed;
 extern uint8_t imputCommandDshot;
 extern uint32_t inputDataNew;
 extern uint8_t  inputProtocol;
