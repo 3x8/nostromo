@@ -103,10 +103,10 @@ int main(void) {
 
     } else {
       inputArmCheck();
-      inputDisarmCheck();
+
 
       if (inputArmed) {
-        /*
+        inputDisarmCheck();
 
 
         advanceDivisor();
@@ -292,7 +292,7 @@ int main(void) {
           dutyCycle = 0;
         }
 
-        */
+
       }
 
     }

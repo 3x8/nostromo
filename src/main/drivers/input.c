@@ -32,21 +32,19 @@ void inputArmCheck(void) {
 }
 
 void inputDisarm(void) {
+  inputDataNew = 0;
+  inputDataValid = false;
   inputArmed = false;
   inputArmCounter = 0;
-
-  inputDataNew = 0;
   inputTimeoutCounter = 0;
 }
 
 void inputDisarmCheck(void) {
-  if (inputArmed) {
-    inputTimeoutCounter++;
-    if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
-      inputDisarm();
-      //debug
-      LED_OFF(RED);
-    }
+  inputTimeoutCounter++;
+  if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
+    inputDisarm();
+    //debug
+    LED_OFF(RED);
   }
 }
 
