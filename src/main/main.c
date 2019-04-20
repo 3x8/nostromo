@@ -31,7 +31,7 @@ extern uint8_t inputArmed;
 extern uint8_t imputCommandDshot;
 extern uint32_t inputDataNew;
 extern uint8_t  inputProtocol;
-extern uint32_t inputBufferDMA[64];
+extern uint32_t inputBufferDMA[20];
 
 
 int main(void) {

@@ -1,9 +1,5 @@
 #include "input.h"
 
-//Todo
-uint32_t inputPulseWidthMin;
-uint32_t timeTest0,timeTest1,timeTest2,timeTest3,timeTest4,timeTest5,timeTest6,timeTest7;
-
 uint8_t inputProtocol;
 uint32_t inputDataNew;
 uint8_t inputDataValid;
@@ -14,8 +10,7 @@ uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
 uint32_t propulse[4], dpulse[16];
-uint32_t inputBufferDMA[64];
-uint32_t inputBufferSize = 64;
+uint32_t inputBufferDMA[20];
 
 extern TIM_HandleTypeDef htim15;
 extern bool motorDirection;
@@ -108,41 +103,24 @@ void inputCallbackDMA() {
       LED_ON(GREEN);
       inputProshot();
       LED_OFF(GREEN);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
       break;
     case SERVOPWM:
       //debug
       LED_ON(BLUE);
       inputServoPwm();
       LED_OFF(BLUE);
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
       break;
-    /*default:
-      inputBufferSize = 8;
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA,inputBufferSize) != HAL_OK);
-      break;*/
   }
 
 }
 
 void inputDetectProtocol() {
-  inputPulseWidthMin = 20000;
-
-  //ToDo
-  inputBufferSize = 8;
   uint32_t inputPulseWidthBuff;
-  //uint32_t inputPulseWidthMin = 20000;
+  uint32_t inputPulseWidthMin = 20000;
 
-
-  timeTest0 = inputBufferDMA[1] - inputBufferDMA[0];
-  timeTest1 = inputBufferDMA[2] - inputBufferDMA[1];
-  timeTest2 = inputBufferDMA[3] - inputBufferDMA[2];
-  timeTest3 = inputBufferDMA[4] - inputBufferDMA[3];
-  timeTest4 = inputBufferDMA[5] - inputBufferDMA[4];
-  timeTest5 = inputBufferDMA[6] - inputBufferDMA[5];
-  timeTest6 = inputBufferDMA[7] - inputBufferDMA[6];
-
-  for (int i = 0; i < (inputBufferSize - 1); i++) {
+  for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
     inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
     if(inputPulseWidthBuff < inputPulseWidthMin) {
       inputPulseWidthMin = inputPulseWidthBuff;
@@ -153,8 +131,7 @@ void inputDetectProtocol() {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0x0;
-    inputBufferSize = 8;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
     return;
   }
 
@@ -162,8 +139,7 @@ void inputDetectProtocol() {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0x0;
-    inputBufferSize = 2;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
     return;
   }
 
@@ -171,8 +147,7 @@ void inputDetectProtocol() {
   if (inputProtocol == AUTODETECT) {
     TIM15->PSC = 1;
     TIM15->CNT = 0x0;
-    inputBufferSize = 8;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   }
 }
 
@@ -230,8 +205,9 @@ void inputProshot() {
 
 void inputServoPwm() {
   uint32_t inputPulseWidthBuff;
+  uint32_t inputPulseWidthMin = 20000;
 
-  for (int i = 0; i < (inputBufferSize - 1); i++) {
+  for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
     inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
     if(inputPulseWidthBuff < inputPulseWidthMin) {
       inputPulseWidthMin = inputPulseWidthBuff;
