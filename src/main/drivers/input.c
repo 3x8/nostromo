@@ -1,8 +1,8 @@
 #include "input.h"
 
 //Todo
-//uint32_t inputPulseWidthMin = 20000;
-//uint32_t timeTest0,timeTest1,timeTest2,timeTest3,timeTest4,timeTest5,timeTest6,timeTest7;
+uint32_t inputPulseWidthMin;
+uint32_t timeTest0,timeTest1,timeTest2,timeTest3,timeTest4,timeTest5,timeTest6,timeTest7;
 
 uint8_t inputProtocol;
 uint32_t inputDataNew;
@@ -133,23 +133,23 @@ void inputCallbackDMA() {
 }
 
 void inputDetectProtocol() {
-  //inputPulseWidthMin = 20000;
+  inputPulseWidthMin = 20000;
 
   //ToDo
   inputBufferSize = 8;
   uint32_t inputPulseWidthBuff;
-  uint32_t inputPulseWidthMin = 20000;
+  //uint32_t inputPulseWidthMin = 20000;
 
-  /*
+
   timeTest0 = inputBufferDMA[1] - inputBufferDMA[0];
   timeTest1 = inputBufferDMA[2] - inputBufferDMA[1];
   timeTest2 = inputBufferDMA[3] - inputBufferDMA[2];
   timeTest3 = inputBufferDMA[4] - inputBufferDMA[3];
   timeTest4 = inputBufferDMA[5] - inputBufferDMA[4];
   timeTest5 = inputBufferDMA[6] - inputBufferDMA[5];
-  timeTest6 = inputBufferDMA[7] - inputBufferDMA[6];*/
+  timeTest6 = inputBufferDMA[7] - inputBufferDMA[6];
 
-  for (int i = 0; i < inputBufferSize; i++) {
+  for (int i = 0; i < (inputBufferSize - 1); i++) {
     inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
     if(inputPulseWidthBuff < inputPulseWidthMin) {
       inputPulseWidthMin = inputPulseWidthBuff;
@@ -157,7 +157,7 @@ void inputDetectProtocol() {
   }
 
   if ((inputPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (inputPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
-    inputProtocol = PROSHOT;
+    //inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0x0;
     inputBufferSize = 8;
@@ -166,8 +166,9 @@ void inputDetectProtocol() {
   }
 
   if (inputPulseWidthMin > 2000) {
-    inputProtocol = SERVOPWM;
-    TIM15->PSC = 47;
+    //inputProtocol = SERVOPWM;
+    //TIM15->PSC = 47;
+    TIM15->PSC = 1;
     TIM15->CNT = 0x0;
     inputBufferSize = 2;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, inputBufferSize) != HAL_OK);
