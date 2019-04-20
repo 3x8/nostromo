@@ -6,10 +6,10 @@ uint32_t timeTest0,timeTest1,timeTest2,timeTest3,timeTest4,timeTest5,timeTest6,t
 
 uint8_t inputProtocol;
 uint32_t inputDataNew;
-bool inputDataValid;
+uint8_t inputDataValid;
 uint8_t imputCommandDshot;
 
-bool inputArmed;
+uint8_t inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
@@ -23,7 +23,7 @@ extern bool motorDirection;
 
 void inputArmCheck(void) {
   if (!inputArmed) {
-    if ((inputProtocol != AUTODETECT) && (inputDataNew == 0)) {
+    if ((inputProtocol != AUTODETECT) && (inputDataNew < DSHOT_CMD_MAX) && inputDataValid) {
       inputArmCounter++;
       HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
