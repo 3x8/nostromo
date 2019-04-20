@@ -99,15 +99,17 @@ int main(void) {
 
     if (inputProtocol == AUTODETECT) {
 
-      HAL_Delay(10);
+      HAL_Delay(20);
 
     } else {
       inputArmCheck();
       inputDisarmCheck();
 
       if (inputArmed) {
-        advanceDivisor();
+        /*
 
+
+        advanceDivisor();
 
         compit = 0;
 
@@ -290,17 +292,10 @@ int main(void) {
           dutyCycle = 0;
         }
 
-
-
-
-
-
-
-
+        */
       }
+
     }
-
-
 
   }
 }
