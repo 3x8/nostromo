@@ -40,27 +40,19 @@ void inputDisarm(void) {
   inputArmed = false;
   inputArmCounter = 0;
 
-  //inputDataNew = 0;
+  inputDataNew = 0;
   inputTimeoutCounter = 0;
-
-  inputProtocol = AUTODETECT;
-  TIM15->PSC = 1;
-  TIM15->CNT = 0x0;
-  inputBufferSize = 8;
-  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 16) != HAL_OK);
 }
 
 void inputDisarmCheck(void) {
-  //if (inputArmed) {
+  if (inputArmed) {
     inputTimeoutCounter++;
     if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
       inputDisarm();
       //debug
       LED_OFF(RED);
     }
-
-  //}
-
+  }
 }
 
 void inputDshotCommandRun(void) {
