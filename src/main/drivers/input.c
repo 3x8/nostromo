@@ -10,7 +10,7 @@ uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
 uint32_t propulse[4], dpulse[16];
-uint32_t inputBufferDMA[20];
+uint32_t inputBufferDMA[64];
 
 extern TIM_HandleTypeDef htim15;
 extern bool motorDirection;
