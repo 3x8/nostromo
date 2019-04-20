@@ -8,6 +8,13 @@
 #define INPUT_PROSHOT_WIDTH_MIN_SYSTICKS 22
 #define INPUT_PROSHOT_WIDTH_MAX_SYSTICKS 80
 
+#define INPUT_PWM_WIDTH_MIN_US 1000
+#define INPUT_PWM_WIDTH_MAX_US 2010
+
+#define INPUT_VALUE_MIN 0
+#define INPUT_VALUE_MAX 2048
+
+
 typedef enum {
     DSHOT_CMD_MOTOR_STOP = 0,
     DSHOT_CMD_BEACON1,
@@ -59,8 +66,4 @@ void inputCallbackDMA();
 void inputDetectProtocol();
 
 void inputProshot();
-void inputMultishot();
-void inputOneshot125();
-void inputOneshot42();
 void inputServoPwm();
-void inputDshot();

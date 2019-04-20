@@ -6,6 +6,7 @@ uint32_t timeTest0,timeTest1,timeTest2,timeTest3,timeTest4,timeTest5,timeTest6,t
 
 uint8_t inputProtocol;
 uint32_t inputDataNew;
+bool inputDataValid;
 uint8_t imputCommandDshot;
 
 bool inputArmed;
@@ -157,7 +158,7 @@ void inputDetectProtocol() {
   }
 
   if ((inputPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (inputPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
-    //inputProtocol = PROSHOT;
+    inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0x0;
     inputBufferSize = 8;
@@ -166,7 +167,7 @@ void inputDetectProtocol() {
   }
 
   if (inputPulseWidthMin > 2000) {
-    //inputProtocol = SERVOPWM;
+    inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0x0;
     inputBufferSize = 2;
@@ -235,99 +236,23 @@ void inputProshot() {
   }
 }
 
-void inputMultishot() {
-  int lastnumber = inputBufferDMA[0];
-
-  for (int j = 1; j < 2; j++) {
-    // blank space
-    if(((inputBufferDMA[j] - lastnumber) < 1500) && ((inputBufferDMA[j] - lastnumber) > 0)) {
-      inputDataNew = map((inputBufferDMA[j] - lastnumber),243,1200, 0, 2000);
-      break;
-    }
-    lastnumber = inputBufferDMA[j];
-  }
-}
-
-void inputOneshot125() {
-  int lastnumber = inputBufferDMA[0];
-
-  for (int j = 1; j < 2; j++) {
-    // blank space
-    if(((inputBufferDMA[j] - lastnumber) < 12300) && ((inputBufferDMA[j] - lastnumber) > 0)) {
-      inputDataNew = map((inputBufferDMA[j] - lastnumber),6500,12000, 0, 2000);
-      break;
-    }
-    lastnumber = inputBufferDMA[j];
-  }
-}
-
-void inputOneshot42() {
-  int lastnumber = inputBufferDMA[0];
-  for (int j = 1; j < 2; j++) {
-    // blank space
-    if(((inputBufferDMA[j] - lastnumber) < 4500) && ((inputBufferDMA[j] - lastnumber) > 0)) {
-      inputDataNew = map((inputBufferDMA[j] - lastnumber),2020, 4032, 0, 2000);
-      break;
-    }
-    lastnumber = inputBufferDMA[j];
-  }
-}
-
 void inputServoPwm() {
-  int lastnumber = inputBufferDMA[0];
-  for (int j = 1; j < 3; j++) {
-    // blank space
-    if(((inputBufferDMA[j] - lastnumber) >1000 ) && ((inputBufferDMA[j] - lastnumber) < 2010)) {
-      inputDataNew = map((inputBufferDMA[j] - lastnumber), 1090, 2000, 0, 2000);
-      inputTimeoutCounter = 0;
-      //break;
-      return;
+  uint32_t inputPulseWidthBuff;
+
+  for (int i = 0; i < (inputBufferSize - 1); i++) {
+    inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+    if(inputPulseWidthBuff < inputPulseWidthMin) {
+      inputPulseWidthMin = inputPulseWidthBuff;
     }
-    lastnumber = inputBufferDMA[j];
   }
-}
 
-
-void inputDshot() {
-  uint8_t calcCRC, checkCRC;
-  int lastnumber = inputBufferDMA[0];
-
-  for (int j = 1; j < inputBufferSize; j++) {
-    // blank space
-    if (((inputBufferDMA[j] - lastnumber) > 50) && ((inputBufferDMA[j] - lastnumber) < 65000)) {
-      for (int i = 0; i < 16; i++) {
-        dpulse[i] = ((inputBufferDMA[j + i*2 +1] - inputBufferDMA[j + i*2]) / 13) - 1;
-      }
-
-      calcCRC = ( (dpulse[0]^dpulse[4]^dpulse[8]) << 3
-                  |(dpulse[1]^dpulse[5]^dpulse[9]) << 2
-                  |(dpulse[2]^dpulse[6]^dpulse[10]) << 1
-                  |(dpulse[3]^dpulse[7]^dpulse[11])
-                  );
-      checkCRC = (dpulse[12]<<3 | dpulse[13]<<2 | dpulse[14]<<1 | dpulse[15]);
-
-      int tocheck = (
-        dpulse[0] << 10 | dpulse[1] << 9 | dpulse[2] << 8 | dpulse[3] << 7
-          | dpulse[4] << 6 | dpulse[5] << 5 | dpulse[6] << 4 | dpulse[7] << 3
-          | dpulse[8] << 2 | dpulse[9] << 1 | dpulse[10]);
-
-      if(calcCRC == checkCRC) {
-        if (tocheck > 47) {
-          inputDataNew = tocheck;
-          imputCommandDshot = 0;
-        }
-      }
-      if ((tocheck <= 47) && (tocheck > 0)) {
-        inputDataNew = 0;
-        imputCommandDshot = tocheck;    // todo
-      }
-      if (tocheck == 0) {
-        inputDataNew = 0;
-        imputCommandDshot = 0;
-      }
-
-      break;
-    }
-    lastnumber = inputBufferDMA[j];
+  if ((inputPulseWidthMin > INPUT_PWM_WIDTH_MIN_US ) && (inputPulseWidthMin < INPUT_PWM_WIDTH_MAX_US)) {
+    inputDataValid = true;
+    inputTimeoutCounter = 0;
+    inputDataNew = map(inputPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
+    return;
+  } else {
+    inputDataValid = false;
+    return;
   }
 }
