@@ -4,10 +4,10 @@ uint32_t debugInputBufferDMA0,debugInputBufferDMA1,debugInputBufferDMA2,debugInp
 
 uint8_t inputProtocol;
 uint32_t inputDataNew;
-uint8_t inputDataValid;
+bool inputDataValid;
 uint8_t imputCommandDshot;
 
-uint8_t inputArmed;
+bool inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
@@ -41,8 +41,9 @@ void inputDisarm(void) {
   inputTimeoutCounter = 0;
   //ToDo
   inputProtocol = AUTODETECT;
+  while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
   TIM15->PSC = 1;
-  TIM15->CNT = 0;
+  TIM15->CNT = 0xffff;
   while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }
 
@@ -133,7 +134,7 @@ void inputDetectProtocol() {
   if ((inputPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (inputPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
-    TIM15->CNT = 0;
+    TIM15->CNT = 0xffff;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
     return;
   }
@@ -141,7 +142,7 @@ void inputDetectProtocol() {
   if (inputPulseWidthMin > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
-    TIM15->CNT = 0;
+    TIM15->CNT = 0xffff;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
     return;
   }
@@ -149,7 +150,7 @@ void inputDetectProtocol() {
   // default
   if (inputProtocol == AUTODETECT) {
     TIM15->PSC = 1;
-    TIM15->CNT = 0;
+    TIM15->CNT = 0xffff;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   }
 }
