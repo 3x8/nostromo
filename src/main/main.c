@@ -139,7 +139,12 @@ int main(void) {
           if (commutation_interval > 30000) {
             HAL_COMP_Stop_IT(&hcomp1);
           }
-        } else {
+        }
+
+
+
+
+         else {
 
           if (escConfig()->motor3Dmode) {
             if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
@@ -252,6 +257,9 @@ int main(void) {
 
 
         }
+
+
+
 
 
 

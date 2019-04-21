@@ -1,5 +1,7 @@
 #include "input.h"
 
+uint32_t debugInputBufferDMA0,debugInputBufferDMA1,debugInputBufferDMA2,debugInputBufferDMA3,debugInputBufferDMA4,debugInputBufferDMA5,debugInputBufferDMA6,debugInputBufferDMA7;
+
 uint8_t inputProtocol;
 uint32_t inputDataNew;
 uint8_t inputDataValid;
@@ -9,7 +11,7 @@ uint8_t inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
-uint32_t propulse[4], dpulse[16];
+uint32_t propulse[4];
 uint32_t inputBufferDMA[64];
 
 extern TIM_HandleTypeDef htim15;
@@ -37,6 +39,11 @@ void inputDisarm(void) {
   inputArmed = false;
   inputArmCounter = 0;
   inputTimeoutCounter = 0;
+  //ToDo
+  inputProtocol = AUTODETECT;
+  TIM15->PSC = 1;
+  TIM15->CNT = 0;
+  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }
 
 void inputDisarmCheck(void) {
@@ -128,7 +135,7 @@ void inputDetectProtocol() {
   if ((inputPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (inputPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
-    TIM15->CNT = 0x0;
+    TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
     return;
   }
@@ -136,7 +143,7 @@ void inputDetectProtocol() {
   if (inputPulseWidthMin > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
-    TIM15->CNT = 0x0;
+    TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
     return;
   }
@@ -144,60 +151,44 @@ void inputDetectProtocol() {
   // default
   if (inputProtocol == AUTODETECT) {
     TIM15->PSC = 1;
-    TIM15->CNT = 0x0;
+    TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   }
 }
 
 void inputProshot() {
-  uint8_t calcCRC, checkCRC;
-  uint32_t lastnumber = inputBufferDMA[0];
+  uint8_t calcCRC = 0, checkCRC = 0;
+  uint16_t telegram = 0;
 
-  for (int j = 1; j < 9; j++) {
-    if (((inputBufferDMA[j] - lastnumber) > 1500) && ((inputBufferDMA[j] - lastnumber) < 50000)) { // blank space
-      if ((inputBufferDMA[j+7] - inputBufferDMA[j]) < 10000) {
+  debugInputBufferDMA0 = inputBufferDMA[1] - inputBufferDMA[0];
+  debugInputBufferDMA1 = inputBufferDMA[2] - inputBufferDMA[1];
+  debugInputBufferDMA2 = inputBufferDMA[3] - inputBufferDMA[2];
+  debugInputBufferDMA3 = inputBufferDMA[4] - inputBufferDMA[3];
+  debugInputBufferDMA4 = inputBufferDMA[5] - inputBufferDMA[4];
+  debugInputBufferDMA5 = inputBufferDMA[6] - inputBufferDMA[5];
+  debugInputBufferDMA6 = inputBufferDMA[7] - inputBufferDMA[6];
+  debugInputBufferDMA7 = inputBufferDMA[8] - inputBufferDMA[7];
 
-        for (int i = 0; i < 4; i++) {
-          propulse[i] = (((inputBufferDMA[j + i*2 + 1] - inputBufferDMA[j + i*2])) - 23)/3;
-        }
 
-        calcCRC = ((propulse[0]^propulse[1]^propulse[2]) << 3
-                   | (propulse[0]^propulse[1]^propulse[2]) << 2
-                   | (propulse[0]^propulse[1]^propulse[2]) << 1
-                   | (propulse[0]^propulse[1]^propulse[2]) << 0);
-        checkCRC = (propulse[3] << 3 | propulse[3] << 2 | propulse[3] << 1 | propulse[3] << 0);
-      }
+  for (int i = 0; i < 4; i++) {
+    propulse[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23)/3;
+  }
 
-      if (calcCRC == checkCRC) {
-        //debug
-        //LED_ON(BLUE);
+  for (int i = 0; i < 4; i++) {
+    calcCRC = calcCRC | ((propulse[0]^propulse[1]^propulse[2]) << i);
+    checkCRC = checkCRC | (propulse[3] << i);
+  }
 
-        inputTimeoutCounter = 0;
+  telegram = ((propulse[0] << 7 | propulse[1] << 3 | propulse[2] >> 1));
 
-        int tocheck = ((propulse[0] << 7 | propulse[1] << 3 | propulse[2] >> 1));
-        if (tocheck > 2047 || tocheck < 0) {
-          break;
-        } else {
-          if(tocheck > 47) {
-            inputDataNew = tocheck;
-            imputCommandDshot = 0;
-          }
-
-          if ((tocheck <= 47)&& (tocheck > 0)) {
-            inputDataNew = 0;
-            imputCommandDshot = tocheck;  //  todo
-          }
-
-          if (tocheck == 0) {
-            inputDataNew = 0;
-            imputCommandDshot = 0;
-          }
-        }
-      }
-      break;
-    }
-
-    lastnumber = inputBufferDMA[j];
+  if ((calcCRC == checkCRC) && (telegram >= INPUT_VALUE_MIN) && (telegram <= INPUT_VALUE_MAX)) {
+    inputDataValid = true;
+    inputTimeoutCounter = 0;
+    inputDataNew = telegram;
+    return;
+  } else {
+    inputDataValid = false;
+    return;
   }
 }
 
