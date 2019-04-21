@@ -139,6 +139,73 @@ int main(void) {
           if (commutation_interval > 30000) {
             HAL_COMP_Stop_IT(&hcomp1);
           }
+        } else {
+
+          if (escConfig()->motor3Dmode) {
+            if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
+              if ( inputDataNew > 1100 ) {
+                if (motorDirection == escConfig()->motorDirection) {
+                  inputAdjusted = 0;
+                  motorBrakeActiveProportional = true;
+                  motorDirection = !escConfig()->motorDirection;
+                }
+
+                if (!motorBrakeActiveProportional) {
+                  inputAdjusted = (inputDataNew - 1050)*3;
+                }
+              }
+
+              if (inputDataNew < 800) {
+                if (motorDirection == (!escConfig()->motorDirection)) {
+                  motorBrakeActiveProportional = true;
+                  inputAdjusted = 0;
+                  motorDirection = escConfig()->motorDirection;
+                  //	HAL_Delay(1);
+                }
+
+                if (!motorBrakeActiveProportional) {
+                  inputAdjusted = (800 - inputDataNew) * 3;
+                }
+              }
+
+              if (zctimeout >= zc_timeout_threshold) {
+                motorBrakeActiveProportional = false;
+                bemf_counts = 0;
+              }
+
+              if ((inputDataNew > 800) && (inputDataNew < 1100)) {
+                inputAdjusted = 0;
+                motorBrakeActiveProportional = false;
+              }
+            }
+
+            if ((inputProtocol == PROSHOT) || (inputProtocol == DSHOT)) {
+              if (inputDataNew > 1097) {
+                if (motorDirection == escConfig()->motorDirection) {
+                  motorDirection = !escConfig()->motorDirection;
+                  bemf_counts =0;
+               }
+                inputAdjusted = (inputDataNew - 1100) * 2 + 100;
+              }
+
+              if ((inputDataNew <= 1047) &&  (inputDataNew > 0)) {
+               if(motorDirection == (!escConfig()->motorDirection)) {
+                 bemf_counts =0;
+                 motorDirection = escConfig()->motorDirection;
+               }
+               inputAdjusted = (inputDataNew - 90) * 2;
+              }
+              if (((inputDataNew > 1047) && (inputDataNew < 1098)) || (inputDataNew <= 120)) {
+                inputAdjusted = 0;
+              }
+           }
+
+         } else {
+           inputAdjusted = inputDataNew;
+         }
+
+
+
         }
 
 
@@ -257,8 +324,6 @@ int main(void) {
         }
 
 
-
-        //if (input <= 47)
 
         if (bemf_counts < 100 || commutation_interval > 10000) {
           filter_delay = 15;
