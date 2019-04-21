@@ -12,7 +12,7 @@ uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
 uint32_t propulse[4];
-uint32_t inputBufferDMA[64];
+uint32_t inputBufferDMA[16];
 
 extern TIM_HandleTypeDef htim15;
 extern bool motorDirection;
@@ -104,10 +104,12 @@ void inputCallbackDMA() {
       inputDetectProtocol();
       break;
     case PROSHOT:
+      while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
       inputProshot();
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
       break;
     case SERVOPWM:
+      while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
       inputServoPwm();
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
       break;
@@ -118,6 +120,8 @@ void inputCallbackDMA() {
 void inputDetectProtocol() {
   uint32_t inputPulseWidthBuff;
   uint32_t inputPulseWidthMin = 20000;
+
+  while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
     inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
@@ -156,17 +160,6 @@ void inputProshot() {
 
   //debug
   LED_OFF(GREEN);
-
-
-  debugInputBufferDMA0 = inputBufferDMA[1] - inputBufferDMA[0];
-  debugInputBufferDMA1 = inputBufferDMA[2] - inputBufferDMA[1];
-  debugInputBufferDMA2 = inputBufferDMA[3] - inputBufferDMA[2];
-  debugInputBufferDMA3 = inputBufferDMA[4] - inputBufferDMA[3];
-  debugInputBufferDMA4 = inputBufferDMA[5] - inputBufferDMA[4];
-  debugInputBufferDMA5 = inputBufferDMA[6] - inputBufferDMA[5];
-  debugInputBufferDMA6 = inputBufferDMA[7] - inputBufferDMA[6];
-  debugInputBufferDMA7 = inputBufferDMA[8] - inputBufferDMA[7];
-
 
   for (int i = 0; i < 4; i++) {
     propulse[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23)/3;

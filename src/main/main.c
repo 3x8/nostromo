@@ -31,7 +31,7 @@ extern uint8_t inputArmed;
 extern uint8_t imputCommandDshot;
 extern uint32_t inputDataNew;
 extern uint8_t  inputProtocol;
-extern uint32_t inputBufferDMA[64];
+extern uint32_t inputBufferDMA[16];
 
 
 int main(void) {
@@ -67,7 +67,7 @@ int main(void) {
   motorStartupTune();
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
-  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, 64) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   adcInit();
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
 
