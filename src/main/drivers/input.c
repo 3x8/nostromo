@@ -26,7 +26,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //debug
-        LED_ON(RED);
+        //LED_ON(RED);
         motorInputTune();
       }
     }
@@ -51,7 +51,7 @@ void inputDisarmCheck(void) {
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
     //debug
-    LED_OFF(RED);
+    //LED_OFF(RED);
   }
 }
 
@@ -104,17 +104,11 @@ void inputCallbackDMA() {
       inputDetectProtocol();
       break;
     case PROSHOT:
-      //debug
-      LED_ON(GREEN);
       inputProshot();
-      LED_OFF(GREEN);
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
       break;
     case SERVOPWM:
-      //debug
-      LED_ON(BLUE);
       inputServoPwm();
-      LED_OFF(BLUE);
       while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
       break;
   }
@@ -160,6 +154,10 @@ void inputProshot() {
   uint8_t calcCRC = 0, checkCRC = 0;
   uint16_t telegram = 0;
 
+  //debug
+  LED_OFF(GREEN);
+
+
   debugInputBufferDMA0 = inputBufferDMA[1] - inputBufferDMA[0];
   debugInputBufferDMA1 = inputBufferDMA[2] - inputBufferDMA[1];
   debugInputBufferDMA2 = inputBufferDMA[3] - inputBufferDMA[2];
@@ -185,6 +183,8 @@ void inputProshot() {
     inputDataValid = true;
     inputTimeoutCounter = 0;
     inputDataNew = telegram;
+    //debug
+    LED_ON(GREEN);
     return;
   } else {
     inputDataValid = false;
@@ -207,6 +207,8 @@ void inputServoPwm() {
     inputDataValid = true;
     inputTimeoutCounter = 0;
     inputDataNew = map(inputPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
+    //debug
+    LED_ON(GREEN);
     return;
   } else {
     inputDataValid = false;
