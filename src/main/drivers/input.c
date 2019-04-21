@@ -26,7 +26,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //debug
-        //LED_ON(RED);
+        LED_ON(RED);
         motorInputTune();
       }
     }
@@ -52,7 +52,7 @@ void inputDisarmCheck(void) {
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
     //debug
-    //LED_OFF(RED);
+    LED_OFF(RED);
   }
 }
 
