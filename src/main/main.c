@@ -198,129 +198,59 @@ int main(void) {
               if (((inputDataNew > 1047) && (inputDataNew < 1098)) || (inputDataNew <= 120)) {
                 inputAdjusted = 0;
               }
-           }
-
-         } else {
-           inputAdjusted = inputDataNew;
-         }
-
-
-
-        }
-
-
-
-        if (escConfig()->motor3Dmode) {
-          if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
-            if ( inputDataNew > 1100 ) {
-              if (motorDirection == escConfig()->motorDirection) {
-                inputAdjusted = 0;
-                motorBrakeActiveProportional = true;
-                motorDirection = !escConfig()->motorDirection;
-              }
-
-              if (!motorBrakeActiveProportional) {
-                inputAdjusted = (inputDataNew - 1050)*3;
-              }
             }
-
-            if (inputDataNew < 800) {
-              if (motorDirection == (!escConfig()->motorDirection)) {
-                motorBrakeActiveProportional = true;
-                inputAdjusted = 0;
-                motorDirection = escConfig()->motorDirection;
-                //	HAL_Delay(1);
-              }
-
-              if (!motorBrakeActiveProportional) {
-                inputAdjusted = (800 - inputDataNew) * 3;
-              }
-            }
-
-            if (zctimeout >= zc_timeout_threshold) {
-              motorBrakeActiveProportional = false;
-              bemf_counts = 0;
-            }
-
-            if ((inputDataNew > 800) && (inputDataNew < 1100)) {
-              inputAdjusted = 0;
-              motorBrakeActiveProportional = false;
-            }
+          } else {
+            inputAdjusted = inputDataNew;
           }
 
-          if ((inputProtocol == PROSHOT) || (inputProtocol == DSHOT)) {
-            if (inputDataNew > 1097) {
-              if (motorDirection == escConfig()->motorDirection) {
-                motorDirection = !escConfig()->motorDirection;
-                bemf_counts =0;
-             }
-              inputAdjusted = (inputDataNew - 1100) * 2 + 100;
-            }
 
-            if ((inputDataNew <= 1047) &&  (inputDataNew > 0)) {
-             if(motorDirection == (!escConfig()->motorDirection)) {
-               bemf_counts =0;
-               motorDirection = escConfig()->motorDirection;
-             }
-             inputAdjusted = (inputDataNew - 90) * 2;
-            }
-            if (((inputDataNew > 1047) && (inputDataNew < 1098)) || (inputDataNew <= 120)) {
-              inputAdjusted = 0;
-            }
-         }
-
-       } else {
-         inputAdjusted = inputDataNew;
-       }
-
-
-
-
-        if (inputAdjusted > 2000) {
-          inputAdjusted = 2000;
-        }
-
-        if (inputAdjusted - input > 25) {
-          input = input + 5;
-        } else {
-          input = inputAdjusted;
-        }
-
-        if (inputAdjusted <= input) {
-          input = inputAdjusted;
-        }
-
-
-
-        if ((input > 47) && (inputArmed)) {
-          motorBrakeActiveProportional = false;
-          motorStartup = true;
-
-          dutyCycle = input / 2 - 10;
-
-          if (bemf_counts < 15) {
-            if(dutyCycle < 70) {
-              dutyCycle=70;
-            }
-            if (dutyCycle > 400) {
-              dutyCycle=400;
-            }
+          if (inputAdjusted > 2000) {
+            inputAdjusted = 2000;
           }
 
-          if (motorRunning) {
-            if (dutyCycle > 998 ) {                                          // safety!!!
-              dutyCycle = 998;
-            }
-            if (dutyCycle < 44) {
-              dutyCycle = 44;
+          if (inputAdjusted - input > 25) {
+            input = input + 5;
+          } else {
+            input = inputAdjusted;
+          }
+
+          if (inputAdjusted <= input) {
+            input = inputAdjusted;
+          }
+
+
+
+            motorBrakeActiveProportional = false;
+            motorStartup = true;
+
+            dutyCycle = input / 2 - 10;
+
+            if (bemf_counts < 15) {
+              if(dutyCycle < 70) {
+                dutyCycle = 70;
+              }
+              if (dutyCycle > 400) {
+                dutyCycle = 400;
+              }
             }
 
-            // set duty cycle to 50 out of 768 to start.
-            TIM1->CCR1 = dutyCycle;
-            TIM1->CCR2 = dutyCycle;
-            TIM1->CCR3 = dutyCycle;
-            //TIM1->CCR4 = dutyCycle;
-          }
+            if (motorRunning) {
+              if (dutyCycle > 998 ) {                                          // safety!!!
+                dutyCycle = 998;
+              }
+              if (dutyCycle < 44) {
+                dutyCycle = 44;
+              }
+
+              // set duty cycle to 50 out of 768 to start.
+              TIM1->CCR1 = dutyCycle;
+              TIM1->CCR2 = dutyCycle;
+              TIM1->CCR3 = dutyCycle;
+              //TIM1->CCR4 = dutyCycle;
+            }
+
+
+
         }
 
 
@@ -364,9 +294,8 @@ int main(void) {
         }
 
 
+
       }
-
     }
-
   }
 }
