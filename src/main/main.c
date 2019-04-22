@@ -94,8 +94,8 @@ int main(void) {
       HAL_Delay(20);
     } else {
       inputArmCheck();
+      inputDisarmCheck();
       if (inputArmed) {
-        inputDisarmCheck();
 
         advanceDivisor();
         compit = 0;
