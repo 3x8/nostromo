@@ -53,43 +53,45 @@ void inputDisarmCheck(void) {
 }
 
 void inputDshotCommandRun(void) {
-  switch (inputData) {
-  case DSHOT_CMD_MOTOR_STOP:
-    break;
-  case DSHOT_CMD_BEACON1:
-    motorStartupTune();
-    break;
-  case DSHOT_CMD_BEACON2:
-    motorInputTune();
-    break;
-  case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
-    escConfig()->motorDirection = 1;
-    inputArmed = false;
-    break;
-  case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
-    escConfig()->motorDirection = 0;
-    inputArmed = false;
-    break;
-  case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
-    motorDirection = escConfig()->motorDirection;
-    break;
-  case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
-    motorDirection = !escConfig()->motorDirection;
-    break;
-  case DSHOT_CMD_SETTING_3D_MODE_OFF:
-    escConfig()->motor3Dmode = 0;
-    inputArmed = false;
-    break;
-  case DSHOT_CMD_SETTING_3D_MODE_ON:
-    escConfig()->motor3Dmode = 1;
-    inputArmed = false;
-    break;
-  case DSHOT_CMD_SETTING_SAVE:
-    configWrite();
-    // reset esc, iwdg timeout
-    while(true);
-  default:
-    break;
+  if (inputProtocol == PROSHOT) {
+    switch (inputData) {
+    case DSHOT_CMD_MOTOR_STOP:
+      break;
+    case DSHOT_CMD_BEACON1:
+      motorStartupTune();
+      break;
+    case DSHOT_CMD_BEACON2:
+      motorInputTune();
+      break;
+    case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
+      escConfig()->motorDirection = 1;
+      inputArmed = false;
+      break;
+    case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
+      escConfig()->motorDirection = 0;
+      inputArmed = false;
+      break;
+    case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
+      motorDirection = escConfig()->motorDirection;
+      break;
+    case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
+      motorDirection = !escConfig()->motorDirection;
+      break;
+    case DSHOT_CMD_SETTING_3D_MODE_OFF:
+      escConfig()->motor3Dmode = 0;
+      inputArmed = false;
+      break;
+    case DSHOT_CMD_SETTING_3D_MODE_ON:
+      escConfig()->motor3Dmode = 1;
+      inputArmed = false;
+      break;
+    case DSHOT_CMD_SETTING_SAVE:
+      configWrite();
+      // reset esc, iwdg timeout
+      while(true);
+    default:
+      break;
+    }
   }
 }
 

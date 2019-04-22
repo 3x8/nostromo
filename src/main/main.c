@@ -100,7 +100,6 @@ int main(void) {
         advanceDivisor();
         compit = 0;
 
-
         if (inputData <= DSHOT_CMD_MAX) {
           motorStartup = false;
 
@@ -132,12 +131,9 @@ int main(void) {
           if (commutation_interval > 30000) {
             //HAL_COMP_Stop_IT(&hcomp1);
           }
-        }
+        } else {
 
 
-
-
-         else {
 
           if (escConfig()->motor3Dmode) {
             /*
