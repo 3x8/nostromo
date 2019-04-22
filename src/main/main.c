@@ -130,7 +130,7 @@ int main(void) {
           TIM1->CCR3 = dutyCycle;
 
           if (commutation_interval > 30000) {
-            HAL_COMP_Stop_IT(&hcomp1);
+            //HAL_COMP_Stop_IT(&hcomp1);
           }
         }
 
@@ -291,7 +291,7 @@ int main(void) {
         zctimeout++;                                            // move to motorStartup if
         if (zctimeout > zc_timeout_threshold) {
           sensorless = 0;
-          HAL_COMP_Stop_IT(&hcomp1);
+          //HAL_COMP_Stop_IT(&hcomp1);
 
           motorRunning = false;
           //		commutation_interval = 0;
