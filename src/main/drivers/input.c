@@ -1,17 +1,15 @@
 #include "input.h"
 
-uint32_t debugInputBufferDMA0,debugInputBufferDMA1,debugInputBufferDMA2,debugInputBufferDMA3,debugInputBufferDMA4,debugInputBufferDMA5,debugInputBufferDMA6,debugInputBufferDMA7;
-
 uint8_t inputProtocol;
-uint32_t inputDataNew;
 bool inputDataValid;
+uint32_t inputDataNew;
 uint8_t imputCommandDshot;
 
 bool inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
-uint32_t propulse[4];
+
 uint32_t inputBufferDMA[16];
 
 extern TIM_HandleTypeDef htim15;
@@ -119,19 +117,19 @@ void inputCallbackDMA() {
 }
 
 void inputDetectProtocol() {
-  uint32_t inputPulseWidthBuff;
-  uint32_t inputPulseWidthMin = 20000;
+  uint32_t telegramPulseWidthBuff;
+  uint32_t telegramPulseWidthMin = 20000;
 
   while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
-    inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
-    if(inputPulseWidthBuff < inputPulseWidthMin) {
-      inputPulseWidthMin = inputPulseWidthBuff;
+    telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+    if(telegramPulseWidthBuff < telegramPulseWidthMin) {
+      telegramPulseWidthMin = telegramPulseWidthBuff;
     }
   }
 
-  if ((inputPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (inputPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
+  if ((telegramPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (telegramPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0xffff;
@@ -139,7 +137,7 @@ void inputDetectProtocol() {
     return;
   }
 
-  if (inputPulseWidthMin > 2000) {
+  if (telegramPulseWidthMin > 2000) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0xffff;
@@ -156,27 +154,28 @@ void inputDetectProtocol() {
 }
 
 void inputProshot() {
-  uint8_t calcCRC = 0, checkCRC = 0;
-  uint16_t telegram = 0;
+  uint8_t telegramCalculatedCRC = 0, telegramReceivedCRC = 0;
+  uint16_t telegramData = 0;
+  uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   //debug
   LED_OFF(GREEN);
 
   for (int i = 0; i < 4; i++) {
-    propulse[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23)/3;
+    telegramPulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23)/3;
   }
 
   for (int i = 0; i < 4; i++) {
-    calcCRC = calcCRC | ((propulse[0]^propulse[1]^propulse[2]) << i);
-    checkCRC = checkCRC | (propulse[3] << i);
+    telegramCalculatedCRC = telegramCalculatedCRC | ((telegramPulseValue[0]^telegramPulseValue[1]^telegramPulseValue[2]) << i);
+    telegramReceivedCRC = telegramReceivedCRC | (telegramPulseValue[3] << i);
   }
 
-  telegram = ((propulse[0] << 7 | propulse[1] << 3 | propulse[2] >> 1));
+  telegramData = ((telegramPulseValue[0] << 7 | telegramPulseValue[1] << 3 | telegramPulseValue[2] >> 1));
 
-  if ((calcCRC == checkCRC) && (telegram >= INPUT_VALUE_MIN) && (telegram <= INPUT_VALUE_MAX)) {
+  if ((telegramCalculatedCRC == telegramReceivedCRC) && (telegramData >= INPUT_VALUE_MIN) && (telegramData <= INPUT_VALUE_MAX)) {
     inputDataValid = true;
     inputTimeoutCounter = 0;
-    inputDataNew = telegram;
+    inputDataNew = telegramData;
     //debug
     LED_ON(GREEN);
     return;
@@ -187,20 +186,20 @@ void inputProshot() {
 }
 
 void inputServoPwm() {
-  uint32_t inputPulseWidthBuff;
-  uint32_t inputPulseWidthMin = 20000;
+  uint32_t telegramPulseWidthBuff;
+  uint32_t telegramPulseWidthMin = 20000;
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
-    inputPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
-    if(inputPulseWidthBuff < inputPulseWidthMin) {
-      inputPulseWidthMin = inputPulseWidthBuff;
+    telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+    if(telegramPulseWidthBuff < telegramPulseWidthMin) {
+      telegramPulseWidthMin = telegramPulseWidthBuff;
     }
   }
 
-  if ((inputPulseWidthMin > INPUT_PWM_WIDTH_MIN_US ) && (inputPulseWidthMin < INPUT_PWM_WIDTH_MAX_US)) {
+  if ((telegramPulseWidthMin > INPUT_PWM_WIDTH_MIN_US ) && (telegramPulseWidthMin < INPUT_PWM_WIDTH_MAX_US)) {
     inputDataValid = true;
     inputTimeoutCounter = 0;
-    inputDataNew = map(inputPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
+    inputDataNew = map(telegramPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
     //debug
     LED_ON(GREEN);
     return;
