@@ -1,7 +1,5 @@
 #include "input.h"
 
-uint32_t debug0, debug1, debug2,debug01,debug12;
-
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 uint8_t inputProtocol;
@@ -192,13 +190,6 @@ void inputServoPwm() {
   uint32_t telegramPulseWidthBuff;
   uint32_t telegramPulseWidthMin = 20000;
 
-  debug0 = inputBufferDMA[0];
-  debug1 = inputBufferDMA[1];
-  debug2 = inputBufferDMA[2];
-
-  debug01 = inputBufferDMA[1] - inputBufferDMA[0];
-  debug12 = inputBufferDMA[2] - inputBufferDMA[1];
-
   //debug
   LED_OFF(GREEN);
 
@@ -210,7 +201,7 @@ void inputServoPwm() {
   }
 
   if ((telegramPulseWidthMin > (INPUT_PWM_WIDTH_MIN_US - INPUT_PWM_WIDTH_MIN_US / 10) ) &&
-      (telegramPulseWidthMin < (INPUT_PWM_WIDTH_MAX_US + INPUT_PWM_WIDTH_MAX_US / 10)) {
+      (telegramPulseWidthMin < (INPUT_PWM_WIDTH_MAX_US + INPUT_PWM_WIDTH_MAX_US / 10))) {
     inputDataValid = true;
     inputTimeoutCounter = 0;
     inputData = map(telegramPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);

@@ -141,12 +141,17 @@ int main(void) {
           if (!motorRunning) {
             inputDshotCommandRun();
           }
-        } else {
+        }
+
+
+
+
+        else {
           if (escConfig()->motor3Dmode) {
-            /*
-            if(escConfig()->motor3Dmode) {
-              inputData = 1001;
-            }*/
+
+            //if(escConfig()->motor3Dmode) {
+            //  inputData = 1001;
+            //}
 
             if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
               if ( inputData > 1100 ) {
@@ -255,6 +260,9 @@ int main(void) {
               //TIM1->CCR4 = dutyCycle;
             }
         }
+
+
+
 
         if (bemf_counts < 100 || commutation_interval > 10000) {
           filter_delay = 15;
