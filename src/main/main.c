@@ -27,9 +27,8 @@ bool motorStartup;
 //ToDo input
 uint32_t input;
 uint32_t inputAdjusted;
-extern uint8_t inputArmed;
-extern uint8_t imputCommandDshot;
-extern uint32_t inputDataNew;
+extern bool inputArmed;
+extern uint32_t inputData;
 extern uint8_t  inputProtocol;
 extern uint32_t inputBufferDMA[16];
 
@@ -81,7 +80,7 @@ int main(void) {
 
 
   if(escConfig()->motor3Dmode) {
-    inputDataNew = 1001;
+    inputData = 1001;
   }
 
   // set duty cycle to 50 out of 768 to start.
@@ -108,7 +107,7 @@ int main(void) {
         compit = 0;
 
 
-        if (inputDataNew <= DSHOT_CMD_MAX) {
+        if (inputData <= DSHOT_CMD_MAX) {
           motorStartup = false;
 
           if (!motorRunning) {
@@ -148,7 +147,7 @@ int main(void) {
 
           if (escConfig()->motor3Dmode) {
             if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
-              if ( inputDataNew > 1100 ) {
+              if ( inputData > 1100 ) {
                 if (motorDirection == escConfig()->motorDirection) {
                   inputAdjusted = 0;
                   motorBrakeActiveProportional = true;
@@ -156,11 +155,11 @@ int main(void) {
                 }
 
                 if (!motorBrakeActiveProportional) {
-                  inputAdjusted = (inputDataNew - 1050)*3;
+                  inputAdjusted = (inputData - 1050)*3;
                 }
               }
 
-              if (inputDataNew < 800) {
+              if (inputData < 800) {
                 if (motorDirection == (!escConfig()->motorDirection)) {
                   motorBrakeActiveProportional = true;
                   inputAdjusted = 0;
@@ -169,7 +168,7 @@ int main(void) {
                 }
 
                 if (!motorBrakeActiveProportional) {
-                  inputAdjusted = (800 - inputDataNew) * 3;
+                  inputAdjusted = (800 - inputData) * 3;
                 }
               }
 
@@ -178,34 +177,34 @@ int main(void) {
                 bemf_counts = 0;
               }
 
-              if ((inputDataNew > 800) && (inputDataNew < 1100)) {
+              if ((inputData > 800) && (inputData < 1100)) {
                 inputAdjusted = 0;
                 motorBrakeActiveProportional = false;
               }
             }
 
             if ((inputProtocol == PROSHOT) || (inputProtocol == DSHOT)) {
-              if (inputDataNew > 1097) {
+              if (inputData > 1097) {
                 if (motorDirection == escConfig()->motorDirection) {
                   motorDirection = !escConfig()->motorDirection;
                   bemf_counts =0;
                }
-                inputAdjusted = (inputDataNew - 1100) * 2 + 100;
+                inputAdjusted = (inputData - 1100) * 2 + 100;
               }
 
-              if ((inputDataNew <= 1047) &&  (inputDataNew > 0)) {
+              if ((inputData <= 1047) &&  (inputData > 0)) {
                if(motorDirection == (!escConfig()->motorDirection)) {
                  bemf_counts =0;
                  motorDirection = escConfig()->motorDirection;
                }
-               inputAdjusted = (inputDataNew - 90) * 2;
+               inputAdjusted = (inputData - 90) * 2;
               }
-              if (((inputDataNew > 1047) && (inputDataNew < 1098)) || (inputDataNew <= 120)) {
+              if (((inputData > 1047) && (inputData < 1098)) || (inputData <= 120)) {
                 inputAdjusted = 0;
               }
             }
           } else {
-            inputAdjusted = inputDataNew;
+            inputAdjusted = inputData;
           }
 
 

@@ -48,7 +48,7 @@ bool motorSlowDecay = true;
 bool motorBrakeActiveProportional = true;
 
 
-extern uint32_t input, inputDataNew;
+extern uint32_t input, inputData;
 
 void advanceDivisor() {
     advancedivisor = map((commutation_interval),100,5000, 2, 20);

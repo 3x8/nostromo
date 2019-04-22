@@ -1,16 +1,14 @@
 #include "input.h"
 
+uint32_t inputBufferDMA[16];
+
 uint8_t inputProtocol;
 bool inputDataValid;
-uint32_t inputDataNew;
-uint8_t imputCommandDshot;
+uint32_t inputData;
 
 bool inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
-
-
-uint32_t inputBufferDMA[16];
 
 extern TIM_HandleTypeDef htim15;
 extern bool motorDirection;
@@ -18,7 +16,7 @@ extern bool motorDirection;
 
 void inputArmCheck(void) {
   if (!inputArmed) {
-    if ((inputProtocol != AUTODETECT) && (inputDataNew < DSHOT_CMD_MAX) && inputDataValid) {
+    if ((inputProtocol != AUTODETECT) && (inputData < DSHOT_CMD_MAX) && inputDataValid) {
       inputArmCounter++;
       HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
@@ -32,7 +30,7 @@ void inputArmCheck(void) {
 }
 
 void inputDisarm(void) {
-  inputDataNew = 0;
+  inputData = 0;
   inputDataValid = false;
   inputArmed = false;
   inputArmCounter = 0;
@@ -55,10 +53,10 @@ void inputDisarmCheck(void) {
 }
 
 void inputDshotCommandRun(void) {
-  switch (imputCommandDshot) {
+  switch (inputData) {
   case DSHOT_CMD_MOTOR_STOP:
     //ToDo
-    //inputDataNew = 0;
+    //inputData = 0;
     break;
   case DSHOT_CMD_BEACON1:
     motorStartupTune();
@@ -175,7 +173,7 @@ void inputProshot() {
   if ((telegramCalculatedCRC == telegramReceivedCRC) && (telegramData >= INPUT_VALUE_MIN) && (telegramData <= INPUT_VALUE_MAX)) {
     inputDataValid = true;
     inputTimeoutCounter = 0;
-    inputDataNew = telegramData;
+    inputData = telegramData;
     //debug
     LED_ON(GREEN);
     return;
@@ -199,7 +197,7 @@ void inputServoPwm() {
   if ((telegramPulseWidthMin > INPUT_PWM_WIDTH_MIN_US ) && (telegramPulseWidthMin < INPUT_PWM_WIDTH_MAX_US)) {
     inputDataValid = true;
     inputTimeoutCounter = 0;
-    inputDataNew = map(telegramPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
+    inputData = map(telegramPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
     //debug
     LED_ON(GREEN);
     return;
