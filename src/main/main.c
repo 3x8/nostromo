@@ -67,10 +67,8 @@ int main(void) {
 
   while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
   while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
-  //adcInit();
+  adcInit();
   while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
-
-
 
 
   //ToDo
@@ -78,10 +76,6 @@ int main(void) {
   // what is normal ?
   motorDirection = escConfig()->motorDirection;
 
-
-  if(escConfig()->motor3Dmode) {
-    inputData = 1001;
-  }
 
   // set duty cycle to 50 out of 768 to start.
   TIM1->CCR1 = 1;
@@ -146,6 +140,11 @@ int main(void) {
          else {
 
           if (escConfig()->motor3Dmode) {
+            /*
+            if(escConfig()->motor3Dmode) {
+              inputData = 1001;
+            }*/
+
             if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
               if ( inputData > 1100 ) {
                 if (motorDirection == escConfig()->motorDirection) {
