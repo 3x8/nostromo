@@ -29,12 +29,12 @@ uint32_t input;
 uint32_t inputAdjusted;
 extern uint8_t inputArmed;
 extern uint32_t inputData;
+extern uint8_t inputDataValid;
 extern uint8_t  inputProtocol;
-extern uint32_t inputBufferDMA[16];
+extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 
 int main(void) {
-
   HAL_Init();
   systemClockConfig();
 
@@ -83,6 +83,10 @@ int main(void) {
   TIM1->CCR3 = 1;
   TIM1->CCR4 = 800;
 
+  // start with break
+  inputDataValid = true;
+  inputData = 0;
+
   // main loop
   while (true) {
     watchdogFeed();
@@ -90,10 +94,41 @@ int main(void) {
     //debug
     //LED_OFF(RED);
 
+    if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
+      switch(escConfig()->motorBrakeState) {
+        case BRAKE_FULL:
+          motorBrakeFull();
+          dutyCycle = 0;
+          break;
+        case BRAKE_PROPORTIONAL:
+          if(motorBrakeActiveProportional) {
+            dutyCycle = escConfig()->motorBrakeProportionalStrength;
+            motorBrakeProportional();
+          }
+          break;
+        case BRAKE_OFF:
+            motorBrakeOff();
+            dutyCycle = 0;
+          break;
+      }
+
+      TIM1->CCR1 = dutyCycle;
+      TIM1->CCR2 = dutyCycle;
+      TIM1->CCR3 = dutyCycle;
+
+      //ToDo where ???
+      if (commutation_interval > 30000) {
+        //HAL_COMP_Stop_IT(&hcomp1);
+      }
+    }
+
+
+
     if (inputProtocol == AUTODETECT) {
-      HAL_Delay(20);
+      //HAL_Delay(3);
     } else {
       inputArmCheck();
+      //ToDo
       inputDisarmCheck();
       if (inputArmed) {
 
@@ -106,35 +141,7 @@ int main(void) {
           if (!motorRunning) {
             inputDshotCommandRun();
           }
-
-          switch(escConfig()->motorBrakeState) {
-            case BRAKE_FULL:
-              motorBrakeFull();
-              dutyCycle = 0;
-              break;
-            case BRAKE_PROPORTIONAL:
-              if(motorBrakeActiveProportional) {
-                dutyCycle = escConfig()->motorBrakeProportionalStrength;
-                motorBrakeProportional();
-              }
-              break;
-            case BRAKE_OFF:
-                motorBrakeOff();
-                dutyCycle = 0;
-              break;
-          }
-
-          TIM1->CCR1 = dutyCycle;
-          TIM1->CCR2 = dutyCycle;
-          TIM1->CCR3 = dutyCycle;
-
-          if (commutation_interval > 30000) {
-            //HAL_COMP_Stop_IT(&hcomp1);
-          }
         } else {
-
-
-
           if (escConfig()->motor3Dmode) {
             /*
             if(escConfig()->motor3Dmode) {
@@ -247,15 +254,7 @@ int main(void) {
               TIM1->CCR3 = dutyCycle;
               //TIM1->CCR4 = dutyCycle;
             }
-
-
-
         }
-
-
-
-
-
 
         if (bemf_counts < 100 || commutation_interval > 10000) {
           filter_delay = 15;
@@ -294,8 +293,6 @@ int main(void) {
           zctimeout = zc_timeout_threshold + 1;
           dutyCycle = 0;
         }
-
-
 
       }
     }
