@@ -4,14 +4,14 @@ uint32_t inputBufferDMA[16];
 
 uint8_t inputProtocol;
 uint32_t inputData;
-bool inputDataValid;
+uint8_t inputDataValid;
 
-bool inputArmed;
+uint8_t inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
 extern TIM_HandleTypeDef htim15;
-extern bool motorDirection;
+extern uint8_t motorDirection;
 
 
 void inputArmCheck(void) {
