@@ -3,8 +3,8 @@
 uint32_t inputBufferDMA[16];
 
 uint8_t inputProtocol;
-bool inputDataValid;
 uint32_t inputData;
+bool inputDataValid;
 
 bool inputArmed;
 uint32_t inputArmCounter;
@@ -55,8 +55,6 @@ void inputDisarmCheck(void) {
 void inputDshotCommandRun(void) {
   switch (inputData) {
   case DSHOT_CMD_MOTOR_STOP:
-    //ToDo
-    //inputData = 0;
     break;
   case DSHOT_CMD_BEACON1:
     motorStartupTune();

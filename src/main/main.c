@@ -294,7 +294,7 @@ int main(void) {
           //HAL_COMP_Stop_IT(&hcomp1);
 
           motorRunning = false;
-          //		commutation_interval = 0;
+          //commutation_interval = 0;
           zctimeout = zc_timeout_threshold + 1;
           dutyCycle = 0;
         }
