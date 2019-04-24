@@ -5,24 +5,18 @@ uint16_t step = 1;
 
 uint32_t thiszctime, lastzctime;
 
-
 // set proportianal to commutation time. with advance divisor
 uint32_t advance = 0;
 
 // increase divisor to decrease advance
 uint16_t advancedivisor = 3;
-//char advancedivisorup = 3;
-//char advancedivisordown = 3;
 
 uint32_t blanktime, waitTime, compit;
 
-
 uint32_t tim2_start_arr = 9000;
-
 
 extern COMP_HandleTypeDef hcomp1;
 extern TIM_HandleTypeDef htim1;
-
 
 extern uint32_t sensorless, commutation_interval;
 extern uint32_t filter_level;
@@ -48,7 +42,7 @@ bool motorSlowDecay = true;
 bool motorBrakeActiveProportional = true;
 
 
-extern uint32_t input, inputData;
+extern uint32_t input;
 
 void advanceDivisor() {
     advancedivisor = map((commutation_interval),100,5000, 2, 20);
@@ -324,7 +318,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   while (TIM3->CNT - timestamp < filter_delay);
 
   if (motorRisingBEMF) {
-    // advancedivisor = advancedivisorup;
     for (int i = 0; i < filter_level; i++) {
       if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_HIGH) {
         return;
@@ -332,7 +325,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
 
   } else {
-    // advancedivisor = advancedivisordown;
     for (int i = 0; i < filter_level; i++) {
       if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_LOW) {
         return;
