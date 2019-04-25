@@ -6,7 +6,7 @@ extern TIM_HandleTypeDef timer1Handle;
 uint32_t motorTimestamp;
 uint16_t motorStep = 1;
 
-uint32_t motorZeroCrossTimesamp, motorZeroCrossTimesampLast;
+uint32_t motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 
 // set proportianal to commutation time. with motorAdvance divisor
 uint32_t motorAdvance = 0;
@@ -331,14 +331,14 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
 
   }
-  motorZeroCrossTimesamp = motorTimestamp;
+  motorZeroCrossTimestamp = motorTimestamp;
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
 
   motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
-  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimesamp) / 2;
+  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 2;
 
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = motorCommutationInterval / 2 - motorAdvance;
@@ -354,7 +354,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
 
-  motorZeroCrossTimesampLast = motorZeroCrossTimesamp;
+  motorZeroCrossTimestampLast = motorZeroCrossTimestamp;
   motorBemfCounter++;
 
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -364,33 +364,33 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 void zc_found_routine() {
   motorZeroCounterTimeout = 0;
 
-  motorZeroCrossTimesamp = TIM3->CNT;
+  motorZeroCrossTimestamp = TIM3->CNT;
 
   //ToDo
   /*
-  if (motorZeroCrossTimesamp < motorZeroCrossTimesampLast) {
-    motorZeroCrossTimesampLast = motorZeroCrossTimesampLast - 65535;
+  if (motorZeroCrossTimestamp < motorZeroCrossTimestampLast) {
+    motorZeroCrossTimestampLast = motorZeroCrossTimestampLast - 65535;
   }*/
 
-  if (motorZeroCrossTimesamp > motorZeroCrossTimesampLast) {
-    //if (((motorZeroCrossTimesamp - motorZeroCrossTimesampLast) > (motorCommutationInterval * 2)) || ((motorZeroCrossTimesamp - motorZeroCrossTimesampLast < motorCommutationInterval/2))){
-    //  motorCommutationInterval = (motorCommutationInterval * 3 + (motorZeroCrossTimesamp - motorZeroCrossTimesampLast))/4;
-    //  motorCommutationInterval = (motorCommutationInterval + (motorZeroCrossTimesamp - motorZeroCrossTimesampLast))/2;
+  if (motorZeroCrossTimestamp > motorZeroCrossTimestampLast) {
+    //if (((motorZeroCrossTimestamp - motorZeroCrossTimestampLast) > (motorCommutationInterval * 2)) || ((motorZeroCrossTimestamp - motorZeroCrossTimestampLast < motorCommutationInterval/2))){
+    //  motorCommutationInterval = (motorCommutationInterval * 3 + (motorZeroCrossTimestamp - motorZeroCrossTimestampLast))/4;
+    //  motorCommutationInterval = (motorCommutationInterval + (motorZeroCrossTimestamp - motorZeroCrossTimestampLast))/2;
     //}else{
-    motorCommutationInterval = (motorZeroCrossTimesamp - motorZeroCrossTimesampLast);       // TEST!   divide by two when tracking up down time independant
+    motorCommutationInterval = (motorZeroCrossTimestamp - motorZeroCrossTimestampLast);       // TEST!   divide by two when tracking up down time independant
     //	}
     motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
     motorWaitTime = motorCommutationInterval /2 - motorAdvance;
   }
   if (motorSensorless) {
-    while (TIM3->CNT - motorZeroCrossTimesamp < motorWaitTime) {
+    while (TIM3->CNT - motorZeroCrossTimestamp < motorWaitTime) {
     }
     motorCommutate();
-    while (TIM3->CNT - motorZeroCrossTimesamp < motorWaitTime + motorBlanktime) {
+    while (TIM3->CNT - motorZeroCrossTimestamp < motorWaitTime + motorBlanktime) {
     }
   }
 
-  motorZeroCrossTimesampLast = motorZeroCrossTimesamp;
+  motorZeroCrossTimestampLast = motorZeroCrossTimestamp;
 }
 
 void motorStartupTune() {
