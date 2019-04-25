@@ -6,12 +6,12 @@ TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo motor
+extern bool motorStartup, motorRunning, motorSensorless;
+extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorZeroCounterTimeout;
 // depends on speed of main loop
 extern uint32_t motorZeroCounterTimeoutThreshold;
 extern uint32_t motorDutyCycle, motorBemfCounter ;
-extern bool motorStartup, motorRunning, motorSensorless;
-extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorCompit, motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 
@@ -115,7 +115,7 @@ int main(void) {
 
       //ToDo where ???
       if (motorCommutationInterval > 30000) {
-        //HAL_COMP_Stop_IT(&comparator1Handle);
+        HAL_COMP_Stop_IT(&comparator1Handle);
       }
     }
 
@@ -150,7 +150,7 @@ int main(void) {
             //  inputData = 1001;
             //}
 
-            if ((inputProtocol != PROSHOT) && (inputProtocol != DSHOT)) {
+            if (inputProtocol == SERVOPWM) {
               if ( inputData > 1100 ) {
                 if (motorDirection == escConfig()->motorDirection) {
                   inputAdjusted = 0;
@@ -187,7 +187,7 @@ int main(void) {
               }
             }
 
-            if ((inputProtocol == PROSHOT) || (inputProtocol == DSHOT)) {
+            if (inputProtocol == PROSHOT) {
               if (inputData > 1097) {
                 if (motorDirection == escConfig()->motorDirection) {
                   motorDirection = !escConfig()->motorDirection;
@@ -211,11 +211,10 @@ int main(void) {
             inputAdjusted = inputData;
           }
 
+          constrain(inputAdjusted, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
 
-          if (inputAdjusted > 2000) {
-            inputAdjusted = 2000;
-          }
 
+          // filter ???
           if (inputAdjusted - input > 25) {
             input = input + 5;
           } else {
@@ -227,28 +226,17 @@ int main(void) {
           }
 
 
-
             motorBrakeActiveProportional = false;
             motorStartup = true;
 
             motorDutyCycle = input / 2 - 10;
 
             if (motorBemfCounter < 15) {
-              if(motorDutyCycle < 70) {
-                motorDutyCycle = 70;
-              }
-              if (motorDutyCycle > 400) {
-                motorDutyCycle = 400;
-              }
+              constrain(motorDutyCycle, 70, 400);
             }
 
             if (motorRunning) {
-              if (motorDutyCycle > 998 ) {                                          // safety!!!
-                motorDutyCycle = 998;
-              }
-              if (motorDutyCycle < 44) {
-                motorDutyCycle = 44;
-              }
+              constrain(motorDutyCycle, 44, 998);
 
               // set duty cycle to 50 out of 768 to start.
               TIM1->CCR1 = motorDutyCycle;
