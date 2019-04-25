@@ -9,7 +9,7 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo rest
 extern uint32_t compit;
-uint32_t sensorless, commutation_interval;
+uint32_t sensorless, commutationInterval;
 uint32_t filterLevel = 1;
 uint32_t filterDelay = 2;
 uint32_t zctimeout = 0;
@@ -117,7 +117,7 @@ int main(void) {
       TIM1->CCR3 = dutyCycle;
 
       //ToDo where ???
-      if (commutation_interval > 30000) {
+      if (commutationInterval > 30000) {
         //HAL_COMP_Stop_IT(&comparator1Handle);
       }
     }
@@ -264,7 +264,7 @@ int main(void) {
 
 
 
-        if (bemfCounter < 100 || commutation_interval > 10000) {
+        if (bemfCounter < 100 || commutationInterval > 10000) {
           filterDelay = 15;
           filterLevel = 10;
         } else {
@@ -272,7 +272,7 @@ int main(void) {
           filterDelay = 3;
         }
 
-        if(commutation_interval < 200 && dutyCycle > 500) {
+        if(commutationInterval < 200 && dutyCycle > 500) {
           filterDelay = 1;
           filterLevel = 0;
         }
@@ -297,7 +297,7 @@ int main(void) {
           //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;
-          //commutation_interval = 0;
+          //commutationInterval = 0;
           zctimeout = zc_timeout_threshold + 1;
           dutyCycle = 0;
         }

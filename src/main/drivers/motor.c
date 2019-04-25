@@ -20,7 +20,7 @@ uint32_t tim2_start_arr = 9000;
 
 extern TIM_HandleTypeDef timer1Handle;
 
-extern uint32_t sensorless, commutation_interval;
+extern uint32_t sensorless, commutationInterval;
 extern uint32_t filterLevel;
 extern uint32_t filterDelay;
 
@@ -47,7 +47,7 @@ bool motorBrakeActiveProportional = true;
 extern uint32_t input;
 
 void advanceDivisor() {
-    advancedivisor = map((commutation_interval),100,5000, 2, 20);
+    advancedivisor = map((commutationInterval),100,5000, 2, 20);
 }
 
 // motorPhaseB qfnf051 , phase A qfp32
@@ -278,7 +278,7 @@ void motorCommutate() {
   }
   motorChangeCompInput();
 // TIM2->CNT = 0;
-// TIM2->ARR = commutation_interval;
+// TIM2->ARR = commutationInterval;
 }
 
 
@@ -296,7 +296,7 @@ void motorStart() {
     motorSlowDecay = 1;
 
     motorCommutate();
-    commutation_interval = tim2_start_arr- 3000;
+    commutationInterval = tim2_start_arr- 3000;
     TIM3->CNT = 0;
     motorRunning = true;
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -341,11 +341,11 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   zctimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
-  commutation_interval = (commutation_interval + thiszctime) / 2;
+  commutationInterval = (commutationInterval + thiszctime) / 2;
 
-  advance = commutation_interval / advancedivisor;
-  waitTime = commutation_interval / 2 - advance;
-  blanktime = commutation_interval / 4;
+  advance = commutationInterval / advancedivisor;
+  waitTime = commutationInterval / 2 - advance;
+  blanktime = commutationInterval / 4;
 
   if (sensorless) {
     while (TIM3->CNT  < waitTime) {
@@ -376,14 +376,14 @@ void zc_found_routine() {
   }*/
 
   if (thiszctime > lastzctime) {
-    //if (((thiszctime - lastzctime) > (commutation_interval * 2)) || ((thiszctime - lastzctime < commutation_interval/2))){
-    //  commutation_interval = (commutation_interval * 3 + (thiszctime - lastzctime))/4;
-    //  commutation_interval = (commutation_interval + (thiszctime - lastzctime))/2;
+    //if (((thiszctime - lastzctime) > (commutationInterval * 2)) || ((thiszctime - lastzctime < commutationInterval/2))){
+    //  commutationInterval = (commutationInterval * 3 + (thiszctime - lastzctime))/4;
+    //  commutationInterval = (commutationInterval + (thiszctime - lastzctime))/2;
     //}else{
-    commutation_interval = (thiszctime - lastzctime);       // TEST!   divide by two when tracking up down time independant
+    commutationInterval = (thiszctime - lastzctime);       // TEST!   divide by two when tracking up down time independant
     //	}
-    advance = commutation_interval / advancedivisor;
-    waitTime = commutation_interval /2 - advance;
+    advance = commutationInterval / advancedivisor;
+    waitTime = commutationInterval /2 - advance;
   }
   if (sensorless) {
     while (TIM3->CNT - thiszctime < waitTime) {
