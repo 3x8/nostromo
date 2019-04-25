@@ -7,4 +7,4 @@
 
 void adcInit(void);
 void adcRead(void);
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle);

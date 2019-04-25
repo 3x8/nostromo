@@ -1,5 +1,7 @@
 #include "motor.h"
 
+COMP_HandleTypeDef comparator1Handle;
+
 uint32_t timestamp;
 uint16_t step = 1;
 
@@ -15,8 +17,8 @@ uint32_t blanktime, waitTime, compit;
 
 uint32_t tim2_start_arr = 9000;
 
-extern COMP_HandleTypeDef hcomp1;
-extern TIM_HandleTypeDef htim1;
+
+extern TIM_HandleTypeDef timer1Handle;
 
 extern uint32_t sensorless, commutation_interval;
 extern uint32_t filter_level;
@@ -212,36 +214,36 @@ void motorBrakeProportional() {
 void motorChangeCompInput() {
   // c floating
   if (step == 1 || step == 4) {
-    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
   }
   // a floating
   if (step == 2 || step == 5) {
     // if f051k6  step 2 , 5 is dac 1 ( swap comp input)
     #ifdef MP6531
-    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
+    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
     #endif
     #ifdef FD6288
-    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
+    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
     #endif
   }
   // b floating
   if (step == 3 || step == 6) {
     #ifdef MP6531
-    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
+    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
     #endif
     #ifdef FD6288
-    hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
+    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
     #endif
   }
   if (motorRisingBEMF) {
     // polarity of comp output reversed
-    hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   }else{
     // falling bemf
-    hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
   }
 
-  while (HAL_COMP_Init(&hcomp1) != HAL_OK);
+  while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
 }
 
 
@@ -290,14 +292,14 @@ void motorStart() {
   uint16_t decaystate = motorSlowDecay;
   sensorless = 0;
   if (!motorRunning) {
-    HAL_COMP_Stop_IT(&hcomp1);
+    HAL_COMP_Stop_IT(&comparator1Handle);
     motorSlowDecay = 1;
 
     motorCommutate();
     commutation_interval = tim2_start_arr- 3000;
     TIM3->CNT = 0;
     motorRunning = true;
-    while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
+    while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
   }
 
   motorSlowDecay = decaystate;    // return to normal
@@ -311,7 +313,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   //LED_ON(RED);
 
   if (compit > 200) {
-    HAL_COMP_Stop_IT(&hcomp1);
+    HAL_COMP_Stop_IT(&comparator1Handle);
     return;
   }
   compit +=1;
@@ -319,14 +321,14 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   if (motorRisingBEMF) {
     for (int i = 0; i < filter_level; i++) {
-      if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_HIGH) {
+      if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_HIGH) {
         return;
       }
     }
 
   } else {
     for (int i = 0; i < filter_level; i++) {
-      if (HAL_COMP_GetOutputLevel(&hcomp1) == COMP_OUTPUTLEVEL_LOW) {
+      if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_LOW) {
         return;
       }
     }
@@ -334,7 +336,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   }
   thiszctime = timestamp;
   TIM3->CNT = 0;
-  HAL_COMP_Stop_IT(&hcomp1);
+  HAL_COMP_Stop_IT(&comparator1Handle);
 
   zctimeout = 0;
 
@@ -358,7 +360,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   lastzctime = thiszctime;
   bemf_counts++;
 
-  while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
+  while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 }
 
 

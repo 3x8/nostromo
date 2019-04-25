@@ -10,7 +10,7 @@ uint8_t inputArmed;
 uint32_t inputArmCounter;
 uint32_t inputTimeoutCounter;
 
-extern TIM_HandleTypeDef htim15;
+extern TIM_HandleTypeDef timer15Handle;
 extern uint8_t motorDirection;
 
 
@@ -38,11 +38,11 @@ void inputDisarm(void) {
   inputTimeoutCounter = 0;
 
   //ToDo
-  while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1) != HAL_OK);
   inputProtocol = AUTODETECT;
   TIM15->PSC = 1;
   TIM15->CNT = 0;
-  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }
 
 void inputDisarmCheck(void) {
@@ -104,14 +104,14 @@ void inputCallbackDMA() {
       inputDetectProtocol();
       break;
     case PROSHOT:
-      while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
+      while (HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1) != HAL_OK);
       inputProshot();
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
       break;
     case SERVOPWM:
-      while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
+      while (HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1) != HAL_OK);
       inputServoPwm();
-      while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
+      while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
       break;
   }
 
@@ -121,7 +121,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthBuff;
   uint32_t telegramPulseWidthMin = 20000;
 
-  while (HAL_TIM_IC_Stop_DMA(&htim15, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1) != HAL_OK);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
@@ -134,7 +134,7 @@ void inputDetectProtocol() {
     inputProtocol = PROSHOT;
     TIM15->PSC = 1;
     TIM15->CNT = 0;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
     return;
   }
 
@@ -142,7 +142,7 @@ void inputDetectProtocol() {
     inputProtocol = SERVOPWM;
     TIM15->PSC = 47;
     TIM15->CNT = 0;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
     return;
   }
 
@@ -150,7 +150,7 @@ void inputDetectProtocol() {
   if (inputProtocol == AUTODETECT) {
     TIM15->PSC = 1;
     TIM15->CNT = 0;
-    while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+    while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   }
 }
 

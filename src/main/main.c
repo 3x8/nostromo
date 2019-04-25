@@ -1,10 +1,10 @@
 #include "main.h"
 
-ADC_HandleTypeDef hadc;
-DMA_HandleTypeDef hdma_adc;
-COMP_HandleTypeDef hcomp1;
-TIM_HandleTypeDef htim1, htim2, htim3, htim15;
-DMA_HandleTypeDef hdma_tim15_ch1_up_trig_com;
+
+extern COMP_HandleTypeDef comparator1Handle;
+
+TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
+DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 
 //ToDo rest
@@ -53,22 +53,22 @@ int main(void) {
 
   watchdogInit(2000);
 
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
-  HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_Base_Start(&htim3);
+  HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_1);
+  HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_2);
+  HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3);
+  HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3);
+  HAL_TIM_Base_Start_IT(&timer2Handle);
+  HAL_TIM_Base_Start(&timer3Handle);
 
   // HAL_Delay(500);
   motorStartupTune();
 
-  while (HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_4) != HAL_OK);
-  while (HAL_TIM_IC_Start_DMA(&htim15, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+  while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   adcInit();
-  while (HAL_COMP_Start_IT(&hcomp1) != HAL_OK);
+  while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 
 
   //ToDo
@@ -118,7 +118,7 @@ int main(void) {
 
       //ToDo where ???
       if (commutation_interval > 30000) {
-        //HAL_COMP_Stop_IT(&hcomp1);
+        //HAL_COMP_Stop_IT(&comparator1Handle);
       }
     }
 
@@ -294,7 +294,7 @@ int main(void) {
         zctimeout++;                                            // move to motorStartup if
         if (zctimeout > zc_timeout_threshold) {
           sensorless = 0;
-          //HAL_COMP_Stop_IT(&hcomp1);
+          //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;
           //commutation_interval = 0;
