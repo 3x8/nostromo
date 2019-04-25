@@ -22,7 +22,7 @@ extern TIM_HandleTypeDef timer1Handle;
 
 extern uint32_t sensorless, commutation_interval;
 extern uint32_t filterLevel;
-extern uint32_t filter_delay;
+extern uint32_t filterDelay;
 
 extern uint32_t zctimeout;
 // depends on speed of main loop
@@ -317,7 +317,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     return;
   }
   compit +=1;
-  while (TIM3->CNT - timestamp < filter_delay);
+  while (TIM3->CNT - timestamp < filterDelay);
 
   if (motorRisingBEMF) {
     for (int i = 0; i < filterLevel; i++) {

@@ -11,7 +11,7 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 extern uint32_t compit;
 uint32_t sensorless, commutation_interval;
 uint32_t filterLevel = 1;
-uint32_t filter_delay = 2;
+uint32_t filterDelay = 2;
 uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zc_timeout_threshold = 2000;
@@ -265,15 +265,15 @@ int main(void) {
 
 
         if (bemfCounter < 100 || commutation_interval > 10000) {
-          filter_delay = 15;
+          filterDelay = 15;
           filterLevel = 10;
         } else {
           filterLevel = 3;
-          filter_delay = 3;
+          filterDelay = 3;
         }
 
         if(commutation_interval < 200 && dutyCycle > 500) {
-          filter_delay = 1;
+          filterDelay = 1;
           filterLevel = 0;
         }
 
