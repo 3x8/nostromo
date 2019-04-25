@@ -63,6 +63,7 @@ void motorPhaseB(uint8_t newPhase)
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
+    return;
   }
 
   if (newPhase == HBRIDGE_FLOATING) {
@@ -70,6 +71,7 @@ void motorPhaseB(uint8_t newPhase)
     B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
+    return;
   }
 
   if (newPhase == HBRIDGE_LOWSIDE) {
@@ -77,6 +79,7 @@ void motorPhaseB(uint8_t newPhase)
     B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
     LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
+    return;
   }
 
 }
@@ -97,6 +100,7 @@ void motorPhaseC(uint8_t newPhase)
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
+    return;
   }
 
   if (newPhase == HBRIDGE_FLOATING) {
@@ -104,6 +108,7 @@ void motorPhaseC(uint8_t newPhase)
     C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
+    return;
   }
 
   if (newPhase == HBRIDGE_LOWSIDE) {
@@ -111,6 +116,7 @@ void motorPhaseC(uint8_t newPhase)
     C_FET_LO_GPIO->BSRR = C_FET_LO_PIN;
     LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
+    return;
   }
 }
 
@@ -130,6 +136,7 @@ void motorPhaseA(uint8_t newPhase)
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
     }
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
+    return;
   }
 
   if (newPhase == HBRIDGE_FLOATING) {
@@ -137,6 +144,7 @@ void motorPhaseA(uint8_t newPhase)
     A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
+    return;
   }
 
   if (newPhase == HBRIDGE_LOWSIDE) {
@@ -144,6 +152,7 @@ void motorPhaseA(uint8_t newPhase)
     A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
     LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
     A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
+    return;
   }
 
 }
@@ -211,29 +220,24 @@ void motorBrakeProportional() {
 
 
 void motorChangeCompInput() {
-  // c floating
-  if (motorStep == 1 || motorStep == 4) {
-    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+  switch(motorStep) {
+    case 1:
+    case 4:
+      // c floating
+      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+      break;
+    case 2:
+    case 5:
+      // a floating
+      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
+      break;
+    case 3:
+    case 6:
+      // b floating
+      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
+      break;
   }
-  // a floating
-  if (motorStep == 2 || motorStep == 5) {
-    // if f051k6  motorStep 2 , 5 is dac 1 ( swap comp input)
-    #ifdef MP6531
-    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
-    #endif
-    #ifdef FD6288
-    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
-    #endif
-  }
-  // b floating
-  if (motorStep == 3 || motorStep == 6) {
-    #ifdef MP6531
-    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
-    #endif
-    #ifdef FD6288
-    comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
-    #endif
-  }
+
   if (motorRisingBEMF) {
     // polarity of comp output reversed
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
