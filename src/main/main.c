@@ -16,7 +16,7 @@ uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zc_timeout_threshold = 2000;
 uint32_t dutyCycle = 100;
-uint32_t bemf_counts;
+uint32_t bemfCounter;
 
 //ToDo motor
 extern bool motorBrakeActiveProportional;
@@ -181,7 +181,7 @@ int main(void) {
 
               if (zctimeout >= zc_timeout_threshold) {
                 motorBrakeActiveProportional = false;
-                bemf_counts = 0;
+                bemfCounter = 0;
               }
 
               if ((inputData > 800) && (inputData < 1100)) {
@@ -194,14 +194,14 @@ int main(void) {
               if (inputData > 1097) {
                 if (motorDirection == escConfig()->motorDirection) {
                   motorDirection = !escConfig()->motorDirection;
-                  bemf_counts =0;
+                  bemfCounter =0;
                }
                 inputAdjusted = (inputData - 1100) * 2 + 100;
               }
 
               if ((inputData <= 1047) &&  (inputData > 0)) {
                if(motorDirection == (!escConfig()->motorDirection)) {
-                 bemf_counts =0;
+                 bemfCounter =0;
                  motorDirection = escConfig()->motorDirection;
                }
                inputAdjusted = (inputData - 90) * 2;
@@ -236,7 +236,7 @@ int main(void) {
 
             dutyCycle = input / 2 - 10;
 
-            if (bemf_counts < 15) {
+            if (bemfCounter < 15) {
               if(dutyCycle < 70) {
                 dutyCycle = 70;
               }
@@ -264,7 +264,7 @@ int main(void) {
 
 
 
-        if (bemf_counts < 100 || commutation_interval > 10000) {
+        if (bemfCounter < 100 || commutation_interval > 10000) {
           filter_delay = 15;
           filter_level = 10;
         } else {

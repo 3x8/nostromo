@@ -29,7 +29,7 @@ extern uint32_t zctimeout;
 extern uint32_t zc_timeout_threshold;
 extern uint32_t dutyCycle;
 
-extern uint32_t bemf_counts;
+extern uint32_t bemfCounter;
 
 bool motorDirection = 1;
 bool motorRisingBEMF = 1;
@@ -304,7 +304,7 @@ void motorStart() {
 
   motorSlowDecay = decaystate;    // return to normal
   sensorless = 1;
-  bemf_counts = 0;
+  bemfCounter = 0;
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
@@ -358,7 +358,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   }
 
   lastzctime = thiszctime;
-  bemf_counts++;
+  bemfCounter++;
 
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 }
