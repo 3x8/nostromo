@@ -9,9 +9,9 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo rest
 
-uint32_t motorZeroCounterTimeout = 0;
+extern uint32_t motorZeroCounterTimeout;
 // depends on speed of main loop
-uint32_t motorZeroCounterTimeoutThreshold = 2000;
+extern uint32_t motorZeroCounterTimeoutThreshold;
 
 
 //ToDo motor

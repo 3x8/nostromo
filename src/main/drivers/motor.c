@@ -24,15 +24,15 @@ uint32_t motorFilterLevel = 1;
 uint32_t motorFilterDelay = 2;
 uint32_t motorDutyCycle = 100;
 
-extern uint32_t motorZeroCounterTimeout;
+uint32_t motorZeroCounterTimeout  = 0;
 // depends on speed of main loop
-extern uint32_t motorZeroCounterTimeoutThreshold;
+uint32_t motorZeroCounterTimeoutThreshold  = 2000;
 
 
 uint32_t motorBemfCounter;
 
 bool motorDirection = 1;
-bool motorRisingBEMF = 1;
+bool motorRisingBEMF = true;
 bool motorRunning;
 
 // 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
@@ -256,9 +256,9 @@ void motorCommutate() {
     }
 
     if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
-      motorRisingBEMF = 1;
+      motorRisingBEMF = true;
     } else {
-      motorRisingBEMF = 0;
+      motorRisingBEMF = false;
     }
   } else {
     if (--motorStep < 1) {
@@ -266,9 +266,9 @@ void motorCommutate() {
     }
 
     if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
-      motorRisingBEMF = 0;
+      motorRisingBEMF = false;
     } else {
-      motorRisingBEMF = 1;
+      motorRisingBEMF = true;
     }
   }
 
@@ -288,11 +288,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void motorStart() {
-  uint16_t decaystate = motorSlowDecay;
+  bool bufferDecaystate = motorSlowDecay;
   motorSensorless = false;
+
   if (!motorRunning) {
     HAL_COMP_Stop_IT(&comparator1Handle);
-    motorSlowDecay = 1;
+    motorSlowDecay = true;
 
     motorCommutate();
     motorCommutationInterval = motorTimer2StartArr- 3000;
@@ -301,7 +302,7 @@ void motorStart() {
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
   }
 
-  motorSlowDecay = decaystate;    // return to normal
+  motorSlowDecay = bufferDecaystate;
   motorSensorless = true;
   motorBemfCounter = 0;
 }
