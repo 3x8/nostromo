@@ -8,11 +8,11 @@ bool motorStartup, motorRunning, motorSensorless;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
 
 uint16_t motorStep = 1;
+// increase divisor to decrease motorAdvance
+uint16_t motorAdvanceDivisor = 3;
 
 // set proportianal to commutation time. with motorAdvance divisor
 uint32_t motorAdvance;
-// increase divisor to decrease motorAdvance
-uint16_t motorAdvanceDivisor = 3;
 uint32_t motorBlanktime, motorWaitTime, motorCompit;
 uint32_t motorTimer2StartArr = 9000;
 
