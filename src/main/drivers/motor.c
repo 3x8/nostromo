@@ -228,8 +228,9 @@ void motorCommutate() {
     motorCommutationStep(motorStep);
   }
   motorChangeCompInput();
-// TIM2->CNT = 0;
-// TIM2->ARR = motorCommutationInterval;
+
+  //TIM2->CNT = 0;
+  //TIM2->ARR = motorCommutationInterval;
 }
 
 // for forced commutation -- open loop
