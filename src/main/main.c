@@ -9,9 +9,9 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo rest
 
-uint32_t zctimeout = 0;
+uint32_t motorZeroCounterTimeout = 0;
 // depends on speed of main loop
-uint32_t zeroCounterTimeoutThreshold = 2000;
+uint32_t motorZeroCounterTimeoutThreshold = 2000;
 
 
 //ToDo motor
@@ -183,7 +183,7 @@ int main(void) {
                 }
               }
 
-              if (zctimeout >= zeroCounterTimeoutThreshold) {
+              if (motorZeroCounterTimeout >= motorZeroCounterTimeoutThreshold) {
                 motorBrakeActiveProportional = false;
                 motorBemfCounter = 0;
               }
@@ -283,26 +283,26 @@ int main(void) {
 
         if (motorStartup) {
           if (!motorRunning) {
-            zctimeout = 0;
+            motorZeroCounterTimeout = 0;
             // safety on for input testing
             motorStart();
           }
         }
 
         if (motorDutyCycle < 300) {
-          zeroCounterTimeoutThreshold = 4000;
+          motorZeroCounterTimeoutThreshold = 4000;
         }else{
-          zeroCounterTimeoutThreshold = 2000;
+          motorZeroCounterTimeoutThreshold = 2000;
         }
 
-        zctimeout++;                                            // move to motorStartup if
-        if (zctimeout > zeroCounterTimeoutThreshold) {
+        motorZeroCounterTimeout++;                                            // move to motorStartup if
+        if (motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
           motorSensorless = 0;
           //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;
           //motorCommutationInterval = 0;
-          zctimeout = zeroCounterTimeoutThreshold + 1;
+          motorZeroCounterTimeout = motorZeroCounterTimeoutThreshold + 1;
           motorDutyCycle = 0;
         }
 

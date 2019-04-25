@@ -1,24 +1,21 @@
 #include "motor.h"
 
 COMP_HandleTypeDef comparator1Handle;
+extern TIM_HandleTypeDef timer1Handle;
 
-uint32_t timestamp;
-uint16_t step = 1;
+uint32_t motorTimestamp;
+uint16_t motorStep = 1;
 
 uint32_t thiszctime, lastzctime;
 
-// set proportianal to commutation time. with advance divisor
-uint32_t advance = 0;
+// set proportianal to commutation time. with motorAdvance divisor
+uint32_t motorAdvance = 0;
 
-// increase divisor to decrease advance
+// increase divisor to decrease motorAdvance
 uint16_t motorAdvanceDivisor = 3;
-
 uint32_t motorBlanktime, motorWaitTime, motorCompit;
 
 uint32_t tim2_start_arr = 9000;
-
-
-extern TIM_HandleTypeDef timer1Handle;
 
 bool motorSensorless;
 bool motorStartup;
@@ -27,9 +24,9 @@ uint32_t motorFilterLevel = 1;
 uint32_t motorFilterDelay = 2;
 uint32_t motorDutyCycle = 100;
 
-extern uint32_t zctimeout;
+extern uint32_t motorZeroCounterTimeout;
 // depends on speed of main loop
-extern uint32_t zeroCounterTimeoutThreshold;
+extern uint32_t motorZeroCounterTimeoutThreshold;
 
 
 uint32_t motorBemfCounter;
@@ -213,12 +210,12 @@ void motorBrakeProportional() {
 
 void motorChangeCompInput() {
   // c floating
-  if (step == 1 || step == 4) {
+  if (motorStep == 1 || motorStep == 4) {
     comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
   }
   // a floating
-  if (step == 2 || step == 5) {
-    // if f051k6  step 2 , 5 is dac 1 ( swap comp input)
+  if (motorStep == 2 || motorStep == 5) {
+    // if f051k6  motorStep 2 , 5 is dac 1 ( swap comp input)
     #ifdef MP6531
     comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
     #endif
@@ -227,7 +224,7 @@ void motorChangeCompInput() {
     #endif
   }
   // b floating
-  if (step == 3 || step == 6) {
+  if (motorStep == 3 || motorStep == 6) {
     #ifdef MP6531
     comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
     #endif
@@ -249,32 +246,32 @@ void motorChangeCompInput() {
 
 void motorCommutate() {
   if (motorDirection == 1) {
-    step++;
-    if (step > 6) {
-      step = 1;
+    motorStep++;
+    if (motorStep > 6) {
+      motorStep = 1;
     }
-    if (step == 1 || step == 3 || step == 5) {
+    if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
       motorRisingBEMF = 1;                                // is back emf motorRisingBEMF or falling
     }
-    if (step == 2 || step == 4 || step == 6) {
+    if (motorStep == 2 || motorStep == 4 || motorStep == 6) {
       motorRisingBEMF = 0;
     }
   }
   if (motorDirection == 0) {
-    step--;
-    if (step < 1) {
-      step = 6;
+    motorStep--;
+    if (motorStep < 1) {
+      motorStep = 6;
     }
-    if (step == 1 || step == 3 || step == 5) {
+    if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
       motorRisingBEMF = 0;
     }
-    if (step == 2 || step == 4 || step == 6) {
+    if (motorStep == 2 || motorStep == 4 || motorStep == 6) {
       motorRisingBEMF = 1;
     }
   }
 
   if (input > 47) {
-    motorCommutationStep(step);
+    motorCommutationStep(motorStep);
   }
   motorChangeCompInput();
 // TIM2->CNT = 0;
@@ -308,7 +305,7 @@ void motorStart() {
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
-  timestamp = TIM3->CNT;
+  motorTimestamp = TIM3->CNT;
   //debug
   //LED_ON(RED);
 
@@ -317,7 +314,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     return;
   }
   motorCompit +=1;
-  while (TIM3->CNT - timestamp < motorFilterDelay);
+  while (TIM3->CNT - motorTimestamp < motorFilterDelay);
 
   if (motorRisingBEMF) {
     for (int i = 0; i < motorFilterLevel; i++) {
@@ -334,17 +331,17 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
 
   }
-  thiszctime = timestamp;
+  thiszctime = motorTimestamp;
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
 
-  zctimeout = 0;
+  motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
   motorCommutationInterval = (motorCommutationInterval + thiszctime) / 2;
 
-  advance = motorCommutationInterval / motorAdvanceDivisor;
-  motorWaitTime = motorCommutationInterval / 2 - advance;
+  motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
+  motorWaitTime = motorCommutationInterval / 2 - motorAdvance;
   motorBlanktime = motorCommutationInterval / 4;
 
   if (motorSensorless) {
@@ -365,7 +362,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
 
 void zc_found_routine() {
-  zctimeout = 0;
+  motorZeroCounterTimeout = 0;
 
   thiszctime = TIM3->CNT;
 
@@ -382,8 +379,8 @@ void zc_found_routine() {
     //}else{
     motorCommutationInterval = (thiszctime - lastzctime);       // TEST!   divide by two when tracking up down time independant
     //	}
-    advance = motorCommutationInterval / motorAdvanceDivisor;
-    motorWaitTime = motorCommutationInterval /2 - advance;
+    motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
+    motorWaitTime = motorCommutationInterval /2 - motorAdvance;
   }
   if (motorSensorless) {
     while (TIM3->CNT - thiszctime < motorWaitTime) {
