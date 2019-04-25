@@ -6,7 +6,7 @@ extern TIM_HandleTypeDef timer1Handle;
 uint32_t motorTimestamp;
 uint16_t motorStep = 1;
 
-uint32_t thiszctime, lastzctime;
+uint32_t motorZeroCrossTimesamp, motorZeroCrossTimesampLast;
 
 // set proportianal to commutation time. with motorAdvance divisor
 uint32_t motorAdvance = 0;
@@ -15,7 +15,7 @@ uint32_t motorAdvance = 0;
 uint16_t motorAdvanceDivisor = 3;
 uint32_t motorBlanktime, motorWaitTime, motorCompit;
 
-uint32_t tim2_start_arr = 9000;
+uint32_t motorTimer2StartArr = 9000;
 
 bool motorSensorless;
 bool motorStartup;
@@ -35,12 +35,12 @@ bool motorDirection = 1;
 bool motorRisingBEMF = 1;
 bool motorRunning;
 
-extern uint32_t input;
-
-
 // 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
 bool motorSlowDecay = true;
 bool motorBrakeActiveProportional = true;
+
+extern uint32_t input;
+
 
 
 void motorAdvanceDivisorCalculate() {
@@ -293,7 +293,7 @@ void motorStart() {
     motorSlowDecay = 1;
 
     motorCommutate();
-    motorCommutationInterval = tim2_start_arr- 3000;
+    motorCommutationInterval = motorTimer2StartArr- 3000;
     TIM3->CNT = 0;
     motorRunning = true;
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -331,14 +331,14 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
 
   }
-  thiszctime = motorTimestamp;
+  motorZeroCrossTimesamp = motorTimestamp;
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
 
   motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
-  motorCommutationInterval = (motorCommutationInterval + thiszctime) / 2;
+  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimesamp) / 2;
 
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = motorCommutationInterval / 2 - motorAdvance;
@@ -354,7 +354,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
 
-  lastzctime = thiszctime;
+  motorZeroCrossTimesampLast = motorZeroCrossTimesamp;
   motorBemfCounter++;
 
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -364,33 +364,33 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 void zc_found_routine() {
   motorZeroCounterTimeout = 0;
 
-  thiszctime = TIM3->CNT;
+  motorZeroCrossTimesamp = TIM3->CNT;
 
   //ToDo
   /*
-  if (thiszctime < lastzctime) {
-    lastzctime = lastzctime - 65535;
+  if (motorZeroCrossTimesamp < motorZeroCrossTimesampLast) {
+    motorZeroCrossTimesampLast = motorZeroCrossTimesampLast - 65535;
   }*/
 
-  if (thiszctime > lastzctime) {
-    //if (((thiszctime - lastzctime) > (motorCommutationInterval * 2)) || ((thiszctime - lastzctime < motorCommutationInterval/2))){
-    //  motorCommutationInterval = (motorCommutationInterval * 3 + (thiszctime - lastzctime))/4;
-    //  motorCommutationInterval = (motorCommutationInterval + (thiszctime - lastzctime))/2;
+  if (motorZeroCrossTimesamp > motorZeroCrossTimesampLast) {
+    //if (((motorZeroCrossTimesamp - motorZeroCrossTimesampLast) > (motorCommutationInterval * 2)) || ((motorZeroCrossTimesamp - motorZeroCrossTimesampLast < motorCommutationInterval/2))){
+    //  motorCommutationInterval = (motorCommutationInterval * 3 + (motorZeroCrossTimesamp - motorZeroCrossTimesampLast))/4;
+    //  motorCommutationInterval = (motorCommutationInterval + (motorZeroCrossTimesamp - motorZeroCrossTimesampLast))/2;
     //}else{
-    motorCommutationInterval = (thiszctime - lastzctime);       // TEST!   divide by two when tracking up down time independant
+    motorCommutationInterval = (motorZeroCrossTimesamp - motorZeroCrossTimesampLast);       // TEST!   divide by two when tracking up down time independant
     //	}
     motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
     motorWaitTime = motorCommutationInterval /2 - motorAdvance;
   }
   if (motorSensorless) {
-    while (TIM3->CNT - thiszctime < motorWaitTime) {
+    while (TIM3->CNT - motorZeroCrossTimesamp < motorWaitTime) {
     }
     motorCommutate();
-    while (TIM3->CNT - thiszctime < motorWaitTime + motorBlanktime) {
+    while (TIM3->CNT - motorZeroCrossTimesamp < motorWaitTime + motorBlanktime) {
     }
   }
 
-  lastzctime = thiszctime;
+  motorZeroCrossTimesampLast = motorZeroCrossTimesamp;
 }
 
 void motorStartupTune() {
