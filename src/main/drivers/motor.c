@@ -15,7 +15,6 @@ uint16_t motorAdvanceDivisor = 3;
 uint32_t motorAdvance;
 uint32_t motorBlanktime, motorWaitTime, motorCompit;
 uint32_t motorTimer2StartArr = 9000;
-
 uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 uint32_t motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;

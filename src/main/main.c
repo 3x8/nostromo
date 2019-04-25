@@ -73,6 +73,10 @@ int main(void) {
   motorFilterDelay = 2;
   motorDutyCycle = 100;
 
+  // start with break
+  inputDataValid = true;
+  inputData = 0;
+
 
   // set duty cycle to 50 out of 768 to start.
   TIM1->CCR1 = 1;
@@ -80,9 +84,6 @@ int main(void) {
   TIM1->CCR3 = 1;
   TIM1->CCR4 = 800;
 
-  // start with break
-  inputDataValid = true;
-  inputData = 0;
 
   // main loop
   while (true) {
@@ -139,7 +140,6 @@ int main(void) {
             inputDshotCommandRun();
           }
         }
-
 
 
 
