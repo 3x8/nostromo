@@ -149,41 +149,43 @@ void motorPhaseA(uint8_t newPhase)
 }
 
 void motorCommutationStep(uint8_t newStep) {
-  //A-B
-  if (newStep == 1) {
-    motorPhaseA(HBRIDGE_PWM);
-    motorPhaseB(HBRIDGE_LOWSIDE);
-    motorPhaseC(HBRIDGE_FLOATING);
-  }
-  // C-B
-  if (newStep == 2) {
-    motorPhaseA(HBRIDGE_FLOATING);
-    motorPhaseB(HBRIDGE_LOWSIDE);
-    motorPhaseC(HBRIDGE_PWM);
-  }
-  // C-A
-  if (newStep == 3) {
-    motorPhaseA(HBRIDGE_LOWSIDE);
-    motorPhaseB(HBRIDGE_FLOATING);
-    motorPhaseC(HBRIDGE_PWM);
-  }
-  // B-A
-  if (newStep == 4) {
-    motorPhaseA(HBRIDGE_LOWSIDE);
-    motorPhaseB(HBRIDGE_PWM);
-    motorPhaseC(HBRIDGE_FLOATING);
-  }
-  // B-C
-  if (newStep == 5) {
-    motorPhaseA(HBRIDGE_FLOATING);
-    motorPhaseB(HBRIDGE_PWM);
-    motorPhaseC(HBRIDGE_LOWSIDE);
-  }
-  // A-C
-  if (newStep == 6) {
-    motorPhaseA(HBRIDGE_PWM);
-    motorPhaseB(HBRIDGE_FLOATING);
-    motorPhaseC(HBRIDGE_LOWSIDE);
+  switch(newStep) {
+    case 1:
+      //A-B
+      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_FLOATING);
+      break;
+    case 2:
+      // C-B
+      motorPhaseA(HBRIDGE_FLOATING);
+      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_PWM);
+      break;
+    case 3:
+      // C-A
+      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_FLOATING);
+      motorPhaseC(HBRIDGE_PWM);
+      break;
+    case 4:
+      // B-A
+      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_FLOATING);
+      break;
+    case 5:
+      // B-C
+      motorPhaseA(HBRIDGE_FLOATING);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_LOWSIDE);
+      break;
+    case 6:
+      // A-C
+      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_FLOATING);
+      motorPhaseC(HBRIDGE_LOWSIDE);
+      break;
   }
 }
 
