@@ -28,9 +28,7 @@ extern uint32_t input;
 
 
 void motorAdvanceDivisorCalculate() {
-    //motorAdvanceDivisor = map((motorCommutationInterval),100,5000, 2, 20);
-    //debug
-    motorAdvanceDivisor = 2;
+    motorAdvanceDivisor = map((motorCommutationInterval),100,5000, 2, 20);
 }
 
 // motorPhaseB qfn , motorPhaseA qfp
@@ -293,9 +291,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
-  //motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 2;
-  //debug  better why ??? 2400KV Lumenier
-  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 4;
+  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 2;
 
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = motorCommutationInterval / 2 - motorAdvance;
