@@ -1,32 +1,19 @@
 #include "main.h"
 
-
 extern COMP_HandleTypeDef comparator1Handle;
 
 TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
-
-//ToDo rest
-
+//ToDo motor
 extern uint32_t motorZeroCounterTimeout;
 // depends on speed of main loop
 extern uint32_t motorZeroCounterTimeoutThreshold;
-
-
-//ToDo motor
-extern uint32_t motorDutyCycle ;
-extern uint32_t motorBemfCounter;
-extern bool motorStartup;
-extern bool motorBrakeActiveProportional;
-extern bool motorDirection;
-extern bool motorRunning;
-extern uint32_t motorCompit;
-extern bool motorSensorless;
-extern uint32_t motorCommutationInterval;
-extern uint32_t motorFilterLevel;
-extern uint32_t motorFilterDelay;
-
+extern uint32_t motorDutyCycle, motorBemfCounter ;
+extern bool motorStartup, motorRunning, motorSensorless;
+extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;;
+extern uint32_t motorCompit, motorCommutationInterval;
+extern uint32_t motorFilterLevel, motorFilterDelay;
 
 //ToDo input
 uint32_t input;
@@ -79,6 +66,7 @@ int main(void) {
   // 3D motorDirection and normalSpin  opposed
   // what is normal ?
   motorDirection = escConfig()->motorDirection;
+  motorSlowDecay = escConfig()->motorSlowDecay;
 
 
   // set duty cycle to 50 out of 768 to start.

@@ -6,6 +6,7 @@
 
 typedef struct escConfig_s {
   bool motorDirection;
+  bool motorSlowDecay;
   bool motor3Dmode;
   uint8_t  motorBrakeState;
   uint16_t motorBrakeProportionalStrength;

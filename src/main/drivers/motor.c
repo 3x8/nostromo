@@ -3,10 +3,9 @@
 COMP_HandleTypeDef comparator1Handle;
 extern TIM_HandleTypeDef timer1Handle;
 
-uint32_t motorTimestamp;
 uint16_t motorStep = 1;
 
-uint32_t motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
+uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 
 // set proportianal to commutation time. with motorAdvance divisor
 uint32_t motorAdvance = 0;
@@ -28,19 +27,17 @@ uint32_t motorZeroCounterTimeout  = 0;
 // depends on speed of main loop
 uint32_t motorZeroCounterTimeoutThreshold  = 2000;
 
-
 uint32_t motorBemfCounter;
 
-bool motorDirection = 1;
+bool motorDirection;
 bool motorRisingBEMF = true;
 bool motorRunning;
 
 // 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
-bool motorSlowDecay = true;
+bool motorSlowDecay;
 bool motorBrakeActiveProportional = true;
 
 extern uint32_t input;
-
 
 
 void motorAdvanceDivisorCalculate() {
@@ -193,17 +190,17 @@ void motorChangeCompInput() {
   switch(motorStep) {
     case 1:
     case 4:
-      // c floating
+      // C floating
       comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
       break;
     case 2:
     case 5:
-      // a floating
+      // A floating
       comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
       break;
     case 3:
     case 6:
-      // b floating
+      // B floating
       comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
       break;
   }

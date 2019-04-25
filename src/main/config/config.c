@@ -17,6 +17,7 @@ void configReset(void) {
 
   // assign default config
   escConfig()->motorDirection = 1;
+  escConfig()->motorSlowDecay = 1;
   escConfig()->motor3Dmode = 0;
   escConfig()->motorBrakeState = BRAKE_FULL;
   escConfig()->motorBrakeProportionalStrength = 300;
