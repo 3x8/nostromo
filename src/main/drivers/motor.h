@@ -18,19 +18,23 @@ typedef enum {
   BRAKE_FULL
 } motorBrakeStateEnum;
 
-void motorAdvanceDivisorCalculate();
+void motorStartupTune();
+void motorInputTune();
 
 void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);
 void motorPhaseC(uint8_t phaseBuffer);
+
+void motorAdvanceDivisorCalculate();
+
+void motorStart();
+void motorCommutate();
 void motorCommutationStep(uint8_t stepBuffer);
+void motorChangeCompInput();
+
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();
-void motorChangeCompInput();
-void motorCommutate();
-void motorStart();
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp);
-void motorStartupTune();
-void motorInputTune();

@@ -1,10 +1,7 @@
 #pragma once
 
 //ToDo
-#define DEAD_TIME 60
-
-
-//ToDo
+#define MOTOR_DEAD_TIME 60
 #define MOTOR_NUM_PHASES            3
 #define MOTOR_NUM_COMMUTATION_STEPS 6
 
