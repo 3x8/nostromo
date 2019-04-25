@@ -259,8 +259,6 @@ int main(void) {
         }
 
 
-
-
         if (motorBemfCounter < 100 || motorCommutationInterval > 10000) {
           motorFilterDelay = 15;
           motorFilterLevel = 10;
@@ -288,9 +286,9 @@ int main(void) {
           motorZeroCounterTimeoutThreshold = 2000;
         }
 
-        motorZeroCounterTimeout++;                                            // move to motorStartup if
-        if (motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
-          motorSensorless = 0;
+        // move to motorStartup if
+        if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
+          motorSensorless = false;
           //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;

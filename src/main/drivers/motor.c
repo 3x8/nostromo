@@ -3,7 +3,7 @@
 COMP_HandleTypeDef comparator1Handle;
 extern TIM_HandleTypeDef timer1Handle;
 
-bool motorRisingBEMF = true;
+bool motorBemfRising = true;
 bool motorStartup, motorRunning, motorSensorless;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
 
@@ -193,11 +193,10 @@ void motorChangeCompInput() {
       break;
   }
 
-  if (motorRisingBEMF) {
-    // polarity of comp output reversed
+  // polarity of comp output reversed
+  if (motorBemfRising) {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   } else {
-    // falling bemf
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
   }
 
@@ -212,9 +211,9 @@ void motorCommutate() {
     }
 
     if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
-      motorRisingBEMF = true;
+      motorBemfRising = true;
     } else {
-      motorRisingBEMF = false;
+      motorBemfRising = false;
     }
   } else {
     if (--motorStep < 1) {
@@ -222,9 +221,9 @@ void motorCommutate() {
     }
 
     if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
-      motorRisingBEMF = false;
+      motorBemfRising = false;
     } else {
-      motorRisingBEMF = true;
+      motorBemfRising = true;
     }
   }
 
@@ -252,7 +251,7 @@ void motorStart() {
     motorSlowDecay = true;
 
     motorCommutate();
-    motorCommutationInterval = motorTimer2StartArr- 3000;
+    motorCommutationInterval = motorTimer2StartArr - 3000;
     TIM3->CNT = 0;
     motorRunning = true;
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -276,7 +275,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorCompit++;
   while (TIM3->CNT - motorTimestamp < motorFilterDelay);
 
-  if (motorRisingBEMF) {
+  if (motorBemfRising) {
     for (int i = 0; i < motorFilterLevel; i++) {
       if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_HIGH) {
         return;
