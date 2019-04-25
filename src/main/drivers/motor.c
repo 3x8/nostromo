@@ -315,7 +315,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     return;
   }
-  motorCompit +=1;
+
+  motorCompit++;
   while (TIM3->CNT - motorTimestamp < motorFilterDelay);
 
   if (motorRisingBEMF) {
@@ -324,19 +325,17 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
         return;
       }
     }
-
   } else {
     for (int i = 0; i < motorFilterLevel; i++) {
       if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_LOW) {
         return;
       }
     }
-
   }
+
   motorZeroCrossTimestamp = motorTimestamp;
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
-
   motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
@@ -347,13 +346,11 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorBlanktime = motorCommutationInterval / 4;
 
   if (motorSensorless) {
-    while (TIM3->CNT  < motorWaitTime) {
-    }
+    while (TIM3->CNT  < motorWaitTime);
 
     motorCompit = 0;
     motorCommutate();
-    while (TIM3->CNT  < motorWaitTime + motorBlanktime) {
-    }
+    while (TIM3->CNT  < motorWaitTime + motorBlanktime);
   }
 
   motorZeroCrossTimestampLast = motorZeroCrossTimestamp;
