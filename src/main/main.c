@@ -8,22 +8,25 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 
 //ToDo rest
+
+uint32_t zctimeout = 0;
+// depends on speed of main loop
+uint32_t zeroCounterTimeoutThreshold = 2000;
+
+
+//ToDo motor
+extern uint32_t motorDutyCycle ;
+extern uint32_t motorBemfCounter;
+extern bool motorStartup;
+extern bool motorBrakeActiveProportional;
+extern bool motorDirection;
+extern bool motorRunning;
 extern uint32_t motorCompit;
 extern bool motorSensorless;
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel;
 extern uint32_t motorFilterDelay;
-uint32_t zctimeout = 0;
-// depends on speed of main loop
-uint32_t zeroCounterTimeoutThreshold = 2000;
-extern uint32_t motorDutyCycle ;
-uint32_t motorBemfCounter;
 
-//ToDo motor
-extern bool motorBrakeActiveProportional;
-extern bool motorDirection;
-extern bool motorRunning;
-bool motorStartup;
 
 //ToDo input
 uint32_t input;
@@ -133,7 +136,7 @@ int main(void) {
       inputDisarmCheck();
       if (inputArmed) {
 
-        advanceDivisor();
+        motorAdvanceDivisorCalculate();
         motorCompit = 0;
 
         if (inputData <= DSHOT_CMD_MAX) {

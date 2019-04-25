@@ -11,9 +11,9 @@ uint32_t thiszctime, lastzctime;
 uint32_t advance = 0;
 
 // increase divisor to decrease advance
-uint16_t advancedivisor = 3;
+uint16_t motorAdvanceDivisor = 3;
 
-uint32_t blanktime, waitTime, motorCompit;
+uint32_t motorBlanktime, motorWaitTime, motorCompit;
 
 uint32_t tim2_start_arr = 9000;
 
@@ -21,6 +21,7 @@ uint32_t tim2_start_arr = 9000;
 extern TIM_HandleTypeDef timer1Handle;
 
 bool motorSensorless;
+bool motorStartup;
 uint32_t motorCommutationInterval;
 uint32_t motorFilterLevel = 1;
 uint32_t motorFilterDelay = 2;
@@ -31,14 +32,13 @@ extern uint32_t zctimeout;
 extern uint32_t zeroCounterTimeoutThreshold;
 
 
-extern uint32_t motorBemfCounter;
+uint32_t motorBemfCounter;
 
 bool motorDirection = 1;
 bool motorRisingBEMF = 1;
 bool motorRunning;
 
-extern bool inputArmed;
-extern uint32_t inputArmCounter;
+extern uint32_t input;
 
 
 // 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
@@ -46,10 +46,8 @@ bool motorSlowDecay = true;
 bool motorBrakeActiveProportional = true;
 
 
-extern uint32_t input;
-
-void advanceDivisor() {
-    advancedivisor = map((motorCommutationInterval),100,5000, 2, 20);
+void motorAdvanceDivisorCalculate() {
+    motorAdvanceDivisor = map((motorCommutationInterval),100,5000, 2, 20);
 }
 
 // motorPhaseB qfnf051 , phase A qfp32
@@ -345,17 +343,17 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   // TEST!   divide by two when tracking up down time independant
   motorCommutationInterval = (motorCommutationInterval + thiszctime) / 2;
 
-  advance = motorCommutationInterval / advancedivisor;
-  waitTime = motorCommutationInterval / 2 - advance;
-  blanktime = motorCommutationInterval / 4;
+  advance = motorCommutationInterval / motorAdvanceDivisor;
+  motorWaitTime = motorCommutationInterval / 2 - advance;
+  motorBlanktime = motorCommutationInterval / 4;
 
   if (motorSensorless) {
-    while (TIM3->CNT  < waitTime) {
+    while (TIM3->CNT  < motorWaitTime) {
     }
 
     motorCompit = 0;
     motorCommutate();
-    while (TIM3->CNT  < waitTime + blanktime) {
+    while (TIM3->CNT  < motorWaitTime + motorBlanktime) {
     }
   }
 
@@ -384,14 +382,14 @@ void zc_found_routine() {
     //}else{
     motorCommutationInterval = (thiszctime - lastzctime);       // TEST!   divide by two when tracking up down time independant
     //	}
-    advance = motorCommutationInterval / advancedivisor;
-    waitTime = motorCommutationInterval /2 - advance;
+    advance = motorCommutationInterval / motorAdvanceDivisor;
+    motorWaitTime = motorCommutationInterval /2 - advance;
   }
   if (motorSensorless) {
-    while (TIM3->CNT - thiszctime < waitTime) {
+    while (TIM3->CNT - thiszctime < motorWaitTime) {
     }
     motorCommutate();
-    while (TIM3->CNT - thiszctime < waitTime + blanktime) {
+    while (TIM3->CNT - thiszctime < motorWaitTime + motorBlanktime) {
     }
   }
 

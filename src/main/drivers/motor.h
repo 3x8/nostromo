@@ -18,7 +18,7 @@ typedef enum {
   BRAKE_FULL
 } motorBrakeStateEnum;
 
-void advanceDivisor();
+void motorAdvanceDivisorCalculate();
 
 void motorPhaseA(uint8_t newPhase);
 void motorPhaseB(uint8_t newPhase);
