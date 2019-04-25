@@ -28,10 +28,12 @@ extern uint32_t input;
 
 
 void motorAdvanceDivisorCalculate() {
-    motorAdvanceDivisor = map((motorCommutationInterval),100,5000, 2, 20);
+    //motorAdvanceDivisor = map((motorCommutationInterval),100,5000, 2, 20);
+    //debug
+    motorAdvanceDivisor = 2;
 }
 
-// motorPhaseB qfnf051 , phase A qfp32
+// motorPhaseB qfn , motorPhaseA qfp
 void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
@@ -58,7 +60,7 @@ void motorPhaseA(uint8_t phaseBuffer) {
   }
 }
 
-// phase c qfn , phase b qfp
+// motorPhaseC qfn , motorPhaseB qfp
 void motorPhaseB(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
@@ -85,7 +87,7 @@ void motorPhaseB(uint8_t phaseBuffer) {
   }
 }
 
-// motorPhaseA qfn , phase C qfp
+// motorPhaseA qfn , motorPhaseC qfp
 void motorPhaseC(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
@@ -172,7 +174,6 @@ void motorBrakeProportional() {
   motorPhaseC(HBRIDGE_PWM);
 }
 
-
 void motorChangeCompInput() {
   switch(motorStep) {
     case 1:
@@ -201,7 +202,6 @@ void motorChangeCompInput() {
 
   while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
 }
-
 
 void motorCommutate() {
   if (motorDirection == 1) {
@@ -233,7 +233,6 @@ void motorCommutate() {
 // TIM2->CNT = 0;
 // TIM2->ARR = motorCommutationInterval;
 }
-
 
 // for forced commutation -- open loop
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -294,7 +293,9 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
-  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 2;
+  //motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 2;
+  //debug  better why ??? 2400KV Lumenier
+  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 4;
 
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = motorCommutationInterval / 2 - motorAdvance;

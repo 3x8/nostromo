@@ -116,7 +116,7 @@ int main(void) {
 
       //ToDo where ???
       if (motorCommutationInterval > 30000) {
-        HAL_COMP_Stop_IT(&comparator1Handle);
+        //HAL_COMP_Stop_IT(&comparator1Handle);
       }
     }
 
@@ -238,7 +238,6 @@ int main(void) {
             if (motorRunning) {
               constrain(motorDutyCycle, 44, 998);
 
-              // set duty cycle to 50 out of 768 to start.
               TIM1->CCR1 = motorDutyCycle;
               TIM1->CCR2 = motorDutyCycle;
               TIM1->CCR3 = motorDutyCycle;
