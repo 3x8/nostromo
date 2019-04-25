@@ -48,113 +48,84 @@ void motorAdvanceDivisorCalculate() {
 }
 
 // motorPhaseB qfnf051 , phase A qfp32
-#ifdef MP6531
-void motorPhaseA(uint8_t newPhase)
-#endif
-#ifdef FD6288
-void motorPhaseB(uint8_t newPhase)
-#endif
-{
-  if (newPhase == HBRIDGE_PWM) {
-    if(!motorSlowDecay  || motorBrakeActiveProportional) {
+void motorPhaseA(uint8_t newPhase) {
+  switch (newPhase) {
+    case HBRIDGE_PWM:
+      if(!motorSlowDecay  || motorBrakeActiveProportional) {
+        LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+        B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
+      } else {
+        LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
+      }
+      LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
+      break;
+    case HBRIDGE_FLOATING:
       LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
-    } else {
-      LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
-    }
-    LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-    return;
+      LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+      B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
+      break;
+    case HBRIDGE_LOWSIDE:
+      LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+      B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
+      LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+      B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
+      break;
   }
-
-  if (newPhase == HBRIDGE_FLOATING) {
-    LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
-    LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-    B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
-    return;
-  }
-
-  if (newPhase == HBRIDGE_LOWSIDE) {
-    LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
-    LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-    B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
-    return;
-  }
-
 }
 
 // phase c qfn , phase b qfp
-#ifdef MP6531
-void motorPhaseB(uint8_t newPhase)
-#endif
-#ifdef FD6288
-void motorPhaseC(uint8_t newPhase)
-#endif
-{
-  if (newPhase == HBRIDGE_PWM) {
-    if (!motorSlowDecay || motorBrakeActiveProportional) {
+void motorPhaseB(uint8_t newPhase) {
+  switch (newPhase) {
+    case HBRIDGE_PWM:
+      if (!motorSlowDecay || motorBrakeActiveProportional) {
+        LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+        C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
+      } else {
+        LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
+      }
+      LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
+      break;
+    case HBRIDGE_FLOATING:
       LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
-    } else {
-      LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
-    }
-    LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-    return;
-  }
-
-  if (newPhase == HBRIDGE_FLOATING) {
-    LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
-    LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-    C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
-    return;
-  }
-
-  if (newPhase == HBRIDGE_LOWSIDE) {
-    LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    C_FET_LO_GPIO->BSRR = C_FET_LO_PIN;
-    LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-    C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
-    return;
+      LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+      C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
+      break;
+    case HBRIDGE_LOWSIDE:
+      LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+      C_FET_LO_GPIO->BSRR = C_FET_LO_PIN;
+      LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+      C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
+      break;
   }
 }
 
 // motorPhaseA qfn , phase C qfp
-#ifdef MP6531
-void motorPhaseC(uint8_t newPhase)
-#endif
-#ifdef FD6288
-void motorPhaseA(uint8_t newPhase)
-#endif
-{
-  if (newPhase == HBRIDGE_PWM) {
-    if (!motorSlowDecay || motorBrakeActiveProportional) {
+void motorPhaseC(uint8_t newPhase) {
+  switch (newPhase) {
+    case HBRIDGE_PWM:
+      if (!motorSlowDecay || motorBrakeActiveProportional) {
+        LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+        A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
+      } else {
+        LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
+      }
+      LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
+      break;
+    case HBRIDGE_FLOATING:
       LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
       A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
-    } else {
-      LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
-    }
-    LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-    return;
+      LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+      A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
+      break;
+    case HBRIDGE_LOWSIDE:
+      LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+      A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
+      LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+      A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
+      break;
   }
-
-  if (newPhase == HBRIDGE_FLOATING) {
-    LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
-    LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-    A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
-    return;
-  }
-
-  if (newPhase == HBRIDGE_LOWSIDE) {
-    LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-    A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
-    LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-    A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
-    return;
-  }
-
 }
 
 void motorCommutationStep(uint8_t newStep) {

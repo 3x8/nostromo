@@ -3,9 +3,6 @@
 //ToDo
 #define DEAD_TIME 60
 
-//ToDo
-#define MP6531
-// #define FD6288
 
 //ToDo
 #define MOTOR_NUM_PHASES            3
