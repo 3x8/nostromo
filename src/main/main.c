@@ -8,16 +8,16 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 
 //ToDo rest
-extern uint32_t compit;
+extern uint32_t motorCompit;
 extern bool motorSensorless;
-extern uint32_t commutationInterval;
+extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel;
 extern uint32_t motorFilterDelay;
 uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zeroCounterTimeoutThreshold = 2000;
-uint32_t dutyCycle = 100;
-uint32_t bemfCounter;
+extern uint32_t motorDutyCycle ;
+uint32_t motorBemfCounter;
 
 //ToDo motor
 extern bool motorBrakeActiveProportional;
@@ -99,26 +99,26 @@ int main(void) {
       switch(escConfig()->motorBrakeState) {
         case BRAKE_FULL:
           motorBrakeFull();
-          dutyCycle = 0;
+          motorDutyCycle = 0;
           break;
         case BRAKE_PROPORTIONAL:
           if(motorBrakeActiveProportional) {
-            dutyCycle = escConfig()->motorBrakeProportionalStrength;
+            motorDutyCycle = escConfig()->motorBrakeProportionalStrength;
             motorBrakeProportional();
           }
           break;
         case BRAKE_OFF:
             motorBrakeOff();
-            dutyCycle = 0;
+            motorDutyCycle = 0;
           break;
       }
 
-      TIM1->CCR1 = dutyCycle;
-      TIM1->CCR2 = dutyCycle;
-      TIM1->CCR3 = dutyCycle;
+      TIM1->CCR1 = motorDutyCycle;
+      TIM1->CCR2 = motorDutyCycle;
+      TIM1->CCR3 = motorDutyCycle;
 
       //ToDo where ???
-      if (commutationInterval > 30000) {
+      if (motorCommutationInterval > 30000) {
         //HAL_COMP_Stop_IT(&comparator1Handle);
       }
     }
@@ -134,7 +134,7 @@ int main(void) {
       if (inputArmed) {
 
         advanceDivisor();
-        compit = 0;
+        motorCompit = 0;
 
         if (inputData <= DSHOT_CMD_MAX) {
           motorStartup = false;
@@ -182,7 +182,7 @@ int main(void) {
 
               if (zctimeout >= zeroCounterTimeoutThreshold) {
                 motorBrakeActiveProportional = false;
-                bemfCounter = 0;
+                motorBemfCounter = 0;
               }
 
               if ((inputData > 800) && (inputData < 1100)) {
@@ -195,14 +195,14 @@ int main(void) {
               if (inputData > 1097) {
                 if (motorDirection == escConfig()->motorDirection) {
                   motorDirection = !escConfig()->motorDirection;
-                  bemfCounter =0;
+                  motorBemfCounter =0;
                }
                 inputAdjusted = (inputData - 1100) * 2 + 100;
               }
 
               if ((inputData <= 1047) &&  (inputData > 0)) {
                if(motorDirection == (!escConfig()->motorDirection)) {
-                 bemfCounter =0;
+                 motorBemfCounter =0;
                  motorDirection = escConfig()->motorDirection;
                }
                inputAdjusted = (inputData - 90) * 2;
@@ -235,37 +235,37 @@ int main(void) {
             motorBrakeActiveProportional = false;
             motorStartup = true;
 
-            dutyCycle = input / 2 - 10;
+            motorDutyCycle = input / 2 - 10;
 
-            if (bemfCounter < 15) {
-              if(dutyCycle < 70) {
-                dutyCycle = 70;
+            if (motorBemfCounter < 15) {
+              if(motorDutyCycle < 70) {
+                motorDutyCycle = 70;
               }
-              if (dutyCycle > 400) {
-                dutyCycle = 400;
+              if (motorDutyCycle > 400) {
+                motorDutyCycle = 400;
               }
             }
 
             if (motorRunning) {
-              if (dutyCycle > 998 ) {                                          // safety!!!
-                dutyCycle = 998;
+              if (motorDutyCycle > 998 ) {                                          // safety!!!
+                motorDutyCycle = 998;
               }
-              if (dutyCycle < 44) {
-                dutyCycle = 44;
+              if (motorDutyCycle < 44) {
+                motorDutyCycle = 44;
               }
 
               // set duty cycle to 50 out of 768 to start.
-              TIM1->CCR1 = dutyCycle;
-              TIM1->CCR2 = dutyCycle;
-              TIM1->CCR3 = dutyCycle;
-              //TIM1->CCR4 = dutyCycle;
+              TIM1->CCR1 = motorDutyCycle;
+              TIM1->CCR2 = motorDutyCycle;
+              TIM1->CCR3 = motorDutyCycle;
+              //TIM1->CCR4 = motorDutyCycle;
             }
         }
 
 
 
 
-        if (bemfCounter < 100 || commutationInterval > 10000) {
+        if (motorBemfCounter < 100 || motorCommutationInterval > 10000) {
           motorFilterDelay = 15;
           motorFilterLevel = 10;
         } else {
@@ -273,7 +273,7 @@ int main(void) {
           motorFilterDelay = 3;
         }
 
-        if(commutationInterval < 200 && dutyCycle > 500) {
+        if(motorCommutationInterval < 200 && motorDutyCycle > 500) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
         }
@@ -286,7 +286,7 @@ int main(void) {
           }
         }
 
-        if (dutyCycle < 300) {
+        if (motorDutyCycle < 300) {
           zeroCounterTimeoutThreshold = 4000;
         }else{
           zeroCounterTimeoutThreshold = 2000;
@@ -298,9 +298,9 @@ int main(void) {
           //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;
-          //commutationInterval = 0;
+          //motorCommutationInterval = 0;
           zctimeout = zeroCounterTimeoutThreshold + 1;
-          dutyCycle = 0;
+          motorDutyCycle = 0;
         }
 
       }
