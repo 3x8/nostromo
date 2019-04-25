@@ -20,7 +20,8 @@ uint32_t tim2_start_arr = 9000;
 
 extern TIM_HandleTypeDef timer1Handle;
 
-uint32_t sensorless, commutationInterval;
+bool motorSensorless;
+uint32_t commutationInterval;
 uint32_t motorFilterLevel = 1;
 uint32_t motorFilterDelay = 2;
 
@@ -290,7 +291,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void motorStart() {
   uint16_t decaystate = motorSlowDecay;
-  sensorless = 0;
+  motorSensorless = false;
   if (!motorRunning) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     motorSlowDecay = 1;
@@ -303,7 +304,7 @@ void motorStart() {
   }
 
   motorSlowDecay = decaystate;    // return to normal
-  sensorless = 1;
+  motorSensorless = true;
   bemfCounter = 0;
 }
 
@@ -347,7 +348,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   waitTime = commutationInterval / 2 - advance;
   blanktime = commutationInterval / 4;
 
-  if (sensorless) {
+  if (motorSensorless) {
     while (TIM3->CNT  < waitTime) {
     }
 
@@ -385,7 +386,7 @@ void zc_found_routine() {
     advance = commutationInterval / advancedivisor;
     waitTime = commutationInterval /2 - advance;
   }
-  if (sensorless) {
+  if (motorSensorless) {
     while (TIM3->CNT - thiszctime < waitTime) {
     }
     motorCommutate();

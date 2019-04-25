@@ -9,7 +9,8 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo rest
 extern uint32_t compit;
-extern uint32_t sensorless, commutationInterval;
+extern bool motorSensorless;
+extern uint32_t commutationInterval;
 extern uint32_t motorFilterLevel;
 extern uint32_t motorFilterDelay;
 uint32_t zctimeout = 0;
@@ -293,7 +294,7 @@ int main(void) {
 
         zctimeout++;                                            // move to motorStartup if
         if (zctimeout > zeroCounterTimeoutThreshold) {
-          sensorless = 0;
+          motorSensorless = 0;
           //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;
