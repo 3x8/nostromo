@@ -210,8 +210,7 @@ void motorBrakeFull() {
   motorPhaseC(HBRIDGE_LOWSIDE);
 }
 
-// duty cycle controls braking strength
-// will turn off lower fets so only high side is active
+// dutyCycle controls braking strength, will turn off lower fets so only high side is active
 void motorBrakeProportional() {
   motorPhaseA(HBRIDGE_PWM);
   motorPhaseB(HBRIDGE_PWM);
@@ -241,7 +240,7 @@ void motorChangeCompInput() {
   if (motorRisingBEMF) {
     // polarity of comp output reversed
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
-  }else{
+  } else {
     // falling bemf
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
   }
@@ -252,31 +251,28 @@ void motorChangeCompInput() {
 
 void motorCommutate() {
   if (motorDirection == 1) {
-    motorStep++;
-    if (motorStep > 6) {
+    if (++motorStep > 6) {
       motorStep = 1;
     }
+
     if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
-      motorRisingBEMF = 1;                                // is back emf motorRisingBEMF or falling
-    }
-    if (motorStep == 2 || motorStep == 4 || motorStep == 6) {
+      motorRisingBEMF = 1;
+    } else {
       motorRisingBEMF = 0;
     }
-  }
-  if (motorDirection == 0) {
-    motorStep--;
-    if (motorStep < 1) {
+  } else {
+    if (--motorStep < 1) {
       motorStep = 6;
     }
+
     if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
       motorRisingBEMF = 0;
-    }
-    if (motorStep == 2 || motorStep == 4 || motorStep == 6) {
+    } else {
       motorRisingBEMF = 1;
     }
   }
 
-  if (input > 47) {
+  if (input > DSHOT_CMD_MAX) {
     motorCommutationStep(motorStep);
   }
   motorChangeCompInput();
