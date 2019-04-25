@@ -9,9 +9,9 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo rest
 extern uint32_t compit;
-uint32_t sensorless, commutationInterval;
-uint32_t filterLevel = 1;
-uint32_t filterDelay = 2;
+extern uint32_t sensorless, commutationInterval;
+extern uint32_t motorFilterLevel;
+extern uint32_t motorFilterDelay;
 uint32_t zctimeout = 0;
 // depends on speed of main loop
 uint32_t zeroCounterTimeoutThreshold = 2000;
@@ -265,16 +265,16 @@ int main(void) {
 
 
         if (bemfCounter < 100 || commutationInterval > 10000) {
-          filterDelay = 15;
-          filterLevel = 10;
+          motorFilterDelay = 15;
+          motorFilterLevel = 10;
         } else {
-          filterLevel = 3;
-          filterDelay = 3;
+          motorFilterLevel = 3;
+          motorFilterDelay = 3;
         }
 
         if(commutationInterval < 200 && dutyCycle > 500) {
-          filterDelay = 1;
-          filterLevel = 0;
+          motorFilterDelay = 1;
+          motorFilterLevel = 0;
         }
 
         if (motorStartup) {

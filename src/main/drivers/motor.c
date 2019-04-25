@@ -20,9 +20,9 @@ uint32_t tim2_start_arr = 9000;
 
 extern TIM_HandleTypeDef timer1Handle;
 
-extern uint32_t sensorless, commutationInterval;
-extern uint32_t filterLevel;
-extern uint32_t filterDelay;
+uint32_t sensorless, commutationInterval;
+uint32_t motorFilterLevel = 1;
+uint32_t motorFilterDelay = 2;
 
 extern uint32_t zctimeout;
 // depends on speed of main loop
@@ -317,17 +317,17 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     return;
   }
   compit +=1;
-  while (TIM3->CNT - timestamp < filterDelay);
+  while (TIM3->CNT - timestamp < motorFilterDelay);
 
   if (motorRisingBEMF) {
-    for (int i = 0; i < filterLevel; i++) {
+    for (int i = 0; i < motorFilterLevel; i++) {
       if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_HIGH) {
         return;
       }
     }
 
   } else {
-    for (int i = 0; i < filterLevel; i++) {
+    for (int i = 0; i < motorFilterLevel; i++) {
       if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_LOW) {
         return;
       }
