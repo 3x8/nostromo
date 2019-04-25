@@ -11,7 +11,7 @@ extern uint32_t motorZeroCounterTimeout;
 extern uint32_t motorZeroCounterTimeoutThreshold;
 extern uint32_t motorDutyCycle, motorBemfCounter ;
 extern bool motorStartup, motorRunning, motorSensorless;
-extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;;
+extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorCompit, motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 
@@ -67,6 +67,11 @@ int main(void) {
   // what is normal ?
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
+
+  motorFilterLevel = 1;
+  motorFilterDelay = 2;
+  motorDutyCycle = 100;
+
 
 
   // set duty cycle to 50 out of 768 to start.

@@ -3,39 +3,27 @@
 COMP_HandleTypeDef comparator1Handle;
 extern TIM_HandleTypeDef timer1Handle;
 
+bool motorRisingBEMF = true;
+bool motorStartup, motorRunning, motorSensorless;
+bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
+
 uint16_t motorStep = 1;
 
-uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
-
 // set proportianal to commutation time. with motorAdvance divisor
-uint32_t motorAdvance = 0;
-
+uint32_t motorAdvance;
 // increase divisor to decrease motorAdvance
 uint16_t motorAdvanceDivisor = 3;
 uint32_t motorBlanktime, motorWaitTime, motorCompit;
-
 uint32_t motorTimer2StartArr = 9000;
 
-bool motorSensorless;
-bool motorStartup;
+uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 uint32_t motorCommutationInterval;
-uint32_t motorFilterLevel = 1;
-uint32_t motorFilterDelay = 2;
-uint32_t motorDutyCycle = 100;
-
-uint32_t motorZeroCounterTimeout  = 0;
+uint32_t motorFilterLevel, motorFilterDelay;
+uint32_t motorDutyCycle, motorBemfCounter;
+uint32_t motorZeroCounterTimeout;
 // depends on speed of main loop
 uint32_t motorZeroCounterTimeoutThreshold  = 2000;
 
-uint32_t motorBemfCounter;
-
-bool motorDirection;
-bool motorRisingBEMF = true;
-bool motorRunning;
-
-// 1 for complementary HBRIDGE_PWM , 0 for diode freewheeling
-bool motorSlowDecay;
-bool motorBrakeActiveProportional = true;
 
 extern uint32_t input;
 
