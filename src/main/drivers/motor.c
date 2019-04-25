@@ -26,7 +26,7 @@ extern uint32_t filterDelay;
 
 extern uint32_t zctimeout;
 // depends on speed of main loop
-extern uint32_t zc_timeout_threshold;
+extern uint32_t zeroCounterTimeoutThreshold;
 extern uint32_t dutyCycle;
 
 extern uint32_t bemfCounter;

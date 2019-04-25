@@ -14,7 +14,7 @@ uint32_t filterLevel = 1;
 uint32_t filterDelay = 2;
 uint32_t zctimeout = 0;
 // depends on speed of main loop
-uint32_t zc_timeout_threshold = 2000;
+uint32_t zeroCounterTimeoutThreshold = 2000;
 uint32_t dutyCycle = 100;
 uint32_t bemfCounter;
 
@@ -179,7 +179,7 @@ int main(void) {
                 }
               }
 
-              if (zctimeout >= zc_timeout_threshold) {
+              if (zctimeout >= zeroCounterTimeoutThreshold) {
                 motorBrakeActiveProportional = false;
                 bemfCounter = 0;
               }
@@ -286,19 +286,19 @@ int main(void) {
         }
 
         if (dutyCycle < 300) {
-          zc_timeout_threshold = 4000;
+          zeroCounterTimeoutThreshold = 4000;
         }else{
-          zc_timeout_threshold = 2000;
+          zeroCounterTimeoutThreshold = 2000;
         }
 
         zctimeout++;                                            // move to motorStartup if
-        if (zctimeout > zc_timeout_threshold) {
+        if (zctimeout > zeroCounterTimeoutThreshold) {
           sensorless = 0;
           //HAL_COMP_Stop_IT(&comparator1Handle);
 
           motorRunning = false;
           //commutationInterval = 0;
-          zctimeout = zc_timeout_threshold + 1;
+          zctimeout = zeroCounterTimeoutThreshold + 1;
           dutyCycle = 0;
         }
 
