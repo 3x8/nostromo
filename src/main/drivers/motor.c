@@ -362,39 +362,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 }
 
-
-void zc_found_routine() {
-  motorZeroCounterTimeout = 0;
-
-  motorZeroCrossTimestamp = TIM3->CNT;
-
-  //ToDo
-  /*
-  if (motorZeroCrossTimestamp < motorZeroCrossTimestampLast) {
-    motorZeroCrossTimestampLast = motorZeroCrossTimestampLast - 65535;
-  }*/
-
-  if (motorZeroCrossTimestamp > motorZeroCrossTimestampLast) {
-    //if (((motorZeroCrossTimestamp - motorZeroCrossTimestampLast) > (motorCommutationInterval * 2)) || ((motorZeroCrossTimestamp - motorZeroCrossTimestampLast < motorCommutationInterval/2))){
-    //  motorCommutationInterval = (motorCommutationInterval * 3 + (motorZeroCrossTimestamp - motorZeroCrossTimestampLast))/4;
-    //  motorCommutationInterval = (motorCommutationInterval + (motorZeroCrossTimestamp - motorZeroCrossTimestampLast))/2;
-    //}else{
-    motorCommutationInterval = (motorZeroCrossTimestamp - motorZeroCrossTimestampLast);       // TEST!   divide by two when tracking up down time independant
-    //	}
-    motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
-    motorWaitTime = motorCommutationInterval /2 - motorAdvance;
-  }
-  if (motorSensorless) {
-    while (TIM3->CNT - motorZeroCrossTimestamp < motorWaitTime) {
-    }
-    motorCommutate();
-    while (TIM3->CNT - motorZeroCrossTimestamp < motorWaitTime + motorBlanktime) {
-    }
-  }
-
-  motorZeroCrossTimestampLast = motorZeroCrossTimestamp;
-}
-
 void motorStartupTune() {
   TIM1->PSC = 75;
   TIM1->CCR1 = 5;
