@@ -33,8 +33,8 @@ void motorAdvanceDivisorCalculate() {
 }
 
 // motorPhaseB qfnf051 , phase A qfp32
-void motorPhaseA(uint8_t newPhase) {
-  switch (newPhase) {
+void motorPhaseA(uint8_t phaseBuffer) {
+  switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if(!motorSlowDecay  || motorBrakeActiveProportional) {
         LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
@@ -60,8 +60,8 @@ void motorPhaseA(uint8_t newPhase) {
 }
 
 // phase c qfn , phase b qfp
-void motorPhaseB(uint8_t newPhase) {
-  switch (newPhase) {
+void motorPhaseB(uint8_t phaseBuffer) {
+  switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
         LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
@@ -87,8 +87,8 @@ void motorPhaseB(uint8_t newPhase) {
 }
 
 // motorPhaseA qfn , phase C qfp
-void motorPhaseC(uint8_t newPhase) {
-  switch (newPhase) {
+void motorPhaseC(uint8_t phaseBuffer) {
+  switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
         LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
@@ -113,8 +113,8 @@ void motorPhaseC(uint8_t newPhase) {
   }
 }
 
-void motorCommutationStep(uint8_t newStep) {
-  switch(newStep) {
+void motorCommutationStep(uint8_t stepBuffer) {
+  switch(stepBuffer) {
     case 1:
       //A-B
       motorPhaseA(HBRIDGE_PWM);

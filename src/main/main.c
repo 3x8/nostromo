@@ -63,6 +63,7 @@ int main(void) {
 
 
   //ToDo
+  // init phase
   // 3D motorDirection and normalSpin  opposed
   // what is normal ?
   motorDirection = escConfig()->motorDirection;
@@ -71,7 +72,6 @@ int main(void) {
   motorFilterLevel = 1;
   motorFilterDelay = 2;
   motorDutyCycle = 100;
-
 
 
   // set duty cycle to 50 out of 768 to start.
