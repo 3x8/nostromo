@@ -3,7 +3,7 @@
 COMP_HandleTypeDef comparator1Handle;
 extern TIM_HandleTypeDef timer1Handle;
 
-bool motorBemfRising = true;
+bool motorBemfRising;
 bool motorStartup, motorRunning, motorSensorless;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
 
