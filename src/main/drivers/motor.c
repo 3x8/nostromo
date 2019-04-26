@@ -32,7 +32,7 @@ void motorAdvanceDivisorCalculate() {
 }
 
 // motorPhaseB qfn , motorPhaseA qfp
-void motorPhaseB(uint8_t phaseBuffer) {
+void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if(!motorSlowDecay  || motorBrakeActiveProportional) {
@@ -59,7 +59,7 @@ void motorPhaseB(uint8_t phaseBuffer) {
 }
 
 // motorPhaseC qfn , motorPhaseB qfp
-void motorPhaseC(uint8_t phaseBuffer) {
+void motorPhaseB(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
@@ -86,7 +86,7 @@ void motorPhaseC(uint8_t phaseBuffer) {
 }
 
 // motorPhaseA qfn , motorPhaseC qfp
-void motorPhaseA(uint8_t phaseBuffer) {
+void motorPhaseC(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
