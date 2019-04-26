@@ -32,7 +32,7 @@ void motorAdvanceDivisorCalculate() {
 }
 
 // motorPhaseB qfn , motorPhaseA qfp
-void motorPhaseA(uint8_t phaseBuffer) {
+void motorPhaseB(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if(!motorSlowDecay  || motorBrakeActiveProportional) {
@@ -59,7 +59,7 @@ void motorPhaseA(uint8_t phaseBuffer) {
 }
 
 // motorPhaseC qfn , motorPhaseB qfp
-void motorPhaseB(uint8_t phaseBuffer) {
+void motorPhaseC(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
@@ -86,7 +86,7 @@ void motorPhaseB(uint8_t phaseBuffer) {
 }
 
 // motorPhaseA qfn , motorPhaseC qfp
-void motorPhaseC(uint8_t phaseBuffer) {
+void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
@@ -193,9 +193,10 @@ void motorChangeCompInput() {
 
   // polarity of comp output reversed
   if (motorBemfRising) {
-    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
-  } else {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+
+  } else {
+    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   }
 
   while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
