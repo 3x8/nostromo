@@ -32,7 +32,7 @@ void motorAdvanceDivisorCalculate() {
 }
 
 // motorPhaseB qfn , motorPhaseA qfp
-void motorPhaseA(uint8_t phaseBuffer) {
+void motorPhaseB(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if(!motorSlowDecay  || motorBrakeActiveProportional) {
@@ -59,7 +59,7 @@ void motorPhaseA(uint8_t phaseBuffer) {
 }
 
 // motorPhaseC qfn , motorPhaseB qfp
-void motorPhaseB(uint8_t phaseBuffer) {
+void motorPhaseC(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
@@ -86,7 +86,7 @@ void motorPhaseB(uint8_t phaseBuffer) {
 }
 
 // motorPhaseA qfn , motorPhaseC qfp
-void motorPhaseC(uint8_t phaseBuffer) {
+void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
@@ -121,16 +121,16 @@ void motorCommutationStep(uint8_t stepBuffer) {
       motorPhaseC(HBRIDGE_FLOATING);
       break;
     case 2:
-      // C-B
-      motorPhaseA(HBRIDGE_FLOATING);
-      motorPhaseB(HBRIDGE_LOWSIDE);
-      motorPhaseC(HBRIDGE_PWM);
+      // A-C
+      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_FLOATING);
+      motorPhaseC(HBRIDGE_LOWSIDE);
       break;
     case 3:
-      // C-A
-      motorPhaseA(HBRIDGE_LOWSIDE);
-      motorPhaseB(HBRIDGE_FLOATING);
-      motorPhaseC(HBRIDGE_PWM);
+      // B-C
+      motorPhaseA(HBRIDGE_FLOATING);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_LOWSIDE);
       break;
     case 4:
       // B-A
@@ -139,16 +139,16 @@ void motorCommutationStep(uint8_t stepBuffer) {
       motorPhaseC(HBRIDGE_FLOATING);
       break;
     case 5:
-      // B-C
-      motorPhaseA(HBRIDGE_FLOATING);
-      motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_LOWSIDE);
+      // C-A
+      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_FLOATING);
+      motorPhaseC(HBRIDGE_PWM);
       break;
     case 6:
-      // A-C
-      motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_FLOATING);
-      motorPhaseC(HBRIDGE_LOWSIDE);
+      // C-B
+      motorPhaseA(HBRIDGE_FLOATING);
+      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_PWM);
       break;
   }
 }
