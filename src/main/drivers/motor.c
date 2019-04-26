@@ -181,22 +181,21 @@ void motorChangeCompInput() {
       break;
     case 2:
     case 5:
-      // A floating
-      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
+      // B floating
+      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
       break;
     case 3:
     case 6:
-      // B floating
-      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
+      // A floating
+      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
       break;
   }
 
   // polarity of comp output reversed
   if (motorBemfRising) {
-    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
-
-  } else {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+  } else {
+    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
   }
 
   while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
