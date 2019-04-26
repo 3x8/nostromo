@@ -24,7 +24,7 @@
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    LL_GPIO_PIN_10
 
-// PA9 --- Phase_B_HI
+// PA9 --- Phase_B_HI ,Ok
 #define B_FET_HI_GPIO   GPIOA
 #define B_FET_HI_PIN    LL_GPIO_PIN_9
 
