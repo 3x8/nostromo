@@ -193,9 +193,9 @@ void motorChangeCompInput() {
 
   // polarity of comp output reversed
   if (motorBemfRising) {
-    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
-  } else {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+  } else {
+    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   }
 
   while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
