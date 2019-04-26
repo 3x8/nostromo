@@ -207,7 +207,7 @@ void motorCommutate() {
       motorStep = 1;
     }
 
-    if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
+    if ((motorStep == 1) || (motorStep == 3) || (motorStep == 5)) {
       motorBemfRising = true;
     } else {
       motorBemfRising = false;
@@ -217,7 +217,7 @@ void motorCommutate() {
       motorStep = 6;
     }
 
-    if (motorStep == 1 || motorStep == 3 || motorStep == 5) {
+    if ((motorStep == 1) || (motorStep == 3) || (motorStep == 5)) {
       motorBemfRising = false;
     } else {
       motorBemfRising = true;
@@ -270,7 +270,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   }
 
   motorCompit++;
-  while (TIM3->CNT - motorTimestamp < motorFilterDelay);
+  while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
   if (motorBemfRising) {
     for (int i = 0; i < motorFilterLevel; i++) {
@@ -303,7 +303,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
     motorCompit = 0;
     motorCommutate();
-    while (TIM3->CNT  < motorWaitTime + motorBlanktime);
+    while (TIM3->CNT  < (motorWaitTime + motorBlanktime));
   }
 
   motorZeroCrossTimestampLast = motorZeroCrossTimestamp;

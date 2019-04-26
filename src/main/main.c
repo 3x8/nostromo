@@ -246,7 +246,7 @@ int main(void) {
         }
 
 
-        if (motorBemfCounter < 100 || motorCommutationInterval > 10000) {
+        if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
           motorFilterDelay = 15;
           motorFilterLevel = 10;
         } else {
@@ -254,7 +254,7 @@ int main(void) {
           motorFilterDelay = 3;
         }
 
-        if(motorCommutationInterval < 200 && motorDutyCycle > 500) {
+        if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
         }
