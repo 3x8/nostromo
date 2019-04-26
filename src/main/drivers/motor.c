@@ -116,39 +116,39 @@ void motorCommutationStep(uint8_t stepBuffer) {
   switch(stepBuffer) {
     case 1:
       //A-B
-      motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_PWM);
       motorPhaseC(HBRIDGE_FLOATING);
       break;
     case 2:
       // A-C
-      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseA(HBRIDGE_LOWSIDE);
       motorPhaseB(HBRIDGE_FLOATING);
-      motorPhaseC(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_PWM);
       break;
     case 3:
       // B-C
       motorPhaseA(HBRIDGE_FLOATING);
-      motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_PWM);
       break;
     case 4:
       // B-A
-      motorPhaseA(HBRIDGE_LOWSIDE);
-      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_LOWSIDE);
       motorPhaseC(HBRIDGE_FLOATING);
       break;
     case 5:
       // C-A
-      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseA(HBRIDGE_PWM);
       motorPhaseB(HBRIDGE_FLOATING);
-      motorPhaseC(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_LOWSIDE);
       break;
     case 6:
       // C-B
       motorPhaseA(HBRIDGE_FLOATING);
-      motorPhaseB(HBRIDGE_LOWSIDE);
-      motorPhaseC(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_LOWSIDE);
       break;
   }
 }
