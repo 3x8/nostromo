@@ -12,7 +12,7 @@ extern uint32_t motorZeroCounterTimeout;
 // depends on speed of main loop
 extern uint32_t motorZeroCounterTimeoutThreshold;
 extern uint32_t motorDutyCycle, motorBemfCounter ;
-extern uint32_t motorCompit, motorCommutationInterval;
+extern uint32_t motorComparatorCallbackCounter, motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 
 //ToDo input
@@ -131,7 +131,7 @@ int main(void) {
       if (inputArmed) {
 
         motorAdvanceDivisorCalculate();
-        motorCompit = 0;
+        motorComparatorCallbackCounter = 0;
 
         if (inputData <= DSHOT_CMD_MAX) {
           motorStartup = false;

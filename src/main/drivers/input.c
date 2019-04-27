@@ -22,7 +22,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //debug
-        LED_ON(RED);
+        //LED_ON(RED);
         motorInputTune();
       }
     }
@@ -50,8 +50,8 @@ void inputDisarmCheck(void) {
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
     //debug
-    LED_OFF(RED);
-    LED_OFF(GREEN);
+    //LED_OFF(RED);
+    //LED_OFF(GREEN);
   }
 }
 
@@ -160,7 +160,7 @@ void inputProshot() {
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   //debug
-  LED_OFF(GREEN);
+  //LED_OFF(GREEN);
 
   for (int i = 0; i < 4; i++) {
     telegramPulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23)/3;
@@ -178,7 +178,7 @@ void inputProshot() {
     inputTimeoutCounter = 0;
     inputData = telegramData;
     //debug
-    LED_ON(GREEN);
+    //LED_ON(GREEN);
     return;
   } else {
     inputDataValid = false;
@@ -191,7 +191,7 @@ void inputServoPwm() {
   uint32_t telegramPulseWidthMin = 20000;
 
   //debug
-  LED_OFF(GREEN);
+  //LED_OFF(GREEN);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
@@ -206,7 +206,7 @@ void inputServoPwm() {
     inputTimeoutCounter = 0;
     inputData = map(telegramPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
     //debug
-    LED_ON(GREEN);
+    //LED_ON(GREEN);
     return;
   } else {
     inputDataValid = false;

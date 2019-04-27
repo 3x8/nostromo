@@ -13,7 +13,7 @@ uint16_t motorAdvanceDivisor = 3;
 
 // set proportianal to commutation time. with motorAdvance divisor
 uint32_t motorAdvance;
-uint32_t motorBlanktime, motorWaitTime, motorCompit;
+uint32_t motorBlanktime, motorWaitTime, motorComparatorCallbackCounter;
 uint32_t motorTimer2StartArr = 9000;
 uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 uint32_t motorCommutationInterval;
@@ -263,14 +263,14 @@ void motorStart() {
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorTimestamp = TIM3->CNT;
   //debug
-  //LED_ON(RED);
+  LED_TOGGLE(GREEN);
 
-  if (motorCompit > 200) {
+  if (motorComparatorCallbackCounter > 200) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     return;
   }
 
-  motorCompit++;
+  motorComparatorCallbackCounter++;
   while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
   if (motorBemfRising) {
@@ -302,7 +302,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   if (motorSensorless) {
     while (TIM3->CNT  < motorWaitTime);
 
-    motorCompit = 0;
+    motorComparatorCallbackCounter = 0;
     motorCommutate();
     while (TIM3->CNT  < (motorWaitTime + motorBlanktime));
   }
