@@ -13,7 +13,7 @@ uint16_t motorAdvanceDivisor = 3;
 
 // set proportianal to commutation time. with motorAdvance divisor
 uint32_t motorAdvance;
-uint32_t motorBlanktime, motorWaitTime, motorComparatorCallbackCounter;
+uint32_t motorBlanktime, motorWaitTime;
 uint32_t motorTimer2StartArr = 9000;
 uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 uint32_t motorCommutationInterval;
@@ -192,11 +192,13 @@ void motorChangeCompInput() {
   }
 
   //ToDo check , motor direction maters ?
+  // it makes a difference at high RPM with 4S LiPo shutter
   // polarity of comp output reversed
   if (motorBemfRising) {
-    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
-  } else {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+  } else {
+    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+
   }
 
   while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
@@ -261,16 +263,18 @@ void motorStart() {
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
+
+  //ToDo new
+  if ((!motorRunning) || (!motorSensorless) ||(!motorStartup)) {
+    HAL_COMP_Stop_IT(&comparator1Handle);
+    LED_OFF(GREEN);
+    return;
+  }
+
   motorTimestamp = TIM3->CNT;
   //debug
   LED_TOGGLE(GREEN);
 
-  if (motorComparatorCallbackCounter > 200) {
-    HAL_COMP_Stop_IT(&comparator1Handle);
-    return;
-  }
-
-  motorComparatorCallbackCounter++;
   while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
   if (motorBemfRising) {
@@ -302,7 +306,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   if (motorSensorless) {
     while (TIM3->CNT  < motorWaitTime);
 
-    motorComparatorCallbackCounter = 0;
     motorCommutate();
     while (TIM3->CNT  < (motorWaitTime + motorBlanktime));
   }
