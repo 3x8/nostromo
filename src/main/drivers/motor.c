@@ -297,7 +297,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
-  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) / 2;
+  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
 
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = motorCommutationInterval / 2 - motorAdvance;

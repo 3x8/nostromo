@@ -221,7 +221,6 @@ int main(void) {
           }
 
 
-
           motorDutyCycle = input >> 1;
 
           if (motorBemfCounter < 15) {
@@ -237,7 +236,7 @@ int main(void) {
             //TIM1->CCR4 = motorDutyCycle;
           }
 
-        }
+        } //input is setpoint value
 
 
 
