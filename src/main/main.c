@@ -138,11 +138,7 @@ int main(void) {
           if (!motorRunning) {
             inputDshotCommandRun();
           }
-        }
-
-
-
-        else {
+        } else {
           if (escConfig()->motor3Dmode) {
 
             //if(escConfig()->motor3Dmode) {
@@ -224,25 +220,28 @@ int main(void) {
             input = inputAdjusted;
           }
 
+          motorStartup = true;
+          motorBrakeActiveProportional = false;
 
-            motorBrakeActiveProportional = false;
-            motorStartup = true;
 
-            motorDutyCycle = input / 2 - 10;
+          //motorDutyCycle = input / 2 - 10;
+          motorDutyCycle = input >> 1;
 
-            if (motorBemfCounter < 15) {
-              constrain(motorDutyCycle, 70, 400);
-            }
+          if (motorBemfCounter < 15) {
+            constrain(motorDutyCycle, 70, 400);
+          }
 
-            if (motorRunning) {
-              constrain(motorDutyCycle, 44, 998);
+          if (motorRunning) {
+            constrain(motorDutyCycle, 44, 998);
 
-              TIM1->CCR1 = motorDutyCycle;
-              TIM1->CCR2 = motorDutyCycle;
-              TIM1->CCR3 = motorDutyCycle;
-              //TIM1->CCR4 = motorDutyCycle;
-            }
+            TIM1->CCR1 = motorDutyCycle;
+            TIM1->CCR2 = motorDutyCycle;
+            TIM1->CCR3 = motorDutyCycle;
+            //TIM1->CCR4 = motorDutyCycle;
+          }
+
         }
+
 
 
         if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
@@ -283,7 +282,8 @@ int main(void) {
           motorDutyCycle = 0;
         }
 
-      }
-    }
-  }
+      } // inputArmed
+    } // inputProtocol detected
+  } // main loop
+
 }
