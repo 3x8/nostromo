@@ -69,9 +69,9 @@ int main(void) {
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
 
-  motorFilterLevel = 1;
-  motorFilterDelay = 2;
-  motorDutyCycle = 100;
+  //motorFilterLevel = 1;
+  //motorFilterDelay = 2;
+  //motorDutyCycle = 100;
 
   // start with break
   inputDataValid = true;
@@ -129,18 +129,18 @@ int main(void) {
       //ToDo
       inputDisarmCheck();
       if (inputArmed) {
-
         motorAdvanceDivisorCalculate();
 
         if (inputData <= DSHOT_CMD_MAX) {
           motorStartup = false;
-
           if (!motorRunning) {
             inputDshotCommandRun();
           }
         } else {
-          if (escConfig()->motor3Dmode) {
+          motorStartup = true;
+          motorBrakeActiveProportional = false;
 
+          if (escConfig()->motor3Dmode) {
             //if(escConfig()->motor3Dmode) {
             //  inputData = 1001;
             //}
@@ -210,7 +210,7 @@ int main(void) {
 
 
           // filter ???
-          if (inputAdjusted - input > 25) {
+          if ((inputAdjusted - input) > 25) {
             input = input + 5;
           } else {
             input = inputAdjusted;
@@ -220,11 +220,8 @@ int main(void) {
             input = inputAdjusted;
           }
 
-          motorStartup = true;
-          motorBrakeActiveProportional = false;
 
 
-          //motorDutyCycle = input / 2 - 10;
           motorDutyCycle = input >> 1;
 
           if (motorBemfCounter < 15) {
@@ -267,7 +264,7 @@ int main(void) {
 
         if (motorDutyCycle < 300) {
           motorZeroCounterTimeoutThreshold = 4000;
-        }else{
+        } else {
           motorZeroCounterTimeoutThreshold = 2000;
         }
 
