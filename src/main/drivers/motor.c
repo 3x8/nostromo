@@ -15,7 +15,7 @@ uint16_t motorAdvanceDivisor = 3;
 uint32_t motorAdvance;
 uint32_t motorBlanktime, motorWaitTime;
 uint32_t motorTimer2StartArr = 9000;
-uint32_t motorTimestamp, motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
+uint32_t motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
 uint32_t motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
@@ -261,11 +261,14 @@ void motorStart() {
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
+  uint32_t motorTimestamp;
 
   //ToDo new
   if ((!motorRunning) || (!motorSensorless) ||(!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
+    //debug
     LED_OFF(GREEN);
+    LED_OFF(BLUE);
     return;
   }
 
@@ -288,6 +291,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
       }
     }
   }
+  //debug
+  LED_TOGGLE(BLUE);
 
   motorZeroCrossTimestamp = motorTimestamp;
   TIM3->CNT = 0;
@@ -298,12 +303,11 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
 
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
-  motorWaitTime = motorCommutationInterval / 2 - motorAdvance;
-  motorBlanktime = motorCommutationInterval / 4;
+  motorWaitTime = (motorCommutationInterval >> 1) - motorAdvance;
+  motorBlanktime = motorCommutationInterval >> 2;
 
   if (motorSensorless) {
     while (TIM3->CNT  < motorWaitTime);
-
     motorCommutate();
     while (TIM3->CNT  < (motorWaitTime + motorBlanktime));
   }
