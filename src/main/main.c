@@ -35,7 +35,7 @@ int main(void) {
   ledInit();
 
   systemDmaInit();
-  systemAdcInit();
+  //systemAdcInit();
   systemComparator1Init();
   systemTimer1Init();
   systemTimer2Init();
@@ -58,7 +58,7 @@ int main(void) {
 
   while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
   while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
-  adcInit();
+  //adcInit();
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 
 
