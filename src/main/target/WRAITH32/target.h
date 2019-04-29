@@ -52,6 +52,7 @@
 // ADC
 #define ADC_VOLTAGE               ADC_CHANNEL_3
 #define ADC_CURRENT               ADC_CHANNEL_6
+#define ADC_TEMPERATURE           LL_ADC_CHANNEL_TEMPSENSOR
 
 //ToDo
 // Sequence number of ADC each particular channel (the order in which they are scanned)

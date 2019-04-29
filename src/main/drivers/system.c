@@ -57,7 +57,7 @@ void systemDmaInit(void) {
 void systemAdcInit(void) {
   ADC_ChannelConfTypeDef sConfig;
 
-  // Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  // configure global ADC features
   adcHandle.Instance = ADC1;
   adcHandle.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   adcHandle.Init.Resolution = ADC_RESOLUTION_12B;
@@ -74,14 +74,17 @@ void systemAdcInit(void) {
   adcHandle.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   while (HAL_ADC_Init(&adcHandle) != HAL_OK);
 
-  // Configure for the selected ADC regular channel to be converted.
-  sConfig.Channel = ADC_VOLTAGE;
+  // ADC channels to be converted.
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+
+  sConfig.Channel = ADC_VOLTAGE;
   while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-  // Configure for the selected ADC regular channel to be converted.
   sConfig.Channel = ADC_CURRENT;
+  while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+
+  sConfig.Channel = ADC_TEMPERATURE;
   while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 }
 
