@@ -48,8 +48,8 @@
 #define COMPARATOR_PHASE_C       COMP_INVERTINGINPUT_IO1
 
 // ADC ,Ok
-#define ADC_VOLTAGE               ADC_CHANNEL_3
-#define GPIO_PIN_VOLTAGE          GPIO_PIN_3
-#define ADC_CURRENT               ADC_CHANNEL_6
-#define GPIO_PIN_CURRENT          GPIO_PIN_6
-#define ADC_TEMPERATURE           ADC_CHANNEL_TEMPSENSOR
+#define ADC_VOLTAGE              ADC_CHANNEL_3
+#define GPIO_PIN_VOLTAGE         GPIO_PIN_3
+#define ADC_CURRENT              ADC_CHANNEL_6
+#define GPIO_PIN_CURRENT         GPIO_PIN_6
+#define ADC_TEMPERATURE          ADC_CHANNEL_TEMPSENSOR
