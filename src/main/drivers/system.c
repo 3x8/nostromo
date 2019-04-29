@@ -75,21 +75,20 @@ void systemAdcInit(void) {
   while (HAL_ADC_Init(&adcHandle) != HAL_OK);
 
   // Configure for the selected ADC regular channel to be converted.
-  sConfig.Channel = ADC_CHANNEL_3;
+  sConfig.Channel = ADC_VOLTAGE;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
   while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-
   // Configure for the selected ADC regular channel to be converted.
-  sConfig.Channel = ADC_CHANNEL_6;
+  sConfig.Channel = ADC_CURRENT;
   while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 }
 
 void systemComparator1Init(void) {
   comparator1Handle.Instance = COMP1;
-  comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
-  comparator1Handle.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
+  comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_B;
+  //comparator1Handle.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   comparator1Handle.Init.Output = COMP_OUTPUT_NONE;
   comparator1Handle.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
   comparator1Handle.Init.Hysteresis = COMP_HYSTERESIS_LOW;

@@ -44,6 +44,15 @@
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    LL_GPIO_PIN_7
 
+// comparator ,Ok
+#define COMPARATOR_PHASE_A       COMP_INVERTINGINPUT_DAC1
+#define COMPARATOR_PHASE_B       COMP_INVERTINGINPUT_DAC2
+#define COMPARATOR_PHASE_C       COMP_INVERTINGINPUT_IO1
+
+// ADC
+#define ADC_VOLTAGE               ADC_CHANNEL_3
+#define ADC_CURRENT               ADC_CHANNEL_6
+
 //ToDo
 // Sequence number of ADC each particular channel (the order in which they are scanned)
 #define ADC_SEQ_TEMPERATURE       0
@@ -53,13 +62,12 @@
 #define ADC_SEQ_PHASE_C           5
 #define ADC_SEQ_CURRENT           6
 
-// ADC channel assignments
 #define ADC_CHAN_TEMPERATURE      LL_ADC_CHANNEL_TEMPSENSOR // CH16
-#define ADC_CHAN_PHASE_A          LL_ADC_CHANNEL_0
 #define ADC_CHAN_VOLTAGE          LL_ADC_CHANNEL_3
-#define ADC_CHAN_PHASE_B          LL_ADC_CHANNEL_4
-#define ADC_CHAN_PHASE_C          LL_ADC_CHANNEL_5
 #define ADC_CHAN_CURRENT          LL_ADC_CHANNEL_6
+//#define ADC_CHAN_PHASE_A          LL_ADC_CHANNEL_0
+//#define ADC_CHAN_PHASE_B          LL_ADC_CHANNEL_4
+//#define ADC_CHAN_PHASE_C          LL_ADC_CHANNEL_5
 
 #define TARGET_ADC_CHANNEL_MASK ( ADC_CHAN_PHASE_A | \
                                   ADC_CHAN_PHASE_B | \

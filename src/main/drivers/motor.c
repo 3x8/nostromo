@@ -177,17 +177,17 @@ void motorChangeCompInput() {
     case 1:
     case 4:
       // C floating
-      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+      comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_C;
       break;
     case 2:
     case 5:
       // B floating
-      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC2;
+      comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_B;
       break;
     case 3:
     case 6:
       // A floating
-      comparator1Handle.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1;
+      comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_A;
       break;
   }
 
