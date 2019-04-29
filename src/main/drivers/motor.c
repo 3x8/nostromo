@@ -1,7 +1,7 @@
 #include "motor.h"
 
 COMP_HandleTypeDef comparator1Handle;
-extern TIM_HandleTypeDef timer1Handle;
+//extern TIM_HandleTypeDef timer1Handle;
 
 bool motorBemfRising;
 bool motorStartup, motorRunning, motorSensorless;
