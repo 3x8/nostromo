@@ -1,9 +1,7 @@
 #pragma once
 
 //ToDo
-#define MOTOR_DEAD_TIME 60
-#define MOTOR_NUM_PHASES            3
-#define MOTOR_NUM_COMMUTATION_STEPS 6
+#define HBRIDGE_DEAD_TIME 60
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
