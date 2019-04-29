@@ -191,8 +191,6 @@ void motorChangeCompInput() {
       break;
   }
 
-  //ToDo check , motor direction maters ?
-  // it makes a difference at high RPM with 4S LiPo shutter
   // polarity of comp output reversed
   if (motorBemfRising) {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;

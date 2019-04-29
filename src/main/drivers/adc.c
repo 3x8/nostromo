@@ -3,17 +3,17 @@
 ADC_HandleTypeDef adcHandle;
 DMA_HandleTypeDef adcDmaHandle;
 
-uint32_t adcVoltageRaw;
-uint32_t adcCurrentRaw;
-uint32_t adcValue[2];
+uint32_t adcValue[3];
+uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 
 void adcInit(void) {
-  while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcValue, 2) != HAL_OK);
+  while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcValue, 3) != HAL_OK);
 }
 
 void adcRead(void){
-  adcVoltageRaw = adcValue[0];
-  adcCurrentRaw = adcValue[1];
+  adcCurrentRaw = adcValue[0];
+  adcVoltageRaw = adcValue[1];
+  adcTemperatureRaw = adcValue[2];
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle) {

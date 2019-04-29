@@ -90,8 +90,7 @@ void systemAdcInit(void) {
 
 void systemComparator1Init(void) {
   comparator1Handle.Instance = COMP1;
-  comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_B;
-  //comparator1Handle.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
+  comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_A;
   comparator1Handle.Init.Output = COMP_OUTPUT_NONE;
   comparator1Handle.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
   comparator1Handle.Init.Hysteresis = COMP_HYSTERESIS_LOW;
