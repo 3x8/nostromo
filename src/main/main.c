@@ -52,7 +52,6 @@ int main(void) {
   HAL_TIM_Base_Start_IT(&timer2Handle);
   HAL_TIM_Base_Start(&timer3Handle);
 
-  // HAL_Delay(500);
   motorStartupTune();
 
   while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
@@ -62,7 +61,7 @@ int main(void) {
 
 
   //ToDo
-  // init phase
+  // init
   // 3D motorDirection and normalSpin  opposed
   // what is normal ?
   motorDirection = escConfig()->motorDirection;
@@ -71,8 +70,7 @@ int main(void) {
   motorFilterLevel = 1;
   motorFilterDelay = 2;
   motorDutyCycle = 100;
-  //motorTimer2StartArr = 6000;
-  motorTimer2StartArr = 100;
+  motorTimer2StartArr = 100; // 6000
   motorZeroCounterTimeoutThreshold  = 2000; // depends on speed of main loop
   motorAdvanceDivisor = 3; // increase divisor to decrease motorAdvance
   motorStep = 1;
@@ -91,9 +89,6 @@ int main(void) {
   // main loop
   while (true) {
     watchdogFeed();
-
-    //debug
-    //LED_OFF(RED);
 
     if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
       switch(escConfig()->motorBrakeState) {
@@ -116,20 +111,14 @@ int main(void) {
       TIM1->CCR1 = motorDutyCycle;
       TIM1->CCR2 = motorDutyCycle;
       TIM1->CCR3 = motorDutyCycle;
-
-      //ToDo where ???
-      if (motorCommutationInterval > 30000) {
-        //HAL_COMP_Stop_IT(&comparator1Handle);
-      }
     }
 
 
 
     if (inputProtocol == AUTODETECT) {
-      //HAL_Delay(3);
+      //noop
     } else {
       inputArmCheck();
-      //ToDo
       inputDisarmCheck();
       if (inputArmed) {
         motorAdvanceDivisorCalculate();
@@ -144,6 +133,7 @@ int main(void) {
           motorBrakeActiveProportional = false;
 
           if (escConfig()->motor3Dmode) {
+            //ToDo
             //if(escConfig()->motor3Dmode) {
             //  inputData = 1001;
             //}
@@ -166,7 +156,6 @@ int main(void) {
                   motorBrakeActiveProportional = true;
                   inputAdjusted = 0;
                   motorDirection = escConfig()->motorDirection;
-                  //	HAL_Delay(1);
                 }
 
                 if (!motorBrakeActiveProportional) {
@@ -212,7 +201,7 @@ int main(void) {
           constrain(inputAdjusted, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
 
 
-          // filter ???
+          //ToDo input filter
           if ((inputAdjusted - input) > 25) {
             input = input + 5;
           } else {
@@ -239,7 +228,7 @@ int main(void) {
           TIM1->CCR2 = motorDutyCycle;
           TIM1->CCR3 = motorDutyCycle;
           //TIM1->CCR4 = motorDutyCycle;
-        } //input is a motor setpoint value
+        }
 
         if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
           motorFilterDelay = 15;
