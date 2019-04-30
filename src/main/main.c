@@ -10,10 +10,11 @@ extern bool motorStartup, motorRunning, motorSensorless;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint16_t motorStep, motorAdvanceDivisor;
 extern uint32_t motorTimer2StartArr;
-extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
-extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
+extern uint32_t motorDutyCycle, motorBemfCounter;
+extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
+
 
 //ToDo input
 uint32_t input;
