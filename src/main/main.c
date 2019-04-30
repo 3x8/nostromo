@@ -70,7 +70,7 @@ int main(void) {
   motorFilterLevel = 1;
   motorFilterDelay = 2;
   motorDutyCycle = 100;
-  motorTimer2StartArr = 100; // 6000
+  motorTimer2StartArr = 101; // 6000
   motorZeroCounterTimeoutThreshold  = 2000; // depends on speed of main loop
   motorAdvanceDivisor = 3; // increase divisor to decrease motorAdvance
   motorStep = 1;
