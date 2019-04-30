@@ -6,7 +6,6 @@ bool motorBemfRising;
 bool motorStartup, motorRunning, motorSensorless;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
 uint16_t motorStep, motorAdvanceDivisor;
-uint32_t motorTimer2StartArr;
 uint32_t motorAdvance, motorBlanktime, motorWaitTime;
 uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;
@@ -218,10 +217,6 @@ void motorCommutate() {
     motorCommutationStep(motorStep);
   }
   motorChangeCompInput();
-
-  //test
-  //TIM2->CNT = 0;
-  //TIM2->ARR = motorCommutationInterval;
 }
 
 // for forced commutation -- open loop
@@ -239,7 +234,7 @@ void motorStart() {
     motorSlowDecay = true;
 
     motorCommutate();
-    motorCommutationInterval = motorTimer2StartArr;
+
     TIM3->CNT = 0;
     motorRunning = true;
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -296,9 +291,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorBlanktime = motorCommutationInterval >> 2;
 
   if (motorSensorless) {
-    while (TIM3->CNT  < motorWaitTime);
     motorCommutate();
-    while (TIM3->CNT  < (motorWaitTime + motorBlanktime));
   }
 
   motorBemfCounter++;

@@ -50,7 +50,7 @@ void systemDmaInit(void) {
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   // DMA1_Channel4_5_IRQn interrupt configuration
-  HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
 
@@ -112,7 +112,6 @@ void systemTimer1Init(void) {
   //ToDo
   //timer1Handle.Init.Period = 999;
   timer1Handle.Init.Period = 701;
-  //timer1Handle.Init.Period = 1103;
   timer1Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   timer1Handle.Init.RepetitionCounter = 0;
   timer1Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

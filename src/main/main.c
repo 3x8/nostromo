@@ -9,7 +9,6 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 extern bool motorStartup, motorRunning, motorSensorless;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint16_t motorStep, motorAdvanceDivisor;
-extern uint32_t motorTimer2StartArr;
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
@@ -38,7 +37,7 @@ int main(void) {
   //systemAdcInit();
   systemComparator1Init();
   systemTimer1Init();
-  systemTimer2Init();
+  //systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
 
@@ -50,7 +49,7 @@ int main(void) {
   HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3);
   HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3);
-  HAL_TIM_Base_Start_IT(&timer2Handle);
+  //HAL_TIM_Base_Start_IT(&timer2Handle);
   HAL_TIM_Base_Start(&timer3Handle);
 
   motorStartupTune();
@@ -71,7 +70,6 @@ int main(void) {
   motorFilterLevel = 1;
   motorFilterDelay = 2;
   motorDutyCycle = 100;
-  motorTimer2StartArr = 101; // 6000
   motorZeroCounterTimeoutThreshold  = 2000; // depends on speed of main loop
   motorAdvanceDivisor = 3; // increase divisor to decrease motorAdvance
   motorStep = 1;
