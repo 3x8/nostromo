@@ -8,9 +8,9 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 //ToDo motor
 extern bool motorStartup, motorRunning, motorSensorless;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-extern uint32_t motorZeroCounterTimeout;
-// depends on speed of main loop
-extern uint32_t motorZeroCounterTimeoutThreshold;
+extern uint16_t motorStep, motorAdvanceDivisor;
+extern uint32_t motorTimer2StartArr;
+extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 extern uint32_t motorDutyCycle, motorBemfCounter ;
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
@@ -18,10 +18,9 @@ extern uint32_t motorFilterLevel, motorFilterDelay;
 //ToDo input
 uint32_t input;
 uint32_t inputAdjusted;
-extern uint8_t inputArmed;
-extern uint32_t inputData;
-extern uint8_t inputDataValid;
+extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
+extern uint32_t inputData;
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 
@@ -69,14 +68,18 @@ int main(void) {
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
 
-  //motorFilterLevel = 1;
-  //motorFilterDelay = 2;
-  //motorDutyCycle = 100;
+  motorFilterLevel = 1;
+  motorFilterDelay = 2;
+  motorDutyCycle = 100;
+  //motorTimer2StartArr = 6000;
+  motorTimer2StartArr = 100;
+  motorZeroCounterTimeoutThreshold  = 2000; // depends on speed of main loop
+  motorAdvanceDivisor = 3; // increase divisor to decrease motorAdvance
+  motorStep = 1;
 
   // start with break
   inputDataValid = true;
   inputData = 0;
-
 
   // set duty cycle to 50 out of 768 to start.
   TIM1->CCR1 = 1;
@@ -224,17 +227,18 @@ int main(void) {
           motorDutyCycle = input >> 1;
 
           if (motorBemfCounter < 15) {
-            constrain(motorDutyCycle, 70, 400);
+            constrain(motorDutyCycle, 50, 300);
+            //constrain(motorDutyCycle, 40, 400);
           }
 
           if (motorRunning) {
             constrain(motorDutyCycle, 44, 998);
-
-            TIM1->CCR1 = motorDutyCycle;
-            TIM1->CCR2 = motorDutyCycle;
-            TIM1->CCR3 = motorDutyCycle;
-            //TIM1->CCR4 = motorDutyCycle;
           }
+
+          TIM1->CCR1 = motorDutyCycle;
+          TIM1->CCR2 = motorDutyCycle;
+          TIM1->CCR3 = motorDutyCycle;
+          //TIM1->CCR4 = motorDutyCycle;
 
         } //input is setpoint value
 
@@ -253,12 +257,9 @@ int main(void) {
           motorFilterLevel = 0;
         }
 
-        if (motorStartup) {
-          if (!motorRunning) {
-            motorZeroCounterTimeout = 0;
-            // safety on for input testing
-            motorStart();
-          }
+        if ((motorStartup) && (!motorRunning)) {
+          motorZeroCounterTimeout = 0;
+          motorStart();
         }
 
         if (motorDutyCycle < 300) {

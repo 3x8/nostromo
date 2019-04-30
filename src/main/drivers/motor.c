@@ -1,28 +1,17 @@
 #include "motor.h"
 
 COMP_HandleTypeDef comparator1Handle;
-//extern TIM_HandleTypeDef timer1Handle;
 
 bool motorBemfRising;
 bool motorStartup, motorRunning, motorSensorless;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
-
-uint16_t motorStep = 1;
-// increase divisor to decrease motorAdvance
-uint16_t motorAdvanceDivisor = 3;
-
-// set proportianal to commutation time. with motorAdvance divisor
-uint32_t motorAdvance;
-uint32_t motorBlanktime, motorWaitTime;
-uint32_t motorTimer2StartArr = 9000;
-uint32_t motorZeroCrossTimestamp, motorZeroCrossTimestampLast;
-uint32_t motorCommutationInterval;
+uint16_t motorStep, motorAdvanceDivisor;
+uint32_t motorTimer2StartArr;
+uint32_t motorAdvance, motorBlanktime, motorWaitTime;
+uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
-uint32_t motorZeroCounterTimeout;
-// depends on speed of main loop
-uint32_t motorZeroCounterTimeoutThreshold  = 2000;
-
+uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 extern uint32_t input;
 
@@ -230,6 +219,7 @@ void motorCommutate() {
   }
   motorChangeCompInput();
 
+  //test
   //TIM2->CNT = 0;
   //TIM2->ARR = motorCommutationInterval;
 }
@@ -249,7 +239,7 @@ void motorStart() {
     motorSlowDecay = true;
 
     motorCommutate();
-    motorCommutationInterval = motorTimer2StartArr - 3000;
+    motorCommutationInterval = motorTimer2StartArr;
     TIM3->CNT = 0;
     motorRunning = true;
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
@@ -264,7 +254,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
   //ToDo new
-  if ((!motorRunning) || (!motorSensorless) ||(!motorStartup)) {
+  if ((!motorRunning) || (!motorSensorless) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     //debug
     LED_OFF(GREEN);
@@ -276,9 +266,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   //debug
   LED_TOGGLE(GREEN);
 
-  //while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
-  if ((TIM3->CNT - motorZeroCrossTimestamp) < motorFilterDelay)
-    return;
+  while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
   if (motorBemfRising) {
     for (int i = 0; i < motorFilterLevel; i++) {
@@ -301,7 +289,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
 
-  // TEST!   divide by two when tracking up down time independant
+  //test   divide by two when tracking up down time independant
   motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = (motorCommutationInterval >> 1) - motorAdvance;
@@ -313,9 +301,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     while (TIM3->CNT  < (motorWaitTime + motorBlanktime));
   }
 
-  motorZeroCrossTimestampLast = motorZeroCrossTimestamp;
   motorBemfCounter++;
-
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 }
 

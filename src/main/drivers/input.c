@@ -1,14 +1,10 @@
 #include "input.h"
 
-uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
-
+bool inputArmed, inputDataValid;
 uint8_t inputProtocol;
 uint32_t inputData;
-uint8_t inputDataValid;
-
-uint8_t inputArmed;
-uint32_t inputArmCounter;
-uint32_t inputTimeoutCounter;
+uint32_t inputArmCounter, inputTimeoutCounter;
+uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 extern TIM_HandleTypeDef timer15Handle;
 extern uint8_t motorDirection;
