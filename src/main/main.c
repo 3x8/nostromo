@@ -239,10 +239,7 @@ int main(void) {
           TIM1->CCR2 = motorDutyCycle;
           TIM1->CCR3 = motorDutyCycle;
           //TIM1->CCR4 = motorDutyCycle;
-
-        } //input is setpoint value
-
-
+        } //input is a motor setpoint value
 
         if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
           motorFilterDelay = 15;
@@ -257,30 +254,25 @@ int main(void) {
           motorFilterLevel = 0;
         }
 
-        if ((motorStartup) && (!motorRunning)) {
-          motorZeroCounterTimeout = 0;
-          motorStart();
-        }
-
         if (motorDutyCycle < 300) {
           motorZeroCounterTimeoutThreshold = 4000;
         } else {
           motorZeroCounterTimeoutThreshold = 2000;
         }
 
-        // move to motorStartup if
         if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
           motorSensorless = false;
-          //HAL_COMP_Stop_IT(&comparator1Handle);
-
           motorRunning = false;
-          //motorCommutationInterval = 0;
-          motorZeroCounterTimeout = motorZeroCounterTimeoutThreshold + 1;
           motorDutyCycle = 0;
+          motorZeroCounterTimeout = motorZeroCounterTimeoutThreshold + 1;
+        }
+
+        if ((motorStartup) && (!motorRunning)) {
+          motorZeroCounterTimeout = 0;
+          motorStart();
         }
 
       } // inputArmed
     } // inputProtocol detected
   } // main loop
-
 }
