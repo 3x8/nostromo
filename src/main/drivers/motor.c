@@ -276,7 +276,9 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   //debug
   LED_TOGGLE(GREEN);
 
-  while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
+  //while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
+  if ((TIM3->CNT - motorZeroCrossTimestamp) < motorFilterDelay)
+    return;
 
   if (motorBemfRising) {
     for (int i = 0; i < motorFilterLevel; i++) {
@@ -294,14 +296,13 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   //debug
   LED_TOGGLE(BLUE);
 
+  motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
-  motorZeroCounterTimeout = 0;
 
   // TEST!   divide by two when tracking up down time independant
   motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
-
   motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
   motorWaitTime = (motorCommutationInterval >> 1) - motorAdvance;
   motorBlanktime = motorCommutationInterval >> 2;
