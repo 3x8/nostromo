@@ -2,9 +2,9 @@
 
 COMP_HandleTypeDef comparator1Handle;
 
-uint8_t motorBemfRising;
-uint8_t motorStartup, motorRunning, motorSensorless;
-uint8_t motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
+bool motorBemfRising;
+bool motorStartup, motorRunning, motorSensorless;
+bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
 
 uint16_t motorStep, motorAdvanceDivisor;
 uint32_t motorAdvance, motorBlanktime, motorWaitTime;

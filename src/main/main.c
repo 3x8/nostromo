@@ -6,8 +6,8 @@ TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo motor
-extern uint8_t motorStartup, motorRunning, motorSensorless;
-extern uint8_t motorDirection, motorSlowDecay, motorBrakeActiveProportional;
+extern bool motorStartup, motorRunning, motorSensorless;
+extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
 extern uint16_t motorStep, motorAdvanceDivisor;
 extern uint32_t motorCommutationInterval;
@@ -19,7 +19,7 @@ extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 //ToDo input
 uint32_t outputPwm;
 uint32_t inputNormed;
-extern uint8_t inputArmed, inputDataValid;
+extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
@@ -61,10 +61,7 @@ int main(void) {
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 
 
-  //ToDo
-  // init
-  // 3D motorDirection and normalSpin  opposed
-  // what is normal ?
+  //ToDo init
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
 
@@ -132,6 +129,7 @@ int main(void) {
             motorStartup = true;
             motorBrakeActiveProportional = false;
             inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
+
             if (escConfig()->motor3Dmode) {
               // up
               if (inputNormed >= escConfig()->input3DdeadbandHigh) {
