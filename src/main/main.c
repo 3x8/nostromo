@@ -144,6 +144,7 @@ int main(void) {
           }
         } //PROSHOT
 
+        //ToDo PWM input for thrust tests
         if (inputProtocol == SERVOPWM) {
           //inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
           //outputPwm = (inputNormed >> 1);
