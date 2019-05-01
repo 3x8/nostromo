@@ -13,7 +13,7 @@ uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
-extern uint32_t input;
+extern uint32_t outputPwm;
 
 
 void motorAdvanceDivisorCalculate() {
@@ -214,7 +214,7 @@ void motorCommutate() {
     }
   }
 
-  if (input > DSHOT_CMD_MAX) {
+  if (outputPwm > 0) {
     motorCommutationStep(motorStep);
   }
   motorChangeCompInput();

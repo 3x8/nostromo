@@ -17,7 +17,7 @@ extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 
 //ToDo input
-uint32_t input, outputPwm;
+uint32_t outputPwm;
 uint32_t inputNormed;
 extern uint8_t inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
@@ -90,6 +90,7 @@ int main(void) {
   while (true) {
     watchdogFeed();
 
+    // brake
     if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
@@ -113,10 +114,8 @@ int main(void) {
       TIM1->CCR3 = motorDutyCycle;
     }
 
-
-
     if (inputProtocol == AUTODETECT) {
-      //noop
+      // noop
     } else {
       inputArmCheck();
       inputDisarmCheck();
@@ -132,9 +131,7 @@ int main(void) {
           } else {
             motorStartup = true;
             motorBrakeActiveProportional = false;
-
             inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
-
             if (escConfig()->motor3Dmode) {
               // up
               if (inputNormed >= escConfig()->input3DdeadbandHigh) {
@@ -156,11 +153,9 @@ int main(void) {
               if ((inputNormed > escConfig()->input3DdeadbandLow) && (inputNormed < escConfig()->input3DdeadbandHigh)) {
                 outputPwm = 0;
               }
-
               outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
             } else {
               outputPwm = (inputNormed >> 1);
-              //outputPwm = constrain((inputNormed >> 1), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
             }
           }
         } //PROSHOT
@@ -168,44 +163,17 @@ int main(void) {
         if (inputProtocol == SERVOPWM) {
           //inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
           //outputPwm = (inputNormed >> 1);
-        }
+        } // SERVOPWM
 
-
-
-
-
-        /*
-        //ToDo input filter
-        if ((inputNormed - input) > 25) {
-          input = input + 5;
-        } else {
-          input = inputNormed;
-        }
-
-        if (inputNormed <= input) {
-          input = inputNormed;
-        }
-
-        motorDutyCycle = input >> 1;*/
-
+        //ToDo filter too quick changes (motor desync ?)
         motorDutyCycle = outputPwm;
-
-        if (motorBemfCounter < 15) {
-          motorDutyCycle = constrain(motorDutyCycle, 50, 300);
-          //constrain(motorDutyCycle, 40, 400);
-        }
-
-        if (motorRunning) {
-          motorDutyCycle = constrain(motorDutyCycle, 44, 998);
-        }
 
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;
         //TIM1->CCR4 = motorDutyCycle;
 
-
-
+        // comparator filtering params
         if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
           motorFilterDelay = 15;
           motorFilterLevel = 10;
@@ -219,6 +187,7 @@ int main(void) {
           motorFilterLevel = 0;
         }
 
+        // timeouts
         if (motorDutyCycle < 300) {
           motorZeroCounterTimeoutThreshold = 4000;
         } else {
@@ -232,14 +201,14 @@ int main(void) {
           motorZeroCounterTimeout = motorZeroCounterTimeoutThreshold + 1;
         }
 
+        // motor start
         if ((motorStartup) && (!motorRunning)) {
           motorZeroCounterTimeout = 0;
           motorStart();
         }
 
-
       } //inputArmed
     } //inputProtocol detected
-
   } //main loop
+
 } //main
