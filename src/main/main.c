@@ -149,15 +149,7 @@ int main(void) {
           //outputPwm = (inputNormed >> 1);
         } // SERVOPWM
 
-        /*
-        if ((outputPwm - motorDutyCycle)  > 25) {
-          motorDutyCycle = motorDutyCycle + 5;
-        } else if ((motorDutyCycle - outputPwm)  > 25) {
-          motorDutyCycle = motorDutyCycle - 5;
-        } else {
-          motorDutyCycle = outputPwm;
-        }*/
-
+        //ToDo filter too quick changes (motor desync ?)
         if (ABS(outputPwm - motorDutyCycle) > 10) {
           if (outputPwm > motorDutyCycle) {
             motorDutyCycle = motorDutyCycle + 10;
@@ -168,13 +160,7 @@ int main(void) {
           motorDutyCycle = outputPwm;
         }
 
-
-
-        //ToDo filter too quick changes (motor desync ?)
-        //motorDutyCycle = outputPwm;
-
         motorDutyCycle = constrain(motorDutyCycle, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;
