@@ -137,7 +137,7 @@ int main(void) {
                   motorDirection = escConfig()->motorDirection;
                   motorBemfCounter = 0;
                 }
-                outputPwm = (inputNormed - escConfig()->input3Dneutral);
+                outputPwm = (inputNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
               }
               // down
               if (inputNormed <= escConfig()->input3DdeadbandLow) {
@@ -145,16 +145,17 @@ int main(void) {
                   motorDirection = !escConfig()->motorDirection;
                   motorBemfCounter = 0;
                 }
-                outputPwm = inputNormed;
+                outputPwm = inputNormed + escConfig()->motorStartThreshold;
               }
               // deadband
               if ((inputNormed > escConfig()->input3DdeadbandLow) && (inputNormed < escConfig()->input3DdeadbandHigh)) {
                 outputPwm = 0;
               }
-              outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
             } else {
-              outputPwm = (inputNormed >> 1);
+              outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold << 1);
             }
+
+            outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
           }
         } //PROSHOT
 
