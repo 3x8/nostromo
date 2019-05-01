@@ -1,6 +1,6 @@
 #include "input.h"
 
-bool inputArmed, inputDataValid;
+uint8_t inputArmed, inputDataValid;
 uint8_t inputProtocol;
 uint32_t inputData;
 uint32_t inputArmCounter, inputTimeoutCounter;

@@ -18,9 +18,12 @@ void configReset(void) {
   // assign default config
   escConfig()->motorDirection = 0;
   escConfig()->motorSlowDecay = 1;
+  escConfig()->motorBrake = BRAKE_FULL;
+  escConfig()->motorBrakeStrength = 300;
   escConfig()->motor3Dmode = 0;
-  escConfig()->motorBrakeState = BRAKE_FULL;
-  escConfig()->motorBrakeProportionalStrength = 300;
+  escConfig()->input3Dneutral = 1000;
+  escConfig()->input3DdeadbandLow = 990;
+  escConfig()->input3DdeadbandHigh = 1010;
   escConfig()->led0 = 0;
   escConfig()->led1 = 0;
   escConfig()->led2 = 0;

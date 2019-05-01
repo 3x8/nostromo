@@ -6,8 +6,9 @@ TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo motor
-extern bool motorStartup, motorRunning, motorSensorless;
-extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
+extern uint8_t motorStartup, motorRunning, motorSensorless;
+extern uint8_t motorDirection, motorSlowDecay, motorBrakeActiveProportional;
+
 extern uint16_t motorStep, motorAdvanceDivisor;
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
@@ -16,9 +17,9 @@ extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 
 //ToDo input
-uint32_t input;
-uint32_t inputAdjusted;
-extern bool inputArmed, inputDataValid;
+uint32_t input, outputPwm;
+uint32_t inputNormed;
+extern uint8_t inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
@@ -90,14 +91,14 @@ int main(void) {
     watchdogFeed();
 
     if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
-      switch(escConfig()->motorBrakeState) {
+      switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeFull();
           motorDutyCycle = 0;
           break;
         case BRAKE_PROPORTIONAL:
           if(motorBrakeActiveProportional) {
-            motorDutyCycle = escConfig()->motorBrakeProportionalStrength;
+            motorDutyCycle = escConfig()->motorBrakeStrength;
             motorBrakeProportional();
           }
           break;
@@ -122,112 +123,88 @@ int main(void) {
       if (inputArmed) {
         motorAdvanceDivisorCalculate();
 
-        if (inputData <= DSHOT_CMD_MAX) {
-          motorStartup = false;
-          if (!motorRunning) {
-            inputDshotCommandRun();
-          }
-        } else {
-          motorStartup = true;
-          motorBrakeActiveProportional = false;
+        if ((inputProtocol == PROSHOT) && (inputDataValid)) {
+          if (inputData <= DSHOT_CMD_MAX) {
+            motorStartup = false;
+            if (!motorRunning) {
+              inputDshotCommandRun();
+            }
+          } else {
+            motorStartup = true;
+            motorBrakeActiveProportional = false;
 
-          if (escConfig()->motor3Dmode) {
-            //ToDo
-            //if(escConfig()->motor3Dmode) {
-            //  inputData = 1001;
-            //}
+            inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
-            if (inputProtocol == SERVOPWM) {
-              if ( inputData > 1100 ) {
-                if (motorDirection == escConfig()->motorDirection) {
-                  inputAdjusted = 0;
-                  motorBrakeActiveProportional = true;
-                  motorDirection = !escConfig()->motorDirection;
-                }
-
-                if (!motorBrakeActiveProportional) {
-                  inputAdjusted = (inputData - 1050)*3;
-                }
-              }
-
-              if (inputData < 800) {
-                if (motorDirection == (!escConfig()->motorDirection)) {
-                  motorBrakeActiveProportional = true;
-                  inputAdjusted = 0;
+            if (escConfig()->motor3Dmode) {
+              // up
+              if (inputNormed >= escConfig()->input3DdeadbandHigh) {
+                if (motorDirection == !escConfig()->motorDirection) {
                   motorDirection = escConfig()->motorDirection;
+                  motorBemfCounter = 0;
                 }
-
-                if (!motorBrakeActiveProportional) {
-                  inputAdjusted = (800 - inputData) * 3;
-                }
+                outputPwm = (inputNormed - escConfig()->input3Dneutral);
               }
-
-              if (motorZeroCounterTimeout >= motorZeroCounterTimeoutThreshold) {
-                motorBrakeActiveProportional = false;
-                motorBemfCounter = 0;
-              }
-
-              if ((inputData > 800) && (inputData < 1100)) {
-                inputAdjusted = 0;
-                motorBrakeActiveProportional = false;
-              }
-            }
-
-            if (inputProtocol == PROSHOT) {
-              if (inputData > 1097) {
-                if (motorDirection == escConfig()->motorDirection) {
+              // down
+              if (inputNormed <= escConfig()->input3DdeadbandLow) {
+                if(motorDirection == escConfig()->motorDirection) {
                   motorDirection = !escConfig()->motorDirection;
-                  motorBemfCounter =0;
-               }
-                inputAdjusted = (inputData - 1100) * 2 + 100;
+                  motorBemfCounter = 0;
+                }
+                outputPwm = inputNormed;
+              }
+              // deadband
+              if ((inputNormed > escConfig()->input3DdeadbandLow) && (inputNormed < escConfig()->input3DdeadbandHigh)) {
+                outputPwm = 0;
               }
 
-              if ((inputData <= 1047) &&  (inputData > 0)) {
-               if(motorDirection == (!escConfig()->motorDirection)) {
-                 motorBemfCounter =0;
-                 motorDirection = escConfig()->motorDirection;
-               }
-               inputAdjusted = (inputData - 90) * 2;
-              }
-              if (((inputData > 1047) && (inputData < 1098)) || (inputData <= 120)) {
-                inputAdjusted = 0;
-              }
+              outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+            } else {
+              outputPwm = (inputNormed >> 1);
+              //outputPwm = constrain((inputNormed >> 1), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
             }
-          } else {
-            inputAdjusted = inputData;
           }
+        } //PROSHOT
 
-          constrain(inputAdjusted, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
-
-
-          //ToDo input filter
-          if ((inputAdjusted - input) > 25) {
-            input = input + 5;
-          } else {
-            input = inputAdjusted;
-          }
-
-          if (inputAdjusted <= input) {
-            input = inputAdjusted;
-          }
-
-
-          motorDutyCycle = input >> 1;
-
-          if (motorBemfCounter < 15) {
-            constrain(motorDutyCycle, 50, 300);
-            //constrain(motorDutyCycle, 40, 400);
-          }
-
-          if (motorRunning) {
-            constrain(motorDutyCycle, 44, 998);
-          }
-
-          TIM1->CCR1 = motorDutyCycle;
-          TIM1->CCR2 = motorDutyCycle;
-          TIM1->CCR3 = motorDutyCycle;
-          //TIM1->CCR4 = motorDutyCycle;
+        if (inputProtocol == SERVOPWM) {
+          //inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
+          //outputPwm = (inputNormed >> 1);
         }
+
+
+
+
+
+        /*
+        //ToDo input filter
+        if ((inputNormed - input) > 25) {
+          input = input + 5;
+        } else {
+          input = inputNormed;
+        }
+
+        if (inputNormed <= input) {
+          input = inputNormed;
+        }
+
+        motorDutyCycle = input >> 1;*/
+
+        motorDutyCycle = outputPwm;
+
+        if (motorBemfCounter < 15) {
+          motorDutyCycle = constrain(motorDutyCycle, 50, 300);
+          //constrain(motorDutyCycle, 40, 400);
+        }
+
+        if (motorRunning) {
+          motorDutyCycle = constrain(motorDutyCycle, 44, 998);
+        }
+
+        TIM1->CCR1 = motorDutyCycle;
+        TIM1->CCR2 = motorDutyCycle;
+        TIM1->CCR3 = motorDutyCycle;
+        //TIM1->CCR4 = motorDutyCycle;
+
+
 
         if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
           motorFilterDelay = 15;
@@ -260,7 +237,9 @@ int main(void) {
           motorStart();
         }
 
-      } // inputArmed
-    } // inputProtocol detected
-  } // main loop
-}
+
+      } //inputArmed
+    } //inputProtocol detected
+
+  } //main loop
+} //main
