@@ -64,24 +64,9 @@ int main(void) {
   //ToDo init
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
-
-  motorFilterLevel = 1;
-  motorFilterDelay = 2;
-  motorDutyCycle = 100;
-  motorZeroCounterTimeoutThreshold  = 2000; // depends on speed of main loop
-  motorAdvanceDivisor = 3; // increase divisor to decrease motorAdvance
-  motorStep = 1;
-
   // start with break
   inputDataValid = true;
   inputData = 0;
-
-  // set duty cycle to 50 out of 768 to start.
-  TIM1->CCR1 = 1;
-  TIM1->CCR2 = 1;
-  TIM1->CCR3 = 1;
-  TIM1->CCR4 = 800;
-
 
   // main loop
   while (true) {
@@ -152,7 +137,7 @@ int main(void) {
                 outputPwm = 0;
               }
             } else {
-              outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold << 1);
+              outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold);
             }
 
             outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
@@ -170,7 +155,6 @@ int main(void) {
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;
-        //TIM1->CCR4 = motorDutyCycle;
 
         // comparator filtering params
         if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
