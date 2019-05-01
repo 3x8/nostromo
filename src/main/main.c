@@ -38,7 +38,7 @@ int main(void) {
   //systemAdcInit();
   systemComparator1Init();
   systemTimer1Init();
-  //systemTimer2Init();
+  systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
 
@@ -50,7 +50,7 @@ int main(void) {
   HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3);
   HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3);
-  //HAL_TIM_Base_Start_IT(&timer2Handle);
+  HAL_TIM_Base_Start_IT(&timer2Handle);
   HAL_TIM_Base_Start(&timer3Handle);
 
   motorStartupTune();
@@ -149,8 +149,31 @@ int main(void) {
           //outputPwm = (inputNormed >> 1);
         } // SERVOPWM
 
+        /*
+        if ((outputPwm - motorDutyCycle)  > 25) {
+          motorDutyCycle = motorDutyCycle + 5;
+        } else if ((motorDutyCycle - outputPwm)  > 25) {
+          motorDutyCycle = motorDutyCycle - 5;
+        } else {
+          motorDutyCycle = outputPwm;
+        }*/
+
+        if (ABS(outputPwm - motorDutyCycle) > 10) {
+          if (outputPwm > motorDutyCycle) {
+            motorDutyCycle = motorDutyCycle + 10;
+          } else {
+            motorDutyCycle = motorDutyCycle - 10;
+          }
+        } else {
+          motorDutyCycle = outputPwm;
+        }
+
+
+
         //ToDo filter too quick changes (motor desync ?)
-        motorDutyCycle = outputPwm;
+        //motorDutyCycle = outputPwm;
+
+        motorDutyCycle = constrain(motorDutyCycle, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
 
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;

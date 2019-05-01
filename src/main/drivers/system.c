@@ -50,7 +50,7 @@ void systemDmaInit(void) {
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   // DMA1_Channel4_5_IRQn interrupt configuration
-  HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
 
