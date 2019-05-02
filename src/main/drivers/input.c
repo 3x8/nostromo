@@ -195,10 +195,6 @@ void inputServoPwm() {
       inputDataValid = true;
       inputTimeoutCounter = 0;
       inputData = map(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-      //ToDo check values
-      if (inputData < DSHOT_CMD_MAX) {
-        inputData = 0;
-      }
       return;
     } else {
       inputDataValid = false;
