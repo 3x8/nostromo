@@ -146,7 +146,7 @@ int main(void) {
 
         //ToDo PWM input for thrust tests
         if ((inputProtocol == SERVOPWM)  && (inputDataValid)) {
-          if (inputData  < 70) {
+          if (inputData  < DSHOT_CMD_MAX) {
             motorStartup = false;
             outputPwm = 0;
           } else {

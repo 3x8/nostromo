@@ -131,7 +131,7 @@ void inputDetectProtocol() {
 
   if ((telegramPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (telegramPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     inputProtocol = PROSHOT;
-    TIM15->PSC = 1;
+    TIM15->PSC = INPUT_PROSHOT_PRESCALER;
     TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT) != HAL_OK);
     return;
@@ -139,7 +139,7 @@ void inputDetectProtocol() {
 
   if (telegramPulseWidthMin > 900) {
     inputProtocol = SERVOPWM;
-    TIM15->PSC = 48;
+    TIM15->PSC = INPUT_PWM_PRESCALER;
     TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
     return;
@@ -147,7 +147,7 @@ void inputDetectProtocol() {
 
   // default
   if (inputProtocol == AUTODETECT) {
-    TIM15->PSC = 1;
+    TIM15->PSC = INPUT_PROSHOT_PRESCALER;
     TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
   }
@@ -195,8 +195,8 @@ void inputServoPwm() {
       inputDataValid = true;
       inputTimeoutCounter = 0;
       inputData = map(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-      // jittery walues why ???
-      if (inputData < 70) {
+      //ToDo check values
+      if (inputData < DSHOT_CMD_MAX) {
         inputData = 0;
       }
       return;
