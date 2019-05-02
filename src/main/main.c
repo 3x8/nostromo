@@ -72,7 +72,8 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
+    //if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
+    if (!outputPwm) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeFull();
@@ -144,8 +145,14 @@ int main(void) {
         } //PROSHOT
 
         //ToDo PWM input for thrust tests
-        if (inputProtocol == SERVOPWM) {
-          outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+        if ((inputProtocol == SERVOPWM)  && (inputDataValid)) {
+          if (inputData  < 70) {
+            motorStartup = false;
+            outputPwm = 0;
+          } else {
+            motorStartup = true;
+            outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          }
         } // SERVOPWM
 
         //ToDo filter too quick changes (motor desync ?)
