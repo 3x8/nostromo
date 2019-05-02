@@ -72,7 +72,8 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
+    //if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
+    if (!outputPwm) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeFull();
@@ -106,6 +107,7 @@ int main(void) {
         if ((inputProtocol == PROSHOT) && (inputDataValid)) {
           if (inputData <= DSHOT_CMD_MAX) {
             motorStartup = false;
+            outputPwm = 0;
             if (!motorRunning) {
               inputDshotCommandRun();
             }
@@ -150,6 +152,7 @@ int main(void) {
             outputPwm = 0;
           } else {
             motorStartup = true;
+            motorBrakeActiveProportional = false;
             outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
           }
         } // SERVOPWM
