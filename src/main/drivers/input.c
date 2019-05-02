@@ -185,19 +185,8 @@ void inputProshot() {
   }
 }
 
-
-
-uint32_t telegramPulseWidthBuff0, telegramPulseWidthBuff1;
-
 void inputServoPwm() {
   uint32_t telegramPulseWidthBuff = 0;
-
-  //debug
-  telegramPulseWidthBuff0 = inputBufferDMA[1] - inputBufferDMA[0];
-  telegramPulseWidthBuff1 = inputBufferDMA[2] - inputBufferDMA[1];
-
-  //debug
-  //LED_OFF(GREEN);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
@@ -210,8 +199,6 @@ void inputServoPwm() {
       if (inputData < 70) {
         inputData = 0;
       }
-      //debug
-      //LED_ON(GREEN);
       return;
     } else {
       inputDataValid = false;
