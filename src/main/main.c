@@ -72,8 +72,7 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    //if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
-    if (!outputPwm) {
+    if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeFull();
