@@ -17,8 +17,7 @@ extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 
 //ToDo input
-uint32_t outputPwm;
-uint32_t inputNormed;
+extern uint32_t inputNormed, outputPwm;
 extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
@@ -146,8 +145,7 @@ int main(void) {
 
         //ToDo PWM input for thrust tests
         if (inputProtocol == SERVOPWM) {
-          //inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
-          //outputPwm = (inputNormed >> 1);
+          outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         } // SERVOPWM
 
         //ToDo filter too quick changes (motor desync ?)

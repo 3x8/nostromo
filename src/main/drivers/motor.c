@@ -214,8 +214,8 @@ void motorCommutate() {
     }
   }
 
-  if (outputPwm > 0) {
-    motorCommutationStep(motorStep);
+  if (outputPwm > escConfig()->motorStartThreshold) {
+    //motorCommutationStep(motorStep);
   }
   motorChangeCompInput();
 }

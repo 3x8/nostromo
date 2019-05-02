@@ -3,12 +3,12 @@
 bool inputArmed, inputDataValid;
 uint8_t inputProtocol;
 uint32_t inputData;
+uint32_t inputNormed, outputPwm;
 uint32_t inputArmCounter, inputTimeoutCounter;
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 extern TIM_HandleTypeDef timer15Handle;
 extern uint8_t motorDirection;
-
 
 void inputArmCheck(void) {
   if (!inputArmed) {
@@ -28,6 +28,9 @@ void inputArmCheck(void) {
 void inputDisarm(void) {
   inputData = 0;
   inputDataValid = true;
+
+  inputNormed = 0;
+  outputPwm = 0;
 
   inputArmed = false;
   inputArmCounter = 0;
@@ -136,7 +139,7 @@ void inputDetectProtocol() {
 
   if (telegramPulseWidthMin > 900) {
     inputProtocol = SERVOPWM;
-    TIM15->PSC = 47;
+    TIM15->PSC = 48;
     TIM15->CNT = 0;
     while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM) != HAL_OK);
     return;
@@ -182,30 +185,37 @@ void inputProshot() {
   }
 }
 
+
+
+uint32_t telegramPulseWidthBuff0, telegramPulseWidthBuff1;
+
 void inputServoPwm() {
-  uint32_t telegramPulseWidthBuff;
-  uint32_t telegramPulseWidthMin = 20000;
+  uint32_t telegramPulseWidthBuff = 0;
+
+  //debug
+  telegramPulseWidthBuff0 = inputBufferDMA[1] - inputBufferDMA[0];
+  telegramPulseWidthBuff1 = inputBufferDMA[2] - inputBufferDMA[1];
 
   //debug
   //LED_OFF(GREEN);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
-    if(telegramPulseWidthBuff < telegramPulseWidthMin) {
-      telegramPulseWidthMin = telegramPulseWidthBuff;
+
+    if ((telegramPulseWidthBuff >= INPUT_PWM_WIDTH_MIN_US) && (telegramPulseWidthBuff <= INPUT_PWM_WIDTH_MAX_US)) {
+      inputDataValid = true;
+      inputTimeoutCounter = 0;
+      inputData = map(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      // jittery walues why ???
+      if (inputData < 70) {
+        inputData = 0;
+      }
+      //debug
+      //LED_ON(GREEN);
+      return;
+    } else {
+      inputDataValid = false;
     }
   }
 
-  if ((telegramPulseWidthMin > (INPUT_PWM_WIDTH_MIN_US - INPUT_PWM_WIDTH_MIN_US / 10) ) &&
-      (telegramPulseWidthMin < (INPUT_PWM_WIDTH_MAX_US + INPUT_PWM_WIDTH_MAX_US / 10))) {
-    inputDataValid = true;
-    inputTimeoutCounter = 0;
-    inputData = map(telegramPulseWidthMin, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, INPUT_VALUE_MIN, INPUT_VALUE_MAX);
-    //debug
-    //LED_ON(GREEN);
-    return;
-  } else {
-    inputDataValid = false;
-    return;
-  }
 }
