@@ -110,9 +110,7 @@ void systemTimer1Init(void) {
   timer1Handle.Init.Prescaler = 0;
   timer1Handle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
   //ToDo
-  //timer1Handle.Init.Period = 999;
-  //timer1Handle.Init.Period = 1213;
-  timer1Handle.Init.Period = 1001;
+  timer1Handle.Init.Period = 997;
   timer1Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   timer1Handle.Init.RepetitionCounter = 0;
   timer1Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
