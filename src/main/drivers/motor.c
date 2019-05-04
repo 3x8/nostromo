@@ -12,8 +12,6 @@ uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
-extern uint32_t outputPwm;
-
 
 // motorPhaseB qfn , motorPhaseA qfp
 void motorPhaseA(uint8_t phaseBuffer) {
@@ -209,9 +207,8 @@ void motorCommutate() {
     }
   }
 
-  if (outputPwm > escConfig()->motorStartThreshold) {
-    motorCommutationStep(motorStep);
-  }
+
+  motorCommutationStep(motorStep);
   motorChangeComparatorInput();
 }
 

@@ -17,7 +17,6 @@ void inputArmCheck(void) {
       HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
-        //debug
         LED_ON(RED);
         motorInputTune();
       }
@@ -48,9 +47,9 @@ void inputDisarmCheck(void) {
   inputTimeoutCounter++;
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
-    //debug
     LED_OFF(RED);
-    LED_OFF(GREEN);
+    //debug
+    //LED_OFF(GREEN);
   }
 }
 
@@ -159,7 +158,7 @@ void inputProshot() {
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   //debug
-  LED_OFF(GREEN);
+  //LED_OFF(GREEN);
 
   for (int i = 0; i < 4; i++) {
     telegramPulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23)/3;
@@ -177,7 +176,7 @@ void inputProshot() {
     inputTimeoutCounter = 0;
     inputData = telegramData;
     //debug
-    LED_ON(GREEN);
+    //LED_ON(GREEN);
     return;
   } else {
     inputDataValid = false;
