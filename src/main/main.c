@@ -102,7 +102,7 @@ int main(void) {
       inputArmCheck();
       inputDisarmCheck();
       if (inputArmed) {
-        motorAdvanceDivisorCalculate();
+        //motorAdvanceDivisorCalculate();
 
         if ((inputProtocol == PROSHOT) && (inputDataValid)) {
           if (inputData <= DSHOT_CMD_MAX) {
