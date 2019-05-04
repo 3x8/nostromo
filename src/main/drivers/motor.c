@@ -161,7 +161,7 @@ void motorBrakeProportional() {
   motorPhaseC(HBRIDGE_PWM);
 }
 
-void motorChangeCompInput() {
+void motorChangeComparatorInput() {
   switch(motorStep) {
     case 1:
     case 4:
@@ -217,7 +217,7 @@ void motorCommutate() {
   if (outputPwm > escConfig()->motorStartThreshold) {
     motorCommutationStep(motorStep);
   }
-  motorChangeCompInput();
+  motorChangeComparatorInput();
 }
 
 // for forced commutation -- open loop

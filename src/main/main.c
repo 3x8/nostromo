@@ -63,16 +63,16 @@ int main(void) {
   //ToDo init
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
-  // start with break
+  // start with brake on
   inputDataValid = true;
   inputData = 0;
+  outputPwm = 0;
 
   // main loop
   while (true) {
     watchdogFeed();
 
     // brake
-    //if ((inputData <= DSHOT_CMD_MAX) && inputDataValid) {
     if (!outputPwm) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:

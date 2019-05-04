@@ -30,7 +30,7 @@ void motorAdvanceDivisorCalculate();
 void motorStart();
 void motorCommutate();
 void motorCommutationStep(uint8_t stepBuffer);
-void motorChangeCompInput();
+void motorChangeComparatorInput();
 
 void motorBrakeOff();
 void motorBrakeFull();
