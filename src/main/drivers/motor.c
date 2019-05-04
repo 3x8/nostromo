@@ -253,14 +253,14 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   if ((!motorRunning) || (!motorSensorless) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     //debug
-    LED_OFF(GREEN);
-    LED_OFF(BLUE);
+    //LED_OFF(GREEN);
+    //LED_OFF(BLUE);
     return;
   }
 
   motorTimestamp = TIM3->CNT;
   //debug
-  LED_TOGGLE(GREEN);
+  //LED_TOGGLE(GREEN);
 
   while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
@@ -278,7 +278,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
   //debug
-  LED_TOGGLE(BLUE);
+  //LED_TOGGLE(BLUE);
 
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
