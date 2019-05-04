@@ -172,25 +172,17 @@ int main(void) {
           motorDutyCycle = (outputPwm << 1) + motorBemfCounter;
         }
 
-
         motorDutyCycle = constrain(motorDutyCycle, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;
 
-        // comparator filtering params
-        if ((motorBemfCounter < 100) || (motorCommutationInterval > 10000)) {
-          motorFilterDelay = 4;
-          motorFilterLevel = 4;
-        } else {
-          motorFilterLevel = 3;
-          motorFilterDelay = 3;
-        }
-
-
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
+        } else {
+          motorFilterLevel = 3;
+          motorFilterDelay = 3;
         }
 
         // timeouts
