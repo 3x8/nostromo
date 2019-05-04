@@ -6,10 +6,10 @@ TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 //ToDo motor
-extern bool motorStartup, motorRunning, motorSensorless;
+extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
-extern uint16_t motorStep, motorAdvanceDivisor;
+extern uint16_t motorStep;
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
@@ -102,8 +102,6 @@ int main(void) {
       inputArmCheck();
       inputDisarmCheck();
       if (inputArmed) {
-        //motorAdvanceDivisorCalculate();
-
         if ((inputProtocol == PROSHOT) && (inputDataValid)) {
           if (inputData <= DSHOT_CMD_MAX) {
             motorStartup = false;
@@ -193,7 +191,6 @@ int main(void) {
         }
 
         if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
-          motorSensorless = false;
           motorRunning = false;
           motorDutyCycle = 0;
           motorZeroCounterTimeout = motorZeroCounterTimeoutThreshold + 1;

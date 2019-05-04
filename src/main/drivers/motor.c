@@ -3,11 +3,10 @@
 COMP_HandleTypeDef comparator1Handle;
 
 bool motorBemfRising;
-bool motorStartup, motorRunning, motorSensorless;
+bool motorStartup, motorRunning;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
 
-uint16_t motorStep = 1, motorAdvanceDivisor = 3;
-uint32_t motorAdvance, motorBlanktime, motorWaitTime;
+uint16_t motorStep = 1;
 uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
@@ -15,10 +14,6 @@ uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 extern uint32_t outputPwm;
 
-
-void motorAdvanceDivisorCalculate() {
-    motorAdvanceDivisor = map((motorCommutationInterval),100,5000, 2, 20);
-}
 
 // motorPhaseB qfn , motorPhaseA qfp
 void motorPhaseA(uint8_t phaseBuffer) {
@@ -228,7 +223,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void motorStart() {
   bool bufferDecaystate = motorSlowDecay;
-  motorSensorless = false;
 
   if (!motorRunning) {
     HAL_COMP_Stop_IT(&comparator1Handle);
@@ -242,7 +236,6 @@ void motorStart() {
   }
 
   motorSlowDecay = bufferDecaystate;
-  motorSensorless = true;
   motorBemfCounter = 0;
 }
 
@@ -250,7 +243,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
   //ToDo new
-  if ((!motorRunning) || (!motorSensorless) || (!motorStartup)) {
+  if ((!motorRunning) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     //debug
     //LED_OFF(GREEN);
@@ -285,15 +278,10 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
 
-  //test   divide by two when tracking up down time independant
+  //ToDo
   motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
-  //motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
-  //motorWaitTime = (motorCommutationInterval >> 1) - motorAdvance;
-  //motorBlanktime = motorCommutationInterval >> 2;
 
-  //if (motorSensorless) {
-    motorCommutate();
-  //}
+  motorCommutate();
 
   motorBemfCounter++;
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);

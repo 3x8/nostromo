@@ -25,8 +25,6 @@ void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);
 void motorPhaseC(uint8_t phaseBuffer);
 
-void motorAdvanceDivisorCalculate();
-
 void motorStart();
 void motorCommutate();
 void motorCommutationStep(uint8_t stepBuffer);
