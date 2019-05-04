@@ -4,7 +4,7 @@ COMP_HandleTypeDef comparator1Handle;
 
 bool motorBemfRising;
 bool motorStartup, motorRunning;
-bool motorDirection, motorSlowDecay, motorBrakeActiveProportional = true;
+bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
 uint16_t motorStep = 1;
 uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
