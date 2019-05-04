@@ -169,7 +169,7 @@ int main(void) {
         }
 
         if (motorBemfCounter < 31) {
-          motorDutyCycle = outputPwm + 10 + motorBemfCounter;
+          motorDutyCycle = (outputPwm << 1) + motorBemfCounter;
         }
 
 
