@@ -287,13 +287,13 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   //test   divide by two when tracking up down time independant
   motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
-  motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
-  motorWaitTime = (motorCommutationInterval >> 1) - motorAdvance;
-  motorBlanktime = motorCommutationInterval >> 2;
+  //motorAdvance = motorCommutationInterval / motorAdvanceDivisor;
+  //motorWaitTime = (motorCommutationInterval >> 1) - motorAdvance;
+  //motorBlanktime = motorCommutationInterval >> 2;
 
-  if (motorSensorless) {
+  //if (motorSensorless) {
     motorCommutate();
-  }
+  //}
 
   motorBemfCounter++;
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
