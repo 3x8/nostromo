@@ -166,13 +166,6 @@ int main(void) {
           motorDutyCycle = outputPwm;
         }
 
-        /*
-        if (motorBemfCounter < 31) {
-          //motorDutyCycle = (motorDutyCycle << 1) + motorBemfCounter;
-          //motorDutyCycle = motorDutyCycle + (motorBemfCounter << 1);
-          motorDutyCycle = (motorDutyCycle << 1);
-        }*/
-
         motorDutyCycle = constrain(motorDutyCycle, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
