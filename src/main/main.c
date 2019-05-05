@@ -155,7 +155,9 @@ int main(void) {
           }
         } // SERVOPWM
 
-        //ToDo filter too quick changes (motor desync ?)
+        //ToDo filter too quick changes (realworld tests)
+        motorDutyCycle = outputPwm;
+        /*
         if (ABS(outputPwm - motorDutyCycle) > 10) {
           if (outputPwm > motorDutyCycle) {
             motorDutyCycle = motorDutyCycle + 10;
@@ -164,7 +166,7 @@ int main(void) {
           }
         } else {
           motorDutyCycle = outputPwm;
-        }
+        } */
 
         motorDutyCycle = constrain(motorDutyCycle, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
