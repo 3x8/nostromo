@@ -285,15 +285,15 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 }
 
 void motorStartupTune() {
-  TIM1->PSC = 75;
+  TIM1->PSC = 100;
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
   motorCommutationStep(motorStep);
   HAL_Delay(100);
-  TIM1->PSC = 50;
+  TIM1->PSC = 75;
   HAL_Delay(100);
-  TIM1->PSC = 25;
+  TIM1->PSC = 50;
   HAL_Delay(100);
   motorBrakeOff();
   TIM1->PSC = 0;
