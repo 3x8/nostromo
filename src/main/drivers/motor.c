@@ -289,7 +289,7 @@ void motorStartupTune() {
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
-  motorCommutationStep(2);
+  motorCommutationStep(motorStep);
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
@@ -300,14 +300,14 @@ void motorStartupTune() {
 }
 
 void motorInputTune() {
-  TIM1->PSC = 100;
+  TIM1->PSC = 75;
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
-  motorCommutationStep(2);
+  motorCommutationStep(motorStep);
   HAL_Delay(100);
   TIM1->PSC = 50;
   HAL_Delay(100);
-  motorBrakeOff();
+
   TIM1->PSC = 0;
 }
