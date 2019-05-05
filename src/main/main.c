@@ -76,18 +76,19 @@ int main(void) {
     if (!outputPwm) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
+          motorBrakeActiveProportional = false;
           motorBrakeFull();
           motorDutyCycle = 0;
           break;
         case BRAKE_PROPORTIONAL:
-          if(motorBrakeActiveProportional) {
-            motorDutyCycle = escConfig()->motorBrakeStrength;
-            motorBrakeProportional();
-          }
+          motorBrakeActiveProportional = true;
+          motorDutyCycle = escConfig()->motorBrakeStrength;
+          motorBrakeProportional();
           break;
         case BRAKE_OFF:
-            motorBrakeOff();
-            motorDutyCycle = 0;
+          motorBrakeActiveProportional = false;
+          motorBrakeOff();
+          motorDutyCycle = 0;
           break;
       }
 
