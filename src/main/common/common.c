@@ -1,23 +1,23 @@
 #include "common.h"
 
-uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max) {
-  if (x < in_min) {
-    x = in_min;
+uint32_t map(uint32_t input, uint32_t inputMin, uint32_t inputMax, uint32_t outputMin, uint32_t outputMax) {
+  if (input < inputMin) {
+    input = inputMin;
   }
-  if (x > in_max) {
-    x = in_max;
+  if (input > inputMax) {
+    input = inputMax;
   }
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  return (input - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) + outputMin;
 }
 
-uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high) {
-  if (amt < low){
-    return (low);
+uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
+  if (input < valueMin){
+    return (valueMin);
   }
-  else if (amt > high) {
-      return (high);
+  else if (input > valueMax) {
+      return (valueMax);
   }
   else {
-      return (amt);
+      return (input);
   }
 }
