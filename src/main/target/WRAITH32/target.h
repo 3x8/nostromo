@@ -1,7 +1,7 @@
 #pragma once
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 60
+#define HBRIDGE_DEAD_TIME 53
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
