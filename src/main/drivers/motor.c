@@ -147,7 +147,7 @@ void motorBrakeFull() {
   motorPhaseC(HBRIDGE_LOWSIDE);
 }
 
-// dutyCycle controls braking strength, will turn off lower fets so only high side is active
+// dutyCycle controls braking strength
 void motorBrakeProportional() {
   motorPhaseA(HBRIDGE_PWM);
   motorPhaseB(HBRIDGE_PWM);
@@ -223,34 +223,27 @@ void motorStart() {
 
   if (!motorRunning) {
     HAL_COMP_Stop_IT(&comparator1Handle);
-    motorSlowDecay = escConfig()->motorSlowDecay;
+    motorSlowDecay = true;
 
     motorCommutate();
 
     TIM3->CNT = 0;
+    motorBemfCounter = 0;
     motorRunning = true;
     while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
   }
-
   motorSlowDecay = bufferDecaystate;
-  motorBemfCounter = 0;
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
-  //ToDo new
   if ((!motorRunning) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
-    //debug
-    //LED_OFF(GREEN);
-    //LED_OFF(BLUE);
     return;
   }
 
   motorTimestamp = TIM3->CNT;
-  //debug
-  //LED_TOGGLE(GREEN);
 
   while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
@@ -267,20 +260,17 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
       }
     }
   }
-  //debug
-  //LED_TOGGLE(BLUE);
 
+  motorBemfCounter++;
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
+  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
+
   TIM3->CNT = 0;
   HAL_COMP_Stop_IT(&comparator1Handle);
 
-  //ToDo
-  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
-
   motorCommutate();
 
-  motorBemfCounter++;
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 }
 
