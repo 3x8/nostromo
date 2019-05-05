@@ -207,7 +207,6 @@ void motorCommutate() {
     }
   }
 
-
   motorCommutationStep(motorStep);
   motorChangeComparatorInput();
 }
@@ -215,6 +214,7 @@ void motorCommutate() {
 // for forced commutation -- open loop
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM2) {
+    //noop
   }
 }
 
@@ -223,7 +223,7 @@ void motorStart() {
 
   if (!motorRunning) {
     HAL_COMP_Stop_IT(&comparator1Handle);
-    motorSlowDecay = true;
+    motorSlowDecay = escConfig()->motorSlowDecay;
 
     motorCommutate();
 
