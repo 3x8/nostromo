@@ -18,6 +18,11 @@ typedef enum {
   BRAKE_FULL
 } motorBrakeStateEnum;
 
+typedef enum {
+  SPIN_CW = 0,
+  SPIN_CCW
+} motorDirectionEnum;
+
 void motorStartupTune();
 void motorInputTune();
 

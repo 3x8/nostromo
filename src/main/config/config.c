@@ -16,7 +16,7 @@ void configReset(void) {
   masterConfig.version = EEPROM_CONF_VERSION;
 
   // assign default config
-  escConfig()->motorDirection = 0;
+  escConfig()->motorDirection = SPIN_CW;
   escConfig()->motorSlowDecay = true;
   escConfig()->motorBrake = BRAKE_FULL;
   escConfig()->motorBrakeStrength = 300;
