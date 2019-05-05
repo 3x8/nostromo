@@ -15,7 +15,7 @@ void configReset(void) {
   memset(&masterConfig, 0, sizeof(master_t));
   masterConfig.version = EEPROM_CONF_VERSION;
 
-  // assign default config
+  // default config
   escConfig()->motorDirection = SPIN_CW;
   escConfig()->motorSlowDecay = true;
   escConfig()->motorBrake = BRAKE_FULL;
@@ -38,5 +38,4 @@ void configRead(void) {
 
 void configWrite(void) {
   eepromWrite();
-  //eepromRead();
 }
