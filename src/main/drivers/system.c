@@ -111,8 +111,8 @@ void systemTimer1Init(void) {
   timer1Handle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
   //ToDo
   //timer1Handle.Init.Period = 999; // default
-  timer1Handle.Init.Period = 827; // WRAITH32MINI
-  //timer1Handle.Init.Period = 727; // WRAITH32MINI 12.0701967138822 RPM peakout ???
+  timer1Handle.Init.Period = 827; // WRAITH32MINI 11.9135092083324
+  //timer1Handle.Init.Period = 727; // WRAITH32MINI 12.0701967138822
   //timer1Handle.Init.Period = 811; // WRAITH32MINI 11.7675238742349N
   //timer1Handle.Init.Period = 1001; // WRAITH32MINI 10.803032776985N
   timer1Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
