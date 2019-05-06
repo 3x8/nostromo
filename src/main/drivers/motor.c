@@ -227,7 +227,7 @@ void motorStart() {
 
     motorCommutate();
 
-    TIM3->CNT = 0;
+    TIM3->CNT = 0xffff;
     motorBemfCounter = 0;
     motorRunning = true;
     HAL_COMP_Start_IT(&comparator1Handle);
@@ -267,7 +267,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
 
   HAL_COMP_Stop_IT(&comparator1Handle);
-  TIM3->CNT = 0;
+  TIM3->CNT = 0xffff;
 
   #ifdef DEBUG_ZERO_CROSS
   LED_TOGGLE(BLUE);
