@@ -112,7 +112,7 @@ void systemTimer1Init(void) {
   //ToDo
   //timer1Handle.Init.Period = 999; // default
   //timer1Handle.Init.Period = 811; // WRAITH32MINI 11.7675238742349N
-  timer1Handle.Init.Period = 1001;
+  timer1Handle.Init.Period = 1001; // WRAITH32MINI PWM wobble
   timer1Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   timer1Handle.Init.RepetitionCounter = 0;
   timer1Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
