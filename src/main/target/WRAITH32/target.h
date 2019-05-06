@@ -1,12 +1,12 @@
 #pragma once
 
 // debug
-//#define DEBUG_ZERO_CROSS
+#define DEBUG_ZERO_CROSS
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 7
+#define HBRIDGE_DEAD_TIME 5
 
 
 // PA15 --- LED RED ,Ok

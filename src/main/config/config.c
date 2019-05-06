@@ -20,7 +20,7 @@ void configReset(void) {
   escConfig()->motorSlowDecay = true;
   escConfig()->motorBrake = BRAKE_FULL;
   escConfig()->motorBrakeStrength = 501;
-  escConfig()->motorStartThreshold = 31;
+  escConfig()->motorStartThreshold = 27;
   escConfig()->motor3Dmode = false;
   escConfig()->input3Dneutral = 1000;
   escConfig()->input3DdeadbandLow = 990;
