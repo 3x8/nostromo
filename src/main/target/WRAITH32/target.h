@@ -6,7 +6,7 @@
 //#define DEBUG_INPUT_AUTODETECT
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 7
+#define HBRIDGE_DEAD_TIME 13
 
 
 // PA15 --- LED RED ,Ok
