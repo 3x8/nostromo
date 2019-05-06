@@ -1,5 +1,9 @@
 #pragma once
 
+// debug
+//#define DEBUG_ZERO_CROSS
+#define DEBUG_INPUT_PROSHOT
+
 //ToDo
 #define HBRIDGE_DEAD_TIME 7
 

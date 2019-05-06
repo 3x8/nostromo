@@ -181,7 +181,7 @@ void motorChangeComparatorInput() {
 
   }
 
-  while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
+  HAL_COMP_Init(&comparator1Handle);
 }
 
 void motorCommutate() {
@@ -230,13 +230,17 @@ void motorStart() {
     TIM3->CNT = 0;
     motorBemfCounter = 0;
     motorRunning = true;
-    while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
+    HAL_COMP_Start_IT(&comparator1Handle);
   }
   motorSlowDecay = bufferDecaystate;
 }
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
+
+  #ifdef DEBUG_ZERO_CROSS
+  LED_TOGGLE(GREEN);
+  #endif
 
   if ((!motorRunning) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
@@ -261,17 +265,22 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
 
+
+  HAL_COMP_Stop_IT(&comparator1Handle);
+  TIM3->CNT = 0;
+
+  #ifdef DEBUG_ZERO_CROSS
+  LED_TOGGLE(BLUE);
+  #endif
+
   motorBemfCounter++;
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
   motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
 
-  TIM3->CNT = 0;
-  HAL_COMP_Stop_IT(&comparator1Handle);
-
   motorCommutate();
 
-  while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
+  HAL_COMP_Start_IT(&comparator1Handle);
 }
 
 void motorStartupTune() {
