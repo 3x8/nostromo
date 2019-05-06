@@ -9,7 +9,7 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
-extern uint16_t motorStep;
+
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
@@ -17,10 +17,10 @@ extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 
 //ToDo input
-extern uint32_t inputNormed, outputPwm;
 extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
+extern uint32_t inputNormed, outputPwm;
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 
@@ -156,7 +156,7 @@ int main(void) {
         } // SERVOPWM
 
         if (inputDataValid) {
-          //motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
           TIM1->CCR1 = motorDutyCycle;
           TIM1->CCR2 = motorDutyCycle;
           TIM1->CCR3 = motorDutyCycle;
