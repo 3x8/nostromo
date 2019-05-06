@@ -8,13 +8,10 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 //ToDo motor
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-
-
 extern uint32_t motorCommutationInterval;
 extern uint32_t motorFilterLevel, motorFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
-
 
 //ToDo input
 extern bool inputArmed, inputDataValid;
