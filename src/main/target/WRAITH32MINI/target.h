@@ -1,7 +1,7 @@
 #pragma once
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 7
+#define HBRIDGE_DEAD_TIME 5
 
 
 // PA15 --- LED RED ,Ok
