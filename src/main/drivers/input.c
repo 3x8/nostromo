@@ -26,11 +26,8 @@ void inputArmCheck(void) {
 
 void inputDisarm(void) {
   inputData = 0;
-  inputDataValid = true;
-
   inputNormed = 0;
   outputPwm = 0;
-
   inputArmed = false;
   inputArmCounter = 0;
   inputTimeoutCounter = 0;
@@ -39,7 +36,7 @@ void inputDisarm(void) {
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
   inputProtocol = AUTODETECT;
   TIM15->PSC = 1;
-  TIM15->CNT = 0;
+  TIM15->CNT = 0xffff;
   HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
 }
 
@@ -48,8 +45,6 @@ void inputDisarmCheck(void) {
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
     LED_OFF(RED);
-    //debug
-    //LED_OFF(GREEN);
   }
 }
 
@@ -112,12 +107,15 @@ void inputCallbackDMA() {
       HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
       break;
   }
-
 }
 
 void inputDetectProtocol() {
   uint32_t telegramPulseWidthBuff;
   uint32_t telegramPulseWidthMin = 20000;
+
+  #ifdef DEBUG_INPUT_AUTODETECT
+  LED_TOGGLE(GREEN);
+  #endif
 
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
 
@@ -131,7 +129,7 @@ void inputDetectProtocol() {
   if ((telegramPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (telegramPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     inputProtocol = PROSHOT;
     TIM15->PSC = INPUT_PROSHOT_PRESCALER;
-    TIM15->CNT = 0;
+    TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
     return;
   }
@@ -139,7 +137,7 @@ void inputDetectProtocol() {
   if (telegramPulseWidthMin > 900) {
     inputProtocol = SERVOPWM;
     TIM15->PSC = INPUT_PWM_PRESCALER;
-    TIM15->CNT = 0;
+    TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
     return;
   }
@@ -147,7 +145,7 @@ void inputDetectProtocol() {
   // default
   if (inputProtocol == AUTODETECT) {
     TIM15->PSC = INPUT_PROSHOT_PRESCALER;
-    TIM15->CNT = 0;
+    TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
   }
 }

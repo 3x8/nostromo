@@ -64,7 +64,6 @@ int main(void) {
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
   // start with brake on
-  inputDataValid = true;
   inputData = 0;
   outputPwm = 0;
 
@@ -156,8 +155,14 @@ int main(void) {
           }
         } // SERVOPWM
 
+        if (inputDataValid) {
+          motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          TIM1->CCR1 = motorDutyCycle;
+          TIM1->CCR2 = motorDutyCycle;
+          TIM1->CCR3 = motorDutyCycle;
+        }
+
         //ToDo filter too quick changes (realworld tests)
-        motorDutyCycle = outputPwm;
         /*
         if (ABS(outputPwm - motorDutyCycle) > 10) {
           if (outputPwm > motorDutyCycle) {
@@ -169,10 +174,7 @@ int main(void) {
           motorDutyCycle = outputPwm;
         } */
 
-        motorDutyCycle = constrain(motorDutyCycle, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        TIM1->CCR1 = motorDutyCycle;
-        TIM1->CCR2 = motorDutyCycle;
-        TIM1->CCR3 = motorDutyCycle;
+
 
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
