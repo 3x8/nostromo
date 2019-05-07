@@ -6,8 +6,8 @@
 //#define DEBUG_INPUT_AUTODETECT
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 7
-#define TIMER1_INIT_PERIOD  773
+#define HBRIDGE_DEAD_TIME 11
+#define TIMER1_INIT_PERIOD  907
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
