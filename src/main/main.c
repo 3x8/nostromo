@@ -31,30 +31,26 @@ int main(void) {
   ledInit();
 
   systemDmaInit();
-  //systemAdcInit();
   systemComparator1Init();
+  systemAdcInit();
   systemTimer1Init();
   systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
 
-  watchdogInit(2000);
 
-  HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_1);
-  HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_2);
-  HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3);
-  HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3);
-  HAL_TIM_Base_Start_IT(&timer2Handle);
-  HAL_TIM_Base_Start(&timer3Handle);
-
-  motorStartupTune();
-
-  while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
   while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
-  //adcInit();
   while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
+  adcInit();
+  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
+  //while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
+  while (HAL_TIM_Base_Start_IT(&timer2Handle) != HAL_OK);
+  while (HAL_TIM_Base_Start(&timer3Handle) != HAL_OK);
 
 
   //ToDo init
@@ -63,6 +59,9 @@ int main(void) {
   // start with motor off
   inputData = 0;
   outputPwm = 0;
+
+  watchdogInit(2000);
+  motorStartupTune();
 
   // main loop
   while (true) {
