@@ -60,7 +60,7 @@ int main(void) {
   //ToDo init
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
-  // start with brake on
+  // start with motor off
   inputData = 0;
   outputPwm = 0;
 
