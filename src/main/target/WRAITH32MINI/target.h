@@ -8,6 +8,7 @@
 //ToDo
 #define HBRIDGE_DEAD_TIME 7
 #define TIMER1_INIT_PERIOD  827
+#define MOTOR_START_THRESHOLD 7;
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
