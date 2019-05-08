@@ -151,7 +151,7 @@ void inputDetectProtocol() {
 }
 
 void inputProshot() {
-  uint8_t telegramCalculatedCRC = 1, telegramReceivedCRC = 2;
+  uint8_t telegramCalculatedCRC = 0, telegramReceivedCRC = 0;
   uint16_t telegramData = 0;
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
