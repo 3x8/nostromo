@@ -34,7 +34,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
     while (HAL_DMA_Init(&adcDmaHandle) != HAL_OK);
 
     __HAL_LINKDMA(adcHandle,DMA_Handle,adcDmaHandle);
-    HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
   }
 }
@@ -60,7 +60,7 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
   }
 }
@@ -83,14 +83,14 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
   if(htim_base->Instance == TIM1) {
     __HAL_RCC_TIM1_CLK_ENABLE();
 
-    HAL_NVIC_SetPriority(TIM1_CC_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);
+    //HAL_NVIC_SetPriority(TIM1_CC_IRQn, 0, 0);
+    //HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);
   }
   else if(htim_base->Instance == TIM2) {
     __HAL_RCC_TIM2_CLK_ENABLE();
 
-    HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(TIM2_IRQn);
+    //HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
+    //HAL_NVIC_EnableIRQ(TIM2_IRQn);
   }
   else if(htim_base->Instance == TIM3) {
     __HAL_RCC_TIM3_CLK_ENABLE();
