@@ -143,6 +143,7 @@ int main(void) {
         }
 
         //ToDo filter too quick changes (realworld tests)
+        /*
         if (ABS(outputPwm - motorDutyCycle) > 10) {
           if (outputPwm > motorDutyCycle) {
             motorDutyCycle = motorDutyCycle + 10;
@@ -151,7 +152,7 @@ int main(void) {
           }
         } else {
           motorDutyCycle = outputPwm;
-        }
+        }*/
 
 
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
