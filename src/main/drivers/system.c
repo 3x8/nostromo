@@ -4,6 +4,9 @@ extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef comparator1Handle;
 extern TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 
+extern uint32_t adcValue[3];
+extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
+
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 
@@ -41,6 +44,7 @@ void systemClockConfig(void) {
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
+
 void systemDmaInit(void) {
   // DMA controller clock enable
   __HAL_RCC_DMA1_CLK_ENABLE();
@@ -53,6 +57,7 @@ void systemDmaInit(void) {
   HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
+
 
 void systemAdcInit(void) {
   ADC_ChannelConfTypeDef sConfig;
@@ -86,7 +91,10 @@ void systemAdcInit(void) {
 
   sConfig.Channel = ADC_TEMPERATURE;
   while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+
+  while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcValue, 3) != HAL_OK);
 }
+
 
 void systemComparator1Init(void) {
   comparator1Handle.Instance = COMP1;
@@ -98,7 +106,10 @@ void systemComparator1Init(void) {
   comparator1Handle.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
   comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
   while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
+
+  while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
 }
+
 
 void systemTimer1Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -148,7 +159,16 @@ void systemTimer1Init(void) {
   while (HAL_TIMEx_ConfigBreakDeadTime(&timer1Handle, &sBreakDeadTimeConfig) != HAL_OK);
 
   HAL_TIM_MspPostInit(&timer1Handle);
+
+  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
+  //while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
 }
+
 
 void systemTimer2Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -168,7 +188,10 @@ void systemTimer2Init(void) {
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&timer2Handle, &sMasterConfig) != HAL_OK);
+
+  while (HAL_TIM_Base_Start_IT(&timer2Handle) != HAL_OK);
 }
+
 
 void systemTimer3Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -188,7 +211,10 @@ void systemTimer3Init(void) {
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&timer3Handle, &sMasterConfig) != HAL_OK);
+
+  while (HAL_TIM_Base_Start(&timer3Handle) != HAL_OK);
 }
+
 
 void systemTimer15Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -217,4 +243,6 @@ void systemTimer15Init(void) {
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
   while (HAL_TIM_IC_ConfigChannel(&timer15Handle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
+
+  while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }

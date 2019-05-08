@@ -18,7 +18,6 @@ extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
 extern uint32_t inputNormed, outputPwm;
-extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 
 int main(void) {
@@ -37,21 +36,6 @@ int main(void) {
   systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
-
-
-  while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
-  while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
-  adcInit();
-  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
-  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
-  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
-  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
-  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
-  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
-  //while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
-  while (HAL_TIM_Base_Start_IT(&timer2Handle) != HAL_OK);
-  while (HAL_TIM_Base_Start(&timer3Handle) != HAL_OK);
-
 
   //ToDo init
   motorDirection = escConfig()->motorDirection;
@@ -159,7 +143,6 @@ int main(void) {
         }
 
         //ToDo filter too quick changes (realworld tests)
-        /*
         if (ABS(outputPwm - motorDutyCycle) > 10) {
           if (outputPwm > motorDutyCycle) {
             motorDutyCycle = motorDutyCycle + 10;
@@ -168,8 +151,7 @@ int main(void) {
           }
         } else {
           motorDutyCycle = outputPwm;
-        } */
-
+        }
 
 
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
