@@ -198,7 +198,7 @@ void systemTimer3Init(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
 
   timer3Handle.Instance = TIM3;
-  timer3Handle.Init.Prescaler = 10;
+  timer3Handle.Init.Prescaler = 11;
   timer3Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
   timer3Handle.Init.Period = 65535;
   timer3Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
