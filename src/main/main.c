@@ -49,6 +49,11 @@ int main(void) {
 
   // main loop
   while (true) {
+
+    #ifdef DEBUG_CYCLETIME_MAINLOOP
+    LED_OFF(BLUE);
+    #endif
+
     watchdogFeed();
 
     // brake
@@ -184,6 +189,10 @@ int main(void) {
 
       } //inputArmed
     } //inputProtocol detected
+
+    #ifdef DEBUG_CYCLETIME_MAINLOOP
+    LED_ON(BLUE);
+    #endif
   } //main loop
 
 } //main

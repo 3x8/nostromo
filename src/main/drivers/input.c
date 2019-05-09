@@ -114,7 +114,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthMin = 20000;
 
   #ifdef DEBUG_INPUT_AUTODETECT
-  LED_TOGGLE(GREEN);
+  LED_OFF(GREEN);
   #endif
 
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
@@ -131,6 +131,11 @@ void inputDetectProtocol() {
     TIM15->PSC = INPUT_PROSHOT_PRESCALER;
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+
+    #ifdef DEBUG_INPUT_AUTODETECT
+    LED_ON(GREEN);
+    #endif
+
     return;
   }
 
@@ -139,6 +144,11 @@ void inputDetectProtocol() {
     TIM15->PSC = INPUT_PWM_PRESCALER;
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+
+    #ifdef DEBUG_INPUT_AUTODETECT
+    LED_ON(GREEN);
+    #endif
+
     return;
   }
 
