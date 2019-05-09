@@ -19,7 +19,6 @@ extern uint8_t  inputProtocol;
 extern uint32_t inputData;
 extern uint32_t inputNormed, outputPwm;
 
-
 int main(void) {
   HAL_Init();
   systemClockConfig();
@@ -140,24 +139,10 @@ int main(void) {
           }
         } // SERVOPWM
 
-        if (inputDataValid) {
-          motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-          TIM1->CCR1 = motorDutyCycle;
-          TIM1->CCR2 = motorDutyCycle;
-          TIM1->CCR3 = motorDutyCycle;
-        }
-
-        //ToDo filter too quick changes (realworld tests)
-        if (ABS(outputPwm - motorDutyCycle) > 10) {
-          if (outputPwm > motorDutyCycle) {
-            motorDutyCycle = motorDutyCycle + 10;
-          } else {
-            motorDutyCycle = motorDutyCycle - 10;
-          }
-        } else {
-          motorDutyCycle = outputPwm;
-        }
-
+        motorDutyCycle = constrain(FilterCalculate(outputPwm), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+        TIM1->CCR1 = motorDutyCycle;
+        TIM1->CCR2 = motorDutyCycle;
+        TIM1->CCR3 = motorDutyCycle;
 
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
