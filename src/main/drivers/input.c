@@ -35,7 +35,7 @@ void inputDisarm(void) {
   //ToDo
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
   inputProtocol = AUTODETECT;
-  TIM15->PSC = 1;
+  TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
   TIM15->CNT = 0xffff;
   HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
 }
@@ -144,7 +144,7 @@ void inputDetectProtocol() {
 
   // default
   if (inputProtocol == AUTODETECT) {
-    TIM15->PSC = INPUT_PROSHOT_PRESCALER;
+    TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
   }
@@ -160,7 +160,7 @@ void inputProshot() {
   #endif
 
   for (int i = 0; i < 4; i++) {
-    telegramPulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 23) / 3;
+    telegramPulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
   }
 
   for (int i = 0; i < 4; i++) {
