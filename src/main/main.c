@@ -139,7 +139,7 @@ int main(void) {
           }
         } // SERVOPWM
 
-        motorDutyCycle = constrain(FilterCalculate(outputPwm), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+        motorDutyCycle = constrain(Filter(outputPwm), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;

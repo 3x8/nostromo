@@ -25,11 +25,11 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
 
 #define WINDOW 5
 uint32_t  Values[WINDOW];
-uint32_t  SortList[WINDOW];
+float  SortList[WINDOW];
 int pos;
 
-uint32_t FilterCalculate(uint32_t newValue) {
-  uint32_t retVal = 0;
+uint32_t Filter(uint32_t newValue) {
+  float retVal = 0;
 
   Values[pos++] = newValue;
   if (pos > WINDOW) pos = 0;
@@ -45,15 +45,14 @@ uint32_t FilterCalculate(uint32_t newValue) {
       if (SortList[k] < SortList[min])
         min = k;
     //   Put found minimum element in its place
-    double temp = SortList[j];
+    float temp = SortList[j];
     SortList[j] = SortList[min];
     SortList[min] = temp;
   }
 
-  for (int i = 2; i < WINDOW - 2 ; i++) {
+  for (int i = 1; i < WINDOW - 1 ; i++) {
     retVal = retVal + SortList[i];
   }
-  retVal = retVal /(WINDOW - 4);
 
-  return retVal;
+  return ((uint32_t)(retVal /(WINDOW - 2)));
 }
