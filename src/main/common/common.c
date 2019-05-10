@@ -39,12 +39,10 @@ uint32_t Filter(uint32_t newValue) {
   }
 
   for (int j = 0; j < WINDOW; ++j) {
-    //   Find position of minimum element
     int min = j;
     for (int k = j + 1; k < WINDOW; ++k)
       if (SortList[k] < SortList[min])
         min = k;
-    //   Put found minimum element in its place
     float temp = SortList[j];
     SortList[j] = SortList[min];
     SortList[min] = temp;
