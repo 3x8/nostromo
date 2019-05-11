@@ -30,7 +30,7 @@ int main(void) {
 
   systemDmaInit();
   systemComparator1Init();
-  systemAdcInit();
+  //systemAdcInit();
   systemTimer1Init();
   systemTimer2Init();
   systemTimer3Init();
@@ -139,9 +139,8 @@ int main(void) {
           }
         } // SERVOPWM
 
-        //ToDo needed filtering ? 
+        //ToDo needed filtering ?
         motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        //motorDutyCycle = constrain(Filter(outputPwm), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;
