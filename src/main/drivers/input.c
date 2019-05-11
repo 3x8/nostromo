@@ -61,11 +61,11 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = 1;
-      inputArmed = false;
+      inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       escConfig()->motorDirection = 0;
-      inputArmed = false;
+      inputDisarm();
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
       motorDirection = escConfig()->motorDirection;
@@ -75,11 +75,11 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
-      inputArmed = false;
+      inputDisarm();
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
       escConfig()->motor3Dmode = 1;
-      inputArmed = false;
+      inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SAVE:
       configWrite();
