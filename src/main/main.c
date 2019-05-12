@@ -42,8 +42,8 @@ int main(void) {
   systemTimer15Init();
 
   //ToDo init
-  kalmanInit(&adcTemperatureFilterState, 5.0f, 31);
-  kalmanInit(&adcCurrentFilterState, 5.0f, 31);
+  //kalmanInit(&adcTemperatureFilterState, 5.0f, 31);
+  kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
@@ -195,27 +195,20 @@ int main(void) {
       inputDisarm();
     }
 
-    //debug
-    /*
-    for (int i = 0; i < adcCurrent / 10; i++) {
-      LED_OFF(GREEN);
-      LED_ON(GREEN);
-    }*/
-
-
-    if ((adcCurrent > 0) && (adcCurrent < 100)) {
+    //debug current faktor + offset
+    if ((adcCurrent > 100) && (adcCurrent < 200)) {
       LED_ON(GREEN);
     } else {
       LED_OFF(GREEN);
     }
 
-    if ((adcCurrent > 100) && (adcCurrent < 200)) {
+    if ((adcCurrent > 200) && (adcCurrent < 300)) {
       LED_ON(BLUE);
     } else {
       LED_OFF(BLUE);
     }
 
-    if ((adcCurrent > 200) && (adcCurrent < 300)) {
+    if ((adcCurrent > 300) && (adcCurrent < 400)) {
       LED_ON(RED);
     } else {
       LED_OFF(RED);
