@@ -42,15 +42,15 @@ int main(void) {
   systemTimer15Init();
 
   //ToDo init
+  kalmanInit(&adcTemperatureFilterState, 5.0f, 31);
+  kalmanInit(&adcCurrentFilterState, 5.0f, 31);
+
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
   // start with motor off
   inputData = 0;
   outputPwm = 0;
 
-  //debug
-  kalmanInit(&adcTemperatureFilterState, 5.0f, 31);
-  kalmanInit(&adcCurrentFilterState, 5.0f, 31);
 
   watchdogInit(2000);
   motorStartupTune();
@@ -148,7 +148,7 @@ int main(void) {
           }
         } // SERVOPWM
 
-        //ToDo needed filtering ?
+        //ToDo filtering needed ?
         motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
@@ -187,21 +187,26 @@ int main(void) {
 
     // kalman filter
     //adcTemperature = kalmanUpdate(&adcTemperatureFilterState, (float)adcTemperatureRaw);
-    adcCurrent = (uint32_t)(kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw) - 50) >> 1;
+    adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
+    //adcCurrent = adcCurrentRaw;
 
-    if ((adcCurrent > 1) && (adcCurrent < 2)) {
+    if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
+      inputDisarm();
+    }
+
+    if ((adcCurrent > 0) && (adcCurrent < 100)) {
       LED_ON(GREEN);
     } else {
       LED_OFF(GREEN);
     }
 
-    if ((adcCurrent > 2) && (adcCurrent < 3)) {
+    if ((adcCurrent > 100) && (adcCurrent < 200)) {
       LED_ON(BLUE);
     } else {
       LED_OFF(BLUE);
     }
 
-    if ((adcCurrent > 3) && (adcCurrent < 4)) {
+    if ((adcCurrent > 200) && (adcCurrent < 300)) {
       LED_ON(RED);
     } else {
       LED_OFF(RED);

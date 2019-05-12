@@ -25,6 +25,8 @@ void configReset(void) {
   escConfig()->input3Dneutral = 1000;
   escConfig()->input3DdeadbandLow = 990;
   escConfig()->input3DdeadbandHigh = 1010;
+  escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
+  escConfig()->limitTemperature = HBRIDGE_MAX_TEMPERATURE;
   escConfig()->led0 = false;
   escConfig()->led1 = false;
   escConfig()->led2 = false;

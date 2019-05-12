@@ -14,6 +14,8 @@ typedef struct escConfig_s {
   uint32_t input3Dneutral;
   uint32_t input3DdeadbandLow;
   uint32_t input3DdeadbandHigh;
+  uint32_t limitCurrent;
+  uint32_t limitTemperature;
   bool led0;
   bool led1;
   bool led2;
