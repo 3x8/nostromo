@@ -5,6 +5,11 @@ extern COMP_HandleTypeDef comparator1Handle;
 TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
+// debug
+kalman_t kalmanFilterState;
+extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
+extern uint32_t adcVoltage, adcCurrent, adcTemperature;
+
 //ToDo motor
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
@@ -30,7 +35,7 @@ int main(void) {
 
   systemDmaInit();
   systemComparator1Init();
-  //systemAdcInit();
+  systemAdcInit();
   systemTimer1Init();
   systemTimer2Init();
   systemTimer3Init();
@@ -42,6 +47,9 @@ int main(void) {
   // start with motor off
   inputData = 0;
   outputPwm = 0;
+
+  //debug
+  kalmanInit(&kalmanFilterState, 1.5f, 32);
 
   watchdogInit(2000);
   motorStartupTune();
@@ -174,6 +182,11 @@ int main(void) {
 
       } //inputArmed
     } //inputProtocol detected
+
+
+    //debug
+    adcTemperature = kalmanUpdate(&kalmanFilterState, (float)adcTemperatureRaw);
+
 
     #ifdef DEBUG_CYCLETIME_MAINLOOP
     LED_ON(BLUE);
