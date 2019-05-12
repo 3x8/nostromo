@@ -32,7 +32,6 @@ void kalmanInit(kalman_t *filter, float q, uint32_t w) {
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 
-//#define VARIANCE_SCALE 0.333f
 #define VARIANCE_SCALE 1.0f
 FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
     const float windowSizeInverse = 1.0f/(filter->w - 1);

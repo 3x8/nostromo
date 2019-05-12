@@ -5,7 +5,7 @@ extern COMP_HandleTypeDef comparator1Handle;
 TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
-// debug
+// kalman filter
 kalman_t kalmanFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
@@ -184,7 +184,7 @@ int main(void) {
     } //inputProtocol detected
 
 
-    //debug
+    // kalman filter
     adcTemperature = kalmanUpdate(&kalmanFilterState, (float)adcTemperatureRaw);
 
 

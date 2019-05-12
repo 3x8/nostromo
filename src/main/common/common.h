@@ -11,7 +11,6 @@ uint32_t scaleInputToOutput(uint32_t x, uint32_t in_min, uint32_t in_max, uint32
 uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 
 
-
 // debug
 #define USE_ITCM_RAM
 
@@ -23,9 +22,7 @@ uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 #define FAST_CODE_NOINLINE
 #endif // USE_ITCM_RAM
 
-//debug
-
-
+// kalman filter
 #define MAX_WINDOW_SIZE 32
 
 typedef struct kalman_s {
