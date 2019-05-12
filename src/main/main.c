@@ -190,9 +190,18 @@ int main(void) {
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     //adcCurrent = adcCurrentRaw;
 
+
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
     }
+
+    //debug
+    /*
+    for (int i = 0; i < adcCurrent / 10; i++) {
+      LED_OFF(GREEN);
+      LED_ON(GREEN);
+    }*/
+
 
     if ((adcCurrent > 0) && (adcCurrent < 100)) {
       LED_ON(GREEN);
