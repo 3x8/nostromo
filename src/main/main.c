@@ -6,7 +6,7 @@ TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 // kalman filter
-kalman_t kalmanFilterState;
+kalman_t adcTemperatureFilterState, adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
@@ -49,7 +49,8 @@ int main(void) {
   outputPwm = 0;
 
   //debug
-  kalmanInit(&kalmanFilterState, 1.5f, 32);
+  kalmanInit(&adcTemperatureFilterState, 5.0f, 31);
+  kalmanInit(&adcCurrentFilterState, 5.0f, 31);
 
   watchdogInit(2000);
   motorStartupTune();
@@ -185,7 +186,26 @@ int main(void) {
 
 
     // kalman filter
-    adcTemperature = kalmanUpdate(&kalmanFilterState, (float)adcTemperatureRaw);
+    //adcTemperature = kalmanUpdate(&adcTemperatureFilterState, (float)adcTemperatureRaw);
+    adcCurrent = (uint32_t)(kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw) - 50) >> 1;
+
+    if ((adcCurrent > 1) && (adcCurrent < 2)) {
+      LED_ON(GREEN);
+    } else {
+      LED_OFF(GREEN);
+    }
+
+    if ((adcCurrent > 2) && (adcCurrent < 3)) {
+      LED_ON(BLUE);
+    } else {
+      LED_OFF(BLUE);
+    }
+
+    if ((adcCurrent > 3) && (adcCurrent < 4)) {
+      LED_ON(RED);
+    } else {
+      LED_OFF(RED);
+    }
 
 
     #ifdef DEBUG_CYCLETIME_MAINLOOP

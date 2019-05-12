@@ -9,9 +9,9 @@ uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 
 void adcRead(void){
-  adcVoltageRaw = adcValue[0];
-  adcTemperatureRaw = adcValue[1];
-  adcCurrentRaw = adcValue[2];
+  //adcVoltageRaw = adcValue[0];
+  //adcTemperatureRaw = adcValue[0];
+  adcCurrentRaw = adcValue[0];
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle) {
