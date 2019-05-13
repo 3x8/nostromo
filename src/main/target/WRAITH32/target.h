@@ -8,7 +8,7 @@
 
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 7
+#define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
 #define HBRIDGE_MAX_CURRENT 5000 // 50A 100:1
 #define HBRIDGE_MAX_TEMPERATURE 1234 //???
 #define TIMER1_INIT_PERIOD  911

@@ -190,7 +190,7 @@ int main(void) {
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     //adcCurrent = adcCurrentRaw;
 
-
+    // esc hardware limits
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
     }
