@@ -5,8 +5,8 @@ extern COMP_HandleTypeDef comparator1Handle;
 TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
-// kalman filter
-kalman_t adcTemperatureFilterState, adcCurrentFilterState;
+// ToDo ADC kalman filter
+kalman_t adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
@@ -41,16 +41,16 @@ int main(void) {
   systemTimer3Init();
   systemTimer15Init();
 
+
   //ToDo init
-  //kalmanInit(&adcTemperatureFilterState, 5.0f, 31);
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
+  //kalmanInit(&adcTemperatureFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
   // start with motor off
   inputData = 0;
   outputPwm = 0;
-
 
   watchdogInit(2000);
   motorStartupTune();
@@ -148,7 +148,7 @@ int main(void) {
           }
         } // SERVOPWM
 
-        //ToDo filtering needed ?
+        //ToDo input filtering needed ?
         motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
@@ -184,36 +184,11 @@ int main(void) {
       } //inputArmed
     } //inputProtocol detected
 
-
-    // kalman filter
-    //adcTemperature = kalmanUpdate(&adcTemperatureFilterState, (float)adcTemperatureRaw);
+    //ToDo esc hardware limits
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
-    //adcCurrent = adcCurrentRaw;
-
-    // esc hardware limits
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
     }
-
-    //debug current faktor + offset
-    if ((adcCurrent > 100) && (adcCurrent < 200)) {
-      LED_ON(GREEN);
-    } else {
-      LED_OFF(GREEN);
-    }
-
-    if ((adcCurrent > 200) && (adcCurrent < 300)) {
-      LED_ON(BLUE);
-    } else {
-      LED_OFF(BLUE);
-    }
-
-    if ((adcCurrent > 300) && (adcCurrent < 400)) {
-      LED_ON(RED);
-    } else {
-      LED_OFF(RED);
-    }
-
 
     #ifdef DEBUG_CYCLETIME_MAINLOOP
     LED_ON(BLUE);
