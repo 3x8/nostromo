@@ -1,7 +1,7 @@
 #  nostromo
 <br />
 
-###  ESC  GPLv3.0
+###  ESC firmware GPLv3.0
 
 <br />
 forked from: <br />
