@@ -2,7 +2,7 @@
 
 extern COMP_HandleTypeDef comparator1Handle;
 
-TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
+TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
 // ToDo ADC kalman filter
@@ -37,7 +37,6 @@ int main(void) {
   systemComparator1Init();
   systemAdcInit();
   systemTimer1Init();
-  systemTimer2Init();
   systemTimer3Init();
   systemTimer15Init();
 

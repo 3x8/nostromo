@@ -2,7 +2,7 @@
 
 extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef comparator1Handle;
-extern TIM_HandleTypeDef timer1Handle, timer2Handle, timer3Handle, timer15Handle;
+extern TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
 
 extern uint32_t adcValue[3];
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
@@ -168,30 +168,6 @@ void systemTimer1Init(void) {
   while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
   //while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
 }
-
-
-void systemTimer2Init(void) {
-  TIM_ClockConfigTypeDef sClockSourceConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-
-  timer2Handle.Instance = TIM2;
-  timer2Handle.Init.Prescaler = 100;
-  timer2Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  timer2Handle.Init.Period = 5000;
-  timer2Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  timer2Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  while (HAL_TIM_Base_Init(&timer2Handle) != HAL_OK);
-
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  while (HAL_TIM_ConfigClockSource(&timer2Handle, &sClockSourceConfig) != HAL_OK);
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  while (HAL_TIMEx_MasterConfigSynchronization(&timer2Handle, &sMasterConfig) != HAL_OK);
-
-  while (HAL_TIM_Base_Start_IT(&timer2Handle) != HAL_OK);
-}
-
 
 void systemTimer3Init(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;

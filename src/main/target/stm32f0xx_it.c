@@ -6,7 +6,7 @@ extern DMA_HandleTypeDef adcDmaHandle;
 extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef comparator1Handle;
 extern DMA_HandleTypeDef timer15Channel1DmaHandle;
-extern TIM_HandleTypeDef timer1Handle, timer2Handle;
+extern TIM_HandleTypeDef timer1Handle;
 
 // Cortex-M0 Processor Interruption and Exception Handlers
 void NMI_Handler(void) {
@@ -50,9 +50,4 @@ void ADC1_COMP_IRQHandler(void) {
 // This function handles TIM1 capture compare interrupt.
 void TIM1_CC_IRQHandler(void) {
   HAL_TIM_IRQHandler(&timer1Handle);
-}
-
-// This function handles TIM2 global interrupt.
-void TIM2_IRQHandler(void) {
-  HAL_TIM_IRQHandler(&timer2Handle);
 }
