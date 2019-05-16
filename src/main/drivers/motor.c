@@ -297,12 +297,12 @@ void motorStartupTune() {
   TIM1->PSC = 0;
 }
 
-void motorInputTune() {
+void motorInputTune(uint8_t motorStepDebug) {
   TIM1->CCR1 = 5;
   TIM1->CCR2 = 5;
   TIM1->CCR3 = 5;
 
-  motorCommutationStep(motorStep);
+  motorCommutationStep(motorStepDebug);
   TIM1->PSC = 75;
   HAL_Delay(100);
   TIM1->PSC = 50;

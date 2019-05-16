@@ -18,7 +18,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //LED_ON(RED);
-        motorInputTune();
+        motorInputTune(motorStep);
       }
     }
   }
@@ -54,10 +54,19 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_MOTOR_STOP:
       break;
     case DSHOT_CMD_BEACON1:
-      motorStartupTune();
+      motorInputTune(1);
       break;
     case DSHOT_CMD_BEACON2:
-      motorInputTune();
+      motorInputTune(2);
+      break;
+    case DSHOT_CMD_BEACON3:
+      motorInputTune(3);
+      break;
+    case DSHOT_CMD_BEACON4:
+      motorInputTune(4);
+      break;
+    case DSHOT_CMD_BEACON5:
+      motorInputTune(5);
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = 1;

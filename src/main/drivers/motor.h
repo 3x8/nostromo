@@ -24,7 +24,7 @@ typedef enum {
 } motorDirectionEnum;
 
 void motorStartupTune();
-void motorInputTune();
+void motorInputTune(uint8_t motorStepDebug);
 
 void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);
