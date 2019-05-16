@@ -178,7 +178,6 @@ void motorChangeComparatorInput() {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   } else {
     comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
-
   }
 
   HAL_COMP_Init(&comparator1Handle);
