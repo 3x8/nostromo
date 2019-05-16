@@ -18,7 +18,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         //LED_ON(RED);
-        motorInputTune(motorStep);
+        motorInputTune(1);
       }
     }
   }
