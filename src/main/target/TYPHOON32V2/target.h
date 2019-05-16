@@ -13,51 +13,58 @@
 #define TIMER1_INIT_PERIOD  911
 #define MOTOR_START_THRESHOLD 17;
 
-// PA15 --- LED RED ,Ok
+// PA15 --- LED RED
 #define RED_GPIO       GPIOA
 #define RED_PIN        GPIO_PIN_15
 #define RED_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOA
 
-// PB3  --- LED GREEN ,Ok
+// PB3  --- LED GREEN
 #define GREEN_GPIO       GPIOB
 #define GREEN_PIN        GPIO_PIN_3
 #define GREEN_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
 
-// PB4  --- LED BLUE ,Ok
+// PB4  --- LED BLUE
 #define BLUE_GPIO       GPIOB
 #define BLUE_PIN        GPIO_PIN_4
 #define BLUE_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
 
 // PA10 --- Phase_A_HI ,Ok
 #define A_FET_HI_GPIO   GPIOA
-#define A_FET_HI_PIN    GPIO_PIN_10
+#define A_FET_HI_PIN    GPIO_PIN_8 //GPIO_PIN_10
 
 // PA9 --- Phase_B_HI ,Ok
 #define B_FET_HI_GPIO   GPIOA
-#define B_FET_HI_PIN    GPIO_PIN_9
+#define B_FET_HI_PIN    GPIO_PIN_10 //GPIO_PIN_9
 
 // PA8 --- Phase_C_HI ,Ok
 #define C_FET_HI_GPIO   GPIOA
-#define C_FET_HI_PIN    GPIO_PIN_8
+#define C_FET_HI_PIN    GPIO_PIN_9 //GPIO_PIN_8
 
 // PB1 --- Phase_A_LO ,Ok
-#define A_FET_LO_GPIO   GPIOB
-#define A_FET_LO_PIN    GPIO_PIN_1
+#define A_FET_LO_GPIO   GPIOA  //GPIOB
+#define A_FET_LO_PIN    GPIO_PIN_7 //GPIO_PIN_1
 
 // PB0 --- Phase_B_LO ,Ok
 #define B_FET_LO_GPIO   GPIOB
-#define B_FET_LO_PIN    GPIO_PIN_0
+#define B_FET_LO_PIN    GPIO_PIN_1 //GPIO_PIN_0
 
 // PA7 --- Phase_C_LO ,Ok
-#define C_FET_LO_GPIO   GPIOA
-#define C_FET_LO_PIN    GPIO_PIN_7
+#define C_FET_LO_GPIO   GPIOB //GPIOA
+#define C_FET_LO_PIN    GPIO_PIN_0 //GPIO_PIN_7
 
-// comparator ,Ok
+// wraith ko
+/*
+#define COMPARATOR_PHASE_A       COMP_INVERTINGINPUT_DAC1
+#define COMPARATOR_PHASE_B       COMP_INVERTINGINPUT_DAC2
+#define COMPARATOR_PHASE_C       COMP_INVERTINGINPUT_IO1*/
+
+// comparator gemessen ko
 #define COMPARATOR_PHASE_A       COMP_INVERTINGINPUT_IO1
 #define COMPARATOR_PHASE_B       COMP_INVERTINGINPUT_DAC1
 #define COMPARATOR_PHASE_C       COMP_INVERTINGINPUT_DAC2
 
-// ADC ,Ok
+
+// ADC
 #define ADC_VOLTAGE              ADC_CHANNEL_3
 #define GPIO_PIN_VOLTAGE         GPIO_PIN_3
 #define ADC_CURRENT              ADC_CHANNEL_6
