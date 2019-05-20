@@ -68,6 +68,9 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_BEACON5:
       motorInputTune(5);
       break;
+    case DSHOT_CMD_SETTING_LED0_ON:
+      motorInputTune(6);
+      break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = 1;
       inputDisarm();
