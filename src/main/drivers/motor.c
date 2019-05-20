@@ -6,7 +6,7 @@ bool motorBemfRising;
 bool motorStartup, motorRunning;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
-uint16_t motorStep = 1;
+uint16_t motorStep;
 uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
