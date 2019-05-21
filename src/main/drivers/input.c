@@ -17,7 +17,7 @@ void inputArmCheck(void) {
       HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
-        //LED_ON(RED);
+        LED_ON(RED);
         motorInputTune(1);
       }
     }
@@ -44,7 +44,7 @@ void inputDisarmCheck(void) {
   inputTimeoutCounter++;
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
-    //LED_OFF(RED);
+    LED_OFF(RED);
   }
 }
 
