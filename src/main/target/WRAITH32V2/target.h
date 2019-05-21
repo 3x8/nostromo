@@ -10,7 +10,7 @@
 #define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
 #define HBRIDGE_MAX_CURRENT 2001 // ~66A  ... 30steps/1A  (at 35A no offset compensation)
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
-#define TIMER1_INIT_PERIOD  911
+#define TIMER1_INIT_PERIOD  1001
 #define MOTOR_START_THRESHOLD 11;
 
 // PA15 --- LED RED ,Ok
