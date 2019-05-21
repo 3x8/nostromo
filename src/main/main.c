@@ -187,7 +187,7 @@ int main(void) {
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
-      LED_OFF(RED);
+      LED_ON(RED);
     }
 
     #ifdef DEBUG_CYCLETIME_MAINLOOP
