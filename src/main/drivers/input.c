@@ -32,6 +32,8 @@ void inputDisarm(void) {
   inputArmCounter = 0;
   inputTimeoutCounter = 0;
 
+  LED_OFF(BLUE);
+
   //ToDo
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
   inputProtocol = AUTODETECT;
@@ -44,7 +46,6 @@ void inputDisarmCheck(void) {
   inputTimeoutCounter++;
   if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
-    LED_OFF(BLUE);
   }
 }
 
