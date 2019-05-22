@@ -156,8 +156,8 @@ int main(void) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
         } else {
-          motorFilterLevel = 3;
           motorFilterDelay = 3;
+          motorFilterLevel = 3;
         }
 
         // timeouts
