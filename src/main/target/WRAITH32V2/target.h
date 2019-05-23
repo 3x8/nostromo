@@ -8,7 +8,7 @@
 
 //ToDo
 #define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
-#define HBRIDGE_MAX_CURRENT 2503 // ~66A  ... 30steps/1A  (at 35A no offset compensation)
+#define HBRIDGE_MAX_CURRENT 3011 // ~54A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
 #define TIMER1_INIT_PERIOD  1103
 #define MOTOR_START_THRESHOLD 11
