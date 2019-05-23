@@ -5,12 +5,12 @@ extern COMP_HandleTypeDef comparator1Handle;
 TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
-// ToDo ADC kalman filter
+// ADC kalman filter
 kalman_t adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
-//ToDo motor
+// motor
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorCommutationInterval;
@@ -18,7 +18,7 @@ extern uint32_t motorFilterLevel, motorFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
-//ToDo input
+// input
 extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
@@ -41,7 +41,7 @@ int main(void) {
   systemTimer15Init();
 
 
-  //ToDo init
+  // init
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;
@@ -134,7 +134,7 @@ int main(void) {
           }
         } //PROSHOT
 
-        //ToDo PWM input for thrust tests
+        // PWM input  only for thrust tests
         if ((inputProtocol == SERVOPWM)  && (inputDataValid)) {
           if (inputData  < DSHOT_CMD_MAX) {
             motorStartup = false;
@@ -146,7 +146,7 @@ int main(void) {
           }
         } // SERVOPWM
 
-        //ToDo input filtering needed ?
+        // input
         motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         TIM1->CCR1 = motorDutyCycle;
         TIM1->CCR2 = motorDutyCycle;
@@ -183,7 +183,7 @@ int main(void) {
       } //inputArmed
     } //inputProtocol detected
 
-    //ToDo esc hardware limits
+    // ESC hardware limits
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();

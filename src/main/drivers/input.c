@@ -38,7 +38,6 @@ void inputDisarm(void) {
   LED_OFF(BLUE);
   #endif
 
-  //ToDo
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
   inputProtocol = AUTODETECT;
   TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
