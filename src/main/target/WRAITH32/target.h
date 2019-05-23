@@ -1,15 +1,15 @@
 #pragma once
 
 // debug
-#define DEBUG
+//#define DEBUG
 //#define CYCLETIME_MAINLOOP
-#define ZERO_CROSS
+//#define ZERO_CROSS
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
 
 //ToDo
 #define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
-#define HBRIDGE_MAX_CURRENT 2003 // ~66A  ... 30steps/1A  (at 35A no offset compensation)
+#define HBRIDGE_MAX_CURRENT 3011 // ~54A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
 #define TIMER1_INIT_PERIOD  911
 #define MOTOR_START_THRESHOLD 17;
