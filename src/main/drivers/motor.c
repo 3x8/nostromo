@@ -11,8 +11,6 @@ uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
 uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
-
-//ToDo
 uint32_t motorCommutationIntervalWindow[4] ,motorCommutationIntervalMeanSum ,motorCommutationIntervalIndex;
 
 void motorPhaseA(uint8_t phaseBuffer) {
