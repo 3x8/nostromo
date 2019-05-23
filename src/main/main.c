@@ -40,7 +40,6 @@ int main(void) {
   systemTimer3Init();
   systemTimer15Init();
 
-
   // init
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
 
@@ -93,6 +92,7 @@ int main(void) {
       inputArmCheck();
       inputDisarmCheck();
       if (inputArmed) {
+        // PROSHOT
         if ((inputProtocol == PROSHOT) && (inputDataValid)) {
           if (inputData <= DSHOT_CMD_MAX) {
             motorStartup = false;
@@ -132,9 +132,9 @@ int main(void) {
 
             outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
           }
-        } //PROSHOT
+        } // PROSHOT
 
-        // PWM input  only for thrust tests
+        // SERVOPWM (use only for thrust tests ...)
         if ((inputProtocol == SERVOPWM)  && (inputDataValid)) {
           if (inputData  < DSHOT_CMD_MAX) {
             motorStartup = false;
