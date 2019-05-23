@@ -180,8 +180,8 @@ int main(void) {
           motorStart();
         }
 
-      } //inputArmed
-    } //inputProtocol detected
+      } // inputArmed
+    } // inputProtocol detected
 
     // ESC hardware limits
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
@@ -195,6 +195,6 @@ int main(void) {
     #if (defined(DEBUG) && defined(CYCLETIME_MAINLOOP))
     LED_ON(BLUE);
     #endif
-  } //main loop
+  } // main loop
 
-} //main
+} // main
