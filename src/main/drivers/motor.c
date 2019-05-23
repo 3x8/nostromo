@@ -12,6 +12,8 @@ uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
+//ToDo
+uint32_t motorCommutationIntervalWindow[4] ,motorCommutationIntervalMeanSum ,motorCommutationIntervalIndex;
 
 void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
@@ -232,7 +234,7 @@ void motorStart() {
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
-  #ifdef DEBUG_ZERO_CROSS
+  #if (defined(DEBUG) && defined(ZERO_CROSS))
   LED_TOGGLE(GREEN);
   #endif
 
@@ -263,14 +265,22 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   HAL_COMP_Stop_IT(&comparator1Handle);
   TIM3->CNT = 0xffff;
 
-  #ifdef DEBUG_ZERO_CROSS
+  #if (defined(DEBUG) && defined(ZERO_CROSS))
   LED_TOGGLE(BLUE);
   #endif
 
   motorBemfCounter++;
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
-  motorCommutationInterval = (motorCommutationInterval + motorZeroCrossTimestamp) >> 1;
+
+  // moving average 4 samples
+  motorCommutationIntervalWindow[motorCommutationIntervalIndex] = motorZeroCrossTimestamp;
+  motorCommutationIntervalMeanSum += motorCommutationIntervalWindow[motorCommutationIntervalIndex];
+  if (++motorCommutationIntervalIndex > 3) {
+      motorCommutationIntervalIndex = 0;
+  }
+  motorCommutationIntervalMeanSum -= motorCommutationIntervalWindow[motorCommutationIntervalIndex];
+  motorCommutationInterval = motorCommutationIntervalMeanSum >> 2;
 
   motorCommutate();
 

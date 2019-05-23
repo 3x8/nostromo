@@ -17,7 +17,9 @@ void inputArmCheck(void) {
       HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
+        #if (!defined(DEBUG))
         LED_ON(BLUE);
+        #endif
         motorInputTune(1);
       }
     }
@@ -32,7 +34,9 @@ void inputDisarm(void) {
   inputArmCounter = 0;
   inputTimeoutCounter = 0;
 
+  #if (!defined(DEBUG))
   LED_OFF(BLUE);
+  #endif
 
   //ToDo
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
@@ -126,7 +130,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthBuff;
   uint32_t telegramPulseWidthMin = 20000;
 
-  #ifdef DEBUG_INPUT_AUTODETECT
+  #if (defined(DEBUG) && defined(INPUT_AUTODETECT))
   LED_OFF(GREEN);
   #endif
 
@@ -145,7 +149,7 @@ void inputDetectProtocol() {
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
-    #ifdef DEBUG_INPUT_AUTODETECT
+    #if (defined(DEBUG) && defined(INPUT_AUTODETECT))
     LED_ON(GREEN);
     #endif
 
@@ -158,7 +162,7 @@ void inputDetectProtocol() {
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
-    #ifdef DEBUG_INPUT_AUTODETECT
+    #if (defined(DEBUG) && defined(INPUT_AUTODETECT))
     LED_ON(GREEN);
     #endif
 
@@ -178,7 +182,7 @@ void inputProshot() {
   uint16_t telegramData = 0;
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
-  #ifdef DEBUG_INPUT_PROSHOT
+  #if (defined(DEBUG) && defined(INPUT_PROSHOT))
   LED_OFF(GREEN);
   #endif
 
@@ -198,7 +202,7 @@ void inputProshot() {
     inputTimeoutCounter = 0;
     inputData = telegramData;
 
-    #ifdef DEBUG_INPUT_PROSHOT
+    #if (defined(DEBUG) && defined(INPUT_PROSHOT))
     LED_ON(GREEN);
     #endif
 
@@ -206,7 +210,7 @@ void inputProshot() {
   } else {
     inputDataValid = false;
 
-    #ifdef DEBUG_INPUT_PROSHOT
+    #if (defined(DEBUG) && defined(INPUT_PROSHOT))
     LED_ON(GREEN);
     #endif
 

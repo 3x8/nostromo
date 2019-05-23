@@ -56,7 +56,7 @@ int main(void) {
   // main loop
   while (true) {
 
-    #ifdef DEBUG_CYCLETIME_MAINLOOP
+    #if (defined(DEBUG) && defined(CYCLETIME_MAINLOOP))
     LED_OFF(BLUE);
     #endif
 
@@ -156,8 +156,8 @@ int main(void) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
         } else {
-          motorFilterDelay = 3;
           motorFilterLevel = 3;
+          motorFilterDelay = 3;
         }
 
         // timeouts
@@ -186,10 +186,12 @@ int main(void) {
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
+      #if (!defined(DEBUG))
       LED_ON(RED);
+      #endif
     }
 
-    #ifdef DEBUG_CYCLETIME_MAINLOOP
+    #if (defined(DEBUG) && defined(CYCLETIME_MAINLOOP))
     LED_ON(BLUE);
     #endif
   } //main loop
