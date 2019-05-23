@@ -152,6 +152,7 @@ int main(void) {
         TIM1->CCR2 = motorDutyCycle;
         TIM1->CCR3 = motorDutyCycle;
 
+        // motor BEMF filter
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
