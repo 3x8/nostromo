@@ -1,17 +1,18 @@
 #pragma once
 
 // debug
-//#define DEBUG_CYCLETIME_MAINLOOP
-//#define DEBUG_ZERO_CROSS
-//#define DEBUG_INPUT_PROSHOT
-//#define DEBUG_INPUT_AUTODETECT
+//#define DEBUG
+//#define CYCLETIME_MAINLOOP
+//#define ZERO_CROSS
+//#define INPUT_PROSHOT
+//#define INPUT_AUTODETECT
 
 //ToDo
 #define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
 #define HBRIDGE_MAX_CURRENT 3011 // ~54A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
-#define TIMER1_INIT_PERIOD  1103
-#define MOTOR_START_THRESHOLD 11
+#define TIMER1_INIT_PERIOD  1001
+#define MOTOR_START_THRESHOLD 13
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
