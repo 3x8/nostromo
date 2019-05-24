@@ -1,10 +1,11 @@
 #pragma once
 
 // debug
-//#define DEBUG_CYCLETIME_MAINLOOP
-//#define DEBUG_ZERO_CROSS
-//#define DEBUG_INPUT_PROSHOT
-//#define DEBUG_INPUT_AUTODETECT
+//#define DEBUG
+//#define CYCLETIME_MAINLOOP
+//#define ZERO_CROSS
+//#define INPUT_PROSHOT
+//#define INPUT_AUTODETECT
 
 //ToDo
 #define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
