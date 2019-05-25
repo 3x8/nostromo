@@ -1,7 +1,7 @@
 #pragma once
 
 // debug
-//#define DEBUG
+//#define DEBUG_
 //#define CYCLETIME_MAINLOOP
 //#define ZERO_CROSS
 //#define INPUT_PROSHOT

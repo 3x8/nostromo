@@ -17,7 +17,7 @@ void inputArmCheck(void) {
       HAL_Delay(1);
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
-        #if (!defined(DEBUG))
+        #if (!defined(DEBUG_))
         LED_ON(BLUE);
         #endif
         motorInputTune(1);
@@ -34,7 +34,7 @@ void inputDisarm(void) {
   inputArmCounter = 0;
   inputTimeoutCounter = 0;
 
-  #if (!defined(DEBUG))
+  #if (!defined(DEBUG_))
   LED_OFF(BLUE);
   #endif
 
@@ -129,7 +129,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthBuff;
   uint32_t telegramPulseWidthMin = 20000;
 
-  #if (defined(DEBUG) && defined(INPUT_AUTODETECT))
+  #if (defined(DEBUG_) && defined(INPUT_AUTODETECT))
   LED_OFF(GREEN);
   #endif
 
@@ -148,7 +148,7 @@ void inputDetectProtocol() {
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
-    #if (defined(DEBUG) && defined(INPUT_AUTODETECT))
+    #if (defined(DEBUG_) && defined(INPUT_AUTODETECT))
     LED_ON(GREEN);
     #endif
 
@@ -161,7 +161,7 @@ void inputDetectProtocol() {
     TIM15->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
-    #if (defined(DEBUG) && defined(INPUT_AUTODETECT))
+    #if (defined(DEBUG_) && defined(INPUT_AUTODETECT))
     LED_ON(GREEN);
     #endif
 
@@ -181,7 +181,7 @@ void inputProshot() {
   uint16_t telegramData = 0;
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
-  #if (defined(DEBUG) && defined(INPUT_PROSHOT))
+  #if (defined(DEBUG_) && defined(INPUT_PROSHOT))
   LED_OFF(GREEN);
   #endif
 
@@ -201,7 +201,7 @@ void inputProshot() {
     inputTimeoutCounter = 0;
     inputData = telegramData;
 
-    #if (defined(DEBUG) && defined(INPUT_PROSHOT))
+    #if (defined(DEBUG_) && defined(INPUT_PROSHOT))
     LED_ON(GREEN);
     #endif
 
@@ -209,7 +209,7 @@ void inputProshot() {
   } else {
     inputDataValid = false;
 
-    #if (defined(DEBUG) && defined(INPUT_PROSHOT))
+    #if (defined(DEBUG_) && defined(INPUT_PROSHOT))
     LED_ON(GREEN);
     #endif
 

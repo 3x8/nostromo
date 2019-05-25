@@ -55,7 +55,7 @@ int main(void) {
   // main loop
   while (true) {
 
-    #if (defined(DEBUG) && defined(CYCLETIME_MAINLOOP))
+    #if (defined(DEBUG_) && defined(CYCLETIME_MAINLOOP))
     LED_OFF(BLUE);
     #endif
 
@@ -187,12 +187,12 @@ int main(void) {
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
-      #if (!defined(DEBUG))
+      #if (!defined(DEBUG_))
       LED_ON(RED);
       #endif
     }
 
-    #if (defined(DEBUG) && defined(CYCLETIME_MAINLOOP))
+    #if (defined(DEBUG_) && defined(CYCLETIME_MAINLOOP))
     LED_ON(BLUE);
     #endif
   } // main loop
