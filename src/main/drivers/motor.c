@@ -232,7 +232,7 @@ void motorStart() {
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
-  #if (defined(DEBUG_) && defined(ZERO_CROSS))
+  #if (defined(_DEBUG_) && defined(ZERO_CROSS))
   LED_TOGGLE(GREEN);
   #endif
 
@@ -263,7 +263,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   HAL_COMP_Stop_IT(&comparator1Handle);
   TIM3->CNT = 0xffff;
 
-  #if (defined(DEBUG_) && defined(ZERO_CROSS))
+  #if (defined(_DEBUG_) && defined(ZERO_CROSS))
   LED_TOGGLE(BLUE);
   #endif
 
