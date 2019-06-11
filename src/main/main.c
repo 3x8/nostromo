@@ -184,6 +184,7 @@ int main(void) {
     } // inputProtocol detected
 
     // ESC hardware limits
+    #if !defined(DYS35ARIA)
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
@@ -191,6 +192,7 @@ int main(void) {
       LED_ON(RED);
       #endif
     }
+    #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
     LED_ON(BLUE);
