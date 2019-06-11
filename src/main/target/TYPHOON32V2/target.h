@@ -1,5 +1,7 @@
 #pragma once
 
+// Ko does not work  some comparator difference ?
+
 // debug
 //#define DEBUG_CYCLETIME_MAINLOOP
 //#define DEBUG_ZERO_CROSS
@@ -11,7 +13,7 @@
 #define HBRIDGE_MAX_CURRENT 3001 // ~50A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
 #define TIMER1_INIT_PERIOD  911
-#define MOTOR_START_THRESHOLD 17;
+#define MOTOR_START_THRESHOLD 17
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
