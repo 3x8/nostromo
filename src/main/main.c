@@ -184,7 +184,7 @@ int main(void) {
     } // inputProtocol detected
 
     // ESC hardware limits
-    #if !defined(FURLING45MINI)
+    #if !(defined(FURLING45MINI) || defined(DYS35ARIA))
     adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
     if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
       inputDisarm();
