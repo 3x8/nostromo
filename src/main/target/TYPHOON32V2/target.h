@@ -9,10 +9,10 @@
 //#define DEBUG_INPUT_AUTODETECT
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 7 // in 22ns cycles
+#define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
 #define HBRIDGE_MAX_CURRENT 3001 // ~50A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
-#define TIMER1_INIT_PERIOD  911
+#define TIMER1_INIT_PERIOD  997 // ~24.1 kHz
 #define MOTOR_START_THRESHOLD 17
 
 // PA15 --- LED RED ,Ok
