@@ -41,6 +41,7 @@ int main(void) {
   systemTimer15Init();
 
   // init
+  ledOff();
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;

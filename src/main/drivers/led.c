@@ -23,7 +23,9 @@ void ledInit(void) {
 
   gpioInit.Pin = BLUE_PIN;
   LL_GPIO_Init(BLUE_GPIO, &gpioInit);
+}
 
+void ledOff(void) {
   LED_OFF(RED);
   LED_OFF(GREEN);
   LED_OFF(BLUE);
