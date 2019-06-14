@@ -13,7 +13,6 @@
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
 #define TIMER1_INIT_PERIOD  911 // ~26.31 kHz //997 // ~24.1 kHz
 #define MOTOR_START_THRESHOLD 13
-//#define LED_INVERTED
 
 // PA15 --- LED RED ,Ok
 #define RED_GPIO       GPIOA
