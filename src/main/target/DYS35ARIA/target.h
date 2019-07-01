@@ -8,7 +8,7 @@
 //#define INPUT_AUTODETECT
 
 //ToDo
-#define HBRIDGE_DEAD_TIME 5 // in 22ns cycles (FD6288 builtin 200ns)
+#define HBRIDGE_DEAD_TIME 11 // in 22ns cycles (FD6288 builtin 200ns)
 #define HBRIDGE_MAX_CURRENT 3011 // ~54A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
 #define TIMER1_INIT_PERIOD  911 //911~26.31kHz //997~24.1kHz
