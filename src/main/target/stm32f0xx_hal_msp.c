@@ -40,6 +40,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
 }
 
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
+
   if(adcHandle->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_DISABLE();
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_VOLTAGE | GPIO_PIN_CURRENT);
@@ -64,13 +65,8 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
 void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
 
   if(hcomp->Instance == COMP1) {
-    /**COMP1 GPIO Configuration
-       PA1     ------> COMP1_INP
-       PA5     ------> COMP1_INM
-     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0 | GPIO_PIN_4 | GPIO_PIN_5);
   }
-
 }
 
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
@@ -123,36 +119,23 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
   if(htim->Instance == TIM1) {
-    /**TIM1 GPIO Configuration
-       PA7     ------> TIM1_CH1N
-       PB0     ------> TIM1_CH2N
-       PB1     ------> TIM1_CH3N
-       PA8     ------> TIM1_CH1
-       PA9     ------> TIM1_CH2
-       PA10     ------> TIM1_CH3
-       PA11     ------> TIM1_CH4 ???
-    */
-
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
 
+    GPIO_InitStruct.Pin = A_FET_LO_PIN;
+    HAL_GPIO_Init(A_FET_LO_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = A_FET_HI_PIN;
+    HAL_GPIO_Init(A_FET_HI_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = B_FET_LO_PIN;
+    HAL_GPIO_Init(B_FET_LO_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = B_FET_HI_PIN;
+    HAL_GPIO_Init(B_FET_HI_GPIO, &GPIO_InitStruct);
     GPIO_InitStruct.Pin = C_FET_LO_PIN;
     HAL_GPIO_Init(C_FET_LO_GPIO, &GPIO_InitStruct);
     GPIO_InitStruct.Pin = C_FET_HI_PIN;
     HAL_GPIO_Init(C_FET_HI_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = B_FET_HI_PIN;
-    HAL_GPIO_Init(B_FET_HI_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = A_FET_HI_PIN;
-    HAL_GPIO_Init(A_FET_HI_GPIO, &GPIO_InitStruct);
-    //GPIO_InitStruct.Pin = GPIO_PIN_11;
-    //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = B_FET_LO_PIN;
-    HAL_GPIO_Init(B_FET_LO_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = A_FET_LO_PIN;
-    HAL_GPIO_Init(A_FET_LO_GPIO, &GPIO_InitStruct);
   }
 }
 
