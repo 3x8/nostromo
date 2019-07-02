@@ -18,7 +18,11 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         #if (!defined(_DEBUG_))
-        LED_ON(BLUE);
+          #if (!defined(DYS35ARIA))
+          LED_ON(BLUE);
+          #else
+          LED_OFF(BLUE);
+          #endif
         #endif
         motorInputTune(1);
       }
@@ -35,7 +39,11 @@ void inputDisarm(void) {
   inputTimeoutCounter = 0;
 
   #if (!defined(_DEBUG_))
-  LED_OFF(BLUE);
+    #if (!defined(DYS35ARIA))
+    LED_OFF(BLUE);
+    #else
+    LED_ON(BLUE);
+    #endif
   #endif
 
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);

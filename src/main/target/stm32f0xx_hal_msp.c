@@ -51,11 +51,7 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
   if(hcomp->Instance == COMP1) {
-    /**COMP1 GPIO Configuration
-       PA1     ------> COMP1_INP
-       PA5     ------> COMP1_INM
-     */
-    GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_5;
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_4 | GPIO_PIN_5;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -72,7 +68,7 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
        PA1     ------> COMP1_INP
        PA5     ------> COMP1_INM
      */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1 | GPIO_PIN_5);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0 | GPIO_PIN_4 | GPIO_PIN_5);
   }
 
 }
