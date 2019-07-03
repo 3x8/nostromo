@@ -129,6 +129,7 @@ int main(void) {
               }
             } else {
               outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold);
+              //outputPwm = scaleInputToOutput(inputNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + (escConfig()->motorStartThreshold);
             }
 
             outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
