@@ -176,7 +176,6 @@ int main(void) {
         if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
           motorRunning = false;
           motorDutyCycle = 0;
-          motorZeroCounterTimeout = motorZeroCounterTimeoutThreshold + 1;
         }
 
         // motor start
