@@ -14,7 +14,7 @@ extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorCommutationInterval;
-extern uint32_t motorFilterLevel, motorFilterDelay;
+extern uint32_t motorFilterLevel, motorFilterDelay, motorWaitTime;
 extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
@@ -158,9 +158,15 @@ int main(void) {
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
+          motorWaitTime = motorCommutationInterval >> 3;
         } else {
           motorFilterLevel = 3;
           motorFilterDelay = 3;
+          if (motorDutyCycle > 50) {
+            motorWaitTime = motorCommutationInterval >> 2;
+          } else {
+            motorWaitTime = 0;
+          }
         }
 
         // timeouts

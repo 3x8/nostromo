@@ -10,7 +10,7 @@ extern uint32_t outputPwm;
 
 uint16_t motorStep = 1;
 uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
-uint32_t motorFilterLevel, motorFilterDelay;
+uint32_t motorFilterLevel, motorFilterDelay, motorWaitTime;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 uint32_t motorCommutationIntervalWindow[4] ,motorCommutationIntervalMeanSum ,motorCommutationIntervalIndex;
@@ -286,9 +286,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorCommutationInterval = motorCommutationIntervalMeanSum >> 2;
 
   TIM3->CNT = 0;
-  if ((outputPwm > 50) && (motorCommutationInterval > 40)) {
-    while (TIM3->CNT  < (motorCommutationInterval >> 2));
-  }
+  while (TIM3->CNT  < motorWaitTime);
 
   motorCommutate();
 
