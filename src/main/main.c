@@ -168,9 +168,9 @@ int main(void) {
 
         // timeouts
         if (motorDutyCycle < 300) {
-          motorZeroCounterTimeoutThreshold = 4000;
+          motorZeroCounterTimeoutThreshold = 400;
         } else {
-          motorZeroCounterTimeoutThreshold = 2000;
+          motorZeroCounterTimeoutThreshold = 200;
         }
 
         if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
