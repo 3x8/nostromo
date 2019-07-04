@@ -5,6 +5,9 @@ extern COMP_HandleTypeDef comparator1Handle;
 TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
+uint32_t motorCommutationIntervalWindow[4] ;
+uint32_t motorCommutationInterval, motorCommutationIntervalMeanSum, motorCommutationIntervalIndex;
+
 // ADC kalman filter
 kalman_t adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
@@ -13,8 +16,8 @@ extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 // motor
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-extern uint32_t motorCommutationInterval;
-extern uint32_t motorFilterLevel, motorFilterDelay, motorWaitTime;
+extern uint32_t motorZeroCrossTimestamp;
+extern uint32_t motorFilterLevel, motorFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
@@ -158,15 +161,9 @@ int main(void) {
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
           motorFilterDelay = 1;
           motorFilterLevel = 0;
-          motorWaitTime = motorCommutationInterval >> 3;
         } else {
           motorFilterLevel = 3;
           motorFilterDelay = 3;
-          if (motorDutyCycle > 50) {
-            motorWaitTime = motorCommutationInterval >> 2;
-          } else {
-            motorWaitTime = 0;
-          }
         }
 
         // timeouts
@@ -187,6 +184,15 @@ int main(void) {
           motorZeroCounterTimeout = 0;
           motorStart();
         }
+
+        // moving average 4 samples
+        motorCommutationIntervalWindow[motorCommutationIntervalIndex] = motorZeroCrossTimestamp;
+        motorCommutationIntervalMeanSum += motorCommutationIntervalWindow[motorCommutationIntervalIndex];
+        if (++motorCommutationIntervalIndex > 3) {
+            motorCommutationIntervalIndex = 0;
+        }
+        motorCommutationIntervalMeanSum -= motorCommutationIntervalWindow[motorCommutationIntervalIndex];
+        motorCommutationInterval = motorCommutationIntervalMeanSum >> 2;
 
       } // inputArmed
     } // inputProtocol detected

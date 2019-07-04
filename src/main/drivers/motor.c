@@ -9,11 +9,10 @@ bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t outputPwm;
 
 uint16_t motorStep = 1;
-uint32_t motorZeroCrossTimestamp, motorCommutationInterval;
-uint32_t motorFilterLevel, motorFilterDelay, motorWaitTime;
+uint32_t motorZeroCrossTimestamp;
+uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
-uint32_t motorCommutationIntervalWindow[4] ,motorCommutationIntervalMeanSum ,motorCommutationIntervalIndex;
 
 void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
@@ -264,9 +263,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
 
-
   HAL_COMP_Stop_IT(&comparator1Handle);
-  //TIM3->CNT = 0xffff;
+  TIM3->CNT = 0xffff;
 
   #if (defined(_DEBUG_) && defined(ZERO_CROSS))
   LED_TOGGLE(BLUE);
@@ -275,18 +273,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorBemfCounter++;
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
-
-  // moving average 4 samples
-  motorCommutationIntervalWindow[motorCommutationIntervalIndex] = motorZeroCrossTimestamp;
-  motorCommutationIntervalMeanSum += motorCommutationIntervalWindow[motorCommutationIntervalIndex];
-  if (++motorCommutationIntervalIndex > 3) {
-      motorCommutationIntervalIndex = 0;
-  }
-  motorCommutationIntervalMeanSum -= motorCommutationIntervalWindow[motorCommutationIntervalIndex];
-  motorCommutationInterval = motorCommutationIntervalMeanSum >> 2;
-
-  TIM3->CNT = 0;
-  while (TIM3->CNT  < motorWaitTime);
 
   motorCommutate();
 
