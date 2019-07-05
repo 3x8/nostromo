@@ -238,10 +238,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   __disable_irq();
   motorTimestamp = TIM3->CNT;
 
-  #if (defined(_DEBUG_) && defined(ZERO_CROSS))
-    LED_TOGGLE(GREEN);
-  #endif
-
   if ((!motorRunning) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
     __enable_irq();
@@ -259,21 +255,30 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
 
+  #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+    LED_ON(GREEN);
+    LED_ON(BLUE);
+  #endif
+
   HAL_COMP_Stop_IT(&comparator1Handle);
   TIM3->CNT = 0xffff;
-
-  #if (defined(_DEBUG_) && defined(ZERO_CROSS))
-    LED_TOGGLE(BLUE);
-  #endif
 
   motorBemfCounter++;
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
 
+  #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+    LED_OFF(BLUE);
+  #endif
+
   // ToDo
   if ((outputPwm > 100) && (outputPwm < 800) && (motorCommutationDelay != 0)) {
     while (TIM3->CNT < motorCommutationDelay);
   }
+
+  #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+    LED_OFF(GREEN);
+  #endif
 
   motorCommutate();
 

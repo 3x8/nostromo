@@ -6,7 +6,7 @@
 // debug
 //#define _DEBUG_
 //#define CYCLETIME_MAINLOOP
-//#define ZERO_CROSS
+//#define MOTOR_TIMING
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
 
