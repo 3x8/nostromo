@@ -257,7 +257,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
     LED_ON(GREEN);
-    LED_ON(BLUE);
   #endif
 
   HAL_COMP_Stop_IT(&comparator1Handle);
@@ -267,13 +266,13 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
 
-  #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
-    LED_OFF(BLUE);
-  #endif
-
   // ToDo
   if ((outputPwm > 100) && (outputPwm < 800) && (motorCommutationDelay != 0)) {
-    while (TIM3->CNT < motorCommutationDelay);
+    while (TIM3->CNT < motorCommutationDelay) {
+      #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+        LED_TOGGLE(BLUE);
+      #endif
+    };
   }
 
   #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
