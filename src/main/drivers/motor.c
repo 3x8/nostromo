@@ -6,13 +6,14 @@ bool motorBemfRising;
 bool motorStartup, motorRunning;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
-extern uint32_t outputPwm;
-
 uint16_t motorStep = 1;
 uint32_t motorZeroCrossTimestamp;
 uint32_t motorFilterLevel, motorFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
+
+// main
+extern uint32_t outputPwm;
 
 void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
