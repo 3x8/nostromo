@@ -8,7 +8,7 @@ DMA_HandleTypeDef timer15Channel1DmaHandle;
 uint32_t motorCommutationIntervalWindow[4] ;
 uint32_t motorCommutationInterval, motorCommutationIntervalMeanSum, motorCommutationIntervalIndex;
 
-// ADC kalman filter
+// ADC
 kalman_t adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
@@ -62,7 +62,7 @@ int main(void) {
   while (true) {
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-    LED_OFF(BLUE);
+      LED_OFF(BLUE);
     #endif
 
     watchdogFeed();
@@ -193,17 +193,17 @@ int main(void) {
 
     // ESC hardware limits
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(WRAITH32MINI))
-    adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
-    if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
-      inputDisarm();
-      #if (!defined(_DEBUG_))
-      LED_ON(RED);
-      #endif
-    }
+      adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
+      if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
+        inputDisarm();
+        #if (!defined(_DEBUG_))
+          LED_ON(RED);
+        #endif
+      }
     #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-    LED_ON(BLUE);
+      LED_ON(BLUE);
     #endif
   } // main loop
 
