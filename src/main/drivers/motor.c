@@ -272,7 +272,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
         LED_TOGGLE(BLUE);
       #endif
-    };
+    }
   }
 
   #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
