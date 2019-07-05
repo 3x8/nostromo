@@ -233,17 +233,18 @@ void motorStart() {
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
+  __disable_irq();
+  motorTimestamp = TIM3->CNT;
+
   #if (defined(_DEBUG_) && defined(ZERO_CROSS))
-  LED_TOGGLE(GREEN);
+    LED_TOGGLE(GREEN);
   #endif
 
   if ((!motorRunning) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&comparator1Handle);
+    __enable_irq();
     return;
   }
-
-  __disable_irq();
-  motorTimestamp = TIM3->CNT;
 
   while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
@@ -260,7 +261,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   TIM3->CNT = 0xffff;
 
   #if (defined(_DEBUG_) && defined(ZERO_CROSS))
-  LED_TOGGLE(BLUE);
+    LED_TOGGLE(BLUE);
   #endif
 
   motorBemfCounter++;
