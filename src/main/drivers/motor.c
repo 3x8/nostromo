@@ -182,7 +182,7 @@ void motorChangeComparatorInput() {
 }
 
 void motorCommutate() {
-  if (motorDirection == 1) {
+  if (motorDirection == SPIN_CW) {
     if (++motorStep > 6) {
       motorStep = 1;
     }

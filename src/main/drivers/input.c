@@ -84,11 +84,11 @@ void inputDshotCommandRun(void) {
       motorInputTune(6);
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
-      escConfig()->motorDirection = 1;
+      escConfig()->motorDirection = SPIN_CW;
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
-      escConfig()->motorDirection = 0;
+      escConfig()->motorDirection = SPIN_CCW;
       inputDisarm();
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
