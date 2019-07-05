@@ -248,16 +248,11 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
 
   for (int i = 0; i < motorFilterLevel; i++) {
-    if (motorBemfRising) {
-      if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_HIGH) {
-        __enable_irq();
-        return;
-      }
-    } else {
-      if (HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_LOW) {
-        __enable_irq();
-        return;
-      }
+    if ((motorBemfRising && HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_HIGH) ||
+        (!motorBemfRising && HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_LOW)) {
+
+      __enable_irq();
+      return;
     }
   }
 
