@@ -14,6 +14,7 @@ extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
+kalman_t motorCommutationIntervalFilterState;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorZeroCrossTimestamp;
@@ -46,6 +47,7 @@ int main(void) {
   // init
   ledOff();
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
+  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 17);
 
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
@@ -184,14 +186,7 @@ int main(void) {
           motorStart();
         }
 
-        // moving average 4 samples
-        motorCommutationIntervalWindow[motorCommutationIntervalIndex] = motorZeroCrossTimestamp;
-        motorCommutationIntervalMeanSum += motorCommutationIntervalWindow[motorCommutationIntervalIndex];
-        if (++motorCommutationIntervalIndex > 3) {
-            motorCommutationIntervalIndex = 0;
-        }
-        motorCommutationIntervalMeanSum -= motorCommutationIntervalWindow[motorCommutationIntervalIndex];
-        motorCommutationInterval = motorCommutationIntervalMeanSum >> 2;
+        motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorZeroCrossTimestamp);
 
       } // inputArmed
     } // inputProtocol detected
