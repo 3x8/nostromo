@@ -270,8 +270,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
 
-  //ToDo
-  if ((outputPwm > 100) && (outputPwm < 800)) {
+  // ToDo
+  if ((outputPwm > 100) && (outputPwm < 800) && (motorCommutationDelay != 0)) {
     while (TIM3->CNT < motorCommutationDelay);
   }
 
