@@ -12,7 +12,7 @@ extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
-uint32_t motorCommutationInterval;
+uint32_t motorCommutationInterval, motorCommutationDelay;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorZeroCrossTimestamp;
@@ -186,6 +186,7 @@ int main(void) {
         }
 
         motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorZeroCrossTimestamp);
+        motorCommutationDelay = motorCommutationInterval >> 4;
 
       } // inputArmed
     } // inputProtocol detected

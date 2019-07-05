@@ -14,6 +14,7 @@ uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 
 // main
 extern uint32_t outputPwm;
+extern uint32_t motorCommutationDelay;
 
 void motorPhaseA(uint8_t phaseBuffer) {
   switch (phaseBuffer) {
@@ -268,6 +269,11 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorBemfCounter++;
   motorZeroCounterTimeout = 0;
   motorZeroCrossTimestamp = motorTimestamp;
+
+  //ToDo
+  if (outputPwm > 100) {
+    while (TIM3->CNT < motorCommutationDelay);
+  }
 
   motorCommutate();
 
