@@ -5,9 +5,6 @@ extern COMP_HandleTypeDef comparator1Handle;
 TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
 DMA_HandleTypeDef timer15Channel1DmaHandle;
 
-uint32_t motorCommutationIntervalWindow[4] ;
-uint32_t motorCommutationInterval, motorCommutationIntervalMeanSum, motorCommutationIntervalIndex;
-
 // ADC
 kalman_t adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
@@ -15,6 +12,7 @@ extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
+uint32_t motorCommutationInterval;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorZeroCrossTimestamp;
