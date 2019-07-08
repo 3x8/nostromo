@@ -268,7 +268,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   // ToDo
   //if ((motorCommutationDelay != 0)) {
-  if ((outputPwm > 37) && (outputPwm < 807) && (motorCommutationDelay != 0) && (motorCommutationDelay < 1001)) {
+  if ((outputPwm > 37) && (outputPwm < 807) && (motorCommutationDelay != 0) && (motorCommutationDelay < 613)) {
     while (TIM3->CNT < motorCommutationDelay) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
         LED_TOGGLE(BLUE);
