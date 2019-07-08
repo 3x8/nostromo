@@ -45,7 +45,7 @@ int main(void) {
   // init
   ledOff();
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 31);
+  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
@@ -174,7 +174,7 @@ int main(void) {
         }
 
         if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
-          kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 31);
+          kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
           motorRunning = false;
           motorDutyCycle = 0;
         }
