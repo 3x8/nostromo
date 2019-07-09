@@ -187,8 +187,8 @@ int main(void) {
 
         // ToDo
         motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorZeroCrossTimestamp);
-        //motorCommutationDelay = 0; //timing 30°
-        motorCommutationDelay = motorCommutationInterval >> 4; //timing 15°
+        motorCommutationDelay = 0; //timing 30°
+        //motorCommutationDelay = motorCommutationInterval >> 4; //timing 15°
         //motorCommutationDelay = motorCommutationInterval >> 3; //timing 0°
       } // inputArmed
     } // inputProtocol detected
