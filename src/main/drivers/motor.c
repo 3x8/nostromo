@@ -267,8 +267,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorZeroCrossTimestamp = motorTimestamp;
 
   // ToDo
-  //if ((motorCommutationDelay != 0) ) {
-  if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 37) && (outputPwm < 707)) {
+  //if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 37) && (outputPwm < 707)) {
+  if (motorCommutationDelay > 17) {
     while (TIM3->CNT < motorCommutationDelay) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
         LED_TOGGLE(BLUE);
