@@ -16,8 +16,8 @@ uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
 extern uint32_t outputPwm;
 extern uint32_t motorCommutationDelay;
 
-void motorPhaseA(uint8_t phaseBuffer) {
-  switch (phaseBuffer) {
+void motorPhaseA(uint8_t hBridgeMode) {
+  switch (hBridgeMode) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
         LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
@@ -42,8 +42,8 @@ void motorPhaseA(uint8_t phaseBuffer) {
   }
 }
 
-void motorPhaseB(uint8_t phaseBuffer) {
-  switch (phaseBuffer) {
+void motorPhaseB(uint8_t hBridgeMode) {
+  switch (hBridgeMode) {
     case HBRIDGE_PWM:
       if(!motorSlowDecay  || motorBrakeActiveProportional) {
         LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
@@ -68,8 +68,8 @@ void motorPhaseB(uint8_t phaseBuffer) {
   }
 }
 
-void motorPhaseC(uint8_t phaseBuffer) {
-  switch (phaseBuffer) {
+void motorPhaseC(uint8_t hBridgeMode) {
+  switch (hBridgeMode) {
     case HBRIDGE_PWM:
       if (!motorSlowDecay || motorBrakeActiveProportional) {
         LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
