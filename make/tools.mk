@@ -17,8 +17,8 @@
 ARM_SDK_DIR ?= $(TOOLS_DIR)/gcc-arm-none-eabi-6-2017-q2-update
 #ARM_SDK_DIR ?= $(TOOLS_DIR)/gcc-arm-none-eabi-8-2018-q4-major
 # Checked below, Should match the output of $(shell arm-none-eabi-gcc -dumpversion)
-GCC_REQUILED_RED_VERSION ?= 6.3.1
-#GCC_REQUILED_RED_VERSION ?= 8.2.1
+GCC_REQUIRED_VERSION ?= 6.3.1
+#GCC_REQUIRED_VERSION ?= 8.2.1
 
 .PHONY: arm_sdk_version
 
@@ -46,7 +46,7 @@ endif
 
 ARM_SDK_FILE := $(notdir $(ARM_SDK_URL))
 
-SDK_INSTALL_MARKER := $(ARM_SDK_DIR)/bin/arm-none-eabi-gcc-$(GCC_REQUILED_RED_VERSION)
+SDK_INSTALL_MARKER := $(ARM_SDK_DIR)/bin/arm-none-eabi-gcc-$(GCC_REQUIRED_VERSION)
 
 # order-only prereq on directory existance:
 arm_sdk_install: | $(TOOLS_DIR)
@@ -300,8 +300,8 @@ else ifeq (,$(findstring _install,$(MAKECMDGOALS)))
   GCC_VERSION = $(shell arm-none-eabi-gcc -dumpversion)
   ifeq ($(GCC_VERSION),)
     $(error **ERROR** arm-none-eabi-gcc not in the PATH. Run 'make arm_sdk_install' to install automatically in the tools folder of this repo)
-  else ifneq ($(GCC_VERSION), $(GCC_REQUILED_RED_VERSION))
-    $(error **ERROR** your arm-none-eabi-gcc is '$(GCC_VERSION)', but '$(GCC_REQUILED_RED_VERSION)' is expected. Override with 'GCC_REQUILED_RED_VERSION' in make/local.mk or run 'make arm_sdk_install' to install the right version automatically in the tools folder of this repo)
+  else ifneq ($(GCC_VERSION), $(GCC_REQUIRED_VERSION))
+    $(error **ERROR** your arm-none-eabi-gcc is '$(GCC_VERSION)', but '$(GCC_REQUIRED_VERSION)' is expected. Override with 'GCC_REQUIRED_VERSION' in make/local.mk or run 'make arm_sdk_install' to install the right version automatically in the tools folder of this repo)
   endif
 
   # ARM tookchain is in the path, and the version is what's required.
