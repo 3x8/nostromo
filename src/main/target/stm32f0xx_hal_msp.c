@@ -83,18 +83,15 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
   }
   else if(htim_base->Instance == TIM15) {
     __HAL_RCC_TIM15_CLK_ENABLE();
-    /**TIM15 GPIO Configuration
-       PA2     ------> TIM15_CH1
-     */
-    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    // TIM15 -> PA2 GPIO
+    GPIO_InitStruct.Pin = INPUT_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
-    /* TIM15 DMA Init */
-    /* TIM15_CH1_UP_TRIG_COM Init */
+    // TIM15 DMA Init, TIM15_CH1_UP_TRIG_COM Init
     timer15Channel1DmaHandle.Instance = DMA1_Channel5;
     timer15Channel1DmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
     timer15Channel1DmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -152,10 +149,8 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
   else if(htim_base->Instance == TIM15) {
     __HAL_RCC_TIM15_CLK_DISABLE();
 
-    /**TIM15 GPIO Configuration
-       PA2     ------> TIM15_CH1
-     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
+    // TIM15 -> PA2 GPIO
+    HAL_GPIO_DeInit(INPUT_GPIO, INPUT_PIN);
 
     HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC1]);
     HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_UPDATE]);
