@@ -19,9 +19,9 @@ void inputArmCheck(void) {
         inputArmed = true;
         #if (!defined(_DEBUG_))
           #if (!defined(DYS35ARIA))
-            LED_ON(BLUE);
+            LED_ON(LED_BLUE);
           #else
-            LED_OFF(BLUE);
+            LED_OFF(LED_BLUE);
           #endif
         #endif
         motorInputTune(1);
@@ -40,9 +40,9 @@ void inputDisarm(void) {
 
   #if (!defined(_DEBUG_))
     #if (!defined(DYS35ARIA))
-      LED_OFF(BLUE);
+      LED_OFF(LED_BLUE);
     #else
-      LED_ON(BLUE);
+      LED_ON(LED_BLUE);
     #endif
   #endif
 
@@ -138,7 +138,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthMin = 20000;
 
   #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-    LED_OFF(GREEN);
+    LED_OFF(LED_GREEN);
   #endif
 
   HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
@@ -157,7 +157,7 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-      LED_ON(GREEN);
+      LED_ON(LED_GREEN);
     #endif
 
     return;
@@ -170,7 +170,7 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-      LED_ON(GREEN);
+      LED_ON(LED_GREEN);
     #endif
 
     return;
@@ -190,7 +190,7 @@ void inputProshot() {
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-    LED_OFF(GREEN);
+    LED_OFF(LED_GREEN);
   #endif
 
   for (int i = 0; i < 4; i++) {
@@ -210,7 +210,7 @@ void inputProshot() {
     inputData = telegramData;
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-      LED_ON(GREEN);
+      LED_ON(LED_GREEN);
     #endif
 
     return;
@@ -218,7 +218,7 @@ void inputProshot() {
     inputDataValid = false;
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-      LED_ON(GREEN);
+      LED_ON(LED_GREEN);
     #endif
 
     return;

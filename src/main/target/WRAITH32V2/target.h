@@ -14,42 +14,26 @@
 #define TIMER1_INIT_PERIOD  977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
 #define MOTOR_START_THRESHOLD 13
 
-// LED RED ,Ok
-#define RED_GPIO       GPIOA
-#define RED_PIN        GPIO_PIN_15
-#define RED_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOA
+// LEDs ,Ok
+#define LED_RED_GPIO    GPIOA
+#define LED_RED_PIN     GPIO_PIN_15
+#define LED_GREEN_GPIO  GPIOB
+#define LED_GREEN_PIN   GPIO_PIN_3
+#define LED_BLUE_GPIO   GPIOB
+#define LED_BLUE_PIN    GPIO_PIN_4
+#define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB | LL_AHB1_GRP1_PERIPH_GPIOB
 
-// LED GREEN ,Ok
-#define GREEN_GPIO       GPIOB
-#define GREEN_PIN        GPIO_PIN_3
-#define GREEN_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
-
-// LED BLUE ,Ok
-#define BLUE_GPIO       GPIOB
-#define BLUE_PIN        GPIO_PIN_4
-#define BLUE_PERIPHERAL LL_AHB1_GRP1_PERIPH_GPIOB
-
-// Phase_A_HI ,Ok
+// H_BRIDGE ,Ok
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    GPIO_PIN_10
-
-// Phase_B_HI ,Ok
 #define B_FET_HI_GPIO   GPIOA
 #define B_FET_HI_PIN    GPIO_PIN_9
-
-// Phase_C_HI ,Ok
 #define C_FET_HI_GPIO   GPIOA
 #define C_FET_HI_PIN    GPIO_PIN_8
-
-// Phase_A_LO ,Ok
 #define A_FET_LO_GPIO   GPIOB
 #define A_FET_LO_PIN    GPIO_PIN_1
-
-// Phase_B_LO ,Ok
 #define B_FET_LO_GPIO   GPIOB
 #define B_FET_LO_PIN    GPIO_PIN_0
-
-// Phase_C_LO ,Ok
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    GPIO_PIN_7
 
