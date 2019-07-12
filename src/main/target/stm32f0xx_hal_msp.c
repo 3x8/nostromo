@@ -18,7 +18,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
   if(adcHandle->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_ENABLE();
 
-    GPIO_InitStruct.Pin = GPIO_PIN_VOLTAGE | GPIO_PIN_CURRENT;
+    GPIO_InitStruct.Pin = ADC_MASK;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -43,7 +43,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
 
   if(adcHandle->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_DISABLE();
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_VOLTAGE | GPIO_PIN_CURRENT);
+    HAL_GPIO_DeInit(GPIOA, ADC_MASK);
     HAL_DMA_DeInit(adcHandle->DMA_Handle);
   }
 }
