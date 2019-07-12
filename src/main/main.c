@@ -148,7 +148,7 @@ int main(void) {
           } else {
             motorStartup = true;
             motorBrakeActiveProportional = false;
-            outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+            outputPwm = constrain((inputData + DSHOT_CMD_MAX), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
           }
         } // SERVOPWM
 
