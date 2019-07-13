@@ -210,7 +210,7 @@ void motorCommutate() {
   motorChangeComparatorInput();
 }
 
-// for forced commutation -- open loop
+// forced commutation -- open loop
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   //noop
 }

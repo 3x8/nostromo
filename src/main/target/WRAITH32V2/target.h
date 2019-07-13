@@ -7,7 +7,7 @@
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
 
-//ToDo
+// ToDo
 #define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
 #define HBRIDGE_MAX_CURRENT 3011 // ~54A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
