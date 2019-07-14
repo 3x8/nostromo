@@ -191,7 +191,7 @@ void systemTimer3Init(void) {
 }
 
 
-void systemTimer15Init(void) {
+void systemInputTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;

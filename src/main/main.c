@@ -40,7 +40,7 @@ int main(void) {
   systemAdcInit();
   systemMotorPwmTimerInit();
   systemTimer3Init();
-  systemTimer15Init();
+  systemInputTimerInit();
 
   // init
   ledOff();
