@@ -1,16 +1,16 @@
 #include "motor.h"
 
-COMP_HandleTypeDef comparator1Handle;
+COMP_HandleTypeDef motorBemfComparatorHandle;
 
 bool motorBemfRising;
 bool motorStartup, motorRunning;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
 uint16_t motorStep = 1;
-uint32_t motorZeroCrossTimestamp;
-uint32_t motorFilterLevel, motorFilterDelay;
+uint32_t motorBemfZeroCrossTimestamp;
+uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
 uint32_t motorDutyCycle, motorBemfCounter;
-uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
+uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
 
 // main
 extern uint32_t outputPwm;
@@ -159,28 +159,28 @@ void motorChangeComparatorInput() {
     case 1:
     case 4:
       // C floating
-      comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_C;
+      motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
       break;
     case 2:
     case 5:
       // B floating
-      comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_B;
+      motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
       break;
     case 3:
     case 6:
       // A floating
-      comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_A;
+      motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
       break;
   }
 
   // polarity of comp output reversed
   if (motorBemfRising) {
-    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+    motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   } else {
-    comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+    motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
   }
 
-  HAL_COMP_Init(&comparator1Handle);
+  HAL_COMP_Init(&motorBemfComparatorHandle);
 }
 
 void motorCommutate() {
@@ -219,7 +219,7 @@ void motorStart() {
   bool bufferDecaystate = motorSlowDecay;
 
   if (!motorRunning) {
-    HAL_COMP_Stop_IT(&comparator1Handle);
+    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     motorSlowDecay = true;
 
     motorCommutate();
@@ -227,7 +227,7 @@ void motorStart() {
     TIM3->CNT = 0xffff;
     motorBemfCounter = 0;
     motorRunning = true;
-    HAL_COMP_Start_IT(&comparator1Handle);
+    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   }
   motorSlowDecay = bufferDecaystate;
 }
@@ -239,16 +239,16 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorTimestamp = TIM3->CNT;
 
   if ((!motorRunning) || (!motorStartup)) {
-    HAL_COMP_Stop_IT(&comparator1Handle);
+    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     __enable_irq();
     return;
   }
 
-  while ((TIM3->CNT - motorTimestamp) < motorFilterDelay);
+  while ((TIM3->CNT - motorTimestamp) < motorBemfFilterDelay);
 
-  for (int i = 0; i < motorFilterLevel; i++) {
-    if ((motorBemfRising && HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_HIGH) ||
-        (!motorBemfRising && HAL_COMP_GetOutputLevel(&comparator1Handle) == COMP_OUTPUTLEVEL_LOW)) {
+  for (int i = 0; i < motorBemfFilterLevel; i++) {
+    if ((motorBemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
+        (!motorBemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
 
       __enable_irq();
       return;
@@ -259,12 +259,12 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     LED_ON(GREEN);
   #endif
 
-  HAL_COMP_Stop_IT(&comparator1Handle);
+  HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
   TIM3->CNT = 0xffff;
 
   motorBemfCounter++;
-  motorZeroCounterTimeout = 0;
-  motorZeroCrossTimestamp = motorTimestamp;
+  motorBemfZeroCounterTimeout = 0;
+  motorBemfZeroCrossTimestamp = motorTimestamp;
 
   // ToDo
   //if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 37) && (outputPwm < 707)) {
@@ -283,7 +283,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   motorCommutate();
 
-  HAL_COMP_Start_IT(&comparator1Handle);
+  HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   __enable_irq();
 }
 

@@ -1,8 +1,8 @@
 #include "system.h"
 
 extern ADC_HandleTypeDef adcHandle;
-extern COMP_HandleTypeDef comparator1Handle;
-extern TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
+extern COMP_HandleTypeDef motorBemfComparatorHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle, timer3Handle, inputTimerHandle;
 
 extern uint32_t adcValue[3];
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
@@ -96,45 +96,45 @@ void systemAdcInit(void) {
 }
 
 
-void systemComparator1Init(void) {
-  comparator1Handle.Instance = COMP1;
-  comparator1Handle.Init.NonInvertingInput = COMPARATOR_COMMON;
-  comparator1Handle.Init.InvertingInput = COMPARATOR_PHASE_A;
-  comparator1Handle.Init.Output = COMP_OUTPUT_NONE;
-  comparator1Handle.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
-  comparator1Handle.Init.Hysteresis = COMP_HYSTERESIS_LOW;
-  comparator1Handle.Init.Mode = COMP_MODE_HIGHSPEED;
-  comparator1Handle.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
-  comparator1Handle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
-  while (HAL_COMP_Init(&comparator1Handle) != HAL_OK);
+void systemBemfComparatorInit(void) {
+  motorBemfComparatorHandle.Instance = COMP1;
+  motorBemfComparatorHandle.Init.NonInvertingInput = COMPARATOR_COMMON;
+  motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+  motorBemfComparatorHandle.Init.Output = COMP_OUTPUT_NONE;
+  motorBemfComparatorHandle.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+  motorBemfComparatorHandle.Init.Hysteresis = COMP_HYSTERESIS_LOW;
+  motorBemfComparatorHandle.Init.Mode = COMP_MODE_HIGHSPEED;
+  motorBemfComparatorHandle.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
+  motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+  while (HAL_COMP_Init(&motorBemfComparatorHandle) != HAL_OK);
 
-  while (HAL_COMP_Start_IT(&comparator1Handle) != HAL_OK);
+  while (HAL_COMP_Start_IT(&motorBemfComparatorHandle) != HAL_OK);
 }
 
 
-void systemTimer1Init(void) {
+void systemMotorPwmTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_OC_InitTypeDef sConfigOC;
   TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
 
-  timer1Handle.Instance = TIM1;
-  timer1Handle.Init.Prescaler = 0;
-  timer1Handle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
-  timer1Handle.Init.Period = TIMER1_INIT_PERIOD;
-  timer1Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  timer1Handle.Init.RepetitionCounter = 0;
-  timer1Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  while (HAL_TIM_Base_Init(&timer1Handle) != HAL_OK);
+  motorPwmTimerHandle.Instance = TIM1;
+  motorPwmTimerHandle.Init.Prescaler = 0;
+  motorPwmTimerHandle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
+  motorPwmTimerHandle.Init.Period = TIMER1_INIT_PERIOD;
+  motorPwmTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  motorPwmTimerHandle.Init.RepetitionCounter = 0;
+  motorPwmTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  while (HAL_TIM_Base_Init(&motorPwmTimerHandle) != HAL_OK);
 
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  while (HAL_TIM_ConfigClockSource(&timer1Handle, &sClockSourceConfig) != HAL_OK);
+  while (HAL_TIM_ConfigClockSource(&motorPwmTimerHandle, &sClockSourceConfig) != HAL_OK);
 
-  while (HAL_TIM_PWM_Init(&timer1Handle) != HAL_OK);
+  while (HAL_TIM_PWM_Init(&motorPwmTimerHandle) != HAL_OK);
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC4REF;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  while (HAL_TIMEx_MasterConfigSynchronization(&timer1Handle, &sMasterConfig) != HAL_OK);
+  while (HAL_TIMEx_MasterConfigSynchronization(&motorPwmTimerHandle, &sMasterConfig) != HAL_OK);
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
@@ -143,10 +143,10 @@ void systemTimer1Init(void) {
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  while (HAL_TIM_PWM_ConfigChannel(&timer1Handle, &sConfigOC, TIM_CHANNEL_1) != HAL_OK);
-  while (HAL_TIM_PWM_ConfigChannel(&timer1Handle, &sConfigOC, TIM_CHANNEL_2) != HAL_OK);
-  while (HAL_TIM_PWM_ConfigChannel(&timer1Handle, &sConfigOC, TIM_CHANNEL_3) != HAL_OK);
-  while (HAL_TIM_PWM_ConfigChannel(&timer1Handle, &sConfigOC, TIM_CHANNEL_4) != HAL_OK);
+  while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_3) != HAL_OK);
+  //while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_4) != HAL_OK);
 
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
@@ -155,17 +155,17 @@ void systemTimer1Init(void) {
   sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
   sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  while (HAL_TIMEx_ConfigBreakDeadTime(&timer1Handle, &sBreakDeadTimeConfig) != HAL_OK);
+  while (HAL_TIMEx_ConfigBreakDeadTime(&motorPwmTimerHandle, &sBreakDeadTimeConfig) != HAL_OK);
 
-  HAL_TIM_MspPostInit(&timer1Handle);
+  HAL_TIM_MspPostInit(&motorPwmTimerHandle);
 
-  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
-  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_1) != HAL_OK);
-  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
-  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_2) != HAL_OK);
-  while (HAL_TIM_PWM_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
-  while (HAL_TIMEx_PWMN_Start(&timer1Handle, TIM_CHANNEL_3) != HAL_OK);
-  //while (HAL_TIM_OC_Start_IT(&timer1Handle, TIM_CHANNEL_4) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&motorPwmTimerHandle, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&motorPwmTimerHandle, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&motorPwmTimerHandle, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&motorPwmTimerHandle, TIM_CHANNEL_2) != HAL_OK);
+  while (HAL_TIM_PWM_Start(&motorPwmTimerHandle, TIM_CHANNEL_3) != HAL_OK);
+  while (HAL_TIMEx_PWMN_Start(&motorPwmTimerHandle, TIM_CHANNEL_3) != HAL_OK);
+  //while (HAL_TIM_OC_Start_IT(&motorPwmTimerHandle, TIM_CHANNEL_4) != HAL_OK);
 }
 
 void systemTimer3Init(void) {
@@ -196,28 +196,28 @@ void systemTimer15Init(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;
 
-  timer15Handle.Instance = TIM15;
-  timer15Handle.Init.Prescaler = 0;
-  timer15Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  timer15Handle.Init.Period = 0xffff;
-  timer15Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  timer15Handle.Init.RepetitionCounter = 0;
-  timer15Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  while (HAL_TIM_Base_Init(&timer15Handle) != HAL_OK);
+  inputTimerHandle.Instance = TIM15;
+  inputTimerHandle.Init.Prescaler = 0;
+  inputTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  inputTimerHandle.Init.Period = 0xffff;
+  inputTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  inputTimerHandle.Init.RepetitionCounter = 0;
+  inputTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  while (HAL_TIM_Base_Init(&inputTimerHandle) != HAL_OK);
 
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  while (HAL_TIM_ConfigClockSource(&timer15Handle, &sClockSourceConfig) != HAL_OK);
-  while (HAL_TIM_IC_Init(&timer15Handle) != HAL_OK);
+  while (HAL_TIM_ConfigClockSource(&inputTimerHandle, &sClockSourceConfig) != HAL_OK);
+  while (HAL_TIM_IC_Init(&inputTimerHandle) != HAL_OK);
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  while (HAL_TIMEx_MasterConfigSynchronization(&timer15Handle, &sMasterConfig) != HAL_OK);
+  while (HAL_TIMEx_MasterConfigSynchronization(&inputTimerHandle, &sMasterConfig) != HAL_OK);
 
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_BOTHEDGE;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
-  while (HAL_TIM_IC_ConfigChannel(&timer15Handle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
 
-  while (HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }

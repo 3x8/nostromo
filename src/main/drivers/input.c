@@ -7,7 +7,7 @@ uint32_t inputNormed, outputPwm;
 uint32_t inputArmCounter, inputTimeoutCounter;
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
-extern TIM_HandleTypeDef timer15Handle;
+extern TIM_HandleTypeDef inputTimerHandle;
 extern uint8_t motorDirection;
 
 void inputArmCheck(void) {
@@ -46,11 +46,11 @@ void inputDisarm(void) {
     #endif
   #endif
 
-  HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
+  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
   inputProtocol = AUTODETECT;
   TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
   TIM15->CNT = 0xffff;
-  HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+  HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
 }
 
 void inputDisarmCheck(void) {
@@ -121,14 +121,14 @@ void inputCallbackDMA() {
       inputDetectProtocol();
       break;
     case PROSHOT:
-      HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
       inputProshot();
-      HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
       break;
     case SERVOPWM:
-      HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
       inputServoPwm();
-      HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
       break;
   }
 }
@@ -141,7 +141,7 @@ void inputDetectProtocol() {
     LED_OFF(LED_GREEN);
   #endif
 
-  HAL_TIM_IC_Stop_DMA(&timer15Handle, TIM_CHANNEL_1);
+  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
@@ -154,7 +154,7 @@ void inputDetectProtocol() {
     inputProtocol = PROSHOT;
     TIM15->PSC = INPUT_PROSHOT_PRESCALER;
     TIM15->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
@@ -167,7 +167,7 @@ void inputDetectProtocol() {
     inputProtocol = SERVOPWM;
     TIM15->PSC = INPUT_PWM_PRESCALER;
     TIM15->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
@@ -180,7 +180,7 @@ void inputDetectProtocol() {
   if (inputProtocol == AUTODETECT) {
     TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
     TIM15->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&timer15Handle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
   }
 }
 

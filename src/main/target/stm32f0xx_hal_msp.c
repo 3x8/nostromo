@@ -2,7 +2,7 @@
 #include "target.h"
 
 extern DMA_HandleTypeDef adcDmaHandle;
-extern DMA_HandleTypeDef timer15Channel1DmaHandle;
+extern DMA_HandleTypeDef inputTimerChannel1DmaHandle;
 
 void HAL_MspInit(void) {
   __HAL_RCC_SYSCFG_CLK_ENABLE();
@@ -92,22 +92,22 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
     // TIM15 DMA Init, TIM15_CH1_UP_TRIG_COM Init
-    timer15Channel1DmaHandle.Instance = DMA1_Channel5;
-    timer15Channel1DmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    timer15Channel1DmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
-    timer15Channel1DmaHandle.Init.MemInc = DMA_MINC_ENABLE;
-    timer15Channel1DmaHandle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    timer15Channel1DmaHandle.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
-    timer15Channel1DmaHandle.Init.Mode = DMA_NORMAL;
-    timer15Channel1DmaHandle.Init.Priority = DMA_PRIORITY_HIGH;
-    while (HAL_DMA_Init(&timer15Channel1DmaHandle) != HAL_OK);
+    inputTimerChannel1DmaHandle.Instance = DMA1_Channel5;
+    inputTimerChannel1DmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    inputTimerChannel1DmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
+    inputTimerChannel1DmaHandle.Init.MemInc = DMA_MINC_ENABLE;
+    inputTimerChannel1DmaHandle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    inputTimerChannel1DmaHandle.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+    inputTimerChannel1DmaHandle.Init.Mode = DMA_NORMAL;
+    inputTimerChannel1DmaHandle.Init.Priority = DMA_PRIORITY_HIGH;
+    while (HAL_DMA_Init(&inputTimerChannel1DmaHandle) != HAL_OK);
 
     /* Several peripheral DMA handle pointers point to the same DMA handle.
        Be aware that there is only one channel to perform all the requested DMAs. */
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],timer15Channel1DmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],timer15Channel1DmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],timer15Channel1DmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_COMMUTATION],timer15Channel1DmaHandle);
+    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],inputTimerChannel1DmaHandle);
+    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerChannel1DmaHandle);
+    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerChannel1DmaHandle);
+    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_COMMUTATION],inputTimerChannel1DmaHandle);
   }
 
 }

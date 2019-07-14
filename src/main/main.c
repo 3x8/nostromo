@@ -1,9 +1,9 @@
 #include "main.h"
 
-extern COMP_HandleTypeDef comparator1Handle;
+extern COMP_HandleTypeDef motorBemfComparatorHandle;
 
-TIM_HandleTypeDef timer1Handle, timer3Handle, timer15Handle;
-DMA_HandleTypeDef timer15Channel1DmaHandle;
+TIM_HandleTypeDef motorPwmTimerHandle, timer3Handle, inputTimerHandle;
+DMA_HandleTypeDef inputTimerChannel1DmaHandle;
 
 // ADC
 kalman_t adcCurrentFilterState;
@@ -15,10 +15,10 @@ kalman_t motorCommutationIntervalFilterState;
 uint32_t motorCommutationInterval, motorCommutationDelay;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-extern uint32_t motorZeroCrossTimestamp;
-extern uint32_t motorFilterLevel, motorFilterDelay;
+extern uint32_t motorBemfZeroCrossTimestamp;
+extern uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
-extern uint32_t motorZeroCounterTimeout, motorZeroCounterTimeoutThreshold;
+extern uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
 
 // input
 extern bool inputArmed, inputDataValid;
@@ -36,9 +36,9 @@ int main(void) {
   ledInit();
 
   systemDmaInit();
-  systemComparator1Init();
+  systemBemfComparatorInit();
   systemAdcInit();
-  systemTimer1Init();
+  systemMotorPwmTimerInit();
   systemTimer3Init();
   systemTimer15Init();
 
@@ -160,21 +160,21 @@ int main(void) {
 
         // motor BEMF filter
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
-          motorFilterDelay = 1;
-          motorFilterLevel = 0;
+          motorBemfFilterDelay = 1;
+          motorBemfFilterLevel = 0;
         } else {
-          motorFilterLevel = 3;
-          motorFilterDelay = 3;
+          motorBemfFilterLevel = 3;
+          motorBemfFilterDelay = 3;
         }
 
         // timeouts
         if (motorDutyCycle < 300) {
-          motorZeroCounterTimeoutThreshold = 400;
+          motorBemfZeroCounterTimeoutThreshold = 400;
         } else {
-          motorZeroCounterTimeoutThreshold = 200;
+          motorBemfZeroCounterTimeoutThreshold = 200;
         }
 
-        if (++motorZeroCounterTimeout > motorZeroCounterTimeoutThreshold) {
+        if (++motorBemfZeroCounterTimeout > motorBemfZeroCounterTimeoutThreshold) {
           kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 31);
           motorRunning = false;
           motorDutyCycle = 0;
@@ -182,12 +182,12 @@ int main(void) {
 
         // motor start
         if ((motorStartup) && (!motorRunning)) {
-          motorZeroCounterTimeout = 0;
+          motorBemfZeroCounterTimeout = 0;
           motorStart();
         }
 
         // ToDo
-        motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorZeroCrossTimestamp);
+        motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorBemfZeroCrossTimestamp);
         motorCommutationDelay = 0; //timing 30°
         //motorCommutationDelay = motorCommutationInterval >> 2; //timing 15°
         //motorCommutationDelay = motorCommutationInterval >> 1; //timing 0°
