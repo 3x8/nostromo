@@ -48,8 +48,8 @@ void inputDisarm(void) {
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
   inputProtocol = AUTODETECT;
-  TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
-  TIM15->CNT = 0xffff;
+  inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
+  inputTimerHandle.Instance->CNT = 0xffff;
   HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
 }
 
@@ -152,8 +152,8 @@ void inputDetectProtocol() {
 
   if ((telegramPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (telegramPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     inputProtocol = PROSHOT;
-    TIM15->PSC = INPUT_PROSHOT_PRESCALER;
-    TIM15->CNT = 0xffff;
+    inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
+    inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
@@ -165,8 +165,8 @@ void inputDetectProtocol() {
 
   if (telegramPulseWidthMin > 900) {
     inputProtocol = SERVOPWM;
-    TIM15->PSC = INPUT_PWM_PRESCALER;
-    TIM15->CNT = 0xffff;
+    inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
+    inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
@@ -178,8 +178,8 @@ void inputDetectProtocol() {
 
   // default
   if (inputProtocol == AUTODETECT) {
-    TIM15->PSC = INPUT_AUTODETECT_PRESCALER;
-    TIM15->CNT = 0xffff;
+    inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
+    inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
   }
 }
