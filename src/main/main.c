@@ -3,7 +3,7 @@
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 
 TIM_HandleTypeDef motorPwmTimerHandle, timer3Handle, inputTimerHandle;
-DMA_HandleTypeDef inputTimerChannel1DmaHandle;
+DMA_HandleTypeDef inputTimerDmaHandle;
 
 // ADC
 kalman_t adcCurrentFilterState;

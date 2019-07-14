@@ -5,7 +5,7 @@ extern void inputCallbackDMA();
 extern DMA_HandleTypeDef adcDmaHandle;
 extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
-extern DMA_HandleTypeDef inputTimerChannel1DmaHandle;
+extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle;
 
 // Cortex-M0 Processor Interruption and Exception Handlers
@@ -37,7 +37,7 @@ void DMA1_Channel1_IRQHandler(void) {
 
 // This function handles DMA1 channel 4 and 5 interrupts.
 void DMA1_Channel4_5_IRQHandler(void) {
-  HAL_DMA_IRQHandler(&inputTimerChannel1DmaHandle);
+  HAL_DMA_IRQHandler(&inputTimerDmaHandle);
   inputCallbackDMA();
 }
 
