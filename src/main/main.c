@@ -197,7 +197,7 @@ int main(void) {
     } // inputProtocol detected
 
     // ESC hardware limits
-    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(WRAITH32MINI))
+    #if (defined(WRAITH32) || defined(WRAITH32V2))
       adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
       if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
         inputDisarm();
