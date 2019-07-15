@@ -1,5 +1,3 @@
-// not working
-
 #pragma once
 
 // debug
@@ -10,11 +8,11 @@
 //#define INPUT_AUTODETECT
 
 // ToDo
-#define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
+#define HBRIDGE_DEAD_TIME 7 // in 22ns cycles (FD6288 builtin 200ns)
 #define HBRIDGE_MAX_CURRENT 2011 // ~36A
 #define HBRIDGE_MAX_TEMPERATURE 1234 // not used
 #define TIMER1_INIT_PERIOD  977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
-#define MOTOR_START_THRESHOLD 7
+#define MOTOR_START_THRESHOLD 11
 
 // input
 #define INPUT_GPIO      GPIOA
@@ -44,13 +42,13 @@
 #define C_FET_LO_PIN    GPIO_PIN_7
 
 // comparator ,Ok
-#define COMPARATOR_PHASE_A       COMP_INVERTINGINPUT_DAC1
-#define COMPARATOR_PHASE_B       COMP_INVERTINGINPUT_DAC2
-#define COMPARATOR_PHASE_C       COMP_INVERTINGINPUT_IO1
+#define COMPARATOR_PHASE_A       COMP_INVERTINGINPUT_IO1
+#define COMPARATOR_PHASE_B       COMP_INVERTINGINPUT_DAC1
+#define COMPARATOR_PHASE_C       COMP_INVERTINGINPUT_DAC2
 #define COMPARATOR_COMMON        COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK          GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5
 
-// ADC ,Ok
+// ADC ,Ko
 #define ADC_VOLTAGE              ADC_CHANNEL_3
 #define ADC_CURRENT              ADC_CHANNEL_6
 #define ADC_TEMPERATURE          ADC_CHANNEL_TEMPSENSOR
