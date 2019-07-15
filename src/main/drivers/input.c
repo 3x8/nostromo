@@ -4,6 +4,7 @@ TIM_HandleTypeDef inputTimerHandle;
 DMA_HandleTypeDef inputTimerDmaHandle;
 
 bool inputArmed, inputDataValid;
+
 uint8_t inputProtocol;
 uint32_t inputData;
 uint32_t inputNormed, outputPwm;

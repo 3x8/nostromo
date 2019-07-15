@@ -14,7 +14,6 @@ uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
 uint32_t motorCommutationInterval, motorCommutationDelay;
 
-// main
 extern uint32_t outputPwm;
 
 void motorPhaseA(uint8_t hBridgeMode) {

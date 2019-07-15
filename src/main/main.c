@@ -2,11 +2,13 @@
 
 // ADC
 kalman_t adcCurrentFilterState;
+
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
+
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 extern bool motorStartup, motorRunning;
