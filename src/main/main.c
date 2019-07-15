@@ -7,7 +7,6 @@ extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
-uint32_t motorCommutationInterval, motorCommutationDelay;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 extern bool motorStartup, motorRunning;
@@ -16,6 +15,7 @@ extern uint32_t motorBemfZeroCrossTimestamp;
 extern uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
 extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
+extern uint32_t motorCommutationInterval, motorCommutationDelay;
 
 // input
 extern TIM_HandleTypeDef  inputTimerHandle;
