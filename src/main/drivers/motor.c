@@ -1,5 +1,6 @@
 #include "motor.h"
 
+TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 
 bool motorBemfRising;
@@ -224,7 +225,7 @@ void motorStart() {
 
     motorCommutate();
 
-    TIM3->CNT = 0xffff;
+    motorCommutationTimerHandle.Instance->CNT = 0xffff;
     motorBemfCounter = 0;
     motorRunning = true;
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
@@ -236,7 +237,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   uint32_t motorTimestamp;
 
   __disable_irq();
-  motorTimestamp = TIM3->CNT;
+  motorTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
   if ((!motorRunning) || (!motorStartup)) {
     HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
@@ -244,7 +245,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     return;
   }
 
-  while ((TIM3->CNT - motorTimestamp) < motorBemfFilterDelay);
+  while ((motorCommutationTimerHandle.Instance->CNT - motorTimestamp) < motorBemfFilterDelay);
 
   for (int i = 0; i < motorBemfFilterLevel; i++) {
     if ((motorBemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
@@ -260,7 +261,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   #endif
 
   HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-  TIM3->CNT = 0xffff;
+  motorCommutationTimerHandle.Instance->CNT = 0xffff;
 
   motorBemfCounter++;
   motorBemfZeroCounterTimeout = 0;
@@ -269,7 +270,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   // ToDo
   //if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 37) && (outputPwm < 707)) {
   if (motorCommutationDelay > 17) {
-    while (TIM3->CNT < motorCommutationDelay) {
+    while (motorCommutationTimerHandle.Instance->CNT < motorCommutationDelay) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
         LED_TOGGLE(BLUE);
       #endif

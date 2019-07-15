@@ -1,10 +1,5 @@
 #include "main.h"
 
-extern COMP_HandleTypeDef motorBemfComparatorHandle;
-
-TIM_HandleTypeDef motorPwmTimerHandle, timer3Handle, inputTimerHandle;
-DMA_HandleTypeDef inputTimerDmaHandle;
-
 // ADC
 kalman_t adcCurrentFilterState;
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
@@ -13,6 +8,8 @@ extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 // motor
 kalman_t motorCommutationIntervalFilterState;
 uint32_t motorCommutationInterval, motorCommutationDelay;
+extern COMP_HandleTypeDef motorBemfComparatorHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorBemfZeroCrossTimestamp;
@@ -21,6 +18,8 @@ extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
 
 // input
+extern TIM_HandleTypeDef  inputTimerHandle;
+extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
 extern uint32_t inputData;
@@ -39,7 +38,7 @@ int main(void) {
   systemBemfComparatorInit();
   systemAdcInit();
   systemMotorPwmTimerInit();
-  systemTimer3Init();
+  systemMotorCommutationTimerInit();
   systemInputTimerInit();
 
   // init

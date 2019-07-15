@@ -9,5 +9,5 @@ void systemDmaInit(void);
 void systemAdcInit(void);
 void systemBemfComparatorInit(void);
 void systemMotorPwmTimerInit(void);
-void systemTimer3Init(void);
+void systemMotorCommutationTimerInit(void);
 void systemInputTimerInit(void);

@@ -1,5 +1,8 @@
 #include "input.h"
 
+TIM_HandleTypeDef inputTimerHandle;
+DMA_HandleTypeDef inputTimerDmaHandle;
+
 bool inputArmed, inputDataValid;
 uint8_t inputProtocol;
 uint32_t inputData;
@@ -7,7 +10,6 @@ uint32_t inputNormed, outputPwm;
 uint32_t inputArmCounter, inputTimeoutCounter;
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
-extern TIM_HandleTypeDef inputTimerHandle;
 extern uint8_t motorDirection;
 
 void inputArmCheck(void) {

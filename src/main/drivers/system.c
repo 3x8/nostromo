@@ -2,7 +2,7 @@
 
 extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
-extern TIM_HandleTypeDef motorPwmTimerHandle, timer3Handle, inputTimerHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
 
 extern uint32_t adcValue[3];
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
@@ -168,26 +168,26 @@ void systemMotorPwmTimerInit(void) {
   //while (HAL_TIM_OC_Start_IT(&motorPwmTimerHandle, TIM_CHANNEL_4) != HAL_OK);
 }
 
-void systemTimer3Init(void) {
+void systemMotorCommutationTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
-  timer3Handle.Instance = TIM3;
-  timer3Handle.Init.Prescaler = 7;
-  timer3Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  timer3Handle.Init.Period = 65535;
-  timer3Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  timer3Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  while (HAL_TIM_Base_Init(&timer3Handle) != HAL_OK);
+  motorCommutationTimerHandle.Instance = TIM3;
+  motorCommutationTimerHandle.Init.Prescaler = 7;
+  motorCommutationTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  motorCommutationTimerHandle.Init.Period = 65535;
+  motorCommutationTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  motorCommutationTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  while (HAL_TIM_Base_Init(&motorCommutationTimerHandle) != HAL_OK);
 
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  while (HAL_TIM_ConfigClockSource(&timer3Handle, &sClockSourceConfig) != HAL_OK);
+  while (HAL_TIM_ConfigClockSource(&motorCommutationTimerHandle, &sClockSourceConfig) != HAL_OK);
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  while (HAL_TIMEx_MasterConfigSynchronization(&timer3Handle, &sMasterConfig) != HAL_OK);
+  while (HAL_TIMEx_MasterConfigSynchronization(&motorCommutationTimerHandle, &sMasterConfig) != HAL_OK);
 
-  while (HAL_TIM_Base_Start(&timer3Handle) != HAL_OK);
+  while (HAL_TIM_Base_Start(&motorCommutationTimerHandle) != HAL_OK);
 }
 
 
