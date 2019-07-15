@@ -72,7 +72,7 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(htim_base->Instance == TIM1) {
+  if(htim_base->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_ENABLE();
 
     //HAL_NVIC_SetPriority(TIM1_CC_IRQn, 0, 0);
@@ -115,7 +115,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(htim->Instance == TIM1) {
+  if(htim->Instance == motorPwmTimerHandle.Instance) {
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -138,7 +138,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
 
-  if(htim_base->Instance == TIM1) {
+  if(htim_base->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_DISABLE();
 
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);

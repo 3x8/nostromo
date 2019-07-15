@@ -288,31 +288,31 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 }
 
 void motorStartupTune() {
-  TIM1->CCR1 = 5;
-  TIM1->CCR2 = 5;
-  TIM1->CCR3 = 5;
+  motorPwmTimerHandle.Instance->CCR1 = 5;
+  motorPwmTimerHandle.Instance->CCR2 = 5;
+  motorPwmTimerHandle.Instance->CCR3 = 5;
 
   motorCommutationStep(motorStep);
-  TIM1->PSC = 100;
+  motorPwmTimerHandle.Instance->PSC = 100;
   HAL_Delay(100);
-  TIM1->PSC = 75;
+  motorPwmTimerHandle.Instance->PSC = 75;
   HAL_Delay(100);
-  TIM1->PSC = 50;
+  motorPwmTimerHandle.Instance->PSC = 50;
   HAL_Delay(100);
 
-  TIM1->PSC = 0;
+  motorPwmTimerHandle.Instance->PSC = 0;
 }
 
 void motorInputTune(uint8_t motorStepDebug) {
-  TIM1->CCR1 = 5;
-  TIM1->CCR2 = 5;
-  TIM1->CCR3 = 5;
+  motorPwmTimerHandle.Instance->CCR1 = 5;
+  motorPwmTimerHandle.Instance->CCR2 = 5;
+  motorPwmTimerHandle.Instance->CCR3 = 5;
 
   motorCommutationStep(motorStepDebug);
-  TIM1->PSC = 75;
+  motorPwmTimerHandle.Instance->PSC = 75;
   HAL_Delay(100);
-  TIM1->PSC = 50;
+  motorPwmTimerHandle.Instance->PSC = 50;
   HAL_Delay(100);
 
-  TIM1->PSC = 0;
+  motorPwmTimerHandle.Instance->PSC = 0;
 }

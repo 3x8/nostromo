@@ -85,9 +85,9 @@ int main(void) {
           break;
       }
 
-      TIM1->CCR1 = motorDutyCycle;
-      TIM1->CCR2 = motorDutyCycle;
-      TIM1->CCR3 = motorDutyCycle;
+      motorPwmTimerHandle.Instance->CCR1 = motorDutyCycle;
+      motorPwmTimerHandle.Instance->CCR2 = motorDutyCycle;
+      motorPwmTimerHandle.Instance->CCR3 = motorDutyCycle;
     }
 
     if (inputProtocol == AUTODETECT) {
@@ -154,9 +154,9 @@ int main(void) {
 
         // input
         motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        TIM1->CCR1 = motorDutyCycle;
-        TIM1->CCR2 = motorDutyCycle;
-        TIM1->CCR3 = motorDutyCycle;
+        motorPwmTimerHandle.Instance->CCR1 = motorDutyCycle;
+        motorPwmTimerHandle.Instance->CCR2 = motorDutyCycle;
+        motorPwmTimerHandle.Instance->CCR3 = motorDutyCycle;
 
         // motor BEMF filter
         if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
