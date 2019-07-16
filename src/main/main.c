@@ -133,7 +133,7 @@ int main(void) {
               }
             } else {
               outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold);
-              // ToDo
+              // introduces non linearity.
               //outputPwm = scaleInputToOutput(inputNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
             }
 
@@ -196,7 +196,7 @@ int main(void) {
       } // inputArmed
     } // inputProtocol detected
 
-    // ESC hardware limits
+    // current limitation
     #if (defined(WRAITH32) || defined(WRAITH32V2))
       adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
       if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
