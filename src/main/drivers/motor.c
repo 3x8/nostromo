@@ -256,7 +256,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   }
 
   #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
-    LED_ON(GREEN);
+    LED_ON(LED_GREEN);
   #endif
 
   HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
@@ -270,14 +270,14 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 37) && (outputPwm < 707)) {
     while (motorCommutationTimerHandle.Instance->CNT < motorCommutationDelay) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
-        LED_TOGGLE(BLUE);
+        LED_TOGGLE(LED_BLUE);
       #endif
     }
   }
 
   #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
-    LED_OFF(GREEN);
-    LED_OFF(BLUE);
+    LED_OFF(LED_GREEN);
+    LED_OFF(LED_BLUE);
   #endif
 
   motorCommutate();
