@@ -70,7 +70,7 @@ void serialPrintNumber(unsigned long n, uint8_t base, uint8_t arg) {
 
   // prevent crash if called with base == 1
   if (base < 2) base = 10;
-  //the argument is only valid for HEX values smaler than 0x10
+  // the argument is only valid for HEX values smaler than 0x10
   if(base != 8 || n>=16) arg = 0;
 
  do {
