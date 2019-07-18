@@ -141,7 +141,11 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthMin = 20000;
 
   #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-    LED_OFF(LED_GREEN);
+    #if (!defined(LED_INVERTED))
+      LED_OFF(LED_GREEN);
+    #else
+      LED_ON(LED_GREEN);
+    #endif
   #endif
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
@@ -160,7 +164,11 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-      LED_ON(LED_GREEN);
+      #if (!defined(LED_INVERTED))
+        LED_ON(LED_GREEN);
+      #else
+        LED_OFF(LED_GREEN);
+      #endif
     #endif
 
     return;
@@ -173,7 +181,11 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-      LED_ON(LED_GREEN);
+      #if (!defined(LED_INVERTED))
+        LED_ON(LED_GREEN);
+      #else
+        LED_OFF(LED_GREEN);
+      #endif
     #endif
 
     return;
@@ -193,7 +205,11 @@ void inputProshot() {
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-    LED_OFF(LED_GREEN);
+    #if (!defined(LED_INVERTED))
+      LED_OFF(LED_GREEN);
+    #else
+      LED_ON(LED_GREEN);
+    #endif
   #endif
 
   for (int i = 0; i < 4; i++) {
@@ -213,7 +229,11 @@ void inputProshot() {
     inputData = telegramData;
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-      LED_ON(LED_GREEN);
+      #if (!defined(LED_INVERTED))
+        LED_ON(LED_GREEN);
+      #else
+        LED_OFF(LED_GREEN);
+      #endif
     #endif
 
     return;
@@ -221,7 +241,11 @@ void inputProshot() {
     inputDataValid = false;
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-      LED_ON(LED_GREEN);
+      #if (!defined(LED_INVERTED))
+        LED_ON(LED_GREEN);
+      #else
+        LED_OFF(LED_GREEN);
+      #endif
     #endif
 
     return;

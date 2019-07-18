@@ -61,7 +61,11 @@ int main(void) {
   while (true) {
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-      LED_OFF(LED_BLUE);
+      #if (!defined(LED_INVERTED))
+        LED_OFF(LED_BLUE);
+      #else
+        LED_ON(LED_BLUE);
+      #endif
     #endif
 
     watchdogFeed();
@@ -202,13 +206,21 @@ int main(void) {
       if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
-          LED_ON(LED_RED);
+          #if (!defined(LED_INVERTED))
+            LED_ON(LED_RED);
+          #else
+            LED_OFF(LED_RED);
+          #endif
         #endif
       }
     #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-      LED_ON(LED_BLUE);
+      #if (!defined(LED_INVERTED))
+        LED_ON(LED_BLUE);
+      #else
+        LED_OFF(LED_BLUE);
+      #endif
     #endif
   } // main loop
 
