@@ -31,6 +31,8 @@ int main(void) {
   HAL_Init();
   systemClockConfig();
 
+  serialInit();
+
   configValidateOrReset();
   configRead();
 
@@ -214,6 +216,11 @@ int main(void) {
         #endif
       }
     #endif
+
+    //serialPrint("shit");
+    serialPrintNumber(motorCommutationInterval, 10, 1);
+    //serialPrintNumber(123, 10, 1);
+    serialPrint("\r\n");
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
       #if (!defined(LED_INVERTED))

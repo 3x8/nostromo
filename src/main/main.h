@@ -25,6 +25,7 @@
 #include "drivers/system.h"
 #include "drivers/input.h"
 #include "drivers/motor.h"
+#include "drivers/uart.h"
 #include "config/config.h"
 
 #include "target.h"

@@ -1,6 +1,6 @@
 #include "uart.h"
 
-#ifdef DEBUG
+#ifdef _DEBUG_
   int _write (int fd, char *ptr, int len) {
     UNUSED(fd);
     for (int i = 0; i < len; i++) {
@@ -60,6 +60,34 @@ void serialPrint(const char *str) {
     serialWrite(ch);
   }
 }
+
+
+void serialPrintNumber(unsigned long n, uint8_t base, uint8_t arg) {
+  char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+  char *str = &buf[sizeof(buf) - 1];
+
+  *str = '\0';
+
+  // prevent crash if called with base == 1
+  if (base < 2) base = 10;
+  //the argument is only valid for HEX values smaler than 0x10
+  if(base != 8 || n>=16) arg = 0;
+
+ do {
+    char c = n % base;
+    n /= base;
+
+    *--str = c < 10 ? c + '0' : c + 'A' - 10;
+  } while(n);
+  if(arg == 1)*--str = '0';
+
+  serialPrint(str);
+}
+
+
+
+
+
 
 void serialInit(void) {
   serialPort_t *s = &serialPort;
