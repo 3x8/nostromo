@@ -30,13 +30,13 @@
 #define SERIAL_RX_BUFSIZE   256
 
 typedef struct {
-    volatile char txBuf[SERIAL_TX_BUFSIZE];
-    uint16_t  txHead, txTail;
+  volatile char txBuf[SERIAL_TX_BUFSIZE];
+  uint16_t  txHead, txTail;
 
-    volatile char rxBuf[SERIAL_RX_BUFSIZE];
-    volatile uint16_t rxHead, rxTail;
+  volatile char rxBuf[SERIAL_RX_BUFSIZE];
+  volatile uint16_t rxHead, rxTail;
 
-    unsigned int rxPos;
+  unsigned int rxPos;
 } serialPort_t;
 
 void serialInit(void);

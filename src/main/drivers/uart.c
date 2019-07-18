@@ -74,7 +74,6 @@ void serialInit(void) {
   GPIO_InitStructure.Speed = LL_GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStructure.Pull = LL_GPIO_PULL_UP;
-
   GPIO_InitStructure.Alternate = LL_GPIO_AF_0;
   GPIO_InitStructure.Pin = USART_TX_PIN;
   LL_GPIO_Init(USART_TX_GPIO_PORT, &GPIO_InitStructure);
@@ -94,7 +93,7 @@ void serialInit(void) {
   USART_InitStructure.OverSampling = LL_USART_OVERSAMPLING_16;
   LL_USART_Init(USART, &USART_InitStructure);
 
-
+  // IRQ init
   NVIC_SetPriority(DMA1_Channel2_3_IRQn, 1);
   NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
   LL_DMA_ClearFlag_GI2(DMA1);
