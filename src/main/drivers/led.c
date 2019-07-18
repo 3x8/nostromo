@@ -26,7 +26,13 @@ void ledInit(void) {
 }
 
 void ledOff(void) {
-  LED_OFF(LED_RED);
-  LED_OFF(LED_GREEN);
-  LED_OFF(LED_BLUE);
+  #if (!defined(LED_INVERTED))
+    LED_OFF(LED_RED);
+    LED_OFF(LED_GREEN);
+    LED_OFF(LED_BLUE);
+  #else
+    LED_ON(LED_RED);
+    LED_ON(LED_GREEN);
+    LED_ON(LED_BLUE);
+  #endif
 }

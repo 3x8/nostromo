@@ -21,7 +21,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         #if (!defined(_DEBUG_))
-          #if (!defined(DYS35ARIA))
+          #if (!defined(LED_INVERTED))
             LED_ON(LED_BLUE);
           #else
             LED_OFF(LED_BLUE);
@@ -42,7 +42,7 @@ void inputDisarm(void) {
   inputTimeoutCounter = 0;
 
   #if (!defined(_DEBUG_))
-    #if (!defined(DYS35ARIA))
+    #if (!defined(LED_INVERTED))
       LED_OFF(LED_BLUE);
     #else
       LED_ON(LED_BLUE);
