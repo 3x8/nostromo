@@ -166,9 +166,9 @@ int main(void) {
         motorPwmTimerHandle.Instance->CCR3 = motorDutyCycle;
 
         // motor BEMF filter
-        if ((motorCommutationInterval < 200) && (motorDutyCycle > 500)) {
+        if ((motorCommutationInterval < 400) && (motorDutyCycle > 500)) {
           motorBemfFilterDelay = 1;
-          motorBemfFilterLevel = 0;
+          motorBemfFilterLevel = 1;
         } else {
           motorBemfFilterLevel = 3;
           motorBemfFilterDelay = 3;
