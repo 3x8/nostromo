@@ -50,7 +50,7 @@ int main(void) {
   // init
   ledOff();
   kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 31);
+  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;
   motorSlowDecay = escConfig()->motorSlowDecay;
@@ -124,7 +124,7 @@ int main(void) {
 
         if (++motorBemfZeroCounterTimeout > motorBemfZeroCounterTimeoutThreshold) {
           motorBemfZeroCrossTimestamp = 0;
-          kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 31);
+          kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
           motorRunning = false;
           motorDutyCycle = 0;
         }
@@ -167,6 +167,11 @@ int main(void) {
         serialPrint("PWM[");
         serialPrintInteger(outputPwm, 10, 1);
         serialPrint("] ");
+
+        serialPrint("RPM[");
+        serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
+        serialPrint("] ");
+
         serialPrint("BEMF[");
         serialPrintInteger(motorCommutationInterval, 10, 1);
         serialPrint("] ");
