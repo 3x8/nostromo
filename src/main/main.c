@@ -1,18 +1,16 @@
 #include "main.h"
 
+// debug
 uint8_t  printIndex = 0;
 
 // ADC
 kalman_t adcCurrentFilterState;
-
 extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
-
-extern COMP_HandleTypeDef motorBemfComparatorHandle;
-extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t motorBemfZeroCrossTimestamp;
@@ -26,8 +24,7 @@ extern TIM_HandleTypeDef  inputTimerHandle;
 extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern bool inputArmed, inputDataValid;
 extern uint8_t  inputProtocol;
-extern uint32_t inputData;
-extern uint32_t inputNormed, outputPwm;
+extern uint32_t inputData, outputPwm;
 
 int main(void) {
   HAL_Init();
@@ -122,6 +119,7 @@ int main(void) {
           motorBemfZeroCounterTimeoutThreshold = 200;
         }
 
+        // motor not turning
         if (++motorBemfZeroCounterTimeout > motorBemfZeroCounterTimeoutThreshold) {
           motorBemfZeroCrossTimestamp = 0;
           kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
