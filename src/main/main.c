@@ -167,7 +167,8 @@ int main(void) {
         serialPrint("] ");
 
         serialPrint("RPM[");
-        serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
+        //serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
+        serialPrintInteger(9276437/motorCommutationInterval, 10, 1);
         serialPrint("] ");
 
         serialPrint("BEMF[");
