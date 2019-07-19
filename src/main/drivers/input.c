@@ -11,7 +11,11 @@ uint32_t inputNormed, outputPwm;
 uint32_t inputArmCounter, inputTimeoutCounter;
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
-extern uint8_t motorDirection;
+// motor
+extern TIM_HandleTypeDef motorPwmTimerHandle;
+extern bool motorStartup, motorRunning;
+extern bool motorDirection, motorBrakeActiveProportional;
+extern uint32_t motorBemfCounter;
 
 void inputArmCheck(void) {
   if (!inputArmed) {
@@ -228,6 +232,54 @@ void inputProshot() {
     inputTimeoutCounter = 0;
     inputData = telegramData;
 
+    // ToDo
+    if (inputArmed) {
+      if (inputData <= DSHOT_CMD_MAX) {
+        motorStartup = false;
+        outputPwm = 0;
+        if (!motorRunning) {
+          inputDshotCommandRun();
+        }
+      } else {
+        motorStartup = true;
+        motorBrakeActiveProportional = false;
+        inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
+
+        if (escConfig()->motor3Dmode) {
+          // up
+          if (inputNormed >= escConfig()->input3DdeadbandHigh) {
+            if (motorDirection == !escConfig()->motorDirection) {
+              motorDirection = escConfig()->motorDirection;
+              motorBemfCounter = 0;
+            }
+            outputPwm = (inputNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+          }
+          // down
+          if (inputNormed <= escConfig()->input3DdeadbandLow) {
+            if(motorDirection == escConfig()->motorDirection) {
+              motorDirection = !escConfig()->motorDirection;
+              motorBemfCounter = 0;
+            }
+            outputPwm = inputNormed + escConfig()->motorStartThreshold;
+          }
+          // deadband
+          if ((inputNormed > escConfig()->input3DdeadbandLow) && (inputNormed < escConfig()->input3DdeadbandHigh)) {
+            outputPwm = 0;
+          }
+        } else {
+          outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold);
+          // introduces non linearity.
+          //outputPwm = scaleInputToOutput(inputNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
+        }
+
+        // output
+        outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+        motorPwmTimerHandle.Instance->CCR1 = outputPwm;
+        motorPwmTimerHandle.Instance->CCR2 = outputPwm;
+        motorPwmTimerHandle.Instance->CCR3 = outputPwm;
+      }
+    }
+
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
       #if (!defined(LED_INVERTED))
         LED_ON(LED_GREEN);
@@ -252,6 +304,7 @@ void inputProshot() {
   }
 }
 
+// SERVOPWM (use only for thrust tests ...)
 void inputServoPwm() {
   uint32_t telegramPulseWidthBuff = 0;
 
@@ -262,6 +315,23 @@ void inputServoPwm() {
       inputDataValid = true;
       inputTimeoutCounter = 0;
       inputData = scaleInputToOutput(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+
+      if (inputArmed) {
+        if (inputData  < DSHOT_CMD_MAX) {
+          motorStartup = false;
+          outputPwm = 0;
+        } else {
+          motorStartup = true;
+          motorBrakeActiveProportional = false;
+
+          // output
+          outputPwm = constrain((inputData + DSHOT_CMD_MAX), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          motorPwmTimerHandle.Instance->CCR1 = outputPwm;
+          motorPwmTimerHandle.Instance->CCR2 = outputPwm;
+          motorPwmTimerHandle.Instance->CCR3 = outputPwm;
+        }
+      }
+
       return;
     } else {
       inputDataValid = false;

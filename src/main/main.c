@@ -103,67 +103,6 @@ int main(void) {
       inputArmCheck();
       inputDisarmCheck();
       if (inputArmed) {
-        // PROSHOT
-        if ((inputProtocol == PROSHOT) && (inputDataValid)) {
-          if (inputData <= DSHOT_CMD_MAX) {
-            motorStartup = false;
-            outputPwm = 0;
-            if (!motorRunning) {
-              inputDshotCommandRun();
-            }
-          } else {
-            motorStartup = true;
-            motorBrakeActiveProportional = false;
-            inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
-
-            if (escConfig()->motor3Dmode) {
-              // up
-              if (inputNormed >= escConfig()->input3DdeadbandHigh) {
-                if (motorDirection == !escConfig()->motorDirection) {
-                  motorDirection = escConfig()->motorDirection;
-                  motorBemfCounter = 0;
-                }
-                outputPwm = (inputNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
-              }
-              // down
-              if (inputNormed <= escConfig()->input3DdeadbandLow) {
-                if(motorDirection == escConfig()->motorDirection) {
-                  motorDirection = !escConfig()->motorDirection;
-                  motorBemfCounter = 0;
-                }
-                outputPwm = inputNormed + escConfig()->motorStartThreshold;
-              }
-              // deadband
-              if ((inputNormed > escConfig()->input3DdeadbandLow) && (inputNormed < escConfig()->input3DdeadbandHigh)) {
-                outputPwm = 0;
-              }
-            } else {
-              outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold);
-              // introduces non linearity.
-              //outputPwm = scaleInputToOutput(inputNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
-            }
-
-            outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-          }
-        } // PROSHOT
-
-        // SERVOPWM (use only for thrust tests ...)
-        if ((inputProtocol == SERVOPWM)  && (inputDataValid)) {
-          if (inputData  < DSHOT_CMD_MAX) {
-            motorStartup = false;
-            outputPwm = 0;
-          } else {
-            motorStartup = true;
-            motorBrakeActiveProportional = false;
-            outputPwm = constrain((inputData + DSHOT_CMD_MAX), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-          }
-        } // SERVOPWM
-
-        // input
-        motorDutyCycle = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        motorPwmTimerHandle.Instance->CCR1 = motorDutyCycle;
-        motorPwmTimerHandle.Instance->CCR2 = motorDutyCycle;
-        motorPwmTimerHandle.Instance->CCR3 = motorDutyCycle;
 
         // motor BEMF filter
         if ((motorCommutationInterval < 400) && (motorDutyCycle > 500)) {
