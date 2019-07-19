@@ -1,5 +1,7 @@
 #include "main.h"
 
+uint8_t  printIndex = 0;
+
 // ADC
 kalman_t adcCurrentFilterState;
 
@@ -158,9 +160,21 @@ int main(void) {
 
     #if (defined(_DEBUG_))
       //serialPrint("abc");
-      //serialPrintNumber(123, 10, 1);
-      serialPrintNumber(motorCommutationInterval, 10, 1);
-      serialPrint("\r\n");
+      //serialPrintNumber(123, 10, 1);outputPwm
+
+      if (printIndex > 100) {
+        serialPrint("PWM[");
+        serialPrintNumber(outputPwm, 10, 1);
+        serialPrint("] ");
+        serialPrint("BEMF[");
+        serialPrintNumber(motorCommutationInterval, 10, 1);
+        serialPrint("] ");
+        serialPrint("\r\n");
+        printIndex = 0;
+      } else {
+        printIndex++;
+      }
+
     #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
