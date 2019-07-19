@@ -325,7 +325,7 @@ void inputServoPwm() {
           motorBrakeActiveProportional = false;
 
           // output
-          outputPwm = constrain((inputData + DSHOT_CMD_MAX), OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
           motorPwmTimerHandle.Instance->CCR1 = outputPwm;
           motorPwmTimerHandle.Instance->CCR2 = outputPwm;
           motorPwmTimerHandle.Instance->CCR3 = outputPwm;

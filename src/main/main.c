@@ -123,6 +123,7 @@ int main(void) {
         }
 
         if (++motorBemfZeroCounterTimeout > motorBemfZeroCounterTimeoutThreshold) {
+          motorBemfZeroCrossTimestamp = 0;
           kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 31);
           motorRunning = false;
           motorDutyCycle = 0;
@@ -137,14 +138,14 @@ int main(void) {
         // ToDo
         motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorBemfZeroCrossTimestamp);
         motorCommutationDelay = 0; //timing 30°
-        //motorCommutationDelay = motorCommutationInterval >> 2; //timing 15°
-        //motorCommutationDelay = motorCommutationInterval >> 1; //timing 0°
+        //motorCommutationDelay = motorCommutationInterval >> 3; //timing 15°
+        //motorCommutationDelay = motorCommutationInterval >> 2; //timing 0°
         //motorCommutationDelay = constrain(motorCommutationDelay, 17, 413);
       } // inputArmed
     } // inputProtocol detected
 
     // current limitation
-    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
+    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(DYS35ARIA))
       adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
       if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
         inputDisarm();
@@ -159,22 +160,28 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_))
-      //serialPrint("abc");
-      //serialPrintNumber(123, 10, 1);outputPwm
-
-      if (printIndex > 100) {
+      if (printIndex > 7) {
+        serialPrint("IN[");
+        serialPrintInteger(inputData, 10, 1);
+        serialPrint("] ");
         serialPrint("PWM[");
-        serialPrintNumber(outputPwm, 10, 1);
+        serialPrintInteger(outputPwm, 10, 1);
         serialPrint("] ");
         serialPrint("BEMF[");
-        serialPrintNumber(motorCommutationInterval, 10, 1);
+        serialPrintInteger(motorCommutationInterval, 10, 1);
         serialPrint("] ");
+        serialPrint("BEMFr[");
+        serialPrintInteger(motorBemfZeroCrossTimestamp, 10, 1);
+        serialPrint("] ");
+        serialPrint("A[");
+        serialPrintInteger(adcCurrent, 10, 1);
+        serialPrint("] ");
+
         serialPrint("\r\n");
         printIndex = 0;
       } else {
         printIndex++;
       }
-
     #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))

@@ -267,7 +267,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorBemfZeroCrossTimestamp = motorTimestamp;
 
   // ToDo
-  if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 37) && (outputPwm < 707)) {
+  if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (outputPwm > 45) && (outputPwm < 707)) {
     while (motorCommutationTimerHandle.Instance->CNT < motorCommutationDelay) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
         LED_TOGGLE(LED_BLUE);
