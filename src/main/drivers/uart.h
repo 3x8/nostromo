@@ -42,10 +42,6 @@ typedef struct {
 void serialInit(void);
 void serialWrite(char ch);
 void serialPrint(const char  *str);
+void serialPrintInteger(uint32_t n, uint8_t base, uint8_t arg);
 bool serialAvailable(void);
 char serialRead(void);
-void serialPrintInteger(unsigned long n, uint8_t base, uint8_t arg);
-
-#ifdef DEBUG
-  int _write (int fd, char *ptr, int len);
-#endif

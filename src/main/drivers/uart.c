@@ -51,7 +51,7 @@ void serialPrint(const char *str) {
   }
 }
 
-void serialPrintInteger(unsigned long n, uint8_t base, uint8_t arg) {
+void serialPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
   char buf[8 * sizeof(long) + 1];
   char *str = &buf[sizeof(buf) - 1];
 
