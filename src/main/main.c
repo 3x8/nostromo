@@ -158,7 +158,7 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_))
-      if (printIndex > 7) {
+      if ( ((outputPwm > 500) && (printIndex > 7)) || ((outputPwm < 500) && (printIndex > 100)) ){
         serialPrint("IN[");
         serialPrintInteger(inputData, 10, 1);
         serialPrint("] ");
