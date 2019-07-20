@@ -8,9 +8,8 @@ bool motorStartup, motorRunning;
 bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 
 uint16_t motorStep = 1;
-uint32_t motorBemfZeroCrossTimestamp;
+uint32_t motorBemfCounter, motorBemfZeroCrossTimestamp;
 uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
-uint32_t motorDutyCycle, motorBemfCounter;
 uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
 uint32_t motorCommutationInterval, motorCommutationDelay;
 

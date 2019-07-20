@@ -25,11 +25,7 @@ void inputArmCheck(void) {
       if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         inputArmed = true;
         #if (!defined(_DEBUG_))
-          #if (!defined(LED_INVERTED))
-            LED_ON(LED_BLUE);
-          #else
-            LED_OFF(LED_BLUE);
-          #endif
+          LED_ON(LED_BLUE);
         #endif
         motorInputTune(1);
       }
@@ -46,11 +42,7 @@ void inputDisarm(void) {
   inputTimeoutCounter = 0;
 
   #if (!defined(_DEBUG_))
-    #if (!defined(LED_INVERTED))
-      LED_OFF(LED_BLUE);
-    #else
-      LED_ON(LED_BLUE);
-    #endif
+    LED_OFF(LED_BLUE);
   #endif
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
@@ -145,11 +137,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthMin = 20000;
 
   #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-    #if (!defined(LED_INVERTED))
-      LED_OFF(LED_GREEN);
-    #else
-      LED_ON(LED_GREEN);
-    #endif
+    LED_OFF(LED_GREEN);
   #endif
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
@@ -168,11 +156,7 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-      #if (!defined(LED_INVERTED))
         LED_ON(LED_GREEN);
-      #else
-        LED_OFF(LED_GREEN);
-      #endif
     #endif
 
     return;
@@ -185,11 +169,7 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
-      #if (!defined(LED_INVERTED))
-        LED_ON(LED_GREEN);
-      #else
-        LED_OFF(LED_GREEN);
-      #endif
+      LED_ON(LED_GREEN);
     #endif
 
     return;
@@ -209,11 +189,7 @@ void inputProshot() {
   uint32_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-    #if (!defined(LED_INVERTED))
-      LED_OFF(LED_GREEN);
-    #else
-      LED_ON(LED_GREEN);
-    #endif
+    LED_OFF(LED_GREEN);
   #endif
 
   for (int i = 0; i < 4; i++) {
@@ -281,11 +257,7 @@ void inputProshot() {
     }
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-      #if (!defined(LED_INVERTED))
-        LED_ON(LED_GREEN);
-      #else
-        LED_OFF(LED_GREEN);
-      #endif
+      LED_ON(LED_GREEN);
     #endif
 
     return;
@@ -293,11 +265,7 @@ void inputProshot() {
     inputDataValid = false;
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
-      #if (!defined(LED_INVERTED))
-        LED_ON(LED_GREEN);
-      #else
-        LED_OFF(LED_GREEN);
-      #endif
+      LED_ON(LED_GREEN);
     #endif
 
     return;

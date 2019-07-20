@@ -13,9 +13,8 @@ kalman_t motorCommutationIntervalFilterState;
 extern TIM_HandleTypeDef motorPwmTimerHandle;
 extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-extern uint32_t motorBemfZeroCrossTimestamp;
+extern uint32_t  motorBemfCounter, motorBemfZeroCrossTimestamp;
 extern uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
-extern uint32_t motorDutyCycle, motorBemfCounter;
 extern uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
 extern uint32_t motorCommutationInterval, motorCommutationDelay;
 
@@ -62,11 +61,7 @@ int main(void) {
   while (true) {
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-      #if (!defined(LED_INVERTED))
-        LED_OFF(LED_BLUE);
-      #else
-        LED_ON(LED_BLUE);
-      #endif
+      LED_OFF(LED_BLUE);
     #endif
 
     watchdogFeed();
@@ -77,23 +72,19 @@ int main(void) {
         case BRAKE_FULL:
           motorBrakeActiveProportional = false;
           motorBrakeFull();
-          motorDutyCycle = 0;
           break;
         case BRAKE_PROPORTIONAL:
           motorBrakeActiveProportional = true;
-          motorDutyCycle = escConfig()->motorBrakeStrength;
+          motorPwmTimerHandle.Instance->CCR1 = escConfig()->motorBrakeStrength;
+          motorPwmTimerHandle.Instance->CCR2 = escConfig()->motorBrakeStrength;
+          motorPwmTimerHandle.Instance->CCR3 = escConfig()->motorBrakeStrength;
           motorBrakeProportional();
           break;
         case BRAKE_OFF:
           motorBrakeActiveProportional = false;
           motorBrakeOff();
-          motorDutyCycle = 0;
           break;
       }
-
-      motorPwmTimerHandle.Instance->CCR1 = motorDutyCycle;
-      motorPwmTimerHandle.Instance->CCR2 = motorDutyCycle;
-      motorPwmTimerHandle.Instance->CCR3 = motorDutyCycle;
     }
 
     if (inputProtocol == AUTODETECT) {
@@ -104,7 +95,7 @@ int main(void) {
       if (inputArmed) {
 
         // motor BEMF filter
-        if ((motorCommutationInterval < 400) && (motorDutyCycle > 500)) {
+        if ((motorCommutationInterval < 400) && (outputPwm > 500)) {
           motorBemfFilterDelay = 1;
           motorBemfFilterLevel = 1;
         } else {
@@ -113,7 +104,7 @@ int main(void) {
         }
 
         // timeouts
-        if (motorDutyCycle < 300) {
+        if (outputPwm < 300) {
           motorBemfZeroCounterTimeoutThreshold = 400;
         } else {
           motorBemfZeroCounterTimeoutThreshold = 200;
@@ -124,7 +115,7 @@ int main(void) {
           motorBemfZeroCrossTimestamp = 0;
           kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
           motorRunning = false;
-          motorDutyCycle = 0;
+          outputPwm = 0;
         }
 
         // motor start
@@ -148,11 +139,7 @@ int main(void) {
       if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
-          #if (!defined(LED_INVERTED))
-            LED_ON(LED_RED);
-          #else
-            LED_OFF(LED_RED);
-          #endif
+          LED_ON(LED_RED);
         #endif
       }
     #endif
@@ -189,11 +176,7 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-      #if (!defined(LED_INVERTED))
-        LED_ON(LED_BLUE);
-      #else
-        LED_OFF(LED_BLUE);
-      #endif
+      LED_ON(LED_BLUE);
     #endif
   } // main loop
 
