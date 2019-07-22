@@ -176,9 +176,13 @@ int main(void) {
         serialPrint("BEMF[");
         serialPrintInteger(motorCommutationInterval, 10, 1);
         serialPrint("] ");
+
+
+        /*
         serialPrint("BEMFr[");
         serialPrintInteger(motorBemfZeroCrossTimestamp, 10, 1);
         serialPrint("] ");
+        */
 
         serialPrint("u[");
         serialPrintInteger(adcRaw.voltage, 10, 1);
