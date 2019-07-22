@@ -2,16 +2,13 @@
 
 ADC_HandleTypeDef adcHandle;
 DMA_HandleTypeDef adcDmaHandle;
-
-uint32_t adcValue[3];
-uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
-uint32_t adcVoltage, adcCurrent, adcTemperature;
-
+uint32_t adcDmaBuffer[3];
+adcData_t adcRaw, adcFiltered;
 
 void adcRead(void){
-  //adcVoltageRaw = adcValue[0];
-  //adcTemperatureRaw = adcValue[0];
-  adcCurrentRaw = adcValue[0];
+  adcRaw.voltage = adcDmaBuffer[0];
+  adcRaw.current = adcDmaBuffer[1];
+  adcRaw.temperature = adcDmaBuffer[2];
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle) {

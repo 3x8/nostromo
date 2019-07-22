@@ -1,10 +1,10 @@
 #include "system.h"
 
-extern ADC_HandleTypeDef adcHandle;
+//extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
 
-extern uint32_t adcValue[3];
+//extern uint32_t adcDmaBuffer[3];
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -83,16 +83,16 @@ void systemAdcInit(void) {
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
-  //sConfig.Channel = ADC_VOLTAGE;
-  //while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
-
   sConfig.Channel = ADC_CURRENT;
   while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-  //sConfig.Channel = ADC_TEMPERATURE;
-  //while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+  sConfig.Channel = ADC_VOLTAGE;
+  while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-  while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcValue, 1) != HAL_OK);
+  sConfig.Channel = ADC_TEMPERATURE;
+  while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+
+  while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcDmaBuffer, 3) != HAL_OK);
 }
 
 

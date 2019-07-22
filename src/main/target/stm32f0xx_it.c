@@ -2,8 +2,8 @@
 
 extern void inputCallbackDMA();
 
-extern DMA_HandleTypeDef adcDmaHandle;
-extern ADC_HandleTypeDef adcHandle;
+//extern DMA_HandleTypeDef adcDmaHandle;
+//extern ADC_HandleTypeDef adcHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle;

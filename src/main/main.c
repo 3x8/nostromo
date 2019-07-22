@@ -5,7 +5,8 @@ uint8_t  printIndex = 0;
 
 // ADC
 kalman_t adcCurrentFilterState;
-extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
+extern adcData_t adcRaw, adcFiltered;
+//extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
 extern uint32_t adcVoltage, adcCurrent, adcTemperature;
 
 // motor
@@ -135,8 +136,8 @@ int main(void) {
 
     // current limitation
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-      adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
-      if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
+      adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
+      if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
@@ -145,8 +146,8 @@ int main(void) {
     #endif
 
     #if (defined(DYS35ARIA))
-      adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
-      if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent) && (outputPwm > 200)) {
+      adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
+      if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent) && (outputPwm > 200)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
@@ -154,8 +155,9 @@ int main(void) {
       }
     #endif
 
-
-    telemetry();
+    #if (!defined(_DEBUG_))
+      telemetry();
+    #endif
 
     #if (defined(_DEBUG_))
       if ( ((outputPwm > 500) && (printIndex > 7)) || ((outputPwm < 500) && (printIndex > 100)) ){
@@ -177,8 +179,15 @@ int main(void) {
         serialPrint("BEMFr[");
         serialPrintInteger(motorBemfZeroCrossTimestamp, 10, 1);
         serialPrint("] ");
-        serialPrint("A[");
-        serialPrintInteger(adcCurrent, 10, 1);
+
+        serialPrint("u[");
+        serialPrintInteger(adcRaw.voltage, 10, 1);
+        serialPrint("] ");
+        serialPrint("i[");
+        serialPrintInteger(adcRaw.current, 10, 1);
+        serialPrint("] ");
+        serialPrint("t[");
+        serialPrintInteger(adcRaw.temperature, 10, 1);
         serialPrint("] ");
 
         serialPrint("\r\n");
