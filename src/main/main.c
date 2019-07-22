@@ -67,7 +67,7 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    if (!outputPwm) {
+    if ((!outputPwm) && (inputProtocol != SERVOPWM)) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeActiveProportional = false;
@@ -154,8 +154,8 @@ int main(void) {
         serialPrint("] ");
 
         serialPrint("RPM[");
-        //serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
-        serialPrintInteger(9276437/motorCommutationInterval, 10, 1);
+        serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
+        //serialPrintInteger(9276437/motorCommutationInterval, 10, 1); //calculated
         serialPrint("] ");
 
         serialPrint("BEMF[");

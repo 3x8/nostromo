@@ -291,13 +291,13 @@ void inputServoPwm() {
         } else {
           motorStartup = true;
           motorBrakeActiveProportional = false;
-
-          // output
           outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-          motorPwmTimerHandle.Instance->CCR1 = outputPwm;
-          motorPwmTimerHandle.Instance->CCR2 = outputPwm;
-          motorPwmTimerHandle.Instance->CCR3 = outputPwm;
         }
+
+        // output
+        motorPwmTimerHandle.Instance->CCR1 = outputPwm;
+        motorPwmTimerHandle.Instance->CCR2 = outputPwm;
+        motorPwmTimerHandle.Instance->CCR3 = outputPwm;
       }
 
       return;
