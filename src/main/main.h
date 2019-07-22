@@ -28,4 +28,5 @@
 #include "drivers/input.h"
 #include "drivers/motor.h"
 #include "drivers/uart.h"
+#include "drivers/telemetry.h"
 #include "config/config.h"

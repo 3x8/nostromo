@@ -154,6 +154,9 @@ int main(void) {
       }
     #endif
 
+
+    telemetry();
+
     #if (defined(_DEBUG_))
       if ( ((outputPwm > 500) && (printIndex > 7)) || ((outputPwm < 500) && (printIndex > 100)) ){
         serialPrint("IN[");

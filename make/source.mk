@@ -26,6 +26,7 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
                     drivers/input.c \
                     drivers/motor.c \
                     drivers/uart.c \
+                    drivers/telemetry.c \
                     config/config.c
 
 SIZE_OPTIMISED_SRC  := ""
