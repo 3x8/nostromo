@@ -67,7 +67,7 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    if ((!outputPwm) && (inputProtocol != SERVOPWM)) {
+    if ((!motorStartup) && (!motorRunning)) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeActiveProportional = false;
