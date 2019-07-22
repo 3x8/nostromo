@@ -134,9 +134,19 @@ int main(void) {
     } // inputProtocol detected
 
     // current limitation
-    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(DYS35ARIA))
+    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
       adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
       if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent)) {
+        inputDisarm();
+        #if (!defined(_DEBUG_))
+          LED_ON(LED_RED);
+        #endif
+      }
+    #endif
+
+    #if (defined(DYS35ARIA))
+      adcCurrent = kalmanUpdate(&adcCurrentFilterState, (float)adcCurrentRaw);
+      if ((escConfig()->limitCurrent > 0) && (adcCurrent > escConfig()->limitCurrent) && (outputPwm > 200)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
