@@ -41,6 +41,11 @@ void inputDisarm(void) {
   inputArmCounter = 0;
   inputTimeoutCounter = 0;
 
+  // output
+  motorPwmTimerHandle.Instance->CCR1 = outputPwm;
+  motorPwmTimerHandle.Instance->CCR2 = outputPwm;
+  motorPwmTimerHandle.Instance->CCR3 = outputPwm;
+
   #if (!defined(_DEBUG_))
     LED_OFF(LED_BLUE);
   #endif
