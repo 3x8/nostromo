@@ -212,7 +212,7 @@ void inputProshot() {
         }
       } else {
         motor.Startup = true;
-        motorBrakeActiveProportional = false;
+        motor.BrakeActiveProportional = false;
         input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
         if (escConfig()->motor3Dmode) {
@@ -220,7 +220,7 @@ void inputProshot() {
           if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
             if (motor.Direction == !escConfig()->motorDirection) {
               motor.Direction = escConfig()->motorDirection;
-              motorBemfCounter = 0;
+              motor.BemfCounter = 0;
             }
             input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
           }
@@ -228,7 +228,7 @@ void inputProshot() {
           if (input.DataNormed <= escConfig()->input3DdeadbandLow) {
             if(motor.Direction == escConfig()->motorDirection) {
               motor.Direction = !escConfig()->motorDirection;
-              motorBemfCounter = 0;
+              motor.BemfCounter = 0;
             }
             input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
           }
@@ -284,7 +284,7 @@ void inputServoPwm() {
           input.PwmValue = 0;
         } else {
           motor.Startup = true;
-          motorBrakeActiveProportional = false;
+          motor.BrakeActiveProportional = false;
           input.PwmValue = constrain(input.Data, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         }
 

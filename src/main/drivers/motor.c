@@ -3,22 +3,12 @@
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 
-bool motorBemfRising;
-//bool motorStartup, motorRunning;
-bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-
-uint16_t motorStep = 1;
-uint32_t motorBemfCounter, motorBemfZeroCrossTimestamp;
-uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
-uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
-uint32_t motorCommutationInterval, motorCommutationDelay;
-
 motor_t motor;
 
 void motorPhaseA(uint8_t hBridgeMode) {
   switch (hBridgeMode) {
     case HBRIDGE_PWM:
-      if (!motor.SlowDecay || motorBrakeActiveProportional) {
+      if (!motor.SlowDecay || motor.BrakeActiveProportional) {
         LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
         A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
       } else {
@@ -44,7 +34,7 @@ void motorPhaseA(uint8_t hBridgeMode) {
 void motorPhaseB(uint8_t hBridgeMode) {
   switch (hBridgeMode) {
     case HBRIDGE_PWM:
-      if(!motor.SlowDecay  || motorBrakeActiveProportional) {
+      if(!motor.SlowDecay  || motor.BrakeActiveProportional) {
         LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
         B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
       } else {
@@ -70,7 +60,7 @@ void motorPhaseB(uint8_t hBridgeMode) {
 void motorPhaseC(uint8_t hBridgeMode) {
   switch (hBridgeMode) {
     case HBRIDGE_PWM:
-      if (!motor.SlowDecay || motorBrakeActiveProportional) {
+      if (!motor.SlowDecay || motor.BrakeActiveProportional) {
         LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
         C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
       } else {
@@ -154,7 +144,7 @@ void motorBrakeProportional() {
 }
 
 void motorChangeComparatorInput() {
-  switch(motorStep) {
+  switch(motor.Step) {
     case 1:
     case 4:
       // C floating
@@ -173,7 +163,7 @@ void motorChangeComparatorInput() {
   }
 
   // polarity of comp output reversed
-  if (motorBemfRising) {
+  if (motor.BemfRising) {
     motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   } else {
     motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
@@ -184,28 +174,28 @@ void motorChangeComparatorInput() {
 
 void motorCommutate() {
   if (motor.Direction == SPIN_CW) {
-    if (++motorStep > 6) {
-      motorStep = 1;
+    if (++motor.Step > 6) {
+      motor.Step = 1;
     }
 
-    if ((motorStep == 1) || (motorStep == 3) || (motorStep == 5)) {
-      motorBemfRising = true;
+    if ((motor.Step == 1) || (motor.Step == 3) || (motor.Step == 5)) {
+      motor.BemfRising = true;
     } else {
-      motorBemfRising = false;
+      motor.BemfRising = false;
     }
   } else {
-    if (--motorStep < 1) {
-      motorStep = 6;
+    if (--motor.Step < 1) {
+      motor.Step = 6;
     }
 
-    if ((motorStep == 1) || (motorStep == 3) || (motorStep == 5)) {
-      motorBemfRising = false;
+    if ((motor.Step == 1) || (motor.Step == 3) || (motor.Step == 5)) {
+      motor.BemfRising = false;
     } else {
-      motorBemfRising = true;
+      motor.BemfRising = true;
     }
   }
 
-  motorCommutationStep(motorStep);
+  motorCommutationStep(motor.Step);
   motorChangeComparatorInput();
 }
 
@@ -224,7 +214,7 @@ void motorStart() {
     motorCommutate();
 
     motorCommutationTimerHandle.Instance->CNT = 0xffff;
-    motorBemfCounter = 0;
+    motor.BemfCounter = 0;
     motor.Running = true;
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   }
@@ -243,11 +233,11 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     return;
   }
 
-  while ((motorCommutationTimerHandle.Instance->CNT - motorTimestamp) < motorBemfFilterDelay);
+  while ((motorCommutationTimerHandle.Instance->CNT - motorTimestamp) < motor.BemfFilterDelay);
 
-  for (int i = 0; i < motorBemfFilterLevel; i++) {
-    if ((motorBemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
-        (!motorBemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
+  for (int i = 0; i < motor.BemfFilterLevel; i++) {
+    if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
+        (!motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
 
       __enable_irq();
       return;
@@ -261,13 +251,13 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
   motorCommutationTimerHandle.Instance->CNT = 0xffff;
 
-  motorBemfCounter++;
-  motorBemfZeroCounterTimeout = 0;
-  motorBemfZeroCrossTimestamp = motorTimestamp;
+  motor.BemfCounter++;
+  motor.BemfZeroCounterTimeout = 0;
+  motor.BemfZeroCrossTimestamp = motorTimestamp;
 
   // ToDo
-  if ((motorCommutationDelay > 31) && (motorCommutationDelay < 613) && (input.PwmValue > 45) && (input.PwmValue < 707)) {
-    while (motorCommutationTimerHandle.Instance->CNT < motorCommutationDelay) {
+  if ((motor.CommutationDelay > 31) && (motor.CommutationDelay < 613) && (input.PwmValue > 45) && (input.PwmValue < 707)) {
+    while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
       #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
         LED_TOGGLE(LED_BLUE);
       #endif
@@ -290,7 +280,7 @@ void motorStartupTune() {
   motorPwmTimerHandle.Instance->CCR2 = 5;
   motorPwmTimerHandle.Instance->CCR3 = 5;
 
-  motorCommutationStep(motorStep);
+  motorCommutationStep(motor.Step);
   motorPwmTimerHandle.Instance->PSC = 100;
   HAL_Delay(100);
   motorPwmTimerHandle.Instance->PSC = 75;

@@ -33,6 +33,7 @@ int main(void) {
 
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
 
+  motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.SlowDecay = escConfig()->motorSlowDecay;
   // start with motor off
@@ -55,18 +56,18 @@ int main(void) {
     if ((!motor.Startup) && (!motor.Running)) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
-          motorBrakeActiveProportional = false;
+          motor.BrakeActiveProportional = false;
           motorBrakeFull();
           break;
         case BRAKE_PROPORTIONAL:
-          motorBrakeActiveProportional = true;
+          motor.BrakeActiveProportional = true;
           motorPwmTimerHandle.Instance->CCR1 = escConfig()->motorBrakeStrength;
           motorPwmTimerHandle.Instance->CCR2 = escConfig()->motorBrakeStrength;
           motorPwmTimerHandle.Instance->CCR3 = escConfig()->motorBrakeStrength;
           motorBrakeProportional();
           break;
         case BRAKE_OFF:
-          motorBrakeActiveProportional = false;
+          motor.BrakeActiveProportional = false;
           motorBrakeOff();
           break;
       }
@@ -80,24 +81,24 @@ int main(void) {
       if (input.Armed) {
 
         // motor BEMF filter
-        if ((motorCommutationInterval < 400) && (input.PwmValue > 500)) {
-          motorBemfFilterDelay = 1;
-          motorBemfFilterLevel = 1;
+        if ((motor.CommutationInterval < 400) && (input.PwmValue > 500)) {
+          motor.BemfFilterDelay = 1;
+          motor.BemfFilterLevel = 1;
         } else {
-          motorBemfFilterLevel = 3;
-          motorBemfFilterDelay = 3;
+          motor.BemfFilterLevel = 3;
+          motor.BemfFilterDelay = 3;
         }
 
         // timeouts
         if (input.PwmValue < 300) {
-          motorBemfZeroCounterTimeoutThreshold = 400;
+          motor.BemfZeroCounterTimeoutThreshold = 400;
         } else {
-          motorBemfZeroCounterTimeoutThreshold = 200;
+          motor.BemfZeroCounterTimeoutThreshold = 200;
         }
 
         // motor not turning
-        if (++motorBemfZeroCounterTimeout > motorBemfZeroCounterTimeoutThreshold) {
-          motorBemfZeroCrossTimestamp = 0;
+        if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
+          motor.BemfZeroCrossTimestamp = 0;
           kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
           motor.Running = false;
           input.PwmValue = 0;
@@ -105,16 +106,16 @@ int main(void) {
 
         // motor start
         if ((motor.Startup) && (!motor.Running)) {
-          motorBemfZeroCounterTimeout = 0;
+          motor.BemfZeroCounterTimeout = 0;
           motorStart();
         }
 
         // ToDo
-        motorCommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motorBemfZeroCrossTimestamp);
-        motorCommutationDelay = 0; //timing 30°
-        //motorCommutationDelay = motorCommutationInterval >> 3; //timing 15°
-        //motorCommutationDelay = motorCommutationInterval >> 2; //timing 0°
-        //motorCommutationDelay = constrain(motorCommutationDelay, 17, 413);
+        motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
+        motor.CommutationDelay = 0; //timing 30°
+        //motor.CommutationDelay = motor.CommutationInterval >> 3; //timing 15°
+        //motor.CommutationDelay = motor.CommutationInterval >> 2; //timing 0°
+        //motor.CommutationDelay = constrain(motor.CommutationDelay, 17, 413);
       } // input.Armed
     } // input.Protocol detected
 
@@ -170,16 +171,16 @@ int main(void) {
 
         /*
         serialPrint("RPM[");
-        serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
-        //serialPrintInteger(9276437/motorCommutationInterval, 10, 1); //calculated
+        serialPrintInteger(7037000/motor.CommutationInterval, 10, 1);
+        //serialPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         serialPrint("] ");
 
         serialPrint("BEMF[");
-        serialPrintInteger(motorCommutationInterval, 10, 1);
+        serialPrintInteger(motor.CommutationInterval, 10, 1);
         serialPrint("] ");
 
         serialPrint("BEMFr[");
-        serialPrintInteger(motorBemfZeroCrossTimestamp, 10, 1);
+        serialPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         serialPrint("] ");
         */
 
