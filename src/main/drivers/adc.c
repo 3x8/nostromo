@@ -2,8 +2,9 @@
 
 ADC_HandleTypeDef adcHandle;
 DMA_HandleTypeDef adcDmaHandle;
+
 uint32_t adcDmaBuffer[3];
-adcData_t adcRaw, adcFiltered;
+adcData_t adcRaw, adcScaled, adcFiltered;
 
 void adcRead(void){
   adcRaw.voltage = adcDmaBuffer[0];

@@ -3,11 +3,8 @@
 // debug
 uint8_t  printIndex = 0;
 
-// ADC
-kalman_t adcCurrentFilterState;
-extern adcData_t adcRaw, adcFiltered;
-//extern uint32_t adcVoltageRaw, adcCurrentRaw, adcTemperatureRaw;
-extern uint32_t adcVoltage, adcCurrent, adcTemperature;
+// adc
+kalman_t adcVoltageFilterState, adcCurrentFilterState, adcTemperatureFilterState;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
@@ -46,7 +43,10 @@ int main(void) {
 
   // init
   ledOff();
-  kalmanInit(&adcCurrentFilterState, 1500.0f, 31);
+  kalmanInit(&adcVoltageFilterState, 2500.0f, 31);
+  kalmanInit(&adcCurrentFilterState, 2500.0f, 31);
+  kalmanInit(&adcTemperatureFilterState, 2500.0f, 31);
+
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
 
   motorDirection = escConfig()->motorDirection;
@@ -137,6 +137,9 @@ int main(void) {
     // current limitation
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
       adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
+      adcFiltered.voltage = kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage);
+      adcScaled.current = ((adcFiltered.current - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
+      adcScaled.voltage = ((adcFiltered.voltage - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
       if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
@@ -168,6 +171,7 @@ int main(void) {
         serialPrintInteger(outputPwm, 10, 1);
         serialPrint("] ");
 
+        /*
         serialPrint("RPM[");
         serialPrintInteger(7037000/motorCommutationInterval, 10, 1);
         //serialPrintInteger(9276437/motorCommutationInterval, 10, 1); //calculated
@@ -177,20 +181,22 @@ int main(void) {
         serialPrintInteger(motorCommutationInterval, 10, 1);
         serialPrint("] ");
 
-
-        /*
         serialPrint("BEMFr[");
         serialPrintInteger(motorBemfZeroCrossTimestamp, 10, 1);
         serialPrint("] ");
         */
 
-        serialPrint("u[");
-        serialPrintInteger(adcRaw.voltage, 10, 1);
+
+        serialPrint("Ufs[");
+        serialPrintInteger(adcScaled.voltage, 10, 1);
         serialPrint("] ");
-        serialPrint("i[");
-        serialPrintInteger(adcRaw.current, 10, 1);
+
+        serialPrint("Ifs[");
+        serialPrintInteger(adcScaled.current, 10, 1);
         serialPrint("] ");
-        serialPrint("t[");
+
+
+        serialPrint("Tr[");
         serialPrintInteger(adcRaw.temperature, 10, 1);
         serialPrint("] ");
 
