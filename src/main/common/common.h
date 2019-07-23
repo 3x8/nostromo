@@ -20,7 +20,7 @@ uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 
 // kalman filter
 #define FAST_CODE                   __attribute__((section(".tcm_code")))
-#define MAX_WINDOW_SIZE 32
+#define MAX_WINDOW_SIZE 7
 
 typedef struct kalman_s {
     uint32_t w;    // window size
