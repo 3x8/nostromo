@@ -33,11 +33,11 @@ int main(void) {
 
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
 
-  motorDirection = escConfig()->motorDirection;
-  motorSlowDecay = escConfig()->motorSlowDecay;
+  motor.Direction = escConfig()->motorDirection;
+  motor.SlowDecay = escConfig()->motorSlowDecay;
   // start with motor off
-  inputData = 0;
-  outputPwm = 0;
+  input.Data = 0;
+  input.PwmValue = 0;
 
   watchdogInit(2000);
   motorStartupTune();
@@ -52,7 +52,7 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    if ((!motorStartup) && (!motorRunning)) {
+    if ((!motor.Startup) && (!motor.Running)) {
       switch(escConfig()->motorBrake) {
         case BRAKE_FULL:
           motorBrakeActiveProportional = false;
@@ -72,15 +72,15 @@ int main(void) {
       }
     }
 
-    if (inputProtocol == AUTODETECT) {
+    if (input.Protocol == AUTODETECT) {
       // noop
     } else {
       inputArmCheck();
       inputDisarmCheck();
-      if (inputArmed) {
+      if (input.Armed) {
 
         // motor BEMF filter
-        if ((motorCommutationInterval < 400) && (outputPwm > 500)) {
+        if ((motorCommutationInterval < 400) && (input.PwmValue > 500)) {
           motorBemfFilterDelay = 1;
           motorBemfFilterLevel = 1;
         } else {
@@ -89,7 +89,7 @@ int main(void) {
         }
 
         // timeouts
-        if (outputPwm < 300) {
+        if (input.PwmValue < 300) {
           motorBemfZeroCounterTimeoutThreshold = 400;
         } else {
           motorBemfZeroCounterTimeoutThreshold = 200;
@@ -99,12 +99,12 @@ int main(void) {
         if (++motorBemfZeroCounterTimeout > motorBemfZeroCounterTimeoutThreshold) {
           motorBemfZeroCrossTimestamp = 0;
           kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
-          motorRunning = false;
-          outputPwm = 0;
+          motor.Running = false;
+          input.PwmValue = 0;
         }
 
         // motor start
-        if ((motorStartup) && (!motorRunning)) {
+        if ((motor.Startup) && (!motor.Running)) {
           motorBemfZeroCounterTimeout = 0;
           motorStart();
         }
@@ -115,8 +115,8 @@ int main(void) {
         //motorCommutationDelay = motorCommutationInterval >> 3; //timing 15°
         //motorCommutationDelay = motorCommutationInterval >> 2; //timing 0°
         //motorCommutationDelay = constrain(motorCommutationDelay, 17, 413);
-      } // inputArmed
-    } // inputProtocol detected
+      } // input.Armed
+    } // input.Protocol detected
 
 
     // adc limits
@@ -145,7 +145,7 @@ int main(void) {
     // ToDo
     #if (defined(DYS35ARIA))
       adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
-      if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent) && (outputPwm > 200)) {
+      if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent) && (input.PwmValue > 200)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
@@ -160,12 +160,12 @@ int main(void) {
     #endif*/
 
     //#if (defined(_DEBUG_))
-      if ( ((outputPwm > 500) && (printIndex > 7)) || ((outputPwm < 500) && (printIndex > 100)) ){
+      if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
         serialPrint("IN[");
-        serialPrintInteger(inputData, 10, 1);
+        serialPrintInteger(input.Data, 10, 1);
         serialPrint("] ");
         serialPrint("PWM[");
-        serialPrintInteger(outputPwm, 10, 1);
+        serialPrintInteger(input.PwmValue, 10, 1);
         serialPrint("] ");
 
         /*

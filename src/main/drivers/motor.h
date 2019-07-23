@@ -20,12 +20,31 @@ typedef enum {
   SPIN_CW
 } motorDirectionEnum;
 
+typedef struct {
+  bool Startup;
+  bool Running;
+  bool Direction;
+  bool SlowDecay;
+  bool BrakeActiveProportional;
+  bool BemfRising;
+  uint32_t BemfCounter;
+  uint32_t BemfZeroCrossTimestamp;
+  uint32_t BemfFilterLevel;
+  uint32_t BemfFilterDelay;
+  uint32_t BemfZeroCounterTimeout;
+  uint32_t BemfZeroCounterTimeoutThreshold;
+  uint32_t CommutationInterval, motorCommutationDelay;
+  uint32_t CommutationDelay;
+} motor_t;
+
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
 
-extern bool motorStartup, motorRunning;
+extern motor_t motor;
+
+//extern bool motorStartup, motorRunning;
 extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
 extern uint32_t  motorBemfCounter, motorBemfZeroCrossTimestamp;
 extern uint32_t motorBemfFilterLevel, motorBemfFilterDelay;

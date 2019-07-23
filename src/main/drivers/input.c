@@ -2,28 +2,17 @@
 
 TIM_HandleTypeDef inputTimerHandle;
 DMA_HandleTypeDef inputTimerDmaHandle;
-
-bool inputArmed, inputDataValid;
-
-uint8_t inputProtocol;
-uint32_t inputData;
-uint32_t inputNormed, outputPwm;
-uint32_t inputArmCounter, inputTimeoutCounter;
+input_t input;
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
-// motor
-extern TIM_HandleTypeDef motorPwmTimerHandle;
-extern bool motorStartup, motorRunning;
-extern bool motorDirection, motorBrakeActiveProportional;
-extern uint32_t motorBemfCounter;
 
 void inputArmCheck(void) {
-  if (!inputArmed) {
-    if ((inputProtocol != AUTODETECT) && (inputData < DSHOT_CMD_MAX) && inputDataValid) {
-      inputArmCounter++;
+  if (!input.Armed) {
+    if ((input.Protocol != AUTODETECT) && (input.Data < DSHOT_CMD_MAX) && input.DataValid) {
+      input.ArmingCounter++;
       HAL_Delay(1);
-      if (inputArmCounter > INPUT_ARM_COUNTER_THRESHOLD) {
-        inputArmed = true;
+      if (input.ArmingCounter > INPUT_ARM_COUNTER_THRESHOLD) {
+        input.Armed = true;
         #if (!defined(_DEBUG_))
           LED_ON(LED_BLUE);
         #endif
@@ -34,39 +23,39 @@ void inputArmCheck(void) {
 }
 
 void inputDisarm(void) {
-  inputData = 0;
-  inputNormed = 0;
-  outputPwm = 0;
-  inputArmed = false;
-  inputArmCounter = 0;
-  inputTimeoutCounter = 0;
+  input.Data = 0;
+  input.DataNormed = 0;
+  input.PwmValue = 0;
+  input.Armed = false;
+  input.ArmingCounter = 0;
+  input.TimeoutCounter = 0;
 
   // output
-  motorPwmTimerHandle.Instance->CCR1 = outputPwm;
-  motorPwmTimerHandle.Instance->CCR2 = outputPwm;
-  motorPwmTimerHandle.Instance->CCR3 = outputPwm;
+  motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+  motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+  motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
 
   #if (!defined(_DEBUG_))
     LED_OFF(LED_BLUE);
   #endif
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
-  inputProtocol = AUTODETECT;
+  input.Protocol = AUTODETECT;
   inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
   inputTimerHandle.Instance->CNT = 0xffff;
   HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
 }
 
 void inputDisarmCheck(void) {
-  inputTimeoutCounter++;
-  if (inputTimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
+  input.TimeoutCounter++;
+  if (input.TimeoutCounter > INPUT_TIMEOUT_COUNTER_THRESHOLD ) {
     inputDisarm();
   }
 }
 
 void inputDshotCommandRun(void) {
-  if (inputProtocol == PROSHOT) {
-    switch (inputData) {
+  if (input.Protocol == PROSHOT) {
+    switch (input.Data) {
     case DSHOT_CMD_MOTOR_STOP:
       break;
     case DSHOT_CMD_BEACON1:
@@ -96,10 +85,10 @@ void inputDshotCommandRun(void) {
       inputDisarm();
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
-      motorDirection = escConfig()->motorDirection;
+      motor.Direction = escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SPIN_DIRECTION_REVERSED:
-      motorDirection = !escConfig()->motorDirection;
+      motor.Direction = !escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
@@ -120,7 +109,7 @@ void inputDshotCommandRun(void) {
 }
 
 void inputCallbackDMA() {
-  switch (inputProtocol) {
+  switch (input.Protocol) {
      case AUTODETECT:
       inputDetectProtocol();
       break;
@@ -155,7 +144,7 @@ void inputDetectProtocol() {
   }
 
   if ((telegramPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (telegramPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
-    inputProtocol = PROSHOT;
+    input.Protocol = PROSHOT;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
@@ -168,7 +157,7 @@ void inputDetectProtocol() {
   }
 
   if (telegramPulseWidthMin > 900) {
-    inputProtocol = SERVOPWM;
+    input.Protocol = SERVOPWM;
     inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
@@ -181,7 +170,7 @@ void inputDetectProtocol() {
   }
 
   // default
-  if (inputProtocol == AUTODETECT) {
+  if (input.Protocol == AUTODETECT) {
     inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
@@ -209,55 +198,55 @@ void inputProshot() {
   telegramData = ((telegramPulseValue[0] << 7 | telegramPulseValue[1] << 3 | telegramPulseValue[2] >> 1));
 
   if ((telegramCalculatedCRC == telegramReceivedCRC) && (telegramData >= INPUT_VALUE_MIN) && (telegramData <= INPUT_VALUE_MAX)) {
-    inputDataValid = true;
-    inputTimeoutCounter = 0;
-    inputData = telegramData;
+    input.DataValid = true;
+    input.TimeoutCounter = 0;
+    input.Data = telegramData;
 
     // ToDo
-    if (inputArmed) {
-      if (inputData <= DSHOT_CMD_MAX) {
-        motorStartup = false;
-        outputPwm = 0;
-        if (!motorRunning) {
+    if (input.Armed) {
+      if (input.Data <= DSHOT_CMD_MAX) {
+        motor.Startup = false;
+        input.PwmValue = 0;
+        if (!motor.Running) {
           inputDshotCommandRun();
         }
       } else {
-        motorStartup = true;
+        motor.Startup = true;
         motorBrakeActiveProportional = false;
-        inputNormed = constrain((inputData - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
+        input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
         if (escConfig()->motor3Dmode) {
           // up
-          if (inputNormed >= escConfig()->input3DdeadbandHigh) {
-            if (motorDirection == !escConfig()->motorDirection) {
-              motorDirection = escConfig()->motorDirection;
+          if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
+            if (motor.Direction == !escConfig()->motorDirection) {
+              motor.Direction = escConfig()->motorDirection;
               motorBemfCounter = 0;
             }
-            outputPwm = (inputNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+            input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
           }
           // down
-          if (inputNormed <= escConfig()->input3DdeadbandLow) {
-            if(motorDirection == escConfig()->motorDirection) {
-              motorDirection = !escConfig()->motorDirection;
+          if (input.DataNormed <= escConfig()->input3DdeadbandLow) {
+            if(motor.Direction == escConfig()->motorDirection) {
+              motor.Direction = !escConfig()->motorDirection;
               motorBemfCounter = 0;
             }
-            outputPwm = inputNormed + escConfig()->motorStartThreshold;
+            input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
           }
           // deadband
-          if ((inputNormed > escConfig()->input3DdeadbandLow) && (inputNormed < escConfig()->input3DdeadbandHigh)) {
-            outputPwm = 0;
+          if ((input.DataNormed > escConfig()->input3DdeadbandLow) && (input.DataNormed < escConfig()->input3DdeadbandHigh)) {
+            input.PwmValue = 0;
           }
         } else {
-          outputPwm = (inputNormed >> 1) + (escConfig()->motorStartThreshold);
+          input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
           // introduces non linearity.
-          //outputPwm = scaleInputToOutput(inputNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
+          //input.PwmValue = scaleInputToOutput(input.DataNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
         }
 
         // output
-        outputPwm = constrain(outputPwm, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        motorPwmTimerHandle.Instance->CCR1 = outputPwm;
-        motorPwmTimerHandle.Instance->CCR2 = outputPwm;
-        motorPwmTimerHandle.Instance->CCR3 = outputPwm;
+        input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+        motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
       }
     }
 
@@ -267,7 +256,7 @@ void inputProshot() {
 
     return;
   } else {
-    inputDataValid = false;
+    input.DataValid = false;
 
     #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
       LED_ON(LED_GREEN);
@@ -285,29 +274,29 @@ void inputServoPwm() {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
 
     if ((telegramPulseWidthBuff >= INPUT_PWM_WIDTH_MIN_US) && (telegramPulseWidthBuff <= INPUT_PWM_WIDTH_MAX_US)) {
-      inputDataValid = true;
-      inputTimeoutCounter = 0;
-      inputData = scaleInputToOutput(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      input.DataValid = true;
+      input.TimeoutCounter = 0;
+      input.Data = scaleInputToOutput(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
 
-      if (inputArmed) {
-        if (inputData  < DSHOT_CMD_MAX) {
-          motorStartup = false;
-          outputPwm = 0;
+      if (input.Armed) {
+        if (input.Data  < DSHOT_CMD_MAX) {
+          motor.Startup = false;
+          input.PwmValue = 0;
         } else {
-          motorStartup = true;
+          motor.Startup = true;
           motorBrakeActiveProportional = false;
-          outputPwm = constrain(inputData, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          input.PwmValue = constrain(input.Data, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         }
 
         // output
-        motorPwmTimerHandle.Instance->CCR1 = outputPwm;
-        motorPwmTimerHandle.Instance->CCR2 = outputPwm;
-        motorPwmTimerHandle.Instance->CCR3 = outputPwm;
+        motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
       }
 
       return;
     } else {
-      inputDataValid = false;
+      input.DataValid = false;
     }
   }
 
