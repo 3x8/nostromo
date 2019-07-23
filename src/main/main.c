@@ -185,12 +185,9 @@ int main(void) {
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
 
-/*
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-
-
 
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
@@ -204,7 +201,6 @@ int main(void) {
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
 
-
         uartPrint("RPM[");
         uartPrintInteger(7037000/motor.CommutationInterval, 10, 1);
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
@@ -217,9 +213,6 @@ int main(void) {
         uartPrint("BEMFr[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");
-
-        */
-
 
         uartPrint("\r\n");
         printIndex = 0;
