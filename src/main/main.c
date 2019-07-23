@@ -2,6 +2,8 @@
 
 // debug
 uint8_t  printIndex = 0;
+extern uint8_t telegramPulseValue[4];
+
 
 // filter
 kalman_t adcVoltageFilterState, adcCurrentFilterState;
@@ -162,12 +164,37 @@ int main(void) {
 
     #if (defined(_DEBUG_))
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
+
+
+
+
+        uartPrint("[");
+        uartPrint(byte_to_binary(telegramPulseValue[0]));
+        uartPrint("]");
+        uartPrint("[");
+        uartPrint(byte_to_binary(telegramPulseValue[1]));
+        uartPrint("]");
+        uartPrint("[");
+        uartPrint(byte_to_binary(telegramPulseValue[2]));
+        uartPrint("]");
+        uartPrint("[");
+        uartPrint(byte_to_binary(telegramPulseValue[3]));
+        uartPrint("] ");
+
+        uartPrint("TR[");
+        uartPrintInteger(input.TelemetryRequest, 10, 1);
+        uartPrint("] ");
+
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+
+/*
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
+
+
 
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
@@ -195,6 +222,7 @@ int main(void) {
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");
 
+        */
 
 
         uartPrint("\r\n");

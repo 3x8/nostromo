@@ -1,5 +1,16 @@
 #include "common.h"
 
+const char *byte_to_binary(uint8_t x) {
+    static char b[9];
+    b[0] = '\0';
+
+    for (int z = 128; z > 0; z >>= 1){
+        strcat(b, ((x & z) == z) ? "1" : "0");
+    }
+
+    return (b);
+}
+
 uint32_t scaleInputToOutput(uint32_t input, uint32_t inputMin, uint32_t inputMax, uint32_t outputMin, uint32_t outputMax) {
   if (input < inputMin) {
     input = inputMin;
