@@ -9,7 +9,7 @@
 typedef struct {
     int32_t voltage;  //0.1 V resolution
     int32_t current;  //0.1 A resolution
-    int32_t temperature;  //0.1 °C resolution
+    int32_t temperature;  //1 °C resolution
 } adcData_t;
 
 

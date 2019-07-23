@@ -134,19 +134,29 @@ int main(void) {
       } // inputArmed
     } // inputProtocol detected
 
-    // current limitation
+    // adc limits
+    adcScaled.temperature = ((adcRaw.temperature  * ADC_TEMPERATURE_FACTOR) + ADC_TEMPERATURE_OFFSET);
+    if ((adcScaled.temperature > 0) && (escConfig()->limitTemperature > 0) && (adcScaled.temperature > escConfig()->limitTemperature)) {
+      inputDisarm();
+      #if (!defined(_DEBUG_))
+        LED_ON(LED_GREEN);
+      #endif
+    }
+
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
       adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
       adcFiltered.voltage = kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage);
       adcScaled.current = ((adcFiltered.current - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
       adcScaled.voltage = ((adcFiltered.voltage - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
-      if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent)) {
+      if ((adcScaled.current > 0) && (escConfig()->limitCurrent > 0) && (adcScaled.current > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
         #endif
       }
     #endif
+
+
 
     #if (defined(DYS35ARIA))
       adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
@@ -158,11 +168,13 @@ int main(void) {
       }
     #endif
 
+
+    /*
     #if (!defined(_DEBUG_))
       telemetry();
-    #endif
+    #endif*/
 
-    #if (defined(_DEBUG_))
+    //#if (defined(_DEBUG_))
       if ( ((outputPwm > 500) && (printIndex > 7)) || ((outputPwm < 500) && (printIndex > 100)) ){
         serialPrint("IN[");
         serialPrintInteger(inputData, 10, 1);
@@ -200,12 +212,18 @@ int main(void) {
         serialPrintInteger(adcRaw.temperature, 10, 1);
         serialPrint("] ");
 
+        serialPrint("Ts[");
+        serialPrintInteger(adcScaled.temperature, 10, 1);
+        serialPrint("] ");
+
+
+
         serialPrint("\r\n");
         printIndex = 0;
       } else {
         printIndex++;
       }
-    #endif
+    //#endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
       LED_ON(LED_BLUE);
