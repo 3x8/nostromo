@@ -3,25 +3,10 @@
 // debug
 uint8_t  printIndex = 0;
 
-// adc
+// filter
 kalman_t adcVoltageFilterState, adcCurrentFilterState;
-
-// motor
 kalman_t motorCommutationIntervalFilterState;
-extern TIM_HandleTypeDef motorPwmTimerHandle;
-extern bool motorStartup, motorRunning;
-extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
-extern uint32_t  motorBemfCounter, motorBemfZeroCrossTimestamp;
-extern uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
-extern uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
-extern uint32_t motorCommutationInterval, motorCommutationDelay;
 
-// input
-extern TIM_HandleTypeDef  inputTimerHandle;
-extern DMA_HandleTypeDef inputTimerDmaHandle;
-extern bool inputArmed, inputDataValid;
-extern uint8_t  inputProtocol;
-extern uint32_t inputData, outputPwm;
 
 int main(void) {
   HAL_Init();

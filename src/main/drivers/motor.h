@@ -2,9 +2,6 @@
 
 #include "main.h"
 
-#include "stm32f0xx_hal_dma.h"
-#include "stm32f0xx_hal_tim.h"
-#include "stm32f0xx_hal_comp.h"
 
 typedef enum {
   HBRIDGE_PWM = 1,
@@ -22,6 +19,19 @@ typedef enum {
   SPIN_CCW = 0,
   SPIN_CW
 } motorDirectionEnum;
+
+
+extern TIM_HandleTypeDef motorPwmTimerHandle;
+extern COMP_HandleTypeDef motorBemfComparatorHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
+
+extern bool motorStartup, motorRunning;
+extern bool motorDirection, motorSlowDecay, motorBrakeActiveProportional;
+extern uint32_t  motorBemfCounter, motorBemfZeroCrossTimestamp;
+extern uint32_t motorBemfFilterLevel, motorBemfFilterDelay;
+extern uint32_t motorBemfZeroCounterTimeout, motorBemfZeroCounterTimeoutThreshold;
+extern uint32_t motorCommutationInterval, motorCommutationDelay;
+
 
 void motorStartupTune();
 void motorInputTune(uint8_t motorStepDebug);

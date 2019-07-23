@@ -2,6 +2,7 @@
 
 #include "main.h"
 
+
 #define EEPROM_CONF_VERSION 3
 
 bool eepromValid(void);

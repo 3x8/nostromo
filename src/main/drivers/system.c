@@ -1,11 +1,5 @@
 #include "system.h"
 
-//extern ADC_HandleTypeDef adcHandle;
-extern COMP_HandleTypeDef motorBemfComparatorHandle;
-extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
-
-//extern uint32_t adcDmaBuffer[3];
-extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 

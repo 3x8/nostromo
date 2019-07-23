@@ -5,6 +5,10 @@
 
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx_hal_flash.h"
+#include "stm32f0xx_hal_dma.h"
+#include "stm32f0xx_hal_tim.h"
+#include "stm32f0xx_hal_comp.h"
+#include "stm32f0xx_hal_adc.h"
 
 #include "stm32f0xx.h"
 #include "stm32f0xx_ll_system.h"
@@ -16,6 +20,8 @@
 #include "stm32f0xx_ll_utils.h"
 #include "stm32f0xx_ll_pwr.h"
 #include "stm32f0xx_ll_dma.h"
+#include "stm32f0xx_ll_usart.h"
+#include "stm32f0xx_ll_adc.h"
 
 #include "target.h"
 

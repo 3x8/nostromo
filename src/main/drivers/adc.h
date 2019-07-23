@@ -2,9 +2,6 @@
 
 #include "main.h"
 
-#include "stm32f0xx_hal_dma.h"
-#include "stm32f0xx_hal_adc.h"
-
 
 typedef struct {
     int32_t voltage;  //0.1 V resolution

@@ -2,7 +2,6 @@
 
 #include "main.h"
 
-#include "stm32f0xx_ll_adc.h"
 
 void systemClockConfig(void);
 void systemDmaInit(void);

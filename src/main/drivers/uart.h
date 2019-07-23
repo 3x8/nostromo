@@ -2,9 +2,6 @@
 
 #include "main.h"
 
-#include "stm32f0xx_ll_usart.h"
-#include "stm32f0xx_ll_dma.h"
-#include "stm32f0xx_ll_gpio.h"
 
 #define USART                           USART1
 #define USART_IRQn                      USART1_IRQn
@@ -29,6 +26,7 @@
 #define SERIAL_TX_BUFSIZE   256
 #define SERIAL_RX_BUFSIZE   256
 
+
 typedef struct {
   volatile char txBuf[SERIAL_TX_BUFSIZE];
   uint16_t  txHead, txTail;
@@ -38,6 +36,7 @@ typedef struct {
 
   unsigned int rxPos;
 } serialPort_t;
+
 
 void serialInit(void);
 void serialWrite(char ch);

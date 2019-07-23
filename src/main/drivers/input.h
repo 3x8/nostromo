@@ -2,6 +2,7 @@
 
 #include "main.h"
 
+
 #define INPUT_ARM_COUNTER_THRESHOLD  1000
 #define INPUT_TIMEOUT_COUNTER_THRESHOLD  1000
 
@@ -27,6 +28,7 @@
 #define INPUT_BUFFER_DMA_SIZE_PWM 3
 #define INPUT_BUFFER_DMA_SIZE_PROSHOT 8
 #define INPUT_BUFFER_DMA_SIZE_AUTODETECT 7
+
 
 typedef enum {
     DSHOT_CMD_MOTOR_STOP = 0,
@@ -68,6 +70,15 @@ typedef enum {
     DSHOT,
     PROSHOT
 } inputProtocolEnum;
+
+
+extern TIM_HandleTypeDef  inputTimerHandle;
+extern DMA_HandleTypeDef inputTimerDmaHandle;
+extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
+extern bool inputArmed, inputDataValid;
+extern uint8_t  inputProtocol;
+extern uint32_t inputData, outputPwm;
+
 
 void inputArmCheck(void);
 void inputDisarm(void);
