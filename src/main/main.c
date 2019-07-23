@@ -160,7 +160,7 @@ int main(void) {
       telemetry();
     #endif*/
 
-    //#if (defined(_DEBUG_))
+    #if (defined(_DEBUG_))
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
@@ -169,7 +169,19 @@ int main(void) {
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
 
-        /*
+        uartPrint("Ufs[");
+        uartPrintInteger(adcScaled.voltage, 10, 1);
+        uartPrint("] ");
+
+        uartPrint("Ifs[");
+        uartPrintInteger(adcScaled.current, 10, 1);
+        uartPrint("] ");
+
+        uartPrint("Ts[");
+        uartPrintInteger(adcScaled.temperature, 10, 1);
+        uartPrint("] ");
+
+
         uartPrint("RPM[");
         uartPrintInteger(7037000/motor.CommutationInterval, 10, 1);
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
@@ -182,25 +194,6 @@ int main(void) {
         uartPrint("BEMFr[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");
-        */
-
-
-        uartPrint("Ufs[");
-        uartPrintInteger(adcScaled.voltage, 10, 1);
-        uartPrint("] ");
-
-        uartPrint("Ifs[");
-        uartPrintInteger(adcScaled.current, 10, 1);
-        uartPrint("] ");
-
-        /*
-        uartPrint("Tr[");
-        uartPrintInteger(adcRaw.temperature, 10, 1);
-        uartPrint("] ");*/
-
-        uartPrint("Ts[");
-        uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");
 
 
 
@@ -209,7 +202,7 @@ int main(void) {
       } else {
         printIndex++;
       }
-    //#endif
+    #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
       LED_ON(LED_BLUE);
