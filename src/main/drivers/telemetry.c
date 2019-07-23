@@ -46,7 +46,7 @@ static void telemetryTelegram(telemetryData_t *telemetryData) {
   telemetryBuffer[9] = calculateCrc8(telemetryBuffer, 9);
 
   for(uint8_t i = 0; i < TELEMETRY_FRAME_SIZE; i++) {
-    serialWrite(telemetryBuffer[i]);
+    uartWrite(telemetryBuffer[i]);
   }
 }
 

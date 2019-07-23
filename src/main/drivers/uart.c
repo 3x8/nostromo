@@ -1,9 +1,9 @@
 #include "uart.h"
 
-static serialPort_t serialPort;
+static uart_t serialPort;
 
 static void serialStartTxDMA(void) {
-  serialPort_t *s = &serialPort;
+  uart_t *s = &serialPort;
 
   LL_DMA_SetMemoryAddress(DMA1, USART_TX_DMA_CHANNEL, (uint32_t)&s->txBuf[s->txTail]);
   if (s->txHead > s->txTail) {
@@ -17,8 +17,8 @@ static void serialStartTxDMA(void) {
   LL_DMA_EnableChannel(DMA1, USART_TX_DMA_CHANNEL);
 }
 
-void serialWrite(char ch) {
-  serialPort_t *s = &serialPort;
+void uartWrite(char ch) {
+  uart_t *s = &serialPort;
 
   s->txBuf[s->txHead] = ch;
   s->txHead = (s->txHead + 1) % SERIAL_TX_BUFSIZE;
@@ -28,12 +28,12 @@ void serialWrite(char ch) {
   }
 }
 
-bool serialAvailable(void) {
+bool uartAvailable(void) {
   return (LL_DMA_GetDataLength(DMA1, USART_RX_DMA_CHANNEL) != serialPort.rxPos);
 }
 
-char serialRead(void) {
-  serialPort_t *s = &serialPort;
+char uartRead(void) {
+  uart_t *s = &serialPort;
 
   char ch = s->rxBuf[SERIAL_RX_BUFSIZE - s->rxPos];
 
@@ -44,14 +44,14 @@ char serialRead(void) {
   return (ch);
 }
 
-void serialPrint(const char *str) {
+void uartPrint(const char *str) {
   char ch;
   while ((ch = *(str++)) != 0) {
-    serialWrite(ch);
+    uartWrite(ch);
   }
 }
 
-void serialPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
+void uartPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
   char buf[8 * sizeof(long) + 1];
   char *str = &buf[sizeof(buf) - 1];
 
@@ -66,11 +66,11 @@ void serialPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
   } while(n);
   if(arg == 1)*--str = '0';
 
-  serialPrint(str);
+  uartPrint(str);
 }
 
-void serialInit(void) {
-  serialPort_t *s = &serialPort;
+void uartInit(void) {
+  uart_t *s = &serialPort;
 
   LL_AHB1_GRP1_EnableClock(USART_TX_GPIO_CLK | USART_RX_GPIO_CLK);
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);

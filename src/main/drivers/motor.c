@@ -2,7 +2,6 @@
 
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
-
 motor_t motor;
 
 void motorPhaseA(uint8_t hBridgeMode) {

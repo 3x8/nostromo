@@ -12,7 +12,7 @@ int main(void) {
   HAL_Init();
   systemClockConfig();
 
-  serialInit();
+  uartInit();
 
   configValidateOrReset();
   configRead();
@@ -162,49 +162,49 @@ int main(void) {
 
     //#if (defined(_DEBUG_))
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
-        serialPrint("IN[");
-        serialPrintInteger(input.Data, 10, 1);
-        serialPrint("] ");
-        serialPrint("PWM[");
-        serialPrintInteger(input.PwmValue, 10, 1);
-        serialPrint("] ");
+        uartPrint("IN[");
+        uartPrintInteger(input.Data, 10, 1);
+        uartPrint("] ");
+        uartPrint("PWM[");
+        uartPrintInteger(input.PwmValue, 10, 1);
+        uartPrint("] ");
 
         /*
-        serialPrint("RPM[");
-        serialPrintInteger(7037000/motor.CommutationInterval, 10, 1);
-        //serialPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
-        serialPrint("] ");
+        uartPrint("RPM[");
+        uartPrintInteger(7037000/motor.CommutationInterval, 10, 1);
+        //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
+        uartPrint("] ");
 
-        serialPrint("BEMF[");
-        serialPrintInteger(motor.CommutationInterval, 10, 1);
-        serialPrint("] ");
+        uartPrint("BEMF[");
+        uartPrintInteger(motor.CommutationInterval, 10, 1);
+        uartPrint("] ");
 
-        serialPrint("BEMFr[");
-        serialPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        serialPrint("] ");
+        uartPrint("BEMFr[");
+        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
+        uartPrint("] ");
         */
 
 
-        serialPrint("Ufs[");
-        serialPrintInteger(adcScaled.voltage, 10, 1);
-        serialPrint("] ");
+        uartPrint("Ufs[");
+        uartPrintInteger(adcScaled.voltage, 10, 1);
+        uartPrint("] ");
 
-        serialPrint("Ifs[");
-        serialPrintInteger(adcScaled.current, 10, 1);
-        serialPrint("] ");
+        uartPrint("Ifs[");
+        uartPrintInteger(adcScaled.current, 10, 1);
+        uartPrint("] ");
 
         /*
-        serialPrint("Tr[");
-        serialPrintInteger(adcRaw.temperature, 10, 1);
-        serialPrint("] ");*/
+        uartPrint("Tr[");
+        uartPrintInteger(adcRaw.temperature, 10, 1);
+        uartPrint("] ");*/
 
-        serialPrint("Ts[");
-        serialPrintInteger(adcScaled.temperature, 10, 1);
-        serialPrint("] ");
+        uartPrint("Ts[");
+        uartPrintInteger(adcScaled.temperature, 10, 1);
+        uartPrint("] ");
 
 
 
-        serialPrint("\r\n");
+        uartPrint("\r\n");
         printIndex = 0;
       } else {
         printIndex++;

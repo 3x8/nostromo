@@ -42,7 +42,6 @@ typedef struct {
 extern TIM_HandleTypeDef motorPwmTimerHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
-
 extern motor_t motor;
 
 void motorStartupTune();
