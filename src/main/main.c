@@ -4,7 +4,7 @@
 uint8_t  printIndex = 0;
 
 // adc
-kalman_t adcVoltageFilterState, adcCurrentFilterState, adcTemperatureFilterState;
+kalman_t adcVoltageFilterState, adcCurrentFilterState;
 
 // motor
 kalman_t motorCommutationIntervalFilterState;
@@ -45,7 +45,6 @@ int main(void) {
   ledOff();
   kalmanInit(&adcVoltageFilterState, 2500.0f, 31);
   kalmanInit(&adcCurrentFilterState, 2500.0f, 31);
-  kalmanInit(&adcTemperatureFilterState, 2500.0f, 31);
 
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 31);
 
@@ -134,6 +133,7 @@ int main(void) {
       } // inputArmed
     } // inputProtocol detected
 
+
     // adc limits
     adcScaled.temperature = ((adcRaw.temperature  * ADC_TEMPERATURE_FACTOR) + ADC_TEMPERATURE_OFFSET);
     if ((adcScaled.temperature > 0) && (escConfig()->limitTemperature > 0) && (adcScaled.temperature > escConfig()->limitTemperature)) {
@@ -157,7 +157,7 @@ int main(void) {
     #endif
 
 
-
+    // ToDo
     #if (defined(DYS35ARIA))
       adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
       if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent) && (outputPwm > 200)) {
@@ -207,10 +207,10 @@ int main(void) {
         serialPrintInteger(adcScaled.current, 10, 1);
         serialPrint("] ");
 
-
+        /*
         serialPrint("Tr[");
         serialPrintInteger(adcRaw.temperature, 10, 1);
-        serialPrint("] ");
+        serialPrint("] ");*/
 
         serialPrint("Ts[");
         serialPrintInteger(adcScaled.temperature, 10, 1);
