@@ -177,17 +177,10 @@ void inputDetectProtocol() {
   }
 }
 
-uint8_t telegramPulseValue[4] = {0, 0, 0, 0};
-
 void inputProshot() {
   uint8_t telegramCalculatedCRC = 0, telegramReceivedCRC = 0;
   uint16_t telegramData = 0;
-  //uint8_t telegramPulseValue[4] = {0, 0, 0, 0};
-
-  telegramPulseValue[0] = 0;
-  telegramPulseValue[1] = 0;
-  telegramPulseValue[2] = 0;
-  telegramPulseValue[3] = 0;
+  uint8_t telegramPulseValue[4] = {0, 0, 0, 0};
 
   #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
     LED_OFF(LED_GREEN);
@@ -252,9 +245,9 @@ void inputProshot() {
 
         // output
         input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        //motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
-        //motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-        //motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+        motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
       }
     }
 
