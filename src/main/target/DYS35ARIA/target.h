@@ -1,16 +1,16 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
-//#define CYCLETIME_MAINLOOP // ~500us
+#define _DEBUG_
+#define CYCLETIME_MAINLOOP // ~500us
 //#define MOTOR_TIMING
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
 
 // ToDo
 #define HBRIDGE_DEAD_TIME 11 // with 0 FD6288 builtin 200ns H_Bridge gets warm ??? (why)
-#define HBRIDGE_MAX_CURRENT 1300 // ~50A
-#define HBRIDGE_MAX_TEMPERATURE 1234 // not used
+#define HBRIDGE_MAX_CURRENT 0 // disabled
+#define HBRIDGE_MAX_TEMPERATURE 77
 #define TIMER1_INIT_PERIOD  977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
 #define MOTOR_START_THRESHOLD 17
 #define LED_INVERTED
@@ -54,3 +54,10 @@
 #define ADC_CURRENT              ADC_CHANNEL_3
 #define ADC_TEMPERATURE          ADC_CHANNEL_TEMPSENSOR
 #define ADC_MASK                 GPIO_PIN_3 | GPIO_PIN_6
+
+#define ADC_VOLTAGE_OFFSET  1
+#define ADC_VOLTAGE_FACTOR  1
+#define ADC_CURRENT_OFFSET  1
+#define ADC_CURRENT_FACTOR  1
+#define ADC_TEMPERATURE_OFFSET  95.05
+#define ADC_TEMPERATURE_FACTOR -0.04

@@ -77,16 +77,29 @@ void systemAdcInit(void) {
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
-  sConfig.Channel = ADC_CURRENT;
-  while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-  sConfig.Channel = ADC_VOLTAGE;
-  while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-  sConfig.Channel = ADC_TEMPERATURE;
-  while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
-  while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcDmaBuffer, 3) != HAL_OK);
+  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
+    sConfig.Channel = ADC_CURRENT;
+    while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+    sConfig.Channel = ADC_VOLTAGE;
+    while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+    sConfig.Channel = ADC_TEMPERATURE;
+    while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+
+    while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcDmaBuffer, 3) != HAL_OK);
+  #endif
+
+  #if (defined(DYS35ARIA))
+    sConfig.Channel = ADC_CURRENT;
+    while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+    sConfig.Channel = ADC_TEMPERATURE;
+    while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
+
+    while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcDmaBuffer, 2) != HAL_OK);
+  #endif
+
 }
 
 

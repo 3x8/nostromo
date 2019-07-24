@@ -4,7 +4,10 @@
 uint8_t  printIndex = 0;
 
 // filter
-kalman_t adcVoltageFilterState, adcCurrentFilterState;
+#if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
+  kalman_t adcVoltageFilterState, adcCurrentFilterState;
+#endif
+
 kalman_t motorCommutationIntervalFilterState;
 
 
@@ -28,8 +31,10 @@ int main(void) {
 
   // init
   ledOff();
-  kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
-  kalmanInit(&adcCurrentFilterState, 2500.0f, 5);
+  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
+    kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
+    kalmanInit(&adcCurrentFilterState, 2500.0f, 5);
+  #endif
 
   kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
 
@@ -146,19 +151,6 @@ int main(void) {
       }
     #endif
 
-
-    // ToDo
-    #if (defined(DYS35ARIA))
-      adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
-      if ((escConfig()->limitCurrent > 0) && (adcFiltered.current > escConfig()->limitCurrent) && (input.PwmValue > 200)) {
-        inputDisarm();
-        #if (!defined(_DEBUG_))
-          LED_ON(LED_RED);
-        #endif
-      }
-    #endif
-
-
     /*
     #if (!defined(_DEBUG_))
       telemetry();
@@ -198,21 +190,31 @@ int main(void) {
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
 
+        /*
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
+/*
+        uartPrint("Ur[");
+        uartPrintInteger(adcRaw.voltage, 10, 1);
+        uartPrint("] ");*/
 
+        uartPrint("If[");
+        uartPrintInteger(adcRaw.current, 10, 1);
+        uartPrint("] ");
+
+/*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
 
         uartPrint("Ifs[");
         uartPrintInteger(adcScaled.current, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
