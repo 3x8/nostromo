@@ -23,6 +23,7 @@ void inputArmCheck(void) {
 }
 
 void inputDisarm(void) {
+  input.DataValid = false;
   input.Data = 0;
   input.DataNormed = 0;
   input.PwmValue = 0;
@@ -226,7 +227,7 @@ void inputProshot() {
             input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
           }
           // down
-          if (input.DataNormed <= escConfig()->input3DdeadbandLow) {
+          if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
             if(motor.Direction == escConfig()->motorDirection) {
               motor.Direction = !escConfig()->motorDirection;
               motor.BemfCounter = 0;
@@ -234,7 +235,7 @@ void inputProshot() {
             input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
           }
           // deadband
-          if ((input.DataNormed > escConfig()->input3DdeadbandLow) && (input.DataNormed < escConfig()->input3DdeadbandHigh)) {
+          if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
             input.PwmValue = 0;
           }
         } else {

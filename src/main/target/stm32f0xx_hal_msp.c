@@ -1,10 +1,6 @@
 #include "stm32f0xx_hal.h"
 #include "target.h"
 
-//extern DMA_HandleTypeDef adcDmaHandle;
-extern TIM_HandleTypeDef inputTimerHandle;
-extern DMA_HandleTypeDef inputTimerDmaHandle;
-extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 
 void HAL_MspInit(void) {
   __HAL_RCC_SYSCFG_CLK_ENABLE();

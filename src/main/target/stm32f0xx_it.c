@@ -1,12 +1,5 @@
 #include "stm32f0xx_it.h"
 
-extern void inputCallbackDMA();
-
-//extern DMA_HandleTypeDef adcDmaHandle;
-//extern ADC_HandleTypeDef adcHandle;
-extern COMP_HandleTypeDef motorBemfComparatorHandle;
-extern DMA_HandleTypeDef inputTimerDmaHandle;
-extern TIM_HandleTypeDef motorPwmTimerHandle;
 
 // Cortex-M0 Processor Interruption and Exception Handlers
 void NMI_Handler(void) {
