@@ -31,17 +31,17 @@ int main(void) {
 
   // init
   ledOff();
+  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
+
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
     kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
     kalmanInit(&adcCurrentFilterState, 2500.0f, 5);
   #endif
 
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
-
+  // start with motor off
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.SlowDecay = escConfig()->motorSlowDecay;
-  // start with motor off
   input.Data = 0;
   input.PwmValue = 0;
 
@@ -156,7 +156,7 @@ int main(void) {
       telemetry();
     #endif*/
 
-    #if (defined(_DEBUG_))
+    //#if (defined(_DEBUG_))
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
 
         /*
@@ -239,7 +239,7 @@ int main(void) {
       } else {
         printIndex++;
       }
-    #endif
+    //#endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
       LED_ON(LED_BLUE);
