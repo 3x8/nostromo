@@ -54,6 +54,7 @@
 #define ADC_TEMPERATURE          ADC_CHANNEL_TEMPSENSOR
 #define ADC_MASK                 GPIO_PIN_3 | GPIO_PIN_6
 
+// corr ,Ok
 #define ADC_VOLTAGE_OFFSET  -77
 #define ADC_VOLTAGE_FACTOR  0.0601
 #define ADC_CURRENT_OFFSET  613

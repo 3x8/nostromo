@@ -31,7 +31,7 @@ int main(void) {
 
   // init
   ledOff();
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 13);
+  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
 
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
     kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
@@ -159,6 +159,7 @@ int main(void) {
     //#if (defined(_DEBUG_))
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
 
+        // debug (telemetry request)
         /*
         uartPrint("[");
         uartPrint(byte_to_binary(telegramPulseValue[0]));
@@ -171,8 +172,8 @@ int main(void) {
         uartPrint("]");
         uartPrint("[");
         uartPrint(byte_to_binary(telegramPulseValue[3]));
-        uartPrint("] ");*/
-        /*
+        uartPrint("] ");
+
         uartPrint("TR[");
         uartPrintInteger(input.TelemetryRequest, 10, 1);
         uartPrint("] ");*/
@@ -198,30 +199,30 @@ int main(void) {
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-/*
+
+        /*
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         uartPrint("If[");
         uartPrintInteger(adcRaw.current, 10, 1);
-        uartPrint("] ");
+        uartPrint("] "); */
 
-/*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
 
         uartPrint("Ifs[");
         uartPrintInteger(adcScaled.current, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
 
         uartPrint("RPM[");
-        uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
+        //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         uartPrint("] ");
 

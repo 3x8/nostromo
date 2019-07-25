@@ -54,10 +54,11 @@
 #define ADC_TEMPERATURE          ADC_CHANNEL_TEMPSENSOR
 #define ADC_MASK                 GPIO_PIN_3 | GPIO_PIN_6
 
-#define ADC_VOLTAGE_OFFSET  -77
+// corr ,Ok
+#define ADC_VOLTAGE_OFFSET  -50
 #define ADC_VOLTAGE_FACTOR  0.0601
-#define ADC_CURRENT_OFFSET  613
-#define ADC_CURRENT_FACTOR  0.187
+#define ADC_CURRENT_OFFSET  600
+#define ADC_CURRENT_FACTOR  0.1931
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR -0.04
 
@@ -82,7 +83,7 @@
 #define USART_TX_DMA_CHANNEL            LL_DMA_CHANNEL_2
 #define USART_RX_DMA_CHANNEL            LL_DMA_CHANNEL_3
 
-// SWD Ko + not working
+// SWD Ko + UART2 not working (DMA conflict ?)
 /*
 #define USART                           USART2
 #define USART_IRQn                      USART2_IRQn
