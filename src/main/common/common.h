@@ -14,7 +14,7 @@
 #define BIT(x) (1 << (x))
 
 
-const char *byte_to_binary(uint8_t x);
+const char *byteToString(uint8_t x);
 uint32_t scaleInputToOutput(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max);
 uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 

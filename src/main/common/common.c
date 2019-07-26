@@ -1,6 +1,6 @@
 #include "common.h"
 
-const char *byte_to_binary(uint8_t x) {
+const char *byteToString(uint8_t x) {
     static char b[9];
     b[0] = '\0';
 
