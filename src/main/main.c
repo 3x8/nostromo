@@ -7,7 +7,6 @@ uint8_t  printIndex = 0;
 #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
   kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
-
 kalman_t motorCommutationIntervalFilterState;
 
 
@@ -222,15 +221,15 @@ int main(void) {
         uartPrint("] ");
 
         uartPrint("RPM[");
-        //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
+        uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         uartPrint("] ");
 
-        /*
         uartPrint("BEMF[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
 
+        /*
         uartPrint("BEMFr[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");*/
