@@ -229,7 +229,6 @@ int main(void) {
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
 
-
         uartPrint("BEMFr[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");
