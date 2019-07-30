@@ -14,8 +14,8 @@
 
 //ToDo
 #define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
-#define HBRIDGE_MAX_CURRENT 3011 // ~54A
-#define HBRIDGE_MAX_TEMPERATURE 1234 // not used
+#define HBRIDGE_MAX_CURRENT 0
+#define HBRIDGE_MAX_TEMPERATURE 77
 #define TIMER1_INIT_PERIOD  977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
 #define MOTOR_START_THRESHOLD 13
 
