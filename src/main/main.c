@@ -155,7 +155,7 @@ int main(void) {
       telemetry();
     #endif*/
 
-    //#if (defined(_DEBUG_))
+    #if (defined(_DEBUG_))
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
 
         // debug (telemetry request)
@@ -238,7 +238,7 @@ int main(void) {
       } else {
         printIndex++;
       }
-    //#endif
+    #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
       LED_ON(LED_BLUE);
