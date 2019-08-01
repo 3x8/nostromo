@@ -47,7 +47,7 @@ int main(void) {
   while (true) {
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-      LED_OFF(LED_BLUE);
+      LED_OFF(LED_GREEN);
     #endif
 
     watchdogFeed();
@@ -233,7 +233,7 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
-      LED_ON(LED_BLUE);
+      LED_ON(LED_GREEN);
     #endif
   } // main loop
 
