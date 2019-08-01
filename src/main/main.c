@@ -5,24 +5,19 @@ uint8_t  printIndex = 0;
 
 // filter
 kalman_t motorCommutationIntervalFilterState;
-#if (!defined(VERSION_LIGHT))
-  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-    kalman_t adcVoltageFilterState, adcCurrentFilterState;
-  #endif
+#if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
+  kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
 
 
 int main(void) {
+  // init
   HAL_Init();
   systemClockConfig();
-
   uartInit();
-
   configValidateOrReset();
   configRead();
-
   ledInit();
-
   systemDmaInit();
   systemBemfComparatorInit();
   systemAdcInit();
@@ -30,15 +25,12 @@ int main(void) {
   systemMotorCommutationTimerInit();
   systemInputTimerInit();
 
-  // init
   ledOff();
 
   kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
-  #if (!defined(VERSION_LIGHT))
-    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-      kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
-      kalmanInit(&adcCurrentFilterState, 2500.0f, 5);
-    #endif
+  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
+    kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
+    kalmanInit(&adcCurrentFilterState, 2500.0f, 5);
   #endif
 
   // start with motor off
@@ -109,7 +101,6 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
             kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
           motor.Running = false;
-          //input.PwmValue = 0;
         }
 
         // motor start
@@ -120,8 +111,6 @@ int main(void) {
 
         // ToDo
         motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
-        //motor.CommutationInterval = (motor.CommutationInterval + motor.BemfZeroCrossTimestamp) >> 1;
-
         motor.CommutationDelay = 0; //timing 30°
         //motor.CommutationDelay = motor.CommutationInterval >> 3; //timing 15°
         //motor.CommutationDelay = motor.CommutationInterval >> 2; //timing 0°
@@ -139,17 +128,10 @@ int main(void) {
     }
 
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-      // ToDo
-      #if (!defined(VERSION_LIGHT))
-        adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
-        adcFiltered.voltage = kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage);
-        adcScaled.current = ((adcFiltered.current - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
-        adcScaled.voltage = ((adcFiltered.voltage - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
-      #else
-        adcScaled.current = ((adcRaw.current - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
-        adcScaled.voltage = ((adcRaw.voltage - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
-      #endif
-
+      adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
+      adcFiltered.voltage = kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage);
+      adcScaled.current = ((adcFiltered.current - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
+      adcScaled.voltage = ((adcFiltered.voltage - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
       if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
