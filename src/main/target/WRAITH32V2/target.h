@@ -3,7 +3,7 @@
 // debug
 #define _DEBUG_
 //#define CYCLETIME_MAINLOOP // ~500us
-//#define MOTOR_TIMING
+#define MOTOR_TIMING
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
 

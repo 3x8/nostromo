@@ -182,7 +182,7 @@ void systemMotorCommutationTimerInit(void) {
   motorCommutationTimerHandle.Instance = TIM3;
   motorCommutationTimerHandle.Init.Prescaler = 7;
   motorCommutationTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  motorCommutationTimerHandle.Init.Period = 65535;
+  motorCommutationTimerHandle.Init.Period = 0xffff;
   motorCommutationTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorCommutationTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   while (HAL_TIM_Base_Init(&motorCommutationTimerHandle) != HAL_OK);
