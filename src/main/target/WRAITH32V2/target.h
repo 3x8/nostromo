@@ -1,11 +1,13 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define CYCLETIME_MAINLOOP // ~500us
 //#define MOTOR_TIMING
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
+
+//#define VERSION_LIGHT
 
 // ToDo
 #define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
