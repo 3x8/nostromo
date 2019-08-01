@@ -89,7 +89,7 @@ int main(void) {
           motor.BemfFilterDelay = 3;
         }
 
-        // timeouts
+        // motor BEMF timeouts
         if (input.PwmValue < 300) {
           motor.BemfZeroCounterTimeoutThreshold = 400;
         } else {
