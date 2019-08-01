@@ -7,8 +7,6 @@
 //#define INPUT_PROSHOT
 //#define INPUT_AUTODETECT
 
-//#define VERSION_LIGHT
-
 // ToDo
 #define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
 #define HBRIDGE_MAX_CURRENT 571 // x0.1A
