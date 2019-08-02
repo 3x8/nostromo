@@ -11,7 +11,7 @@ int main(void) {
   // init
   HAL_Init();
   systemClockConfig();
-  uartInit();
+  //uartInit();
   configValidateOrReset();
   configRead();
   ledInit();
@@ -77,6 +77,12 @@ int main(void) {
       inputDisarmCheck();
       if (input.Armed) {
 
+        // uart init
+        if ((input.Protocol == PROSHOT) && (!serialPort.InitDone)){
+          uartInit();
+          serialPort.InitDone = true;
+        }
+
         // motor BEMF filter
         if ((motor.CommutationInterval < 400) && (input.PwmValue > 500)) {
           motor.BemfFilterDelay = 1;
@@ -140,6 +146,7 @@ int main(void) {
     #if (!defined(DEBUG_DATA_UART))
       if (input.TelemetryRequest) {
         telemetry();
+        input.TelemetryRequest = false;
       }
     #endif
 
@@ -152,7 +159,7 @@ int main(void) {
         uartPrint("TR[");
         uartPrintInteger(input.TelemetryRequest, 10, 1);
         uartPrint("] ");*/
-        
+
         /*
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);

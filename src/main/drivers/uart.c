@@ -1,6 +1,6 @@
 #include "uart.h"
 
-static uart_t serialPort;
+uart_t serialPort;
 
 static void serialStartTxDMA(void) {
   uart_t *s = &serialPort;

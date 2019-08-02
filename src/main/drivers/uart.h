@@ -14,7 +14,11 @@ typedef struct {
   volatile uint16_t rxHead, rxTail;
 
   unsigned int rxPos;
+  bool InitDone;
 } uart_t;
+
+
+extern uart_t serialPort;
 
 
 void uartInit(void);
