@@ -28,7 +28,7 @@ typedef struct {
     uint32_t voltage;      // Voltage (resolution 0.01V)
     uint32_t current;      // Current (resolution 0.01A)
     uint32_t consumption;  // Consumption (resolution 1mAh)
-    uint32_t rpm;          // Electrical Rpm (resolution 100Rpm)
+    uint32_t erpm;         // Electrical Rpm (resolution 100Rpm)
 } telemetryData_t;
 
 

@@ -31,8 +31,8 @@ static void telemetryTelegram(telemetryData_t *telemetryData) {
   telemetryBuffer[4] = telemetryData->current & 0xFF;
   telemetryBuffer[5] = telemetryData->consumption >> 8;
   telemetryBuffer[6] = telemetryData->consumption & 0xFF;
-  telemetryBuffer[7] = telemetryData->rpm >> 8;
-  telemetryBuffer[8] = telemetryData->rpm & 0xFF;
+  telemetryBuffer[7] = telemetryData->erpm >> 8;
+  telemetryBuffer[8] = telemetryData->erpm & 0xFF;
   telemetryBuffer[9] = calculateCrc8(telemetryBuffer, 9);
 
   for(uint8_t i = 0; i < TELEMETRY_FRAME_SIZE; i++) {
@@ -45,11 +45,7 @@ void telemetry(void) {
   telemetryData.voltage = adcScaled.voltage * 10;
   telemetryData.current = adcScaled.current * 10;
   telemetryData.consumption = 0;
-  // ERPM
-  //telemetryData.rpm = 542137.4/motor.CommutationInterval;
-  // RPM 14 pole
-  telemetryData.rpm = 7744820/motor.CommutationInterval;
-
+  telemetryData.erpm = 542137.4/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
 }
