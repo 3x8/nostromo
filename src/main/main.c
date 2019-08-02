@@ -144,7 +144,6 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-
     static uint8_t  printIndex = 0;
 
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
@@ -153,7 +152,7 @@ int main(void) {
         uartPrint("TR[");
         uartPrintInteger(input.TelemetryRequest, 10, 1);
         uartPrint("] ");*/
-
+        
         /*
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
