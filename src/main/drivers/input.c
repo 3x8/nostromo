@@ -131,7 +131,7 @@ void inputDetectProtocol() {
   uint32_t telegramPulseWidthBuff;
   uint32_t telegramPulseWidthMin = 20000;
 
-  #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
+  #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
     LED_OFF(LED_GREEN);
   #endif
 
@@ -150,7 +150,7 @@ void inputDetectProtocol() {
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
-    #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
         LED_ON(LED_GREEN);
     #endif
 
@@ -163,7 +163,7 @@ void inputDetectProtocol() {
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
-    #if (defined(_DEBUG_) && defined(INPUT_AUTODETECT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
     #endif
 
@@ -183,7 +183,7 @@ void inputProshot() {
   uint16_t telegramData = 0;
   uint8_t telegramPulseValue[4] = {0, 0, 0, 0};
 
-  #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
+  #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
     LED_OFF(LED_GREEN);
   #endif
 
@@ -252,7 +252,7 @@ void inputProshot() {
       }
     }
 
-    #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_ON(LED_GREEN);
     #endif
 
@@ -260,7 +260,7 @@ void inputProshot() {
   } else {
     input.DataValid = false;
 
-    #if (defined(_DEBUG_) && defined(INPUT_PROSHOT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_ON(LED_GREEN);
     #endif
 

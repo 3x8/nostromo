@@ -1,8 +1,5 @@
 #include "main.h"
 
-// debug
-uint8_t  printIndex = 0;
-
 // filter
 kalman_t motorCommutationIntervalFilterState;
 #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
@@ -46,7 +43,7 @@ int main(void) {
   // main loop
   while (true) {
 
-    #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
+    #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
     #endif
 
@@ -140,31 +137,17 @@ int main(void) {
       }
     #endif
 
-
-
-    /*
-    #if (!defined(_DEBUG_))
+    #if (!defined(DEBUG_DATA_UART))
       telemetry();
-    #endif*/
+    #endif
 
-    #if (defined(_DEBUG_))
+    #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+
+    static uint8_t  printIndex = 0;
+
       if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
 
-        // debug (telemetry request)
         /*
-        uartPrint("[");
-        uartPrint(byteToString(telegramPulseValue[0]));
-        uartPrint("]");
-        uartPrint("[");
-        uartPrint(byteToString(telegramPulseValue[1]));
-        uartPrint("]");
-        uartPrint("[");
-        uartPrint(byteToString(telegramPulseValue[2]));
-        uartPrint("]");
-        uartPrint("[");
-        uartPrint(byteToString(telegramPulseValue[3]));
-        uartPrint("] ");
-
         uartPrint("TR[");
         uartPrintInteger(input.TelemetryRequest, 10, 1);
         uartPrint("] ");*/
@@ -196,7 +179,7 @@ int main(void) {
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
 
-        uartPrint("If[");
+        uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] "); */
 
@@ -232,7 +215,7 @@ int main(void) {
       }
     #endif
 
-    #if (defined(_DEBUG_) && defined(CYCLETIME_MAINLOOP))
+    #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
     #endif
   } // main loop

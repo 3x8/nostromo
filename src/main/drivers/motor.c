@@ -243,7 +243,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     }
   }
 
-  #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
     LED_ON(LED_GREEN);
   #endif
 
@@ -257,13 +257,13 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   // ToDo
   if ((motor.CommutationDelay > 31) && (motor.CommutationDelay < 613) && (input.PwmValue > 45) && (input.PwmValue < 707)) {
     while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
-      #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+      #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
         LED_TOGGLE(LED_BLUE);
       #endif
     }
   }
 
-  #if (defined(_DEBUG_) && defined(MOTOR_TIMING))
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
     LED_OFF(LED_GREEN);
     LED_OFF(LED_BLUE);
   #endif

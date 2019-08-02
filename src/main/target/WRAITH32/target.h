@@ -2,10 +2,10 @@
 
 // debug
 //#define _DEBUG_
-//#define CYCLETIME_MAINLOOP // ~500us
-//#define MOTOR_TIMING
-//#define INPUT_PROSHOT
-//#define INPUT_AUTODETECT
+//#define DEBUG_CYCLETIME_MAINLOOP // ~500us
+//#define DEBUG_MOTOR_TIMING
+//#define DEBUG_INPUT_PROSHOT
+//#define DEBUG_INPUT_AUTODETECT
 
 // ToDo
 #define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
