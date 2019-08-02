@@ -1,14 +1,14 @@
 #include "telemetry.h"
 
 telemetryData_t telemetryData;
-uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE] = { 0, };
+uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
 
 static uint8_t updateCrc8(uint8_t crc, uint8_t crc_seed) {
     uint8_t crc_u = crc;
 
     crc_u ^= crc_seed;
-    for (int i=0; i<8; i++) {
+    for (int i = 0; i < 8; i++) {
         crc_u = ( crc_u & 0x80 ) ? 0x7 ^ ( crc_u << 1 ) : ( crc_u << 1 );
     }
     return (crc_u);
@@ -45,7 +45,10 @@ void telemetry(void) {
   telemetryData.voltage = adcScaled.voltage * 10;
   telemetryData.current = adcScaled.current * 10;
   telemetryData.consumption = 0;
-  telemetryData.rpm = 77448/motor.CommutationInterval;
+  // ERPM
+  telemetryData.rpm = 542136/motor.CommutationInterval;
+  // RPM 14 pole
+  //telemetryData.rpm = 77448/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
 }
