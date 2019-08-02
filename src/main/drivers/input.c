@@ -202,7 +202,6 @@ void inputProshot() {
     input.DataValid = true;
     input.TimeoutCounter = 0;
     input.Data = telegramData;
-    // ToDo... telemetry not requested from FC
     input.TelemetryRequest = (telegramPulseValue[2] & BIT(0));
 
     if (input.Armed) {

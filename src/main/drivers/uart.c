@@ -3,25 +3,22 @@
 uart_t serialPort;
 
 static void serialStartTxDMA(void) {
-  uart_t *s = &serialPort;
 
-  LL_DMA_SetMemoryAddress(DMA1, USART_TX_DMA_CHANNEL, (uint32_t)&s->txBuf[s->txTail]);
-  if (s->txHead > s->txTail) {
-    LL_DMA_SetDataLength(DMA1, USART_TX_DMA_CHANNEL, s->txHead - s->txTail);
-    s->txTail = s->txHead;
+  LL_DMA_SetMemoryAddress(DMA1, USART_TX_DMA_CHANNEL, (uint32_t)&serialPort.txBuf[serialPort.txTail]);
+  if (serialPort.txHead > serialPort.txTail) {
+    LL_DMA_SetDataLength(DMA1, USART_TX_DMA_CHANNEL, serialPort.txHead - serialPort.txTail);
+    serialPort.txTail = serialPort.txHead;
   } else {
-    LL_DMA_SetDataLength(DMA1, USART_TX_DMA_CHANNEL, SERIAL_TX_BUFSIZE - s->txTail);
-    s->txTail = 0;
+    LL_DMA_SetDataLength(DMA1, USART_TX_DMA_CHANNEL, SERIAL_TX_BUFSIZE - serialPort.txTail);
+    serialPort.txTail = 0;
   }
-  // Enable the DMA channel
   LL_DMA_EnableChannel(DMA1, USART_TX_DMA_CHANNEL);
 }
 
 void uartWrite(char ch) {
-  uart_t *s = &serialPort;
 
-  s->txBuf[s->txHead] = ch;
-  s->txHead = (s->txHead + 1) % SERIAL_TX_BUFSIZE;
+  serialPort.txBuf[serialPort.txHead] = ch;
+  serialPort.txHead = (serialPort.txHead + 1) % SERIAL_TX_BUFSIZE;
 
   if (!LL_DMA_IsEnabledChannel(DMA1, USART_TX_DMA_CHANNEL)) {
     serialStartTxDMA();
@@ -33,12 +30,10 @@ bool uartAvailable(void) {
 }
 
 char uartRead(void) {
-  uart_t *s = &serialPort;
+  char ch = serialPort.rxBuf[SERIAL_RX_BUFSIZE - serialPort.rxPos];
 
-  char ch = s->rxBuf[SERIAL_RX_BUFSIZE - s->rxPos];
-
-  if (--s->rxPos == 0) {
-    s->rxPos = SERIAL_RX_BUFSIZE;
+  if (--serialPort.rxPos == 0) {
+    serialPort.rxPos = SERIAL_RX_BUFSIZE;
   }
 
   return (ch);
@@ -70,8 +65,6 @@ void uartPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
 }
 
 void uartInit(void) {
-  uart_t *s = &serialPort;
-
   LL_AHB1_GRP1_EnableClock(USART_TX_GPIO_CLK | USART_RX_GPIO_CLK);
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
@@ -112,8 +105,8 @@ void uartInit(void) {
   LL_DMA_ClearFlag_GI2(DMA1);
   LL_DMA_ClearFlag_GI3(DMA1);
 
-  s->rxHead = s->rxTail = 0;
-  s->txHead = s->txTail = 0;
+  serialPort.rxHead = serialPort.rxTail = 0;
+  serialPort.txHead = serialPort.txTail = 0;
 
   // DMA Configuration
   LL_DMA_InitTypeDef DMA_InitStructure;
@@ -126,14 +119,14 @@ void uartInit(void) {
   LL_DMA_DeInit(DMA1, USART_RX_DMA_CHANNEL);
   DMA_InitStructure.PeriphOrM2MSrcAddress = USART_RDR_ADDRESS;
   DMA_InitStructure.NbData = SERIAL_RX_BUFSIZE;
-  DMA_InitStructure.MemoryOrM2MDstAddress = (uint32_t)s->rxBuf;
+  DMA_InitStructure.MemoryOrM2MDstAddress = (uint32_t)serialPort.rxBuf;
   DMA_InitStructure.Direction = LL_DMA_DIRECTION_PERIPH_TO_MEMORY;
   DMA_InitStructure.Mode = LL_DMA_MODE_CIRCULAR;
   DMA_InitStructure.Priority = LL_DMA_PRIORITY_LOW;
   LL_DMA_Init(DMA1, USART_RX_DMA_CHANNEL, &DMA_InitStructure);
   LL_DMA_EnableChannel(DMA1, USART_RX_DMA_CHANNEL);
   LL_USART_EnableDMAReq_RX(USART);
-  s->rxPos = LL_DMA_GetDataLength(DMA1, USART_RX_DMA_CHANNEL);
+  serialPort.rxPos = LL_DMA_GetDataLength(DMA1, USART_RX_DMA_CHANNEL);
 
   // DMA channel Tx of USART Configuration
   LL_DMA_DeInit(DMA1, USART_TX_DMA_CHANNEL);

@@ -11,7 +11,6 @@ int main(void) {
   // init
   HAL_Init();
   systemClockConfig();
-  //uartInit();
   configValidateOrReset();
   configRead();
   ledInit();
@@ -36,6 +35,7 @@ int main(void) {
   motor.SlowDecay = escConfig()->motorSlowDecay;
   input.Data = 0;
   input.PwmValue = 0;
+  serialPort.InitDone = false;
 
   watchdogInit(2000);
   motorStartupTune();
