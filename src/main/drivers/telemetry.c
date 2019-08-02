@@ -46,9 +46,9 @@ void telemetry(void) {
   telemetryData.current = adcScaled.current * 10;
   telemetryData.consumption = 0;
   // ERPM
-  telemetryData.rpm = 77448/motor.CommutationInterval;
+  //telemetryData.rpm = 542137.4/motor.CommutationInterval;
   // RPM 14 pole
-  //telemetryData.rpm = 542136/motor.CommutationInterval;
+  telemetryData.rpm = 7744820/motor.CommutationInterval;
 
 
   telemetryTelegram(&telemetryData);
