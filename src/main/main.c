@@ -138,7 +138,9 @@ int main(void) {
     #endif
 
     #if (!defined(DEBUG_DATA_UART))
-      telemetry();
+      if (input.TelemetryRequest) {
+        telemetry();
+      }
     #endif
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))

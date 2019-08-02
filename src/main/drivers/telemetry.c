@@ -41,11 +41,11 @@ static void telemetryTelegram(telemetryData_t *telemetryData) {
 }
 
 void telemetry(void) {
-  telemetryData.temperature = adcFiltered.current;
-  telemetryData.voltage = adcFiltered.current;
-  telemetryData.current = adcFiltered.current;
+  telemetryData.temperature = adcScaled.temperature;
+  telemetryData.voltage = adcScaled.voltage * 10;
+  telemetryData.current = adcScaled.current * 10;
   telemetryData.consumption = 0;
-  telemetryData.rpm = 0;
+  telemetryData.rpm = 77448/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
 }
