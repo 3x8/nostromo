@@ -104,13 +104,13 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;
-      uartPrint("DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL");
+      uartPrint("# DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       escConfig()->motorDirection = SPIN_CCW;
-      uartPrint("DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED");
+      uartPrint("# DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED");
       uartPrint("\r\n");
       inputDisarm();
       break;
@@ -122,18 +122,18 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
-      uartPrint("DSHOT_CMD_SETTING_3D_MODE_OFF");
+      uartPrint("# DSHOT_CMD_SETTING_3D_MODE_OFF");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
       escConfig()->motor3Dmode = 1;
-      uartPrint("DSHOT_CMD_SETTING_3D_MODE_ON");
+      uartPrint("# DSHOT_CMD_SETTING_3D_MODE_ON");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SAVE:
-      uartPrint("DSHOT_CMD_SETTING_SAVE");
+      uartPrint("# DSHOT_CMD_SETTING_SAVE");
       uartPrint("\r\n");
       HAL_Delay(1000);
       configWrite();
