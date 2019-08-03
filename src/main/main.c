@@ -23,7 +23,7 @@ int main(void) {
 
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
+  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 5);
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
     kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
     kalmanInit(&adcCurrentFilterState, 2500.0f, 5);

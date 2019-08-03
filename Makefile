@@ -27,7 +27,7 @@ DEBUG_HARDFAULTS ?=
 SERIAL_DEVICE   ?= $(firstword $(wildcard /dev/ttyUSB*) no-port-found)
 
 # Flash size (KB).  Some low-end chips actually have more flash than advertised, use this to override.
-FLASH_SIZE ?=
+FLASH_SIZE ?= 64
 
 EXTRA_FLAGS ?=
 
