@@ -74,15 +74,44 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_BEACON5:
       motorInputTune(5);
       break;
+    case DSHOT_CMD_ESC_INFO:
+
+      uartPrint("# ");
+      uartPrint(FW_FIRMWARE_NAME);
+      uartPrint("_");
+      uartPrintInteger(FW_VERSION_MAJOR, 10, 1);
+      uartPrint(".");
+      uartPrintInteger(FW_VERSION_MINOR, 10, 1);
+      uartPrint(".");
+      uartPrintInteger(FW_VERSION_PATCH_LEVEL, 10, 1);
+      uartPrint(" ");
+      uartPrint(__DATE__);
+      uartPrint(" / ");
+      uartPrint(__TIME__);
+      uartPrint(" (");
+      uartPrint(__REVISION__);
+      uartPrint(")");
+
+      uartPrint("\r\n");
+      uartPrint("# MCU UID ");
+      uartPrintInteger(U_ID_2, 16, 1);
+      uartPrintInteger(U_ID_1, 16, 1);
+      uartPrintInteger(U_ID_0, 16, 1);
+      uartPrint("\r\n");
+      break;
     case DSHOT_CMD_SETTING_LED0_ON:
       motorInputTune(6);
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;
+      uartPrint("DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL");
+      uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       escConfig()->motorDirection = SPIN_CCW;
+      uartPrint("DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED");
+      uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
@@ -93,13 +122,20 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
+      uartPrint("DSHOT_CMD_SETTING_3D_MODE_OFF");
+      uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
       escConfig()->motor3Dmode = 1;
+      uartPrint("DSHOT_CMD_SETTING_3D_MODE_ON");
+      uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SAVE:
+      uartPrint("DSHOT_CMD_SETTING_SAVE");
+      uartPrint("\r\n");
+      HAL_Delay(1000);
       configWrite();
       // reset esc, iwdg timeout
       while(true);

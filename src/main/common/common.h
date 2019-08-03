@@ -13,6 +13,12 @@
 
 #define BIT(x) (1 << (x))
 
+// MCU UID
+#if defined(STM32F051x8)
+  #define U_ID_0 (*(uint32_t*)0x1FFFF7AC)
+  #define U_ID_1 (*(uint32_t*)0x1FFFF7B0)
+  #define U_ID_2 (*(uint32_t*)0x1FFFF7B4)
+#endif
 
 const char *byteToString(uint8_t x);
 uint32_t scaleInputToOutput(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max);

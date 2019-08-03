@@ -24,7 +24,7 @@
 #include "stm32f0xx_ll_adc.h"
 
 #include "target.h"
-
+#include "build/version.h"
 #include "common/common.h"
 #include "drivers/adc.h"
 #include "drivers/led.h"
