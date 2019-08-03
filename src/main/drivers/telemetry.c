@@ -43,7 +43,7 @@ static void telemetryTelegram(telemetryData_t *telemetryData) {
 void telemetry(void) {
   telemetryData.temperature = adcScaled.temperature;
   telemetryData.voltage = adcScaled.voltage * 10;
-  if (adcScaled.current > 5) {
+  if (adcScaled.current > 1) {
     telemetryData.current = adcScaled.current * 10;
   } else {
     telemetryData.current = 0;
