@@ -2,7 +2,6 @@
 # F0 Make file include
 #
 
-TARGET_FLASH    := 64
 CMSIS_DIR       := $(LIB_DIR)/$(TARGET_MCU)/Drivers/CMSIS
 
 DRIVER_DIR       = $(LIB_DIR)/$(TARGET_MCU)/Drivers/STM32F0xx_HAL_Driver

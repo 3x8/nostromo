@@ -7,7 +7,7 @@ VALID_TARGETS  := $(sort $(VALID_TARGETS))
 
 SUPPORTED_TARGETS = $(VALID_TARGETS)
 
--include $(ROOT)/src/main/target/$(TARGET)/target.mk
+include $(ROOT)/src/main/target/$(TARGET)/target.mk
 
 ifeq ($(filter $(TARGET),$(VALID_TARGETS)),)
 $(error Target '$(TARGET)' is not valid, must be one of $(VALID_TARGETS). Have you prepared a valid target.mk?)

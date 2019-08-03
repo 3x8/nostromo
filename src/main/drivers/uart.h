@@ -28,6 +28,5 @@ void uartPrintInteger(uint32_t n, uint8_t base, uint8_t arg);
 bool uartAvailable(void);
 char uartRead(void);
 
-/*
-void uartOn (void);
-void uartOff (void);*/
+void uartOn(void);
+void uartOff(void);
