@@ -25,7 +25,7 @@ void uartWrite(char ch) {
     serialStartTxDMA();
   }
 
-  uartOFF()
+  uartOff()
 }
 
 bool uartAvailable(void) {
@@ -157,7 +157,7 @@ void DMA1_Channel2_3_IRQHandler(void) {
   }
 }
 
-void uartOn (void) {
+void uartOn(void) {
   LL_GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_InitStructure.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStructure.Speed = LL_GPIO_SPEED_FREQ_HIGH;
@@ -168,7 +168,7 @@ void uartOn (void) {
   LL_GPIO_Init(USART_TX_GPIO_PORT, &GPIO_InitStructure);
 }
 
-void uartOff (void) {
+void uartOff(void) {
   LL_GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_InitStructure.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStructure.Speed = LL_GPIO_SPEED_FREQ_HIGH;
