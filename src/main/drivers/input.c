@@ -75,7 +75,6 @@ void inputDshotCommandRun(void) {
       motorInputTune(5);
       break;
     case DSHOT_CMD_ESC_INFO:
-
       uartPrint("# ");
       uartPrint(FW_FIRMWARE_NAME);
       uartPrint("_");
@@ -91,12 +90,22 @@ void inputDshotCommandRun(void) {
       uartPrint(" (");
       uartPrint(__REVISION__);
       uartPrint(")");
-
       uartPrint("\r\n");
       uartPrint("# MCU UID ");
       uartPrintInteger(U_ID_2, 16, 1);
       uartPrintInteger(U_ID_1, 16, 1);
       uartPrintInteger(U_ID_0, 16, 1);
+      uartPrint("\r\n");
+      if (escConfig()->motorDirection == SPIN_CW) {
+        uartPrint("# SPIN_CW ");
+      } else {
+        uartPrint("# SPIN_CCW ");
+      }
+      if (escConfig()->motor3Dmode == false) {
+        uartPrint("3D_OFF ");
+      } else {
+        uartPrint("3D_ON ");
+      }
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
@@ -135,7 +144,7 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_SETTING_SAVE:
       uartPrint("# DSHOT_CMD_SETTING_SAVE");
       uartPrint("\r\n");
-      HAL_Delay(1000);
+      HAL_Delay(100);
       configWrite();
       // reset esc, iwdg timeout
       while(true);
