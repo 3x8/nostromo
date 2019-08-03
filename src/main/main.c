@@ -144,7 +144,9 @@ int main(void) {
     #endif
 
     #if (!defined(DEBUG_DATA_UART))
-      if ((input.TelemetryRequest) && (input.Data > DSHOT_CMD_MAX)) {
+    //ToDo
+    //if ((input.TelemetryRequest) && (input.Data > DSHOT_CMD_MAX)) {
+      if (input.TelemetryRequest) {
         telemetry();
         input.TelemetryRequest = false;
       }
