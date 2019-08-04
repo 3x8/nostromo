@@ -3,7 +3,6 @@
 telemetryData_t telemetryData;
 uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
-
 static uint8_t updateCrc8(uint8_t crc, uint8_t crc_seed) {
     uint8_t crc_u = crc;
 

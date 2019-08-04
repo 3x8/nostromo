@@ -63,7 +63,7 @@
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR -0.04
 
-// UART, telemetry
+// telemetry
 #define USART                           USART1
 #define USART_IRQn                      USART1_IRQn
 #define USART_IRQHandler                USART1_IRQHandler
