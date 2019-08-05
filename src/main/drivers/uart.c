@@ -69,10 +69,14 @@ void uartInit(void) {
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
 
+  LL_USART_SetTransferDirection(USART, LL_USART_DIRECTION_RX);
+
   // Configure USART Tx GPIO
   LL_GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_InitStructure.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStructure.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStructure.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStructure.Pull = LL_GPIO_PULL_UP;
   GPIO_InitStructure.Alternate = USART_TX_AF;
   GPIO_InitStructure.Pin = USART_TX_PIN;
   LL_GPIO_Init(USART_TX_GPIO_PORT, &GPIO_InitStructure);
