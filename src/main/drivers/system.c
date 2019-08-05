@@ -1,8 +1,8 @@
 #include "system.h"
 
+TIM_HandleTypeDef msTimerHandle;
 
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-
 
 void systemClockConfig(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -227,4 +227,27 @@ void systemInputTimerInit(void) {
   while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
 
   while (HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+}
+
+
+void systemMsTimerInit(void) {
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  msTimerHandle.Instance = TIM2;
+  msTimerHandle.Init.Prescaler = 45454;
+  msTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  msTimerHandle.Init.Period = 0xffffffff;
+  msTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  msTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  while (HAL_TIM_Base_Init(&msTimerHandle) != HAL_OK);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  while (HAL_TIM_ConfigClockSource(&msTimerHandle, &sClockSourceConfig) != HAL_OK);
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  while (HAL_TIMEx_MasterConfigSynchronization(&msTimerHandle, &sMasterConfig) != HAL_OK);
+
+  while (HAL_TIM_Base_Start(&msTimerHandle) != HAL_OK);
 }

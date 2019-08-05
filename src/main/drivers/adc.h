@@ -11,7 +11,8 @@ typedef struct {
 extern ADC_HandleTypeDef adcHandle;
 extern DMA_HandleTypeDef adcDmaHandle;
 extern uint32_t adcDmaBuffer[3];
-extern adcData_t adcRaw, adcScaled, adcFiltered;
+extern adcData_t adcRaw, adcScaled;
+extern float consumptionMah;
 
 void adcRead(void);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle);

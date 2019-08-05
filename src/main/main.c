@@ -1,8 +1,5 @@
 #include "main.h"
 
-uint32_t mainTimeBegin, mainTimeEnd, mainTimeLoop;
-float mah;
-
 // filter
 kalman_t motorCommutationIntervalFilterState;
 #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
@@ -22,6 +19,7 @@ int main(void) {
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
   systemInputTimerInit();
+  systemMsTimerInit();
 
   ledOff();
 
@@ -44,7 +42,6 @@ int main(void) {
 
   // main loop
   while (true) {
-    mainTimeBegin = motorCommutationTimerHandle.Instance->CNT;
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
@@ -134,15 +131,18 @@ int main(void) {
     }
 
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-      adcFiltered.current = kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current);
-      adcFiltered.voltage = kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage);
-      adcScaled.current = ((adcFiltered.current - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
-      adcScaled.voltage = ((adcFiltered.voltage - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
+      adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
+      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
       if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
         #endif
+      }
+
+      if (msTimerHandle.Instance->CNT > 100) {
+        msTimerHandle.Instance->CNT = 0;
+        consumptionMah += adcScaled.current * 0.0028;
       }
     #endif
 
@@ -154,48 +154,30 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-    static uint8_t  printIndex = 0;
+      static uint8_t  printIndex = 0;
 
-      if ( ((input.PwmValue > 500) && (printIndex > 7)) || ((input.PwmValue < 500) && (printIndex > 100)) ){
-
+      if ((msTimerHandle.Instance->CNT % 101) == 0) {
         /*
         uartPrint("TR[");
         uartPrintInteger(input.TelemetryRequest, 10, 1);
-        uartPrint("] ");*/
-
-        /*
+        uartPrint("] ");
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
-
         uartPrint("VALID[");
         uartPrintInteger(input.DataValid, 10, 1);
         uartPrint("] ");*/
 
-
-        mah = mah + mainTimeLoop * adcScaled.current * 0.000000000028;
-
-        uartPrint("mAh[");
-        uartPrintInteger(mah, 10, 1);
-        uartPrint("] ");
-
-        uartPrint("mainUs[");
-        uartPrintInteger(mainTimeLoop, 10, 1);
-        uartPrint("] ");
-
-        /*
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
-
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint("] ");
-
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint("] "); */
-
+        uartPrint("] ");
+        
         /*
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
@@ -205,28 +187,27 @@ int main(void) {
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] "); */
 
-        /*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
-
         uartPrint("Ifs[");
         uartPrintInteger(adcScaled.current, 10, 1);
         uartPrint("] ");
-
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
+        uartPrint("mAh[");
+        uartPrintInteger(consumptionMah, 10, 1);
+        uartPrint("] ");
 
+        /*
         uartPrint("RPM[");
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         uartPrint("] ");
-
         uartPrint("BEMF[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
-
         uartPrint("BEMFr[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] "); */
@@ -241,8 +222,6 @@ int main(void) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
     #endif
-    mainTimeEnd = motorCommutationTimerHandle.Instance->CNT;
-    mainTimeLoop = (mainTimeEnd - mainTimeBegin) * 0.168;
   } // main loop
 
 } // main
