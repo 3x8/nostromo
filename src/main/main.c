@@ -143,6 +143,7 @@ int main(void) {
       if (msTimerHandle.Instance->CNT > 100) {
         msTimerHandle.Instance->CNT = 0;
         consumptionMah += adcScaled.current *  0.0028;
+        telemetryData.consumption = (int)consumptionMah;
       }
     #endif
 

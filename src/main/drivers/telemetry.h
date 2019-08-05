@@ -2,7 +2,6 @@
 
 #include "main.h"
 
-
 // from https://www.rcgroups.com/forums/showatt.php?attachmentid=8524039&d=1450424877
 /*
         KISS ESC TELEMETRY PROTOCOL
