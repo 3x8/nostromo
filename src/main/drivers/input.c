@@ -247,7 +247,11 @@ void inputProshot() {
     input.DataValid = true;
     input.TimeoutCounter = 0;
     input.Data = telegramData;
-    input.TelemetryRequest = (telegramPulseValue[2] & BIT(0));
+
+    // only update if not active
+    if (!input.TelemetryRequest) {
+      input.TelemetryRequest = (telegramPulseValue[2] & BIT(0));
+    }
 
     if (input.Armed) {
       if (input.Data <= DSHOT_CMD_MAX) {
