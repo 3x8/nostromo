@@ -12,7 +12,7 @@ extern ADC_HandleTypeDef adcHandle;
 extern DMA_HandleTypeDef adcDmaHandle;
 extern uint32_t adcDmaBuffer[3];
 extern adcData_t adcRaw, adcScaled;
-extern uint32_t consumptionMah;
+float consumptionMah;
 
 void adcRead(void);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle);

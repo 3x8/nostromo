@@ -197,7 +197,11 @@ int main(void) {
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
         uartPrint("mAh[");
-        uartPrintInteger(consumptionMah, 10, 1);
+        uartPrintInteger((int)consumptionMah, 10, 1);
+        uartPrint("] ");
+        uartPrint("] ");
+        uartPrint("teleAh[");
+        uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");
 
         /*
