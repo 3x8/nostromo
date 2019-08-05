@@ -1,15 +1,15 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
-//#define DEBUG_CYCLETIME_MAINLOOP // ~500us
+#define _DEBUG_
+#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 
 // ToDo
-#define HBRIDGE_DEAD_TIME       0   // (in 20.083ns cycles at 48 MHz) (FD6288 builtin 200ns)
+#define HBRIDGE_DEAD_TIME       0   // (in 24ns cycles) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     571 // x0.1A
 #define HBRIDGE_MAX_TEMPERATURE 77  // °C
 #define TIMER1_INIT_PERIOD      977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz

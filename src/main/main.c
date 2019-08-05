@@ -1,11 +1,13 @@
 #include "main.h"
 
+uint32_t mainTimeBegin, mainTimeEnd, mainTimeLoop;
+float mah;
+
 // filter
 kalman_t motorCommutationIntervalFilterState;
 #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
   kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
-
 
 int main(void) {
   // init
@@ -42,6 +44,7 @@ int main(void) {
 
   // main loop
   while (true) {
+    mainTimeBegin = motorCommutationTimerHandle.Instance->CNT;
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
@@ -169,18 +172,29 @@ int main(void) {
         uartPrintInteger(input.DataValid, 10, 1);
         uartPrint("] ");*/
 
+
+        mah = mah + mainTimeLoop * adcScaled.current * 0.000000000028;
+
+        uartPrint("mAh[");
+        uartPrintInteger(mah, 10, 1);
+        uartPrint("] ");
+
+        uartPrint("mainUs[");
+        uartPrintInteger(mainTimeLoop, 10, 1);
+        uartPrint("] ");
+
+        /*
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
 
-        /*
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint("] ");
+        uartPrint("] "); */
 
         /*
         uartPrint("Ur[");
@@ -191,6 +205,7 @@ int main(void) {
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] "); */
 
+        /*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
@@ -214,7 +229,7 @@ int main(void) {
 
         uartPrint("BEMFr[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] ");
+        uartPrint("] "); */
 
         uartPrint("\r\n");
         printIndex = 0;
@@ -226,6 +241,8 @@ int main(void) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
     #endif
+    mainTimeEnd = motorCommutationTimerHandle.Instance->CNT;
+    mainTimeLoop = (mainTimeEnd - mainTimeBegin) * 0.168;
   } // main loop
 
 } // main
