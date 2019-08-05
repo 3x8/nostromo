@@ -296,13 +296,6 @@ void inputProshot() {
       }
     }
 
-    #if (!defined(DEBUG_DATA_UART))
-      if (input.TelemetryRequest) {
-        telemetry();
-        input.TelemetryRequest = false;
-      }
-    #endif
-
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_OFF(LED_GREEN);
     #endif
