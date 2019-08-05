@@ -5,7 +5,7 @@ DMA_HandleTypeDef adcDmaHandle;
 
 uint32_t adcDmaBuffer[3];
 adcData_t adcRaw, adcScaled;
-float consumptionMah;
+uint32_t consumptionMah;
 
 void adcRead(void) {
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
