@@ -158,10 +158,10 @@ int main(void) {
       }
     #endif
 
-      if (input.TelemetryRequest) {
-        telemetry();
-        input.TelemetryRequest = false;
-      }
+    if (input.TelemetryRequest) {
+      telemetry();
+      input.TelemetryRequest = false;
+    }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       static uint8_t  printIndex = 0;
