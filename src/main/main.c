@@ -189,6 +189,7 @@ int main(void) {
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
+
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] "); */
