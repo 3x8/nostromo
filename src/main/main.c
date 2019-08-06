@@ -143,16 +143,14 @@ int main(void) {
       if (msTimerHandle.Instance->CNT > 100) {
         msTimerHandle.Instance->CNT = 0;
         consumptionMah += adcScaled.current *  0.0028;
-        telemetryData.consumption = (int)consumptionMah;
+        //telemetryData.consumption = (int)consumptionMah;
       }
     #endif
 
-    #if (!defined(DEBUG_DATA_UART))
       if (input.TelemetryRequest) {
         telemetry();
         input.TelemetryRequest = false;
       }
-    #endif
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       static uint8_t  printIndex = 0;
@@ -197,11 +195,12 @@ int main(void) {
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
+
         uartPrint("mAh[");
         uartPrintInteger((int)consumptionMah, 10, 1);
+
         uartPrint("] ");
-        uartPrint("] ");
-        uartPrint("teleAh[");
+        uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");
 

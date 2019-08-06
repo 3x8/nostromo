@@ -22,20 +22,22 @@ static uint8_t calculateCrc8(const uint8_t *buf, const uint8_t bufLen) {
     return (crc);
 }
 
-static void telemetryTelegram(telemetryData_t *telemetryData) {
-  telemetryBuffer[0] = telemetryData->temperature;
-  telemetryBuffer[1] = telemetryData->voltage >> 8;
-  telemetryBuffer[2] = telemetryData->voltage & 0xFF;
-  telemetryBuffer[3] = telemetryData->current >> 8;
-  telemetryBuffer[4] = telemetryData->current & 0xFF;
-  telemetryBuffer[5] = telemetryData->consumption >> 8;
-  telemetryBuffer[6] = telemetryData->consumption & 0xFF;
-  telemetryBuffer[7] = telemetryData->erpm >> 8;
-  telemetryBuffer[8] = telemetryData->erpm & 0xFF;
+static void telemetryTelegram(telemetryData_t *data) {
+  telemetryBuffer[0] = data->temperature;
+  telemetryBuffer[1] = data->voltage >> 8;
+  telemetryBuffer[2] = data->voltage & 0xFF;
+  telemetryBuffer[3] = data->current >> 8;
+  telemetryBuffer[4] = data->current & 0xFF;
+  telemetryBuffer[5] = data->consumption >> 8;
+  telemetryBuffer[6] = data->consumption & 0xFF;
+  telemetryBuffer[7] = data->erpm >> 8;
+  telemetryBuffer[8] = data->erpm & 0xFF;
   telemetryBuffer[9] = calculateCrc8(telemetryBuffer, 9);
 
   for(uint8_t i = 0; i < TELEMETRY_FRAME_SIZE; i++) {
-    uartWrite(telemetryBuffer[i]);
+    #if (!defined(DEBUG_DATA_UART))
+      uartWrite(telemetryBuffer[i]);
+    #endif
   }
 }
 
@@ -47,6 +49,7 @@ void telemetry(void) {
   } else {
     telemetryData.current = 0;
   }
+  telemetryData.consumption = 11;
   telemetryData.erpm = 542137.4/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
