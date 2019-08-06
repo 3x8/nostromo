@@ -197,9 +197,6 @@ int main(void) {
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         uartPrint("] ");
-        uartPrint("BEMF[");
-        uartPrintInteger(motor.CommutationInterval, 10, 1);
-        uartPrint("] ");
 
         uartPrint("\r\n");
         printIndex = 0;
