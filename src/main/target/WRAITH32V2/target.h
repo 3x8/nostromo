@@ -9,10 +9,10 @@
 #define DEBUG_DATA_UART
 
 // ToDo
-#define HBRIDGE_DEAD_TIME       0   // (in 24ns cycles) (FD6288 has a builtin 200ns deadtime)
-#define HBRIDGE_MAX_CURRENT     5710 // x0.1A
-#define HBRIDGE_MAX_TEMPERATURE 77  // °C
-#define TIMER1_INIT_PERIOD      977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
+#define HBRIDGE_DEAD_TIME       0     // (in 24ns cycles) (FD6288 has a builtin 200ns deadtime)
+#define HBRIDGE_MAX_CURRENT     5710  // (in 10mA steps)
+#define HBRIDGE_MAX_TEMPERATURE 77    // °C
+#define TIMER1_INIT_PERIOD      977   // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
 #define MOTOR_START_THRESHOLD   13
 
 // input ,Ok
@@ -60,6 +60,7 @@
 #define ADC_VOLTAGE_FACTOR      0.601684717208
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
 #define ADC_CURRENT_FACTOR      1.87
+#define ADC_CONSUMPTION_FACTOR  0.00028
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04
 
