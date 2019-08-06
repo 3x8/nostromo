@@ -23,10 +23,10 @@ int main(void) {
 
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 500.0f, 17);
+  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-    kalmanInit(&adcVoltageFilterState, 2500.0f, 5);
-    kalmanInit(&adcCurrentFilterState, 2500.0f, 5);
+    kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
+    kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
   #endif
 
   // start with motor off
@@ -111,7 +111,7 @@ int main(void) {
         // motor not turning
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
           motor.BemfZeroCrossTimestamp = 0;
-            kalmanInit(&motorCommutationIntervalFilterState, 500.0f, 17);
+            kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
           motor.Running = false;
         }
 
