@@ -19,6 +19,7 @@ typedef struct escConfig_s {
   bool led0;
   bool led1;
   bool led2;
+  int32_t adcCurrentOffset;
 } escConfig_t;
 
 typedef struct master_s {

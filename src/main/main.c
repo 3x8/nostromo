@@ -77,6 +77,15 @@ int main(void) {
       inputDisarmCheck();
       if (input.Armed) {
 
+        // adcCurrent, auto offset at first arm after firmware write
+        if (escConfig()->adcCurrentOffset == 0) {
+          escConfig()->adcCurrentOffset = -adcScaled.current;
+
+          configWrite();
+          // reset esc, iwdg timeout
+          while(true);
+        }
+
         // uart init
         if ((input.Protocol == PROSHOT) && (!serialPort.InitDone)){
           uartInit();
@@ -131,8 +140,8 @@ int main(void) {
     }
 
     #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
-      adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) - ADC_CURRENT_OFFSET) * ADC_CURRENT_FACTOR);
-      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) - ADC_VOLTAGE_OFFSET) * ADC_VOLTAGE_FACTOR);
+      adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
+      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
       if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
@@ -180,7 +189,6 @@ int main(void) {
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
-
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] "); */
@@ -189,15 +197,13 @@ int main(void) {
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ifs[");
-        uartPrintInteger(adcScaled.current, 10, 1);
+        uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
-
         uartPrint("mAh[");
-        uartPrintInteger((int)consumptionMah, 10, 1);
-
+        uartPrintInteger(ABS((int)consumptionMah), 10, 1);
         uartPrint("] ");
         uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);

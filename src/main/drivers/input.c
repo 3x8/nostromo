@@ -106,6 +106,8 @@ void inputDshotCommandRun(void) {
       } else {
         uartPrint("3D_ON ");
       }
+      uartPrint("adcCurrentOffset = ");
+      uartPrintInteger(escConfig()->adcCurrentOffset, 16, 1);
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:

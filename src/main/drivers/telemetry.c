@@ -43,13 +43,17 @@ static void telemetryTelegram(telemetryData_t *data) {
 
 void telemetry(void) {
   telemetryData.temperature = adcScaled.temperature;
-  telemetryData.voltage = adcScaled.voltage * 10;
-  if (adcScaled.current > 1) {
-    telemetryData.current = adcScaled.current * 10;
-  } else {
+  telemetryData.voltage = adcScaled.voltage;
+  if (adcScaled.current < 0) {
     telemetryData.current = 0;
+  } else {
+    telemetryData.current = adcScaled.current;
   }
-  telemetryData.consumption =  (int)consumptionMah;
+  if (consumptionMah < 0) {
+    telemetryData.consumption = 0;
+  } else {
+    telemetryData.consumption =  (int)consumptionMah;
+  }
   telemetryData.erpm = 542137.4/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);

@@ -30,6 +30,7 @@ void configReset(void) {
   escConfig()->led0 = false;
   escConfig()->led1 = false;
   escConfig()->led2 = false;
+  escConfig()->adcCurrentOffset = ADC_CURRENT_OFFSET;
 
   eepromWrite();
 }

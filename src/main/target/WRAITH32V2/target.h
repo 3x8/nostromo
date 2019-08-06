@@ -1,16 +1,16 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 
 // ToDo
 #define HBRIDGE_DEAD_TIME       0   // (in 24ns cycles) (FD6288 has a builtin 200ns deadtime)
-#define HBRIDGE_MAX_CURRENT     571 // x0.1A
+#define HBRIDGE_MAX_CURRENT     5710 // x0.1A
 #define HBRIDGE_MAX_TEMPERATURE 77  // °C
 #define TIMER1_INIT_PERIOD      977 // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
 #define MOTOR_START_THRESHOLD   13
@@ -56,10 +56,10 @@
 #define ADC_MASK                GPIO_PIN_3 | GPIO_PIN_6
 
 // adc calibration ,Ok
-#define ADC_VOLTAGE_OFFSET      -77
-#define ADC_VOLTAGE_FACTOR      0.0601
-#define ADC_CURRENT_OFFSET      600
-#define ADC_CURRENT_FACTOR      0.187
+#define ADC_VOLTAGE_OFFSET      40.3128760529
+#define ADC_VOLTAGE_FACTOR      0.601684717208
+#define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
+#define ADC_CURRENT_FACTOR      1.87
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04
 
