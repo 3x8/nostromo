@@ -111,7 +111,7 @@ int main(void) {
         // motor not turning
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
           motor.BemfZeroCrossTimestamp = 0;
-            kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 7);
+            kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 5);
           motor.Running = false;
         }
 
@@ -167,17 +167,6 @@ int main(void) {
       static uint8_t  printIndex = 0;
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
-        /*
-        uartPrint("TR[");
-        uartPrintInteger(input.TelemetryRequest, 10, 1);
-        uartPrint("] ");
-        uartPrint("ARM[");
-        uartPrintInteger(input.Armed, 10, 1);
-        uartPrint("] ");
-        uartPrint("VALID[");
-        uartPrintInteger(input.DataValid, 10, 1);
-        uartPrint("] ");*/
-
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
@@ -187,15 +176,6 @@ int main(void) {
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-
-        /*
-        uartPrint("Ur[");
-        uartPrintInteger(adcRaw.voltage, 10, 1);
-        uartPrint("] ");
-
-        uartPrint("Ir[");
-        uartPrintInteger(adcRaw.current, 10, 1);
-        uartPrint("] "); */
 
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
@@ -213,7 +193,6 @@ int main(void) {
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");
 
-        /*
         uartPrint("RPM[");
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
@@ -221,9 +200,6 @@ int main(void) {
         uartPrint("BEMF[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
-        uartPrint("BEMFr[");
-        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] "); */
 
         uartPrint("\r\n");
         printIndex = 0;
