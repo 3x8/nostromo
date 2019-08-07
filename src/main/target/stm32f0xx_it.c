@@ -43,8 +43,8 @@ void DMA1_Channel2_3_IRQHandler(void) {
 void DMA1_Channel4_5_IRQHandler(void) {
 
   // Todo usart2
-  if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
-    LL_DMA_ClearFlag_TC2(DMA1);
+  if (LL_DMA_IsActiveFlag_TC4(DMA1)) {
+    LL_DMA_ClearFlag_TC4(DMA1);
     LL_DMA_DisableChannel(DMA1, USART_TX_DMA_CHANNEL);
 
     if (serialPort.txHead != serialPort.txTail) {

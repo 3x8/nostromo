@@ -67,7 +67,7 @@ void uartPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
 void uartInit(void) {
   LL_AHB1_GRP1_EnableClock(USART_TX_GPIO_CLK);
   // ToDo usart2
-  LL_APB1_GRP2_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
 
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
@@ -95,12 +95,13 @@ void uartInit(void) {
   USART_InitStructure.OverSampling = LL_USART_OVERSAMPLING_16;
   LL_USART_Init(USART, &USART_InitStructure);
 
+  // ToDo usart2
   // IRQ init
-  NVIC_SetPriority(DMA1_Channel2_3_IRQn, 1);
-  NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+  //NVIC_SetPriority(DMA1_Channel2_3_IRQn, 1);
+  //NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
 
-  LL_DMA_ClearFlag_GI2(DMA1);
-  LL_DMA_ClearFlag_GI3(DMA1);
+  //LL_DMA_ClearFlag_GI2(DMA1);
+  //LL_DMA_ClearFlag_GI3(DMA1);
 
   serialPort.rxHead = serialPort.rxTail = 0;
   serialPort.txHead = serialPort.txTail = 0;

@@ -66,6 +66,7 @@
 #define ADC_TEMPERATURE_FACTOR  -0.04
 
 // telemetry
+/*
 #define USART                   USART1
 #define USART_IRQn              USART1_IRQn
 #define USART_IRQHandler        USART1_IRQHandler
@@ -78,11 +79,11 @@
 #define USART_TDR_ADDRESS       0x40013828
 
 #define USART_TX_DMA_CHANNEL    LL_DMA_CHANNEL_2
-#define USART_RX_DMA_CHANNEL    LL_DMA_CHANNEL_3
+#define USART_RX_DMA_CHANNEL    LL_DMA_CHANNEL_3*/
 
 
 // SWD Ko + UART2 not working (DMA conflict ?)
-/*
+
 #define USART                   USART2
 #define USART_IRQn              USART2_IRQn
 #define USART_IRQHandler        USART2_IRQHandler
@@ -95,4 +96,4 @@
 #define USART_TDR_ADDRESS       0x40004428
 
 #define USART_TX_DMA_CHANNEL    LL_DMA_CHANNEL_4
-#define USART_RX_DMA_CHANNEL    LL_DMA_CHANNEL_5*/
+#define USART_RX_DMA_CHANNEL    LL_DMA_CHANNEL_5
