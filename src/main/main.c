@@ -77,6 +77,7 @@ int main(void) {
       inputDisarmCheck();
       if (input.Armed) {
 
+        #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
         // adcCurrent, auto offset at first arm after firmware write
         if (escConfig()->adcCurrentOffset == 0) {
           escConfig()->adcCurrentOffset = -adcScaled.current;
@@ -85,6 +86,7 @@ int main(void) {
           // reset esc, iwdg timeout
           while(true);
         }
+        #endif
 
         // uart init
         if ((input.Protocol == PROSHOT) && (!serialPort.InitDone)){
@@ -167,6 +169,7 @@ int main(void) {
       static uint8_t  printIndex = 0;
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
+        /*
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
@@ -196,6 +199,13 @@ int main(void) {
         uartPrint("RPM[");
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
+        uartPrint("] ");*/
+
+        uartPrint("PWM[");
+        uartPrintInteger(input.PwmValue, 10, 1);
+        uartPrint("] ");
+        uartPrint("RPM[");
+        uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         uartPrint("] ");
 
         uartPrint("\r\n");
