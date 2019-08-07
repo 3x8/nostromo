@@ -121,15 +121,3 @@ void uartInit(void) {
   LL_USART_EnableDMAReq_TX(USART);
   LL_USART_Enable(USART);
 }
-
-/*
-void DMA1_Channel2_3_IRQHandler(void) {
-  if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
-    LL_DMA_ClearFlag_TC2(DMA1);
-    LL_DMA_DisableChannel(DMA1, USART_TX_DMA_CHANNEL);
-
-    if (serialPort.txHead != serialPort.txTail) {
-      uartStartTxDMA();
-    }
-  }
-}*/
