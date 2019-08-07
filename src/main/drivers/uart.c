@@ -2,7 +2,7 @@
 
 uart_t serialPort;
 
-static void serialStartTxDMA(void) {
+void uartStartTxDMA(void) {
   LL_DMA_SetMemoryAddress(DMA1, USART_TX_DMA_CHANNEL, (uint32_t)&serialPort.txBuf[serialPort.txTail]);
   if (serialPort.txHead > serialPort.txTail) {
     LL_DMA_SetDataLength(DMA1, USART_TX_DMA_CHANNEL, serialPort.txHead - serialPort.txTail);
@@ -20,7 +20,7 @@ void uartWrite(char ch) {
   serialPort.txHead = (serialPort.txHead + 1) % SERIAL_TX_BUFSIZE;
 
   if (!LL_DMA_IsEnabledChannel(DMA1, USART_TX_DMA_CHANNEL)) {
-    serialStartTxDMA();
+    uartStartTxDMA();
   }
   LL_USART_SetTransferDirection(USART, LL_USART_DIRECTION_RX);
 }
@@ -122,13 +122,14 @@ void uartInit(void) {
   LL_USART_Enable(USART);
 }
 
+/*
 void DMA1_Channel2_3_IRQHandler(void) {
   if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
     LL_DMA_ClearFlag_TC2(DMA1);
     LL_DMA_DisableChannel(DMA1, USART_TX_DMA_CHANNEL);
 
     if (serialPort.txHead != serialPort.txTail) {
-      serialStartTxDMA();
+      uartStartTxDMA();
     }
   }
-}
+}*/

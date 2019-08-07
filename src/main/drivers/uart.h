@@ -20,7 +20,7 @@ typedef struct {
 
 extern uart_t serialPort;
 
-
+void uartStartTxDMA(void);
 void uartInit(void);
 void uartWrite(char ch);
 void uartPrint(const char  *str);

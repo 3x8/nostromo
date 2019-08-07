@@ -28,6 +28,17 @@ void DMA1_Channel1_IRQHandler(void) {
   HAL_DMA_IRQHandler(&adcDmaHandle);
 }
 
+void DMA1_Channel2_3_IRQHandler(void) {
+  if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
+    LL_DMA_ClearFlag_TC2(DMA1);
+    LL_DMA_DisableChannel(DMA1, USART_TX_DMA_CHANNEL);
+
+    if (serialPort.txHead != serialPort.txTail) {
+      uartStartTxDMA();
+    }
+  }
+}
+
 // This function handles DMA1 channel 4 and 5 interrupts.
 void DMA1_Channel4_5_IRQHandler(void) {
   HAL_DMA_IRQHandler(&inputTimerDmaHandle);
