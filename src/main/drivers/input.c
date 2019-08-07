@@ -106,7 +106,7 @@ void inputDshotCommandRun(void) {
       } else {
         uartPrint("3D=ON ");
       }
-      uartPrint("off[");
+      uartPrint(" [");
       if (escConfig()->adcCurrentOffset < 0) {
         uartPrint("-");
       }
