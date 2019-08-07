@@ -97,20 +97,21 @@ void inputDshotCommandRun(void) {
       uartPrintInteger(U_ID_0, 16, 1);
       uartPrint("\r\n");
       if (escConfig()->motorDirection == SPIN_CW) {
-        uartPrint("# SPIN_CW ");
+        uartPrint("# CW ");
       } else {
-        uartPrint("# SPIN_CCW ");
+        uartPrint("# CCW ");
       }
       if (escConfig()->motor3Dmode == false) {
-        uartPrint("3D_OFF ");
+        uartPrint("3D=OFF ");
       } else {
-        uartPrint("3D_ON ");
+        uartPrint("3D=ON ");
       }
-      uartPrint("adcCurrentOffset = ");
+      uartPrint("off[");
       if (escConfig()->adcCurrentOffset < 0) {
         uartPrint("-");
       }
       uartPrintInteger(ABS(escConfig()->adcCurrentOffset), 16, 1);
+      uartPrint("]");
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
@@ -118,13 +119,13 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;
-      uartPrint("# DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL");
+      uartPrint("# CW");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       escConfig()->motorDirection = SPIN_CCW;
-      uartPrint("# DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED");
+      uartPrint("# CCW");
       uartPrint("\r\n");
       inputDisarm();
       break;
@@ -136,18 +137,18 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
       escConfig()->motor3Dmode = 0;
-      uartPrint("# DSHOT_CMD_SETTING_3D_MODE_OFF");
+      uartPrint("# 3D=OFF");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
       escConfig()->motor3Dmode = 1;
-      uartPrint("# DSHOT_CMD_SETTING_3D_MODE_ON");
+      uartPrint("# 3D=ON");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_SAVE:
-      uartPrint("# DSHOT_CMD_SETTING_SAVE");
+      uartPrint("# SAVE");
       uartPrint("\r\n");
       HAL_Delay(100);
       configWrite();
