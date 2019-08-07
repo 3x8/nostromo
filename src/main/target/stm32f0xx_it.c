@@ -41,7 +41,6 @@ void DMA1_Channel2_3_IRQHandler(void) {
 
 // This function handles DMA1 channel 4 and 5 interrupts.
 void DMA1_Channel4_5_IRQHandler(void) {
-
   // Todo usart2
   if (LL_DMA_IsActiveFlag_TC4(DMA1)) {
     LL_DMA_ClearFlag_TC4(DMA1);
@@ -50,10 +49,10 @@ void DMA1_Channel4_5_IRQHandler(void) {
     if (serialPort.txHead != serialPort.txTail) {
       uartStartTxDMA();
     }
+  } else {
+    HAL_DMA_IRQHandler(&inputTimerDmaHandle);
+    inputCallbackDMA();
   }
-
-  HAL_DMA_IRQHandler(&inputTimerDmaHandle);
-  inputCallbackDMA();
 }
 
 // This function handles ADC and COMP interrupts (COMP interrupts through EXTI lines 21 and 22).
