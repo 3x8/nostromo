@@ -55,8 +55,10 @@ void uartInit(void) {
   LL_AHB1_GRP1_EnableClock(USART_TX_GPIO_CLK);
   #if (defined(TYPHOON32V2))
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
+  #else
+    LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
   #endif
-  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
+
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
 
   LL_USART_SetTransferDirection(USART, LL_USART_DIRECTION_RX);

@@ -12,7 +12,7 @@
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
 
-//ToDo
+// ToDo
 #define HBRIDGE_DEAD_TIME 0 // in 22ns cycles (FD6288 builtin 200ns)
 #define HBRIDGE_MAX_CURRENT 0
 #define HBRIDGE_MAX_TEMPERATURE 77

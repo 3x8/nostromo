@@ -1,6 +1,6 @@
 #include "eeprom.h"
 
-//ToDo move to target ???
+// ToDo move to target ???
 #define FLASH_PAGE_COUNT                64
 
 #define FLASH_TO_RESERVE_FOR_CONFIG     0x800
