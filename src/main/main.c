@@ -169,7 +169,7 @@ int main(void) {
       static uint8_t  printIndex = 0;
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
-        
+
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
@@ -179,12 +179,19 @@ int main(void) {
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-
+        /*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ifs[");
-        uartPrintInteger(ABS(adcScaled.current), 10, 1);
+        uartPrintInteger(ABS(adcScaled.current), 10, 1);*/
+
+        uartPrint("] ");
+        uartPrint("Ur[");
+        uartPrintInteger(adcRaw.voltage, 10, 1);
+        uartPrint("] ");
+        uartPrint("Ir[");
+        uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);

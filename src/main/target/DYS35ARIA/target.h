@@ -70,12 +70,9 @@
 #define USART                   USART1
 #define USART_IRQn              USART1_IRQn
 #define USART_IRQHandler        USART1_IRQHandler
-
 #define USART_TX_PIN            LL_GPIO_PIN_6
 #define USART_TX_GPIO_PORT      GPIOB
 #define USART_TX_GPIO_CLK       LL_AHB1_GRP1_PERIPH_GPIOB
 #define USART_TX_AF             LL_GPIO_AF_0
-
 #define USART_TDR_ADDRESS       0x40013828
-
 #define USART_TX_DMA_CHANNEL    LL_DMA_CHANNEL_2
