@@ -5,13 +5,11 @@
 #define SERIAL_TX_BUFSIZE   256
 #define SERIAL_RX_BUFSIZE   256
 
-
 typedef struct {
   volatile char txBuf[SERIAL_TX_BUFSIZE];
   uint16_t  txHead, txTail;
   bool InitDone;
 } uart_t;
-
 
 extern uart_t serialPort;
 

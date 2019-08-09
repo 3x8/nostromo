@@ -29,7 +29,6 @@ typedef struct {
     uint32_t erpm;         // Electrical Rpm (resolution 100Rpm)
 } telemetryData_t;
 
-
 extern telemetryData_t telemetryData;
 
 void telemetry(void);

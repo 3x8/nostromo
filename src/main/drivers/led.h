@@ -2,7 +2,6 @@
 
 #include "main.h"
 
-
 #if !defined(LED_INVERTED)
   #define LED_ON(X)       LL_GPIO_SetOutputPin(X ## _GPIO, X ## _PIN)
   #define LED_OFF(X)      LL_GPIO_ResetOutputPin(X ## _GPIO, X ## _PIN)
