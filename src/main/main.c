@@ -80,7 +80,11 @@ int main(void) {
         #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2))
         // adcCurrent, auto offset at first arm after firmware write
         if (escConfig()->adcCurrentOffset == 0) {
-          escConfig()->adcCurrentOffset = -adcScaled.current;
+          if (adcScaled.current != 0) {
+            escConfig()->adcCurrentOffset = -adcScaled.current;
+          } else {
+            escConfig()->adcCurrentOffset = 1;
+          }
 
           configWrite();
           // reset esc, iwdg timeout
