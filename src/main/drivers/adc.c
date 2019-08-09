@@ -14,6 +14,10 @@ void adcRead(void) {
     adcRaw.temperature = adcDmaBuffer[2];
   #endif
 
+  #if (defined(WRAITH32MINI))
+    adcRaw.temperature = adcDmaBuffer[0];
+  #endif
+
   #if (defined(DYS35ARIA))
     adcRaw.current = adcDmaBuffer[0];
     adcRaw.temperature = adcDmaBuffer[1];
