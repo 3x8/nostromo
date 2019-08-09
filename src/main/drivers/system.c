@@ -189,7 +189,7 @@ void systemMotorCommutationTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
-  motorCommutationTimerHandle.Instance = TIM3;
+  motorCommutationTimerHandle.Instance = TIM14;
   motorCommutationTimerHandle.Init.Prescaler = 7;
   motorCommutationTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   motorCommutationTimerHandle.Init.Period = 0xffff;
@@ -213,7 +213,7 @@ void systemInputTimerInit(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;
 
-  inputTimerHandle.Instance = TIM15;
+  inputTimerHandle.Instance = TIM3;
   inputTimerHandle.Init.Prescaler = 0;
   inputTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   inputTimerHandle.Init.Period = 0xffff;

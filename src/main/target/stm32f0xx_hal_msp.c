@@ -77,16 +77,16 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     __HAL_RCC_TIM2_CLK_ENABLE();
   }
   else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
-    __HAL_RCC_TIM3_CLK_ENABLE();
+    __HAL_RCC_TIM14_CLK_ENABLE();
   }
   else if(htim_base->Instance == inputTimerHandle.Instance) {
-    __HAL_RCC_TIM15_CLK_ENABLE();
+    __HAL_RCC_TIM3_CLK_ENABLE();
     // TIM15 -> PA2 GPIO
     GPIO_InitStruct.Pin = INPUT_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
+    GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
     // TIM15 DMA Init, TIM15_CH1_UP_TRIG_COM Init
@@ -145,10 +145,10 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
     __HAL_RCC_TIM2_CLK_DISABLE();
   }
   else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
-    __HAL_RCC_TIM3_CLK_DISABLE();
+    __HAL_RCC_TIM14_CLK_DISABLE();
   }
   else if(htim_base->Instance == inputTimerHandle.Instance) {
-    __HAL_RCC_TIM15_CLK_DISABLE();
+    __HAL_RCC_TIM3_CLK_DISABLE();
 
     // TIM15 -> PA2 GPIO
     HAL_GPIO_DeInit(INPUT_GPIO, INPUT_PIN);
