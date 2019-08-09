@@ -174,44 +174,45 @@ int main(void) {
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
 
-        /*uartPrint("IN[");
+        uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
 
-        /*
+
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
         uartPrint("Ifs[");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("] ");
         /*uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
-        uartPrint("] ");
-        /*
+        uartPrint("] "); */
+
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
+        /*
         uartPrint("mAh[");
         uartPrintInteger(ABS((int)consumptionMah), 10, 1);
         uartPrint("] ");
         uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         uartPrint("RPM[");
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
         //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         uartPrint("\r\n");
         printIndex = 0;
