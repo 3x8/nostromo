@@ -2,33 +2,25 @@
 
 #include "main.h"
 
-
 #define INPUT_ARM_COUNTER_THRESHOLD  1000
 #define INPUT_TIMEOUT_COUNTER_THRESHOLD  1000
-
 #define INPUT_AUTODETECT_PRESCALER 1
 #define INPUT_PROSHOT_PRESCALER 0
 #define INPUT_PROSHOT_WIDTH_MIN_SYSTICKS 22
 #define INPUT_PROSHOT_WIDTH_MAX_SYSTICKS 80
-
 #define INPUT_PWM_PRESCALER 95
 #define INPUT_PWM_WIDTH_MIN_US 490
 #define INPUT_PWM_WIDTH_MAX_US 983 //1020
-
 #define INPUT_VALUE_MIN 0
 #define INPUT_VALUE_MAX 2047
-
 #define INPUT_NORMED_MIN 0
 #define INPUT_NORMED_MAX 2000
-
 #define OUTPUT_PWM_MIN 0
 #define OUTPUT_PWM_MAX TIMER1_INIT_PERIOD
-
 #define INPUT_BUFFER_DMA_SIZE 9
 #define INPUT_BUFFER_DMA_SIZE_PWM 3
 #define INPUT_BUFFER_DMA_SIZE_PROSHOT 8
 #define INPUT_BUFFER_DMA_SIZE_AUTODETECT 7
-
 
 typedef enum {
   DSHOT_CMD_MOTOR_STOP = 0,
@@ -83,21 +75,16 @@ typedef struct {
   uint32_t PwmValue;
 } input_t;
 
-
 extern TIM_HandleTypeDef  inputTimerHandle;
 extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern input_t input;
 extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
-
 void inputArmCheck(void);
 void inputDisarm(void);
 void inputDisarmCheck(void);
-
 void inputDshotCommandRun(void);
-
 void inputCallbackDMA();
 void inputDetectProtocol();
-
 void inputProshot();
 void inputServoPwm();
