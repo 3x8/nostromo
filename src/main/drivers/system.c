@@ -233,7 +233,7 @@ void systemInputTimerInit(void) {
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_BOTHEDGE;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  //sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 0;
   while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
 
   while (HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);

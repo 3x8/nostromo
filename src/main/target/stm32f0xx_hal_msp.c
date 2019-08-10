@@ -5,6 +5,9 @@
 void HAL_MspInit(void) {
   __HAL_RCC_SYSCFG_CLK_ENABLE();
 
+  //debug
+  __HAL_RCC_PWR_CLK_ENABLE();
+
   HAL_NVIC_SetPriority(SVC_IRQn, 0, 0);
   HAL_NVIC_SetPriority(PendSV_IRQn, 0, 0);
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
@@ -90,7 +93,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
     // TIM15 DMA Init, TIM15_CH1_UP_TRIG_COM Init
-    inputTimerDmaHandle.Instance = DMA1_Channel5;
+    inputTimerDmaHandle.Instance = DMA1_Channel4;
     inputTimerDmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
     inputTimerDmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
     inputTimerDmaHandle.Init.MemInc = DMA_MINC_ENABLE;
@@ -103,9 +106,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     /* Several peripheral DMA handle pointers point to the same DMA handle.
        Be aware that there is only one channel to perform all the requested DMAs. */
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
+    //__HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerDmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_COMMUTATION],inputTimerDmaHandle);
+    //__HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_COMMUTATION],inputTimerDmaHandle);
   }
 
 }
