@@ -22,6 +22,7 @@
 // input ,Ok
 #define INPUT_GPIO      GPIOB
 #define INPUT_PIN       GPIO_PIN_4
+#define INPUT_TIMER     TIM3
 
 // LEDs ,no
 #define LED_RED_GPIO    GPIOA
