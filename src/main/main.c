@@ -93,7 +93,7 @@ int main(void) {
         #endif
 
         // uart init
-        if ((input.Protocol == PROSHOT) && (!serialPort.InitDone)){
+        if (!serialPort.InitDone){
           uartInit();
           serialPort.InitDone = true;
         }
