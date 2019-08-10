@@ -177,13 +177,18 @@ int main(void) {
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+        uartPrint("INv[");
+        uartPrintInteger(input.DataValid, 10, 1);
+        uartPrint("] ");
+        uartPrint("INp[");
+        uartPrintInteger(input.Protocol, 10, 1);
+        uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint("] ");
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-
 
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
@@ -196,8 +201,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
-        uartPrint("] "); */
-
+        uartPrint("] ");*/
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");

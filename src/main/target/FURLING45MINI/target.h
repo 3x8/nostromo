@@ -4,12 +4,12 @@
 // bridge PB4 to PA2 input (SERVOPWM not working)
 
 // debug
-#define _DEBUG_
+//#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-#define DEBUG_DATA_UART
+//#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
 // ToDo
@@ -20,16 +20,17 @@
 #define MOTOR_START_THRESHOLD   13
 
 // input ,Ok
-#define INPUT_GPIO      GPIOA
-#define INPUT_PIN       GPIO_PIN_2
+#define INPUT_GPIO      GPIOB
+#define INPUT_PIN       GPIO_PIN_4
+#define INPUT_TIMER     TIM3
 
 // LEDs ,no
 #define LED_RED_GPIO    GPIOA
 #define LED_RED_PIN     GPIO_PIN_15
-#define LED_GREEN_GPIO  GPIOB
-#define LED_GREEN_PIN   GPIO_PIN_3
-#define LED_BLUE_GPIO   GPIOB
-#define LED_BLUE_PIN    GPIO_PIN_4
+#define LED_GREEN_GPIO  GPIOA
+#define LED_GREEN_PIN   GPIO_PIN_15
+#define LED_BLUE_GPIO   GPIOA
+#define LED_BLUE_PIN    GPIO_PIN_15
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok

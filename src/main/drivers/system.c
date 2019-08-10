@@ -81,9 +81,6 @@ void systemAdcInit(void) {
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
-
-
-
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
     sConfig.Channel = ADC_CURRENT;
     while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
@@ -189,7 +186,7 @@ void systemMotorCommutationTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
-  motorCommutationTimerHandle.Instance = TIM3;
+  motorCommutationTimerHandle.Instance = TIM14;
   motorCommutationTimerHandle.Init.Prescaler = 7;
   motorCommutationTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   motorCommutationTimerHandle.Init.Period = 0xffff;
@@ -213,7 +210,7 @@ void systemInputTimerInit(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;
 
-  inputTimerHandle.Instance = TIM15;
+  inputTimerHandle.Instance = INPUT_TIMER;
   inputTimerHandle.Init.Prescaler = 0;
   inputTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   inputTimerHandle.Init.Period = 0xffff;

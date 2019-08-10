@@ -4,6 +4,7 @@
 
 void HAL_MspInit(void) {
   __HAL_RCC_SYSCFG_CLK_ENABLE();
+  __HAL_RCC_PWR_CLK_ENABLE();
 
   HAL_NVIC_SetPriority(SVC_IRQn, 0, 0);
   HAL_NVIC_SetPriority(PendSV_IRQn, 0, 0);
@@ -77,20 +78,25 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     __HAL_RCC_TIM2_CLK_ENABLE();
   }
   else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
-    __HAL_RCC_TIM3_CLK_ENABLE();
+    __HAL_RCC_TIM14_CLK_ENABLE();
   }
   else if(htim_base->Instance == inputTimerHandle.Instance) {
-    __HAL_RCC_TIM15_CLK_ENABLE();
-    // TIM15 -> PA2 GPIO
+    if (INPUT_TIMER == TIM3){
+      __HAL_RCC_TIM3_CLK_ENABLE();
+      GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
+    }
+    if (INPUT_TIMER == TIM15){
+      __HAL_RCC_TIM15_CLK_ENABLE();
+      GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
+    }
     GPIO_InitStruct.Pin = INPUT_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
-    // TIM15 DMA Init, TIM15_CH1_UP_TRIG_COM Init
-    inputTimerDmaHandle.Instance = DMA1_Channel5;
+    // timer DMA Init
+    inputTimerDmaHandle.Instance = DMA1_Channel4;
     inputTimerDmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
     inputTimerDmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
     inputTimerDmaHandle.Init.MemInc = DMA_MINC_ENABLE;
@@ -100,12 +106,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     inputTimerDmaHandle.Init.Priority = DMA_PRIORITY_HIGH;
     while (HAL_DMA_Init(&inputTimerDmaHandle) != HAL_OK);
 
-    /* Several peripheral DMA handle pointers point to the same DMA handle.
-       Be aware that there is only one channel to perform all the requested DMAs. */
+    //  there is only one channel to perform all the requested DMAs.
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerDmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_COMMUTATION],inputTimerDmaHandle);
   }
 
 }
@@ -145,17 +148,19 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
     __HAL_RCC_TIM2_CLK_DISABLE();
   }
   else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
-    __HAL_RCC_TIM3_CLK_DISABLE();
+    __HAL_RCC_TIM14_CLK_DISABLE();
   }
   else if(htim_base->Instance == inputTimerHandle.Instance) {
-    __HAL_RCC_TIM15_CLK_DISABLE();
+    if (INPUT_TIMER == TIM3){
+      __HAL_RCC_TIM3_CLK_DISABLE();
+    }
+    if (INPUT_TIMER == TIM15){
+      __HAL_RCC_TIM15_CLK_DISABLE();
+    }
 
-    // TIM15 -> PA2 GPIO
+    // input timer
     HAL_GPIO_DeInit(INPUT_GPIO, INPUT_PIN);
-
     HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC1]);
-    HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_UPDATE]);
     HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_TRIGGER]);
-    HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_COMMUTATION]);
   }
 }

@@ -20,6 +20,7 @@
 // input ,Ok
 #define INPUT_GPIO      GPIOA
 #define INPUT_PIN       GPIO_PIN_2
+#define INPUT_TIMER     TIM15
 
 // LEDs ,Ok
 #define LED_RED_GPIO    GPIOA
