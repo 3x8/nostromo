@@ -96,7 +96,12 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
     // timer DMA Init
-    inputTimerDmaHandle.Instance = DMA1_Channel4;
+    if (INPUT_TIMER == TIM3){
+      inputTimerDmaHandle.Instance = DMA1_Channel4;
+    }
+    if (INPUT_TIMER == TIM15){
+      inputTimerDmaHandle.Instance = DMA1_Channel5;
+    }
     inputTimerDmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
     inputTimerDmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
     inputTimerDmaHandle.Init.MemInc = DMA_MINC_ENABLE;
