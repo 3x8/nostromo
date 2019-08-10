@@ -1,7 +1,6 @@
 #pragma once
 
 // changed MCU to stm32f051
-// bridge PB4 to PA2 input (SERVOPWM not working)
 
 // debug
 //#define _DEBUG_
