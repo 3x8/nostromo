@@ -5,7 +5,6 @@ DMA_HandleTypeDef inputTimerDmaHandle;
 input_t input;
 uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
 
-
 void inputArmCheck(void) {
   if (!input.Armed) {
     if ((input.Protocol != AUTODETECT) && (input.Data < DSHOT_CMD_MAX) && input.DataValid) {

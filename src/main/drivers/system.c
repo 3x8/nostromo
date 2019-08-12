@@ -1,7 +1,6 @@
 #include "system.h"
 
 TIM_HandleTypeDef msTimerHandle;
-
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 void systemClockConfig(void) {
@@ -38,7 +37,6 @@ void systemClockConfig(void) {
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-
 void systemDmaInit(void) {
   // DMA controller clock enable
   __HAL_RCC_DMA1_CLK_ENABLE();
@@ -55,7 +53,6 @@ void systemDmaInit(void) {
   HAL_NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
-
 
 void systemAdcInit(void) {
   ADC_ChannelConfTypeDef sConfig;
@@ -109,7 +106,6 @@ void systemAdcInit(void) {
   #endif
 }
 
-
 void systemBemfComparatorInit(void) {
   motorBemfComparatorHandle.Instance = COMP1;
   motorBemfComparatorHandle.Init.NonInvertingInput = COMPARATOR_COMMON;
@@ -124,7 +120,6 @@ void systemBemfComparatorInit(void) {
 
   while (HAL_COMP_Start_IT(&motorBemfComparatorHandle) != HAL_OK);
 }
-
 
 void systemMotorPwmTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
@@ -204,7 +199,6 @@ void systemMotorCommutationTimerInit(void) {
   while (HAL_TIM_Base_Start(&motorCommutationTimerHandle) != HAL_OK);
 }
 
-
 void systemInputTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
@@ -235,7 +229,6 @@ void systemInputTimerInit(void) {
 
   while (HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }
-
 
 void systemMsTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;

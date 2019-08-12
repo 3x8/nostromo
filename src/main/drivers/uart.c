@@ -41,7 +41,7 @@ void uartPrintInteger(uint32_t n, uint8_t base, uint8_t arg) {
   if (base < 2) base = 10;
   if(base != 8 || n>=16) arg = 0;
 
- do {
+  do {
     char c = n % base;
     n /= base;
     *--str = c < 10 ? c + '0' : c + 'A' - 10;
@@ -61,7 +61,6 @@ void uartInit(void) {
   #endif
 
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
-
   LL_USART_SetTransferDirection(USART, LL_USART_DIRECTION_RX);
 
   // Configure USART Tx GPIO
@@ -84,9 +83,6 @@ void uartInit(void) {
   USART_InitStructure.TransferDirection = LL_USART_DIRECTION_TX_RX;
   USART_InitStructure.OverSampling = LL_USART_OVERSAMPLING_16;
   LL_USART_Init(USART, &USART_InitStructure);
-
-  //LL_DMA_ClearFlag_GI2(DMA1);
-  //LL_DMA_ClearFlag_GI3(DMA1);
 
   serialPort.txHead = serialPort.txTail = 0;
 

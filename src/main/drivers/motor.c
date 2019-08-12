@@ -198,11 +198,6 @@ void motorCommutate() {
   motorChangeComparatorInput();
 }
 
-// forced commutation -- open loop
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  //noop
-}
-
 void motorStart() {
   bool bufferDecaystate = motor.SlowDecay;
 

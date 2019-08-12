@@ -54,5 +54,4 @@ void motorChangeComparatorInput();
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp);

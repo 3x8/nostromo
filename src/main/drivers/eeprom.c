@@ -13,7 +13,6 @@ static uint8_t calculateChecksum(const uint8_t *data, uint32_t length) {
   for (byteOffset = data; byteOffset < (data + length); byteOffset++) {
     checksum ^= *byteOffset;
   }
-
   return (checksum);
 }
 
@@ -41,11 +40,11 @@ void eepromRead(void) {
     // reset esc, iwdg timeout
     while(true);
   }
-
   memcpy(&masterConfig, (char *) CONFIG_START_FLASH_ADDRESS, sizeof(master_t));
 }
 
 void eepromWrite(void) {
+  HAL_StatusTypeDef status;
   int8_t attemptsRemaining = 3;
 
   masterConfig.version = EEPROM_CONF_VERSION;
@@ -55,17 +54,14 @@ void eepromWrite(void) {
   masterConfig.chk = 0;
   masterConfig.chk = calculateChecksum((const uint8_t *) &masterConfig, sizeof(master_t));
 
-  HAL_StatusTypeDef status;
   HAL_FLASH_Unlock();
   while (attemptsRemaining--) {
     for (uint32_t wordOffset = 0; wordOffset < sizeof(master_t); wordOffset += 4) {
       if (wordOffset % FLASH_PAGE_SIZE == 0) {
-
         FLASH_EraseInitTypeDef eraseInit;
         eraseInit.TypeErase   = FLASH_TYPEERASE_PAGES;
         eraseInit.PageAddress = CONFIG_START_FLASH_ADDRESS + wordOffset;
         eraseInit.NbPages = 1;
-
         uint32_t eraseError = 0;
 
         status = HAL_FLASHEx_Erase(&eraseInit, &eraseError);
@@ -86,8 +82,6 @@ void eepromWrite(void) {
   }
 
   HAL_FLASH_Lock();
-
   if (status != HAL_OK || !eepromValid()) {
-
   }
 }
