@@ -18,6 +18,7 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
                     $(TARGET_DIR_SRC) \
                     main.c \
                     common/common.c \
+                    config/config.c \
                     drivers/adc.c \
                     drivers/led.c \
                     drivers/eeprom.c \
@@ -26,8 +27,7 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
                     drivers/input.c \
                     drivers/motor.c \
                     drivers/uart.c \
-                    drivers/telemetry.c \
-                    config/config.c
+                    drivers/telemetry.c
 
 SIZE_OPTIMISED_SRC  := ""
 

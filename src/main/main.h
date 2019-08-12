@@ -26,6 +26,7 @@
 #include "target.h"
 #include "build/version.h"
 #include "common/common.h"
+#include "config/config.h"
 #include "drivers/adc.h"
 #include "drivers/led.h"
 #include "drivers/eeprom.h"
@@ -35,4 +36,3 @@
 #include "drivers/motor.h"
 #include "drivers/uart.h"
 #include "drivers/telemetry.h"
-#include "config/config.h"
