@@ -1,7 +1,6 @@
 #include "stm32f0xx_hal.h"
 #include "target.h"
 
-
 void HAL_MspInit(void) {
   __HAL_RCC_SYSCFG_CLK_ENABLE();
   __HAL_RCC_PWR_CLK_ENABLE();
@@ -39,7 +38,6 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
 }
 
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
-
   if(adcHandle->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_DISABLE();
     HAL_GPIO_DeInit(GPIOA, ADC_MASK);
@@ -62,7 +60,6 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
 }
 
 void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
-
   if(hcomp->Instance == COMP1) {
     HAL_GPIO_DeInit(GPIOA, COMPARATOR_MASK);
   }
@@ -143,10 +140,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
 }
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
-
   if(htim_base->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_DISABLE();
-
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
   }
   else if(htim_base->Instance==msTimerHandle.Instance) {
