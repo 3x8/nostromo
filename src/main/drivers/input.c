@@ -306,7 +306,7 @@ void inputProshot() {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
-      //LED_OFF(LED_GREEN);
+      LED_OFF(LED_GREEN);
     #endif
 
     return;
@@ -314,7 +314,7 @@ void inputProshot() {
     input.DataValid = false;
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
-      LED_OFF(LED_GREEN);
+      //LED_OFF(LED_GREEN);
     #endif
 
     return;
