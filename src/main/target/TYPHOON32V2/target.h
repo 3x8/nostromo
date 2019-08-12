@@ -1,10 +1,10 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
-//#define DEBUG_INPUT_PROSHOT
+#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
 //#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
@@ -25,8 +25,8 @@
 // LEDs ,no
 #define LED_RED_GPIO    GPIOA
 #define LED_RED_PIN     GPIO_PIN_15
-#define LED_GREEN_GPIO  GPIOA
-#define LED_GREEN_PIN   GPIO_PIN_15
+#define LED_GREEN_GPIO  GPIOB
+#define LED_GREEN_PIN   GPIO_PIN_6
 #define LED_BLUE_GPIO   GPIOA
 #define LED_BLUE_PIN    GPIO_PIN_15
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
