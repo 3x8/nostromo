@@ -103,7 +103,7 @@ int main(void) {
           motor.BemfFilterLevel = 5;
           motor.BemfFilterDelay = 5;
         } else {
-          if ((motor.CommutationInterval < 400) && (input.PwmValue > 500)) {
+          if ((motor.CommutationInterval < 401) && (input.PwmValue > 503)) {
             motor.BemfFilterDelay = 1;
             motor.BemfFilterLevel = 1;
           } else {
@@ -114,9 +114,9 @@ int main(void) {
 
         // motor BEMF timeouts
         if (input.PwmValue < 300) {
-          motor.BemfZeroCounterTimeoutThreshold = 400;
+          motor.BemfZeroCounterTimeoutThreshold = 401;
         } else {
-          motor.BemfZeroCounterTimeoutThreshold = 200;
+          motor.BemfZeroCounterTimeoutThreshold = 199;
         }
 
         // motor not running
