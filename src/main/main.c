@@ -99,12 +99,17 @@ int main(void) {
         }
 
         // motor BEMF filter
-        if ((motor.CommutationInterval < 400) && (input.PwmValue > 500)) {
-          motor.BemfFilterDelay = 1;
-          motor.BemfFilterLevel = 1;
+        if (input.PwmValue < 67) {
+          motor.BemfFilterLevel = 5;
+          motor.BemfFilterDelay = 5;
         } else {
-          motor.BemfFilterLevel = 3;
-          motor.BemfFilterDelay = 3;
+          if ((motor.CommutationInterval < 400) && (input.PwmValue > 500)) {
+            motor.BemfFilterDelay = 1;
+            motor.BemfFilterLevel = 1;
+          } else {
+            motor.BemfFilterLevel = 3;
+            motor.BemfFilterDelay = 3;
+          }
         }
 
         // motor BEMF timeouts
