@@ -39,8 +39,11 @@ int main(void) {
 
   // ToDo 3D double
   if(escConfig()->motor3Dmode) {
-    escConfig()->limitCurrent = escConfig()->limitCurrent * 2;
-    escConfig()->motorStartThreshold = escConfig()->motorStartThreshold *2;
+    escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT << 1;
+    escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD << 1;
+  } else {
+    escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
+    escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   }
 
   watchdogInit(2000);
