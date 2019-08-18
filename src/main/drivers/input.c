@@ -100,12 +100,10 @@ void inputDshotCommandRun(void) {
       } else {
         uartPrint("# CCW ");
       }
-      if (escConfig()->motor3Dmode == false) {
-        uartPrint("3D=OFF ");
-      } else {
-        uartPrint("3D=ON ");
+      if (escConfig()->motor3Dmode == true) {
+        uartPrint("3D ");
       }
-      uartPrint(" [");
+      uartPrint("[");
       if (escConfig()->adcCurrentOffset < 0) {
         uartPrint("-");
       }
@@ -149,7 +147,7 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_SETTING_SAVE:
       uartPrint("# SAVE");
       uartPrint("\r\n");
-      HAL_Delay(100);
+      HAL_Delay(11);
       configWrite();
       // reset esc, iwdg timeout
       while(true);
