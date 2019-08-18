@@ -37,9 +37,10 @@ int main(void) {
   input.PwmValue = 0;
   serialPort.InitDone = false;
 
-  // ToDo 3D double current
+  // ToDo 3D double
   if(escConfig()->motor3Dmode) {
     escConfig()->limitCurrent = escConfig()->limitCurrent * 2;
+    escConfig()->motorStartThreshold = escConfig()->motorStartThreshold *2;
   }
 
   watchdogInit(2000);
