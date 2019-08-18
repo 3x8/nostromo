@@ -9,7 +9,7 @@
 //#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
-// ToDo
+// hw constants
 #define HBRIDGE_DEAD_TIME       11    // with 0 FD6288 builtin 200ns H_Bridge gets warm ??? (why)
 #define HBRIDGE_MAX_CURRENT     0     // disabled
 #define HBRIDGE_MAX_TEMPERATURE 77

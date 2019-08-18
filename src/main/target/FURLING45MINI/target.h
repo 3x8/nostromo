@@ -11,7 +11,7 @@
 //#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
-// ToDo
+// hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     0  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 0    // °C

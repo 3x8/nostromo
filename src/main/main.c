@@ -37,7 +37,7 @@ int main(void) {
   input.PwmValue = 0;
   serialPort.InitDone = false;
 
-  //ToDo 3D double current
+  // ToDo 3D double current
   if(escConfig()->motor3Dmode) {
     escConfig()->limitCurrent = escConfig()->limitCurrent * 2;
   }
