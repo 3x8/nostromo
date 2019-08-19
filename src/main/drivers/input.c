@@ -75,6 +75,8 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_ESC_INFO:
       uartPrint("# ");
+      uartPrint(__TARGET__);
+      uartPrint(" ");
       uartPrint(FW_FIRMWARE_NAME);
       uartPrint("_");
       uartPrintInteger(FW_VERSION_MAJOR, 10, 1);
