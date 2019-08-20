@@ -1,12 +1,12 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
-//#define DEBUG_MOTOR_TIMING
+#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
 // hw constants
@@ -58,7 +58,7 @@
 #define ADC_MASK                GPIO_PIN_3 | GPIO_PIN_6
 
 // adc calibration ,Ok
-#define ADC_VOLTAGE_OFFSET      50.1
+#define ADC_VOLTAGE_OFFSET      46.5
 #define ADC_VOLTAGE_FACTOR      0.6
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
 #define ADC_CURRENT_FACTOR      1.87
