@@ -1,12 +1,12 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
 // hw constants
@@ -24,9 +24,9 @@
 
 // LEDs ,Ok
 #define LED_RED_GPIO    GPIOA
-#define LED_RED_PIN     GPIO_PIN_13
+#define LED_RED_PIN     GPIO_PIN_12
 #define LED_GREEN_GPIO  GPIOA
-#define LED_GREEN_PIN   GPIO_PIN_13
+#define LED_GREEN_PIN   GPIO_PIN_12
 #define LED_BLUE_GPIO   GPIOA
 #define LED_BLUE_PIN    GPIO_PIN_12
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
@@ -42,7 +42,7 @@
 #define A_FET_LO_PIN    GPIO_PIN_0
 #define B_FET_LO_GPIO   GPIOB
 #define B_FET_LO_PIN    GPIO_PIN_4
-#define C_FET_LO_GPIO   GPIOA
+#define C_FET_LO_GPIO   GPIOB
 #define C_FET_LO_PIN    GPIO_PIN_5
 
 // comparator ,Ok
@@ -68,6 +68,16 @@
 #define ADC_TEMPERATURE_FACTOR  -0.04
 
 // telemetry
+#define USART                   USART1
+#define USART_IRQn              USART1_IRQn
+#define USART_IRQHandler        USART1_IRQHandler
+#define USART_TX_PIN            LL_GPIO_PIN_6
+#define USART_TX_GPIO_PORT      GPIOB
+#define USART_TX_GPIO_CLK       LL_AHB1_GRP1_PERIPH_GPIOB
+#define USART_TX_AF             LL_GPIO_AF_0
+#define USART_TDR_ADDRESS       0x40013828
+#define USART_TX_DMA_CHANNEL    LL_DMA_CHANNEL_2
+/*
 #define USART                   USART2
 #define USART_IRQn              USART2_IRQn
 #define USART_IRQHandler        USART2_IRQHandler
@@ -76,4 +86,4 @@
 #define USART_TX_GPIO_CLK       LL_AHB1_GRP1_PERIPH_GPIOA
 #define USART_TX_AF             LL_GPIO_AF_1
 #define USART_TDR_ADDRESS       0x40004428
-#define USART_TX_DMA_CHANNEL    LL_DMA_CHANNEL_4
+#define USART_TX_DMA_CHANNEL    LL_DMA_CHANNEL_4*/

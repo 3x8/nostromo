@@ -23,6 +23,11 @@ int main(void) {
 
   ledOff();
 
+  if (!serialPort.InitDone){
+    uartInit();
+    serialPort.InitDone = true;
+  }
+
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
