@@ -225,9 +225,9 @@ void systemInputTimerInit(void) {
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
-  while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, INPUT_TIMER_CH) != HAL_OK);
 
-  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle,INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }
 
 void systemMsTimerInit(void) {
