@@ -23,6 +23,7 @@ int main(void) {
 
   ledOff();
 
+  // debug
   if (!serialPort.InitDone){
     uartInit();
     serialPort.InitDone = true;
