@@ -72,12 +72,16 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     __HAL_RCC_TIM1_CLK_ENABLE();
   }
   else if(htim_base->Instance==msTimerHandle.Instance) {
-    __HAL_RCC_TIM2_CLK_ENABLE();
+    __HAL_RCC_TIM16_CLK_ENABLE();
   }
   else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
     __HAL_RCC_TIM14_CLK_ENABLE();
   }
   else if(htim_base->Instance == inputTimerHandle.Instance) {
+    if (INPUT_TIMER == TIM2){
+      __HAL_RCC_TIM2_CLK_ENABLE();
+      GPIO_InitStruct.Alternate = GPIO_AF2_TIM2;
+    }
     if (INPUT_TIMER == TIM3){
       __HAL_RCC_TIM3_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
@@ -93,6 +97,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
     // timer DMA Init
+    // ToDo ...
+    if (INPUT_TIMER == TIM2){
+      inputTimerDmaHandle.Instance = DMA1_Channel4;
+    }
     if (INPUT_TIMER == TIM3){
       inputTimerDmaHandle.Instance = DMA1_Channel4;
     }
@@ -124,18 +132,18 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
 
-    GPIO_InitStruct.Pin = A_FET_LO_PIN;
-    HAL_GPIO_Init(A_FET_LO_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = A_FET_HI_PIN;
-    HAL_GPIO_Init(A_FET_HI_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = B_FET_LO_PIN;
-    HAL_GPIO_Init(B_FET_LO_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = B_FET_HI_PIN;
-    HAL_GPIO_Init(B_FET_HI_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = C_FET_LO_PIN;
-    HAL_GPIO_Init(C_FET_LO_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = C_FET_HI_PIN;
-    HAL_GPIO_Init(C_FET_HI_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = A_FET_OE_PIN;
+    HAL_GPIO_Init(A_FET_OE_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = A_FET_IN_PIN;
+    HAL_GPIO_Init(A_FET_IN_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = B_FET_OE_PIN;
+    HAL_GPIO_Init(B_FET_OE_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = B_FET_IN_PIN;
+    HAL_GPIO_Init(B_FET_IN_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = C_FET_OE_PIN;
+    HAL_GPIO_Init(C_FET_OE_GPIO, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = C_FET_IN_PIN;
+    HAL_GPIO_Init(C_FET_IN_GPIO, &GPIO_InitStruct);
   }
 }
 
@@ -145,12 +153,15 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
   }
   else if(htim_base->Instance==msTimerHandle.Instance) {
-    __HAL_RCC_TIM2_CLK_DISABLE();
+    __HAL_RCC_TIM16_CLK_DISABLE();
   }
   else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
     __HAL_RCC_TIM14_CLK_DISABLE();
   }
   else if(htim_base->Instance == inputTimerHandle.Instance) {
+    if (INPUT_TIMER == TIM2){
+      __HAL_RCC_TIM2_CLK_DISABLE();
+    }
     if (INPUT_TIMER == TIM3){
       __HAL_RCC_TIM3_CLK_DISABLE();
     }

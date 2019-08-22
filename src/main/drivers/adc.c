@@ -8,7 +8,7 @@ adcData_t adcRaw, adcScaled;
 float consumptionMah;
 
 void adcRead(void) {
-  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
+  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
     adcRaw.voltage = adcDmaBuffer[0];
     adcRaw.current = adcDmaBuffer[1];
     adcRaw.temperature = adcDmaBuffer[2];
