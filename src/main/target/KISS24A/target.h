@@ -5,9 +5,9 @@
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
-//#define DEBUG_INPUT_AUTODETECT
+#define DEBUG_INPUT_AUTODETECT
 #define DEBUG_DATA_UART
-#define DEBUG_MS_TIMER
+//#define DEBUG_MS_TIMER
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       7     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
@@ -20,7 +20,7 @@
 #define INPUT_GPIO      GPIOB
 #define INPUT_PIN       GPIO_PIN_3
 #define INPUT_TIMER     TIM2
-#define INPUT_TIMER_CH  TIM_CHANNEL_1 // ??
+#define INPUT_TIMER_CH  TIM_CHANNEL_ALL // ??
 
 // LEDs
 #define LED_RED_GPIO    GPIOA
