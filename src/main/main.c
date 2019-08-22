@@ -84,11 +84,22 @@ int main(void) {
       }
     }
 
-    if (input.Protocol == AUTODETECT) {
+    if (input.Protocol != AUTODETECT) {
       // noop
     } else {
-      inputArmCheck();
-      inputDisarmCheck();
+      // debug
+      //inputArmCheck();
+      //inputDisarmCheck();
+      input.Armed = true;
+      input.Data = 48;
+      input.DataValid = true;
+      input.PwmValue = 51;
+      motor.Startup = true;
+
+      motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+
       if (input.Armed) {
 
         #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
@@ -192,6 +203,10 @@ int main(void) {
       static uint8_t  printIndex = 0;
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
+
+        uartPrint("ARM[");
+        uartPrintInteger(input.Armed, 10, 1);
+        uartPrint("] ");
 
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
