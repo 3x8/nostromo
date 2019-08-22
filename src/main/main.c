@@ -83,7 +83,8 @@ int main(void) {
           break;
       }
     }
-
+    
+    // debug
     if (input.Protocol != AUTODETECT) {
       // noop
     } else {
