@@ -83,7 +83,7 @@ int main(void) {
           break;
       }
     }
-    
+
     // debug
     if (input.Protocol != AUTODETECT) {
       // noop
@@ -94,7 +94,7 @@ int main(void) {
       input.Armed = true;
       input.Data = 48;
       input.DataValid = true;
-      input.PwmValue = 51;
+      input.PwmValue = 17;
       motor.Startup = true;
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
