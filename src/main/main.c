@@ -205,11 +205,10 @@ int main(void) {
       static uint8_t  printIndex = 0;
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
-
+        /*
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
-
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
@@ -221,7 +220,8 @@ int main(void) {
         uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
+
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
@@ -250,6 +250,14 @@ int main(void) {
         uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");*/
+
+        uartPrint("MCI[");
+        uartPrintInteger(motor.CommutationInterval, 10, 1);
+        uartPrint("] ");
+
+        uartPrint("ZCT[");
+        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
+        uartPrint("] ");
 
         uartPrint("RPM[");
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
