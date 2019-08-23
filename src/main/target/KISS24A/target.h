@@ -55,10 +55,10 @@
 #define COMPARATOR_MASK         GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5
 
 // adc
-#define ADC_VOLTAGE             ADC_CHANNEL_6
+#define ADC_VOLTAGE             ADC_CHANNEL_1
 #define ADC_CURRENT             ADC_CHANNEL_7
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
-#define ADC_MASK                GPIO_PIN_6 | GPIO_PIN_7
+#define ADC_MASK                GPIO_PIN_7 | GPIO_PIN_1
 
 // adc calibration
 #define ADC_VOLTAGE_OFFSET      1
