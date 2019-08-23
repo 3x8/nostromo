@@ -95,7 +95,7 @@ int main(void) {
       input.Armed = true;
       input.Data = 48;
       input.DataValid = true;
-      input.PwmValue = 48;
+      input.PwmValue = 17;
       motor.Startup = true;
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
@@ -225,22 +225,24 @@ int main(void) {
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-        /*
+
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ifs[");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
+        uartPrint("Ts[");
+        uartPrintInteger(adcScaled.temperature, 10, 1);
+        uartPrint("] ");
+
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] ");
-        uartPrint("Ts[");
-        uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");
+
         /*
         uartPrint("mAh[");
         uartPrintInteger(ABS((int)consumptionMah), 10, 1);
