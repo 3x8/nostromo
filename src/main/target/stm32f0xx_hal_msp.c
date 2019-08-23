@@ -48,7 +48,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
 void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(hcomp->Instance == COMP1) {
+  if(hcomp->Instance == COMPARATOR) {
     GPIO_InitStruct.Pin = COMPARATOR_MASK;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -60,7 +60,7 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
 }
 
 void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
-  if(hcomp->Instance == COMP1) {
+  if(hcomp->Instance == COMPARATOR) {
     HAL_GPIO_DeInit(GPIOA, COMPARATOR_MASK);
   }
 }

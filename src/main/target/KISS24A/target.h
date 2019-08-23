@@ -10,7 +10,7 @@
 //#define DEBUG_MS_TIMER
 
 // hw constants
-#define HBRIDGE_DEAD_TIME       7     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
+#define HBRIDGE_DEAD_TIME       1     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      977   // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
@@ -47,17 +47,18 @@
 #define C_FET_OE_PIN    GPIO_PIN_5
 
 // comparator
-#define COMPARATOR_PHASE_A      COMP_INPUT_MINUS_IO4 //PA4
-#define COMPARATOR_PHASE_B      COMP_INPUT_MINUS_IO6 //PA0 , PA2
-#define COMPARATOR_PHASE_C      COMP_INPUT_MINUS_IO5 //PA5
-#define COMPARATOR_COMMON       COMP_INPUT_PLUS_IO1 //PA1
+#define COMPARATOR              COMP2
+#define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_DAC1
+#define COMPARATOR_PHASE_B      COMP_INVERTINGINPUT_IO1
+#define COMPARATOR_PHASE_C      COMP_INVERTINGINPUT_DAC2
+#define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5
 
 // adc
-#define ADC_VOLTAGE             ADC_CHANNEL_1
-#define ADC_CURRENT             ADC_CHANNEL_6
+#define ADC_VOLTAGE             ADC_CHANNEL_6
+#define ADC_CURRENT             ADC_CHANNEL_7
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
-#define ADC_MASK                GPIO_PIN_1 | GPIO_PIN_6
+#define ADC_MASK                GPIO_PIN_6 | GPIO_PIN_7
 
 // adc calibration
 #define ADC_VOLTAGE_OFFSET      1
