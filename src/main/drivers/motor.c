@@ -225,7 +225,7 @@ void motorChangeComparatorInput() {
       break;
   }
 
-  // polarity of comp output reversed
+  // polarity of comp input reversed
   if (motor.BemfRising) {
     motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
   } else {
