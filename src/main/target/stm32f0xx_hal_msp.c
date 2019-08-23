@@ -1,4 +1,4 @@
-#include "stm32f0xx_hal.h"
+//#include "stm32f0xx_hal.h"
 #include "target.h"
 
 void HAL_MspInit(void) {
@@ -131,6 +131,21 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
+
+    #if defined(FD6288)
+      GPIO_InitStruct.Pin = A_FET_LO_PIN;
+      HAL_GPIO_Init(A_FET_LO_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = A_FET_HI_PIN;
+      HAL_GPIO_Init(A_FET_HI_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = B_FET_LO_PIN;
+      HAL_GPIO_Init(B_FET_LO_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = B_FET_HI_PIN;
+      HAL_GPIO_Init(B_FET_HI_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = C_FET_LO_PIN;
+      HAL_GPIO_Init(C_FET_LO_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = C_FET_HI_PIN;
+      HAL_GPIO_Init(C_FET_HI_GPIO, &GPIO_InitStruct);
+    #endif
 
     #if defined(NCP3420)
       GPIO_InitStruct.Pin = A_FET_OE_PIN;
