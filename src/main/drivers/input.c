@@ -15,7 +15,7 @@ void inputArmCheck(void) {
         #if (!defined(_DEBUG_))
           LED_ON(LED_BLUE);
         #endif
-        motorInputTune(1);
+        motorTuneInput(1);
       }
     }
   }
@@ -59,19 +59,19 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_MOTOR_STOP:
       break;
     case DSHOT_CMD_BEACON1:
-      motorInputTune(1);
+      motorTuneInput(1);
       break;
     case DSHOT_CMD_BEACON2:
-      motorInputTune(2);
+      motorTuneInput(2);
       break;
     case DSHOT_CMD_BEACON3:
-      motorInputTune(3);
+      motorTuneInput(3);
       break;
     case DSHOT_CMD_BEACON4:
-      motorInputTune(4);
+      motorTuneInput(4);
       break;
     case DSHOT_CMD_BEACON5:
-      motorInputTune(5);
+      motorTuneInput(5);
       break;
     case DSHOT_CMD_ESC_INFO:
       uartPrint("# ");
@@ -114,7 +114,7 @@ void inputDshotCommandRun(void) {
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
-      motorInputTune(6);
+      motorTuneInput(6);
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;

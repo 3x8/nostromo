@@ -53,7 +53,7 @@ int main(void) {
   }
 
   watchdogInit(2000);
-  motorStartupTune();
+  motorTuneStartup();
 
   // main loop
   while (true) {

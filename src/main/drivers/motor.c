@@ -333,7 +333,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   __enable_irq();
 }
 
-void motorStartupTune() {
+void motorTuneStartup() {
   motorPwmTimerHandle.Instance->CCR1 = 5;
   motorPwmTimerHandle.Instance->CCR2 = 5;
   motorPwmTimerHandle.Instance->CCR3 = 5;
@@ -349,7 +349,7 @@ void motorStartupTune() {
   motorPwmTimerHandle.Instance->PSC = 0;
 }
 
-void motorInputTune(uint8_t motorStepDebug) {
+void motorTuneInput(uint8_t motorStepDebug) {
   motorPwmTimerHandle.Instance->CCR1 = 5;
   motorPwmTimerHandle.Instance->CCR2 = 5;
   motorPwmTimerHandle.Instance->CCR3 = 5;
