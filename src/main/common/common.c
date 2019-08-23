@@ -7,7 +7,6 @@ const char *byteToString(uint8_t x) {
     for (int z = 128; z > 0; z >>= 1){
         strcat(b, ((x & z) == z) ? "1" : "0");
     }
-
     return (b);
 }
 
