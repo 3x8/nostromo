@@ -22,6 +22,7 @@
 #define INPUT_GPIO      GPIOB
 #define INPUT_PIN       GPIO_PIN_4
 #define INPUT_TIMER     TIM3
+#define INPUT_TIMER_CH  TIM_CHANNEL_1
 
 // LEDs ,no
 #define LED_RED_GPIO    GPIOA
@@ -33,6 +34,7 @@
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok
+#define FD6288
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    GPIO_PIN_10
 #define B_FET_HI_GPIO   GPIOA
