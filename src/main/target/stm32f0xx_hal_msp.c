@@ -90,6 +90,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
       __HAL_RCC_TIM15_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
     }
+    //ToDo
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+
     GPIO_InitStruct.Pin = INPUT_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -99,7 +103,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     // timer DMA Init
     // ToDo ...
     if (INPUT_TIMER == TIM2){
-      inputTimerDmaHandle.Instance = DMA1_Channel4;
+      inputTimerDmaHandle.Instance = DMA1_Channel2;
     }
     if (INPUT_TIMER == TIM3){
       inputTimerDmaHandle.Instance = DMA1_Channel4;
@@ -119,6 +123,8 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     //  there is only one channel to perform all the requested DMAs.
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerDmaHandle);
+    // ToDo
+    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
   }
 
 }
