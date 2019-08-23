@@ -132,18 +132,20 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
 
-    GPIO_InitStruct.Pin = A_FET_OE_PIN;
-    HAL_GPIO_Init(A_FET_OE_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = A_FET_IN_PIN;
-    HAL_GPIO_Init(A_FET_IN_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = B_FET_OE_PIN;
-    HAL_GPIO_Init(B_FET_OE_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = B_FET_IN_PIN;
-    HAL_GPIO_Init(B_FET_IN_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = C_FET_OE_PIN;
-    HAL_GPIO_Init(C_FET_OE_GPIO, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = C_FET_IN_PIN;
-    HAL_GPIO_Init(C_FET_IN_GPIO, &GPIO_InitStruct);
+    #if defined(NCP3420)
+      GPIO_InitStruct.Pin = A_FET_OE_PIN;
+      HAL_GPIO_Init(A_FET_OE_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = A_FET_IN_PIN;
+      HAL_GPIO_Init(A_FET_IN_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = B_FET_OE_PIN;
+      HAL_GPIO_Init(B_FET_OE_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = B_FET_IN_PIN;
+      HAL_GPIO_Init(B_FET_IN_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = C_FET_OE_PIN;
+      HAL_GPIO_Init(C_FET_OE_GPIO, &GPIO_InitStruct);
+      GPIO_InitStruct.Pin = C_FET_IN_PIN;
+      HAL_GPIO_Init(C_FET_IN_GPIO, &GPIO_InitStruct);
+    #endif
   }
 }
 

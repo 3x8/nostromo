@@ -107,7 +107,7 @@ void systemAdcInit(void) {
 }
 
 void systemBemfComparatorInit(void) {
-  motorBemfComparatorHandle.Instance = COMP1;
+  motorBemfComparatorHandle.Instance = COMP2;
   motorBemfComparatorHandle.Init.NonInvertingInput = COMPARATOR_COMMON;
   motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
   motorBemfComparatorHandle.Init.Output = COMP_OUTPUT_NONE;
