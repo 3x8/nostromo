@@ -206,7 +206,7 @@ void motorBrakeProportional() {
   motorPhaseC(HBRIDGE_PWM);
 }
 
-void motorChangeComparatorInput() {
+void motorComparatorInputChange() {
   switch(motor.Step) {
     case 1:
     case 4:
@@ -259,7 +259,7 @@ void motorCommutate() {
   }
 
   motorCommutationStep(motor.Step);
-  motorChangeComparatorInput();
+  motorComparatorInputChange();
 }
 
 void motorStart() {

@@ -50,7 +50,7 @@ void motorPhaseC(uint8_t phaseBuffer);
 void motorStart();
 void motorCommutate();
 void motorCommutationStep(uint8_t stepBuffer);
-void motorChangeComparatorInput();
+void motorComparatorInputChange();
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();
