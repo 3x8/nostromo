@@ -85,13 +85,15 @@ int main(void) {
       }
     }
 
-    // debug
-    if (input.Protocol != AUTODETECT) {
+    // ToDo debug
+    if (input.Protocol == AUTODETECT) {
       // noop
     } else {
-      // debug
-      //inputArmCheck();
-      //inputDisarmCheck();
+      // ToDo debug
+      inputArmCheck();
+      inputDisarmCheck();
+      
+      /*
       input.Armed = true;
       input.Data = 48;
       input.DataValid = true;
@@ -100,7 +102,7 @@ int main(void) {
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;*/
 
       if (input.Armed) {
 
