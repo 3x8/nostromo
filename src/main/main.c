@@ -92,7 +92,8 @@ int main(void) {
       // ToDo debug
       inputArmCheck();
       inputDisarmCheck();
-      
+
+      // ToDo debug
       /*
       input.Armed = true;
       input.Data = 48;
