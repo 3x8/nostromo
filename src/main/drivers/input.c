@@ -15,7 +15,7 @@ void inputArmCheck(void) {
         #if (!defined(_DEBUG_))
           LED_ON(LED_BLUE);
         #endif
-        motorInputTune(1);
+        motorTuneInput(1);
       }
     }
   }
@@ -39,11 +39,11 @@ void inputDisarm(void) {
     LED_OFF(LED_BLUE);
   #endif
 
-  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
+  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
   input.Protocol = AUTODETECT;
   inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
   inputTimerHandle.Instance->CNT = 0xffff;
-  HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+  HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
 }
 
 void inputDisarmCheck(void) {
@@ -59,19 +59,19 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_MOTOR_STOP:
       break;
     case DSHOT_CMD_BEACON1:
-      motorInputTune(1);
+      motorTuneInput(1);
       break;
     case DSHOT_CMD_BEACON2:
-      motorInputTune(2);
+      motorTuneInput(2);
       break;
     case DSHOT_CMD_BEACON3:
-      motorInputTune(3);
+      motorTuneInput(3);
       break;
     case DSHOT_CMD_BEACON4:
-      motorInputTune(4);
+      motorTuneInput(4);
       break;
     case DSHOT_CMD_BEACON5:
-      motorInputTune(5);
+      motorTuneInput(5);
       break;
     case DSHOT_CMD_ESC_INFO:
       uartPrint("# ");
@@ -114,7 +114,7 @@ void inputDshotCommandRun(void) {
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
-      motorInputTune(6);
+      motorTuneInput(6);
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;
@@ -165,14 +165,14 @@ void inputCallbackDMA() {
       inputDetectProtocol();
       break;
     case PROSHOT:
-      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputProshot();
-      HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
       break;
     case SERVOPWM:
-      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputServoPwm();
-      HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
       break;
   }
 }
@@ -185,7 +185,7 @@ void inputDetectProtocol() {
     LED_OFF(LED_GREEN);
   #endif
 
-  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, TIM_CHANNEL_1);
+  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
     telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
@@ -198,7 +198,7 @@ void inputDetectProtocol() {
     input.Protocol = PROSHOT;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
         LED_ON(LED_GREEN);
@@ -211,7 +211,7 @@ void inputDetectProtocol() {
     input.Protocol = SERVOPWM;
     inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
@@ -224,7 +224,7 @@ void inputDetectProtocol() {
   if (input.Protocol == AUTODETECT) {
     inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
   }
 }
 

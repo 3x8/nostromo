@@ -42,15 +42,15 @@ extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
 extern motor_t motor;
 
-void motorStartupTune();
-void motorInputTune(uint8_t motorStepDebug);
+void motorTuneStartup();
+void motorTuneInput(uint8_t motorStepDebug);
 void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);
 void motorPhaseC(uint8_t phaseBuffer);
 void motorStart();
 void motorCommutate();
 void motorCommutationStep(uint8_t stepBuffer);
-void motorChangeComparatorInput();
+void motorComparatorInputChange();
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();

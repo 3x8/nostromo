@@ -2,7 +2,7 @@
 
 // filter
 kalman_t motorCommutationIntervalFilterState;
-#if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
+#if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
   kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
 
@@ -24,7 +24,7 @@ int main(void) {
   ledOff();
 
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
-  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
+  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
   #endif
@@ -39,15 +39,16 @@ int main(void) {
 
   // ToDo 3D double
   if(escConfig()->motor3Dmode) {
-    escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT << 1;
+    // ko motor burned
+    // escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT << 1;
     escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD << 1;
   } else {
-    escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
+    // escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
     escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   }
 
   watchdogInit(2000);
-  motorStartupTune();
+  motorTuneStartup();
 
   // main loop
   while (true) {
@@ -82,11 +83,13 @@ int main(void) {
     if (input.Protocol == AUTODETECT) {
       // noop
     } else {
+
       inputArmCheck();
       inputDisarmCheck();
+
       if (input.Armed) {
 
-        #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
+        #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
         // adcCurrent, auto offset at first arm after firmware write
         if (escConfig()->adcCurrentOffset == 0) {
           if (adcScaled.current != 0) {
@@ -159,7 +162,7 @@ int main(void) {
       #endif
     }
 
-    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
+    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
       adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
       adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
       if ((escConfig()->limitCurrent > 0) && (adcScaled.current > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
@@ -188,9 +191,14 @@ int main(void) {
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
 
+        /*
+        uartPrint("ARM[");
+        uartPrintInteger(input.Armed, 10, 1);
+        uartPrint("] ");*/
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+
         uartPrint("INv[");
         uartPrintInteger(input.DataValid, 10, 1);
         uartPrint("] ");
@@ -200,9 +208,11 @@ int main(void) {
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint("] ");
+
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
+
 
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
@@ -210,21 +220,33 @@ int main(void) {
         uartPrint("Ifs[");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("] ");
-        /*uartPrint("Ur[");
+        uartPrint("Ts[");
+        uartPrintInteger(adcScaled.temperature, 10, 1);
+        uartPrint("] ");
+
+        /*
+        uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] ");*/
-        uartPrint("Ts[");
-        uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");
+
         /*
         uartPrint("mAh[");
         uartPrintInteger(ABS((int)consumptionMah), 10, 1);
         uartPrint("] ");
         uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);
+        uartPrint("] ");*/
+
+        uartPrint("MCI[");
+        uartPrintInteger(motor.CommutationInterval, 10, 1);
+        uartPrint("] ");
+
+        /*
+        uartPrint("ZCT[");
+        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");*/
 
         uartPrint("RPM[");

@@ -1,12 +1,12 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
-//#define DEBUG_MOTOR_TIMING
+#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
 // hw constants
@@ -20,6 +20,7 @@
 #define INPUT_GPIO      GPIOA
 #define INPUT_PIN       GPIO_PIN_2
 #define INPUT_TIMER     TIM15
+#define INPUT_TIMER_CH  TIM_CHANNEL_1
 
 // LEDs ,Ok
 #define LED_RED_GPIO    GPIOA
@@ -31,6 +32,7 @@
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok
+#define FD6288
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    GPIO_PIN_10
 #define B_FET_HI_GPIO   GPIOA
@@ -45,6 +47,7 @@
 #define C_FET_LO_PIN    GPIO_PIN_7
 
 // comparator ,Ok
+#define COMPARATOR              COMP1
 #define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_IO1
 #define COMPARATOR_PHASE_B      COMP_INVERTINGINPUT_DAC1
 #define COMPARATOR_PHASE_C      COMP_INVERTINGINPUT_DAC2
@@ -61,7 +64,7 @@
 #define ADC_VOLTAGE_OFFSET      1.0
 #define ADC_VOLTAGE_FACTOR      0.6
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
-#define ADC_CURRENT_FACTOR      1.87
+#define ADC_CURRENT_FACTOR      2.13
 #define ADC_CONSUMPTION_FACTOR  0.00028
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04

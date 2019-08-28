@@ -22,6 +22,12 @@ void adcRead(void) {
     adcRaw.current = adcDmaBuffer[0];
     adcRaw.temperature = adcDmaBuffer[1];
   #endif
+
+  #if (defined(KISS24A))
+  adcRaw.voltage = adcDmaBuffer[1];
+  adcRaw.current = adcDmaBuffer[0];
+  adcRaw.temperature = adcDmaBuffer[2];
+  #endif
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adcHandle) {

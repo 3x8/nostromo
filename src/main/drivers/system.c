@@ -78,7 +78,7 @@ void systemAdcInit(void) {
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
-  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI))
+  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
     sConfig.Channel = ADC_CURRENT;
     while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
     sConfig.Channel = ADC_VOLTAGE;
@@ -107,7 +107,7 @@ void systemAdcInit(void) {
 }
 
 void systemBemfComparatorInit(void) {
-  motorBemfComparatorHandle.Instance = COMP1;
+  motorBemfComparatorHandle.Instance = COMPARATOR;
   motorBemfComparatorHandle.Init.NonInvertingInput = COMPARATOR_COMMON;
   motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
   motorBemfComparatorHandle.Init.Output = COMP_OUTPUT_NONE;
@@ -225,16 +225,16 @@ void systemInputTimerInit(void) {
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
-  while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, TIM_CHANNEL_1) != HAL_OK);
+  while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, INPUT_TIMER_CH) != HAL_OK);
 
-  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle, TIM_CHANNEL_1, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle,INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
 }
 
 void systemMsTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
-  msTimerHandle.Instance = TIM2;
+  msTimerHandle.Instance = TIM16;
   msTimerHandle.Init.Prescaler = 47017;   // 1ms counter
   msTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   msTimerHandle.Init.Period = 0xffffffff;
