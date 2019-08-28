@@ -217,7 +217,7 @@ int main(void) {
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
-        /*
+
         uartPrint("INv[");
         uartPrintInteger(input.DataValid, 10, 1);
         uartPrint("] ");
@@ -226,7 +226,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);

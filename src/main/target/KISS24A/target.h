@@ -1,11 +1,13 @@
 #pragma once
 
+// Ko input not working
+
 // debug
 #define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
-#define DEBUG_MOTOR_TIMING
+//#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
-//#define DEBUG_INPUT_AUTODETECT
+#define DEBUG_INPUT_AUTODETECT
 #define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 

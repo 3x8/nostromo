@@ -24,6 +24,10 @@ void DMA1_Channel1_IRQHandler(void) {
 }
 
 void DMA1_Channel2_3_IRQHandler(void) {
+
+  HAL_DMA_IRQHandler(&inputTimerDmaHandle);
+  inputCallbackDMA();
+
   if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
     LL_DMA_ClearFlag_TC2(DMA1);
     LL_DMA_DisableChannel(DMA1, USART_TX_DMA_CHANNEL);
