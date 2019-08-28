@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-//#include "stm32_hal_legacy.h"
-
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx_hal_flash.h"
 #include "stm32f0xx_hal_dma.h"
