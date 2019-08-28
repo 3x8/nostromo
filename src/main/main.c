@@ -210,12 +210,14 @@ int main(void) {
 
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
 
+        /*
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+        /*
         uartPrint("INv[");
         uartPrintInteger(input.DataValid, 10, 1);
         uartPrint("] ");
@@ -224,13 +226,13 @@ int main(void) {
         uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
 
-        /*
+
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
@@ -239,7 +241,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         /*
         uartPrint("Ur[");
@@ -261,9 +263,10 @@ int main(void) {
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
 
+        /*
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         uartPrint("RPM[");
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
