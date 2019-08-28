@@ -13,7 +13,7 @@
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
-#define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
+#define HBRIDGE_MAX_CURRENT     7713  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      977   // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
 #define MOTOR_START_THRESHOLD   13
@@ -65,8 +65,8 @@
 // adc calibration ,Ok  I->Ko
 #define ADC_VOLTAGE_OFFSET      59.5
 #define ADC_VOLTAGE_FACTOR      0.888
-#define ADC_CURRENT_OFFSET      1.0  // 0 -> auto offset
-#define ADC_CURRENT_FACTOR      1.0
+#define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
+#define ADC_CURRENT_FACTOR      3.064
 #define ADC_CONSUMPTION_FACTOR  0.00028
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04
