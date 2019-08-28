@@ -22,7 +22,7 @@
 #define INPUT_GPIO      GPIOB
 #define INPUT_PIN       GPIO_PIN_3
 #define INPUT_TIMER     TIM2
-#define INPUT_TIMER_CH  TIM_CHANNEL_ALL // ToDo
+#define INPUT_TIMER_CH  TIM_CHANNEL_2 // ToDo
 
 // LEDs
 #define LED_RED_GPIO    GPIOA

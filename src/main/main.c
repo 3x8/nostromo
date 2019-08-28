@@ -39,11 +39,8 @@ int main(void) {
 
   // ToDo 3D double
   if(escConfig()->motor3Dmode) {
-    // ko motor burned
-    // escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT << 1;
     escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD << 1;
   } else {
-    // escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
     escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   }
 
