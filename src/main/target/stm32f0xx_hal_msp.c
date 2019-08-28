@@ -122,9 +122,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 
     //  there is only one channel to perform all the requested DMAs.
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerDmaHandle);
+    //__HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerDmaHandle);
     // ToDo
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
+    //__HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
   }
 
 }
