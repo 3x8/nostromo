@@ -23,12 +23,6 @@ int main(void) {
 
   ledOff();
 
-  // debug
-  if (!serialPort.InitDone){
-    uartInit();
-    serialPort.InitDone = true;
-  }
-
   kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
@@ -86,25 +80,12 @@ int main(void) {
       }
     }
 
-    // ToDo debug
     if (input.Protocol == AUTODETECT) {
       // noop
     } else {
-      // ToDo debug
+
       inputArmCheck();
       inputDisarmCheck();
-
-      // ToDo debug
-      /*
-      input.Armed = true;
-      input.Data = 48;
-      input.DataValid = true;
-      input.PwmValue = 17;
-      motor.Startup = true;
-
-      motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;*/
 
       if (input.Armed) {
 
