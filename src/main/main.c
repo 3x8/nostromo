@@ -47,6 +47,15 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
+
+  // debug
+  // uart init
+  if (!serialPort.InitDone){
+    uartInit();
+    serialPort.InitDone = true;
+  }
+
+
   // main loop
   while (true) {
 
