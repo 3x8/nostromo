@@ -49,11 +49,13 @@ int main(void) {
 
 
   // debug
-  // uart init
-  if (!serialPort.InitDone){
-    uartInit();
-    serialPort.InitDone = true;
-  }
+  #if defined(KISS24A)
+    // uart init
+    if (!serialPort.InitDone){
+      uartInit();
+      serialPort.InitDone = true;
+    }
+  #endif
 
 
   // main loop
