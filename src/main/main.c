@@ -133,11 +133,14 @@ int main(void) {
         }
 
         // motor BEMF timeouts
+        motor.BemfZeroCounterTimeoutThreshold = 27;
+        // ToDo
+        /*
         if (input.PwmValue < 300) {
-          motor.BemfZeroCounterTimeoutThreshold = 47;
+          motor.BemfZeroCounterTimeoutThreshold = 27;
         } else {
           motor.BemfZeroCounterTimeoutThreshold = 19;
-        }
+        }*/
 
         // motor not running
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
