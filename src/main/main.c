@@ -134,9 +134,9 @@ int main(void) {
 
         // motor BEMF timeouts
         if (input.PwmValue < 300) {
-          motor.BemfZeroCounterTimeoutThreshold = 401;
+          motor.BemfZeroCounterTimeoutThreshold = 47;
         } else {
-          motor.BemfZeroCounterTimeoutThreshold = 199;
+          motor.BemfZeroCounterTimeoutThreshold = 19;
         }
 
         // motor not running
