@@ -31,6 +31,7 @@ int main(void) {
 
   // start with motor off
   motor.Step = 1;
+  motor.BemfZeroCounterTimeoutThreshold = 27;
   motor.Direction = escConfig()->motorDirection;
   motor.SlowDecay = escConfig()->motorSlowDecay;
   input.Data = 0;
@@ -131,16 +132,6 @@ int main(void) {
             motor.BemfFilterDelay = 3;
           }
         }
-
-        // motor BEMF timeouts
-        motor.BemfZeroCounterTimeoutThreshold = 27;
-        // ToDo
-        /*
-        if (input.PwmValue < 300) {
-          motor.BemfZeroCounterTimeoutThreshold = 27;
-        } else {
-          motor.BemfZeroCounterTimeoutThreshold = 19;
-        }*/
 
         // motor not running
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
