@@ -48,6 +48,7 @@
 #define C_FET_LO_PIN    GPIO_PIN_7
 
 // comparator ,Ok
+#define COMPARATOR_OPTIMIZE
 #define COMPARATOR              COMP1
 #define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_IO1
 #define COMPARATOR_PHASE_A_CSR  0b1100001

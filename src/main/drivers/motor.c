@@ -211,35 +211,51 @@ void motorComparatorInputChange() {
     case 1:
     case 4:
       // C floating
-      //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
-      COMP->CSR = COMPARATOR_PHASE_C_CSR;
+      #if !defined(COMPARATOR_OPTIMIZE)
+        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
+      #else
+        COMP->CSR = COMPARATOR_PHASE_C_CSR;
+      #endif
       break;
     case 2:
     case 5:
       // B floating
-      //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
-      COMP->CSR = COMPARATOR_PHASE_B_CSR;
+      #if !defined(COMPARATOR_OPTIMIZE)
+        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
+      #else
+        COMP->CSR = COMPARATOR_PHASE_B_CSR;
+      #endif
       break;
     case 3:
     case 6:
       // A floating
-      //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
-      COMP->CSR = COMPARATOR_PHASE_A_CSR;
+      #if !defined(COMPARATOR_OPTIMIZE)
+        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+      #else
+        COMP->CSR = COMPARATOR_PHASE_A_CSR;
+      #endif
       break;
   }
 
   // polarity of comp input reversed
   if (motor.BemfRising) {
-    //motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
-    EXTI->RTSR = 0x0;
-    EXTI->FTSR = 0x200000;
+    #if !defined(COMPARATOR_OPTIMIZE)
+      motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+    #else
+      EXTI->RTSR = 0x0;
+      EXTI->FTSR = 0x200000;
+    #endif
   } else {
-    //motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
-    EXTI->RTSR = 0x200000;
-    EXTI->FTSR = 0x0;
+    #if !defined(COMPARATOR_OPTIMIZE)
+      motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+    #else
+      EXTI->RTSR = 0x200000;
+      EXTI->FTSR = 0x0;
+    #endif
   }
-
-  //HAL_COMP_Init(&motorBemfComparatorHandle);
+  #if !defined(COMPARATOR_OPTIMIZE)
+    HAL_COMP_Init(&motorBemfComparatorHandle);
+  #endif
 }
 
 void motorCommutate() {
@@ -273,9 +289,12 @@ void motorStart() {
   bool bufferDecaystate = motor.SlowDecay;
 
   if (!motor.Running) {
-    //HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-    EXTI->IMR &= (0 << 21);
-    EXTI->PR &=(0 << 21);
+    #if !defined(COMPARATOR_OPTIMIZE)
+      HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    #else
+      EXTI->IMR &= (0 << 21);
+      EXTI->PR &=(0 << 21);
+    #endif
 
     motor.SlowDecay = true;
 
@@ -284,8 +303,11 @@ void motorStart() {
     motorCommutationTimerHandle.Instance->CNT = 0xffff;
     motor.BemfCounter = 0;
     motor.Running = true;
-    //HAL_COMP_Start_IT(&motorBemfComparatorHandle);
-    EXTI->IMR |= (1 << 21);
+    #if !defined(COMPARATOR_OPTIMIZE)
+      HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+    #else
+      EXTI->IMR |= (1 << 21);
+    #endif
   }
   motor.SlowDecay = bufferDecaystate;
 }
@@ -297,9 +319,13 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
   if ((!motor.Running) || (!motor.Startup)) {
-    //HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-    EXTI->IMR &= (0 << 21);
-    EXTI->PR &=(0 << 21);
+    #if !defined(COMPARATOR_OPTIMIZE)
+      HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    #else
+      EXTI->IMR &= (0 << 21);
+      EXTI->PR &=(0 << 21);
+    #endif
+
     __enable_irq();
     return;
   }
@@ -319,9 +345,12 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     LED_ON(LED_GREEN);
   #endif
 
-  //HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-  EXTI->IMR &= (0 << 21);
-  EXTI->PR &=(0 << 21);
+  #if !defined(COMPARATOR_OPTIMIZE)
+    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+  #else
+    EXTI->IMR &= (0 << 21);
+    EXTI->PR &=(0 << 21);
+  #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0xffff;
 
@@ -345,8 +374,12 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   motorCommutate();
 
-  //HAL_COMP_Start_IT(&motorBemfComparatorHandle);
-  EXTI->IMR |= (1 << 21);
+  #if !defined(COMPARATOR_OPTIMIZE)
+    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+  #else
+    EXTI->IMR |= (1 << 21);
+  #endif
+
   __enable_irq();
 }
 
