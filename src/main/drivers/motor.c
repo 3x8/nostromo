@@ -212,19 +212,19 @@ void motorComparatorInputChange() {
     case 4:
       // C floating
       //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
-      COMP->CSR = 0b1010001;
+      COMP->CSR = COMPARATOR_PHASE_C_CSR;
       break;
     case 2:
     case 5:
       // B floating
       //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
-      COMP->CSR = 0b1000001;
+      COMP->CSR = COMPARATOR_PHASE_B_CSR;
       break;
     case 3:
     case 6:
       // A floating
       //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
-      COMP->CSR = 0b1100001;
+      COMP->CSR = COMPARATOR_PHASE_A_CSR;
       break;
   }
 
