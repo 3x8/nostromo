@@ -211,28 +211,35 @@ void motorComparatorInputChange() {
     case 1:
     case 4:
       // C floating
-      motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
+      //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
+      COMP->CSR = 0b1010001;
       break;
     case 2:
     case 5:
       // B floating
-      motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
+      //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
+      COMP->CSR = 0b1000001;
       break;
     case 3:
     case 6:
       // A floating
-      motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+      //motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+      COMP->CSR = 0b1100001;
       break;
   }
 
   // polarity of comp input reversed
   if (motor.BemfRising) {
-    motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+    //motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+    EXTI->RTSR = 0x0;
+    EXTI->FTSR = 0x200000;
   } else {
-    motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+    //motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+    EXTI->RTSR = 0x200000;
+    EXTI->FTSR = 0x0;
   }
 
-  HAL_COMP_Init(&motorBemfComparatorHandle);
+  //HAL_COMP_Init(&motorBemfComparatorHandle);
 }
 
 void motorCommutate() {
@@ -266,7 +273,10 @@ void motorStart() {
   bool bufferDecaystate = motor.SlowDecay;
 
   if (!motor.Running) {
-    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    //HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    EXTI->IMR &= (0 << 21);
+    EXTI->PR &=(0 << 21);
+
     motor.SlowDecay = true;
 
     motorCommutate();
@@ -274,7 +284,8 @@ void motorStart() {
     motorCommutationTimerHandle.Instance->CNT = 0xffff;
     motor.BemfCounter = 0;
     motor.Running = true;
-    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+    //HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+    EXTI->IMR |= (1 << 21);
   }
   motor.SlowDecay = bufferDecaystate;
 }
@@ -286,7 +297,9 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
   motorTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
   if ((!motor.Running) || (!motor.Startup)) {
-    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    //HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    EXTI->IMR &= (0 << 21);
+    EXTI->PR &=(0 << 21);
     __enable_irq();
     return;
   }
@@ -306,7 +319,10 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     LED_ON(LED_GREEN);
   #endif
 
-  HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+  //HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+  EXTI->IMR &= (0 << 21);
+  EXTI->PR &=(0 << 21);
+
   motorCommutationTimerHandle.Instance->CNT = 0xffff;
 
   motor.BemfCounter++;
@@ -329,7 +345,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
   motorCommutate();
 
-  HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+  //HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+  EXTI->IMR |= (1 << 21);
   __enable_irq();
 }
 
