@@ -178,8 +178,8 @@ void inputCallbackDMA() {
 }
 
 void inputDetectProtocol() {
-  uint32_t telegramPulseWidthBuff;
-  uint32_t telegramPulseWidthMin = 20000;
+  uint32_t pulseWidthBuff;
+  uint32_t pulseWidthMin = 20000;
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
     LED_OFF(LED_GREEN);
@@ -188,13 +188,13 @@ void inputDetectProtocol() {
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
-    telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
-    if(telegramPulseWidthBuff < telegramPulseWidthMin) {
-      telegramPulseWidthMin = telegramPulseWidthBuff;
+    pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+    if(pulseWidthBuff < pulseWidthMin) {
+      pulseWidthMin = pulseWidthBuff;
     }
   }
 
-  if ((telegramPulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (telegramPulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
+  if ((pulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (pulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
     input.Protocol = PROSHOT;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -207,7 +207,7 @@ void inputDetectProtocol() {
     return;
   }
 
-  if (telegramPulseWidthMin > 900) {
+  if (pulseWidthMin > 900) {
     input.Protocol = SERVOPWM;
     inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -229,33 +229,33 @@ void inputDetectProtocol() {
 }
 
 void inputProshot() {
-  uint8_t telegramCalculatedCRC = 0, telegramReceivedCRC = 0;
-  uint16_t telegramData = 0;
-  uint8_t telegramPulseValue[4] = {0, 0, 0, 0};
+  uint8_t calculatedCRC = 0, receivedCRC = 0;
+  uint16_t data = 0;
+  uint8_t pulseValue[4] = {0, 0, 0, 0};
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
     LED_ON(LED_GREEN);
   #endif
 
   for (int i = 0; i < 4; i++) {
-    telegramPulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
+    pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
   }
 
   for (int i = 0; i < 4; i++) {
-    telegramCalculatedCRC = telegramCalculatedCRC | ((telegramPulseValue[0]^telegramPulseValue[1]^telegramPulseValue[2]) << i);
-    telegramReceivedCRC = telegramReceivedCRC | (telegramPulseValue[3] << i);
+    calculatedCRC = calculatedCRC | ((pulseValue[0]^pulseValue[1]^pulseValue[2]) << i);
+    receivedCRC = receivedCRC | (pulseValue[3] << i);
   }
 
-  telegramData = ((telegramPulseValue[0] << 7 | telegramPulseValue[1] << 3 | telegramPulseValue[2] >> 1));
+  data = ((pulseValue[0] << 7 | pulseValue[1] << 3 | pulseValue[2] >> 1));
 
-  if ((telegramCalculatedCRC == telegramReceivedCRC) && (telegramData >= INPUT_VALUE_MIN) && (telegramData <= INPUT_VALUE_MAX)) {
+  if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
     input.DataValid = true;
     input.TimeoutCounter = 0;
-    input.Data = telegramData;
+    input.Data = data;
 
     // only update if not active
     if (!input.TelemetryRequest) {
-      input.TelemetryRequest = (telegramPulseValue[2] & BIT(0));
+      input.TelemetryRequest = (pulseValue[2] & BIT(0));
     }
 
     if (input.Armed) {
@@ -323,15 +323,15 @@ void inputProshot() {
 
 // SERVOPWM (use only for thrust tests ...)
 void inputServoPwm() {
-  uint32_t telegramPulseWidthBuff = 0;
+  uint32_t pulseWidthBuff = 0;
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
-    telegramPulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+    pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
 
-    if ((telegramPulseWidthBuff >= INPUT_PWM_WIDTH_MIN_US) && (telegramPulseWidthBuff <= INPUT_PWM_WIDTH_MAX_US)) {
+    if ((pulseWidthBuff >= INPUT_PWM_WIDTH_MIN_US) && (pulseWidthBuff <= INPUT_PWM_WIDTH_MAX_US)) {
       input.DataValid = true;
       input.TimeoutCounter = 0;
-      input.Data = scaleInputToOutput(telegramPulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      input.Data = scaleInputToOutput(pulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
 
       if (input.Armed) {
         if (input.Data  < DSHOT_CMD_MAX) {
