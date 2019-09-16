@@ -54,4 +54,3 @@ void motorComparatorInputChange();
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();
-void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle);
