@@ -31,7 +31,7 @@ int main(void) {
 
   // start with motor off
   motor.Step = 1;
-  motor.BemfZeroCounterTimeoutThreshold = 51;
+  motor.BemfZeroCounterTimeoutThreshold = 27;
   motor.Direction = escConfig()->motorDirection;
   motor.SlowDecay = escConfig()->motorSlowDecay;
   input.Data = 0;
