@@ -1,7 +1,7 @@
 #include "system.h"
 
 TIM_HandleTypeDef msTimerHandle;
-extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timerHandle);
 
 void systemClockConfig(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct;

@@ -13,7 +13,7 @@ void HAL_MspInit(void) {
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(adcHandle->Instance == ADC1) {
+  if (adcHandle->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_ENABLE();
 
     GPIO_InitStruct.Pin = ADC_MASK;
@@ -38,7 +38,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
 }
 
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
-  if(adcHandle->Instance == ADC1) {
+  if (adcHandle->Instance == ADC1) {
     __HAL_RCC_ADC1_CLK_DISABLE();
     HAL_GPIO_DeInit(GPIOA, ADC_MASK);
     HAL_DMA_DeInit(adcHandle->DMA_Handle);
@@ -48,7 +48,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
 void HAL_COMP_MspInit(COMP_HandleTypeDef* comparatorHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(comparatorHandle->Instance == COMPARATOR) {
+  if (comparatorHandle->Instance == COMPARATOR) {
     GPIO_InitStruct.Pin = COMPARATOR_MASK;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -60,7 +60,7 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* comparatorHandle) {
 }
 
 void HAL_COMP_MspDeInit(COMP_HandleTypeDef* comparatorHandle) {
-  if(comparatorHandle->Instance == COMPARATOR) {
+  if (comparatorHandle->Instance == COMPARATOR) {
     HAL_GPIO_DeInit(GPIOA, COMPARATOR_MASK);
   }
 }
@@ -68,16 +68,16 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* comparatorHandle) {
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(timerHandle->Instance == motorPwmTimerHandle.Instance) {
+  if (timerHandle->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_ENABLE();
   }
-  else if(timerHandle->Instance==msTimerHandle.Instance) {
+  else if (timerHandle->Instance==msTimerHandle.Instance) {
     __HAL_RCC_TIM16_CLK_ENABLE();
   }
-  else if(timerHandle->Instance == motorCommutationTimerHandle.Instance) {
+  else if (timerHandle->Instance == motorCommutationTimerHandle.Instance) {
     __HAL_RCC_TIM14_CLK_ENABLE();
   }
-  else if(timerHandle->Instance == inputTimerHandle.Instance) {
+  else if (timerHandle->Instance == inputTimerHandle.Instance) {
     if (INPUT_TIMER == TIM2){
       __HAL_RCC_TIM2_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF2_TIM2;
@@ -128,10 +128,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
   }
 }
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timerHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(htim->Instance == motorPwmTimerHandle.Instance) {
+  if (timerHandle->Instance == motorPwmTimerHandle.Instance) {
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -170,24 +170,24 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
 }
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
-  if(timerHandle->Instance == motorPwmTimerHandle.Instance) {
+  if (timerHandle->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_DISABLE();
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
   }
-  else if(timerHandle->Instance==msTimerHandle.Instance) {
+  else if (timerHandle->Instance==msTimerHandle.Instance) {
     __HAL_RCC_TIM16_CLK_DISABLE();
   }
-  else if(timerHandle->Instance == motorCommutationTimerHandle.Instance) {
+  else if (timerHandle->Instance == motorCommutationTimerHandle.Instance) {
     __HAL_RCC_TIM14_CLK_DISABLE();
   }
-  else if(timerHandle->Instance == inputTimerHandle.Instance) {
-    if (INPUT_TIMER == TIM2){
+  else if (timerHandle->Instance == inputTimerHandle.Instance) {
+    if (INPUT_TIMER == TIM2) {
       __HAL_RCC_TIM2_CLK_DISABLE();
     }
-    if (INPUT_TIMER == TIM3){
+    if (INPUT_TIMER == TIM3) {
       __HAL_RCC_TIM3_CLK_DISABLE();
     }
-    if (INPUT_TIMER == TIM15){
+    if (INPUT_TIMER == TIM15) {
       __HAL_RCC_TIM15_CLK_DISABLE();
     }
 
