@@ -101,7 +101,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
     if (INPUT_TIMER == TIM2){
-      inputTimerDmaHandle.Instance = DMA1_Channel2;
+      inputTimerDmaHandle.Instance = DMA1_Channel3;
     }
     if (INPUT_TIMER == TIM3){
       inputTimerDmaHandle.Instance = DMA1_Channel4;
