@@ -48,18 +48,6 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
-
-  // debug
-  /*
-  #if defined(KISS24A)
-    // uart init
-    if (!serialPort.InitDone){
-      uartInit();
-      serialPort.InitDone = true;
-    }
-  #endif*/
-
-
   // main loop
   while (true) {
 
@@ -114,7 +102,7 @@ int main(void) {
         }
         #endif
 
-        // uart init
+        // uart init (USART2 swd programming locked after arming)
         if (!serialPort.InitDone){
           uartInit();
           serialPort.InitDone = true;

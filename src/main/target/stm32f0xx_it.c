@@ -32,7 +32,6 @@ void DMA1_Channel2_3_IRQHandler(void) {
       uartStartTxDMA();
     }
   } else {
-    // ToDo
     HAL_DMA_IRQHandler(&inputTimerDmaHandle);
     inputCallbackDMA();
   }
