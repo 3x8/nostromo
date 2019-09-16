@@ -45,10 +45,10 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
   }
 }
 
-void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
+void HAL_COMP_MspInit(COMP_HandleTypeDef* comparatorHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(hcomp->Instance == COMPARATOR) {
+  if(comparatorHandle->Instance == COMPARATOR) {
     GPIO_InitStruct.Pin = COMPARATOR_MASK;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -59,25 +59,25 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp) {
   }
 }
 
-void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp) {
-  if(hcomp->Instance == COMPARATOR) {
+void HAL_COMP_MspDeInit(COMP_HandleTypeDef* comparatorHandle) {
+  if(comparatorHandle->Instance == COMPARATOR) {
     HAL_GPIO_DeInit(GPIOA, COMPARATOR_MASK);
   }
 }
 
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  if(htim_base->Instance == motorPwmTimerHandle.Instance) {
+  if(timerHandle->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_ENABLE();
   }
-  else if(htim_base->Instance==msTimerHandle.Instance) {
+  else if(timerHandle->Instance==msTimerHandle.Instance) {
     __HAL_RCC_TIM16_CLK_ENABLE();
   }
-  else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
+  else if(timerHandle->Instance == motorCommutationTimerHandle.Instance) {
     __HAL_RCC_TIM14_CLK_ENABLE();
   }
-  else if(htim_base->Instance == inputTimerHandle.Instance) {
+  else if(timerHandle->Instance == inputTimerHandle.Instance) {
     if (INPUT_TIMER == TIM2){
       __HAL_RCC_TIM2_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF2_TIM2;
@@ -120,10 +120,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 
     //  there is only one channel to perform all the requested DMAs.
     #if (INPUT_TIMER_CH == TIM_CHANNEL_1)
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
+    __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
     #endif
     #if (INPUT_TIMER_CH == TIM_CHANNEL_2)
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC2],inputTimerDmaHandle);
+    __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC2],inputTimerDmaHandle);
     #endif
   }
 }
@@ -169,18 +169,18 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
   }
 }
 
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
-  if(htim_base->Instance == motorPwmTimerHandle.Instance) {
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
+  if(timerHandle->Instance == motorPwmTimerHandle.Instance) {
     __HAL_RCC_TIM1_CLK_DISABLE();
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
   }
-  else if(htim_base->Instance==msTimerHandle.Instance) {
+  else if(timerHandle->Instance==msTimerHandle.Instance) {
     __HAL_RCC_TIM16_CLK_DISABLE();
   }
-  else if(htim_base->Instance == motorCommutationTimerHandle.Instance) {
+  else if(timerHandle->Instance == motorCommutationTimerHandle.Instance) {
     __HAL_RCC_TIM14_CLK_DISABLE();
   }
-  else if(htim_base->Instance == inputTimerHandle.Instance) {
+  else if(timerHandle->Instance == inputTimerHandle.Instance) {
     if (INPUT_TIMER == TIM2){
       __HAL_RCC_TIM2_CLK_DISABLE();
     }
@@ -194,10 +194,10 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
     // input timer
     HAL_GPIO_DeInit(INPUT_GPIO, INPUT_PIN);
     #if (INPUT_TIMER_CH == TIM_CHANNEL_1)
-      HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC1]);
+      HAL_DMA_DeInit(timerHandle->hdma[TIM_DMA_ID_CC1]);
     #endif
     #if (INPUT_TIMER_CH == TIM_CHANNEL_2)
-      HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC2]);
+      HAL_DMA_DeInit(timerHandle->hdma[TIM_DMA_ID_CC2]);
     #endif
   }
 }

@@ -312,7 +312,7 @@ void motorStart() {
   motor.SlowDecay = bufferDecaystate;
 }
 
-void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
+void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   uint32_t motorTimestamp;
 
   __disable_irq();
