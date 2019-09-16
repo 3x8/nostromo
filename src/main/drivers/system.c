@@ -68,8 +68,6 @@ void systemAdcInit(void) {
   adcHandle.Init.LowPowerAutoPowerOff = DISABLE;
   adcHandle.Init.ContinuousConvMode = ENABLE;
   adcHandle.Init.DiscontinuousConvMode = DISABLE;
-  //adcHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC4;
-  //adcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
   adcHandle.Init.DMAContinuousRequests = ENABLE;
   adcHandle.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   while (HAL_ADC_Init(&adcHandle) != HAL_OK);
