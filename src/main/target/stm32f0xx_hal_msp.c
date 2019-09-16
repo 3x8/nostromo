@@ -90,7 +90,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
       __HAL_RCC_TIM15_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
     }
-    // ToDo
+
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -100,8 +100,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
-    // timer DMA Init
-    // ToDo ...
     if (INPUT_TIMER == TIM2){
       inputTimerDmaHandle.Instance = DMA1_Channel2;
     }
@@ -127,12 +125,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
     #if (INPUT_TIMER_CH == TIM_CHANNEL_2)
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC2],inputTimerDmaHandle);
     #endif
-
-    // ToDo
-    //__HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_TRIGGER],inputTimerDmaHandle);
-    //__HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_UPDATE],inputTimerDmaHandle);
   }
-
 }
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
@@ -206,8 +199,5 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
     #if (INPUT_TIMER_CH == TIM_CHANNEL_2)
       HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC2]);
     #endif
-
-    // ToDo
-    //HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_TRIGGER]);
   }
 }
