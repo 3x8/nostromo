@@ -1,7 +1,5 @@
 #pragma once
 
-// Ko input not working
-
 // debug
 //#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
