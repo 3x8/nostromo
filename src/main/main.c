@@ -217,7 +217,7 @@ int main(void) {
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
 
-        /*
+
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
@@ -226,7 +226,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         /*
         uartPrint("Ur[");
