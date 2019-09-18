@@ -238,7 +238,6 @@ void inputProshot() {
   #endif
 
   for (int i = 0; i < 4; i++) {
-    //pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 8); // (prescaler 5) ErrorRate 2%
     pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
   }
 
@@ -260,52 +259,7 @@ void inputProshot() {
       input.TelemetryRequest = (pulseValue[2] & BIT(0));
     }
 
-    if (input.Armed) {
-      if (input.Data <= DSHOT_CMD_MAX) {
-        motor.Startup = false;
-        input.PwmValue = 0;
-        if (!motor.Running) {
-          inputDshotCommandRun();
-        }
-      } else {
-        motor.Startup = true;
-        motor.BrakeActiveProportional = false;
-        input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
-
-        if (escConfig()->motor3Dmode) {
-          // up
-          if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
-            if (motor.Direction == !escConfig()->motorDirection) {
-              motor.Direction = escConfig()->motorDirection;
-              motor.BemfCounter = 0;
-            }
-            input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
-          }
-          // down
-          if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
-            if(motor.Direction == escConfig()->motorDirection) {
-              motor.Direction = !escConfig()->motorDirection;
-              motor.BemfCounter = 0;
-            }
-            input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
-          }
-          // deadband
-          if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
-            input.PwmValue = 0;
-          }
-        } else {
-          input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
-          // ToDo introduces non linearity.
-          //input.PwmValue = scaleInputToOutput(input.DataNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
-        }
-
-        // output
-        input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
-        motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-        motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
-      }
-    }
+    motorInputUpdate();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_OFF(LED_GREEN);
@@ -331,30 +285,17 @@ void inputServoPwm() {
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
     pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
 
-    if ((pulseWidthBuff >= INPUT_PWM_WIDTH_MIN_US) && (pulseWidthBuff <= INPUT_PWM_WIDTH_MAX_US)) {
+    if ((pulseWidthBuff >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuff <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
       input.DataValid = true;
+      input.DataValidCounter++;
       input.TimeoutCounter = 0;
-      input.Data = scaleInputToOutput(pulseWidthBuff, INPUT_PWM_WIDTH_MIN_US, INPUT_PWM_WIDTH_MAX_US, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 1;
 
-      if (input.Armed) {
-        if (input.Data  < DSHOT_CMD_MAX) {
-          motor.Startup = false;
-          input.PwmValue = 0;
-        } else {
-          motor.Startup = true;
-          motor.BrakeActiveProportional = false;
-          input.PwmValue = constrain(input.Data, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
-        }
-
-        // output
-        motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
-        motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-        motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
-      }
-
+      //motorInputUpdate();
       return;
     } else {
       input.DataValid = false;
+      input.DataErrorCounter++;
     }
   }
 

@@ -48,12 +48,6 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
-  // debug
-  if (!serialPort.InitDone){
-    uartInit();
-    serialPort.InitDone = true;
-  }
-
   // main loop
   while (true) {
 
@@ -217,11 +211,11 @@ int main(void) {
         uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");
+        uartPrint("] "); */
 
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         /*
         uartPrint("Ufs[");

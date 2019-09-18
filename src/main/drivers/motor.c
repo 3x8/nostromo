@@ -412,3 +412,50 @@ void motorTuneInput(uint8_t motorStepDebug) {
 
   motorPwmTimerHandle.Instance->PSC = 0;
 }
+
+void motorInputUpdate(void) {
+  if (input.Armed) {
+    if (input.Data <= DSHOT_CMD_MAX) {
+      motor.Startup = false;
+      input.PwmValue = 0;
+      if (!motor.Running) {
+        inputDshotCommandRun();
+      }
+    } else {
+      motor.Startup = true;
+      motor.BrakeActiveProportional = false;
+      input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
+
+      if (escConfig()->motor3Dmode) {
+        // up
+        if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
+          if (motor.Direction == !escConfig()->motorDirection) {
+            motor.Direction = escConfig()->motorDirection;
+            motor.BemfCounter = 0;
+          }
+          input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+        }
+        // down
+        if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
+          if(motor.Direction == escConfig()->motorDirection) {
+            motor.Direction = !escConfig()->motorDirection;
+            motor.BemfCounter = 0;
+          }
+          input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
+        }
+        // deadband
+        if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
+          input.PwmValue = 0;
+        }
+      } else {
+        input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
+      }
+
+      // output
+      input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+    }
+  }
+}

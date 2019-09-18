@@ -54,3 +54,5 @@ void motorComparatorInputChange();
 void motorBrakeOff();
 void motorBrakeFull();
 void motorBrakeProportional();
+
+void motorInputUpdate(void);

@@ -10,16 +10,6 @@ const char *byteToString(uint8_t x) {
     return (b);
 }
 
-uint32_t scaleInputToOutput(uint32_t input, uint32_t inputMin, uint32_t inputMax, uint32_t outputMin, uint32_t outputMax) {
-  if (input < inputMin) {
-    input = inputMin;
-  }
-  if (input > inputMax) {
-    input = inputMax;
-  }
-  return ((input - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) + outputMin);
-}
-
 uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
   if (input < valueMin){
     return (valueMin);
