@@ -376,7 +376,7 @@ void motorBrakeFull() {
   motorPhaseC(HBRIDGE_LOWSIDE);
 }
 
-// dutyCycle controls braking strength
+// escConfig()->motorBrakeStrength
 void motorBrakeProportional() {
   motorPhaseA(HBRIDGE_PWM);
   motorPhaseB(HBRIDGE_PWM);
