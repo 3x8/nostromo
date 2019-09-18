@@ -289,7 +289,7 @@ void inputServoPwm() {
       input.DataValid = true;
       input.DataValidCounter++;
       input.TimeoutCounter = 0;
-      input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 1;
+      input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 2;
 
       motorInputUpdate();
       return;

@@ -426,7 +426,7 @@ void motorInputUpdate(void) {
       motor.BrakeActiveProportional = false;
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
-      if (escConfig()->motor3Dmode) {
+      if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
         // up
         if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
           if (motor.Direction == !escConfig()->motorDirection) {
