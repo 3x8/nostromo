@@ -237,9 +237,9 @@ int main(void) {
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");*/
-        
+
         uartPrint("RPM[");
-        if (motor.CommutationInterval > 0) {}
+        if (motor.CommutationInterval > 0) {
           uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         }
