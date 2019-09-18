@@ -238,8 +238,8 @@ void inputProshot() {
   #endif
 
   for (int i = 0; i < 4; i++) {
-     pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 8); // (prescaler 5) ErrorRate 2%
-    //pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
+    //pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 8); // (prescaler 5) ErrorRate 2%
+    pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
   }
 
   for (int i = 0; i < 4; i++) {
@@ -295,7 +295,7 @@ void inputProshot() {
           }
         } else {
           input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
-          // introduces non linearity.
+          // ToDo introduces non linearity.
           //input.PwmValue = scaleInputToOutput(input.DataNormed, INPUT_NORMED_MIN, INPUT_NORMED_MAX, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX) + escConfig()->motorStartThreshold;
         }
 
