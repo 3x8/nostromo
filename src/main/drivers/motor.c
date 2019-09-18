@@ -4,6 +4,77 @@ TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motor_t motor;
 
+void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+  uint32_t motorTimestamp;
+
+  __disable_irq();
+  motorTimestamp = motorCommutationTimerHandle.Instance->CNT;
+
+  if ((!motor.Running) || (!motor.Startup)) {
+    #if (!defined(COMPARATOR_OPTIMIZE))
+      HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+    #else
+      EXTI->IMR &= (0 << 21);
+      EXTI->PR &=(0 << 21);
+    #endif
+
+    __enable_irq();
+    return;
+  }
+
+  while ((motorCommutationTimerHandle.Instance->CNT - motorTimestamp) < motor.BemfFilterDelay);
+
+  for (int i = 0; i < motor.BemfFilterLevel; i++) {
+    if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
+        (!motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
+
+      __enable_irq();
+      return;
+    }
+  }
+
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_ON(LED_GREEN);
+  #endif
+
+  #if (!defined(COMPARATOR_OPTIMIZE))
+    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+  #else
+    EXTI->IMR &= (0 << 21);
+    EXTI->PR &=(0 << 21);
+  #endif
+
+  motorCommutationTimerHandle.Instance->CNT = 0xffff;
+
+  motor.BemfCounter++;
+  motor.BemfZeroCounterTimeout = 0;
+  motor.BemfZeroCrossTimestamp = motorTimestamp;
+
+  // ToDo
+  if ((motor.CommutationDelay > 31) && (motor.CommutationDelay < 613) && (input.PwmValue > 45) && (input.PwmValue < 707)) {
+    while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
+      #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+        LED_TOGGLE(LED_BLUE);
+      #endif
+    }
+  }
+
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_OFF(LED_GREEN);
+    LED_OFF(LED_BLUE);
+  #endif
+
+  motorCommutate();
+
+  #if (!defined(COMPARATOR_OPTIMIZE))
+    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+  #else
+    EXTI->IMR |= (1 << 21);
+  #endif
+
+  __enable_irq();
+}
+
 #if defined(FD6288)
   void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
@@ -187,25 +258,6 @@ void motorCommutationStep(uint8_t stepBuffer) {
   }
 }
 
-void motorBrakeOff() {
-  motorPhaseA(HBRIDGE_FLOATING);
-  motorPhaseB(HBRIDGE_FLOATING);
-  motorPhaseC(HBRIDGE_FLOATING);
-}
-
-void motorBrakeFull() {
-  motorPhaseA(HBRIDGE_LOWSIDE);
-  motorPhaseB(HBRIDGE_LOWSIDE);
-  motorPhaseC(HBRIDGE_LOWSIDE);
-}
-
-// dutyCycle controls braking strength
-void motorBrakeProportional() {
-  motorPhaseA(HBRIDGE_PWM);
-  motorPhaseB(HBRIDGE_PWM);
-  motorPhaseC(HBRIDGE_PWM);
-}
-
 void motorComparatorInputChange() {
   switch(motor.Step) {
     case 1:
@@ -312,75 +364,23 @@ void motorStart() {
   motor.SlowDecay = bufferDecaystate;
 }
 
-void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-  uint32_t motorTimestamp;
+void motorBrakeOff() {
+  motorPhaseA(HBRIDGE_FLOATING);
+  motorPhaseB(HBRIDGE_FLOATING);
+  motorPhaseC(HBRIDGE_FLOATING);
+}
 
-  __disable_irq();
-  motorTimestamp = motorCommutationTimerHandle.Instance->CNT;
+void motorBrakeFull() {
+  motorPhaseA(HBRIDGE_LOWSIDE);
+  motorPhaseB(HBRIDGE_LOWSIDE);
+  motorPhaseC(HBRIDGE_LOWSIDE);
+}
 
-  if ((!motor.Running) || (!motor.Startup)) {
-    #if (!defined(COMPARATOR_OPTIMIZE))
-      HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-    #else
-      EXTI->IMR &= (0 << 21);
-      EXTI->PR &=(0 << 21);
-    #endif
-
-    __enable_irq();
-    return;
-  }
-
-  while ((motorCommutationTimerHandle.Instance->CNT - motorTimestamp) < motor.BemfFilterDelay);
-
-  for (int i = 0; i < motor.BemfFilterLevel; i++) {
-    if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
-        (!motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
-
-      __enable_irq();
-      return;
-    }
-  }
-
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_ON(LED_GREEN);
-  #endif
-
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-  #else
-    EXTI->IMR &= (0 << 21);
-    EXTI->PR &=(0 << 21);
-  #endif
-
-  motorCommutationTimerHandle.Instance->CNT = 0xffff;
-
-  motor.BemfCounter++;
-  motor.BemfZeroCounterTimeout = 0;
-  motor.BemfZeroCrossTimestamp = motorTimestamp;
-
-  // ToDo
-  if ((motor.CommutationDelay > 31) && (motor.CommutationDelay < 613) && (input.PwmValue > 45) && (input.PwmValue < 707)) {
-    while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
-      #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-        LED_TOGGLE(LED_BLUE);
-      #endif
-    }
-  }
-
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_OFF(LED_GREEN);
-    LED_OFF(LED_BLUE);
-  #endif
-
-  motorCommutate();
-
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
-  #else
-    EXTI->IMR |= (1 << 21);
-  #endif
-
-  __enable_irq();
+// dutyCycle controls braking strength
+void motorBrakeProportional() {
+  motorPhaseA(HBRIDGE_PWM);
+  motorPhaseB(HBRIDGE_PWM);
+  motorPhaseC(HBRIDGE_PWM);
 }
 
 void motorTuneStartup() {
