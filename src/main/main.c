@@ -48,6 +48,12 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
+  // debug
+  if (!serialPort.InitDone){
+    uartInit();
+    serialPort.InitDone = true;
+  }
+
   // main loop
   while (true) {
 
@@ -195,6 +201,19 @@ int main(void) {
         uartPrint("] ");
         uartPrint("INp[");
         uartPrintInteger(input.Protocol, 10, 1);
+
+        uartPrint("] ");
+        uartPrint("STA[");
+        uartPrintInteger(input.DataValidCounter, 10, 1);
+        uartPrint("->");
+        uartPrintInteger(input.DataErrorCounter, 10, 1);
+        uartPrint("->");
+        if (input.DataValidCounter > 0) {
+          uartPrintInteger((input.DataErrorCounter * 100)/ input.DataValidCounter, 10, 1);
+        }
+        uartPrint("] ");
+
+        /*
         uartPrint("] ");
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
@@ -202,9 +221,9 @@ int main(void) {
 
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
-
+        /*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
@@ -213,7 +232,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         /*
         uartPrint("Ur[");

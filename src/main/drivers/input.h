@@ -5,7 +5,7 @@
 #define INPUT_ARM_COUNTER_THRESHOLD  1000
 #define INPUT_TIMEOUT_COUNTER_THRESHOLD  1000
 #define INPUT_AUTODETECT_PRESCALER 1
-#define INPUT_PROSHOT_PRESCALER 0
+#define INPUT_PROSHOT_PRESCALER 5
 #define INPUT_PROSHOT_WIDTH_MIN_SYSTICKS 22
 #define INPUT_PROSHOT_WIDTH_MAX_SYSTICKS 80
 #define INPUT_PWM_PRESCALER 97
@@ -77,6 +77,8 @@ typedef struct {
   uint32_t ArmingCounter;
   uint32_t TimeoutCounter;
   uint32_t PwmValue;
+  uint32_t DataValidCounter;
+  uint32_t DataErrorCounter;
 } input_t;
 
 extern TIM_HandleTypeDef  inputTimerHandle;

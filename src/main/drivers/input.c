@@ -238,7 +238,8 @@ void inputProshot() {
   #endif
 
   for (int i = 0; i < 4; i++) {
-    pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
+     pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 8); // (prescaler 5) ErrorRate 2%
+    //pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
   }
 
   for (int i = 0; i < 4; i++) {
@@ -250,6 +251,7 @@ void inputProshot() {
 
   if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
     input.DataValid = true;
+    input.DataValidCounter++;
     input.TimeoutCounter = 0;
     input.Data = data;
 
@@ -312,6 +314,7 @@ void inputProshot() {
     return;
   } else {
     input.DataValid = false;
+    input.DataErrorCounter++;
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_OFF(LED_GREEN);
