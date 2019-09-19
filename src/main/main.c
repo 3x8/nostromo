@@ -43,7 +43,6 @@ int main(void) {
 
   // main loop
   while (true) {
-
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
     #endif
@@ -74,12 +73,9 @@ int main(void) {
     if (input.Protocol == AUTODETECT) {
       // noop
     } else {
-
       inputArmCheck();
       inputDisarmCheck();
-
       if (input.Armed) {
-
         #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
         // adcCurrent, auto offset at first arm after firmware write
         if (escConfig()->adcCurrentOffset == 0) {
@@ -88,7 +84,6 @@ int main(void) {
           } else {
             escConfig()->adcCurrentOffset = 1;
           }
-
           configWrite();
           // reset esc, iwdg timeout
           while(true);
@@ -119,8 +114,8 @@ int main(void) {
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
-          kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
           motor.Running = false;
+          kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
         }
 
         // motor start
@@ -179,19 +174,15 @@ int main(void) {
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
-
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
-
         uartPrint("INN[");
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint("] ");
-
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-
         uartPrint("STA[");
         uartPrintInteger(input.DataValidCounter, 10, 1);
         uartPrint("->");
@@ -205,11 +196,9 @@ int main(void) {
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
-
         uartPrint("Ifs[");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("] ");
-
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
@@ -218,7 +207,6 @@ int main(void) {
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
-
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] ");*/
@@ -226,15 +214,14 @@ int main(void) {
         uartPrint("mAh[");
         uartPrintInteger(ABS((int)consumptionMah), 10, 1);
         uartPrint("] ");
-
         uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");*/
 
+        /*
         uartPrint("MCI[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
-        /*
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");*/

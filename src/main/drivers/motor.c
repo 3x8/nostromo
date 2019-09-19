@@ -460,7 +460,6 @@ void motorInputUpdate(void) {
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
-
     }
   }
 }
