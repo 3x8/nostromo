@@ -15,7 +15,7 @@
 #define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      977   // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
-#define MOTOR_START_THRESHOLD   37
+#define MOTOR_START_THRESHOLD   13
 
 // input ,Ok
 #define INPUT_GPIO      GPIOB
