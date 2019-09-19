@@ -23,7 +23,7 @@ int main(void) {
 
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 11);
+  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 13);
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -115,7 +115,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 11);
+          kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 13);
         }
 
         // motor start
