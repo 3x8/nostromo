@@ -23,7 +23,7 @@ int main(void) {
 
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
+  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 11);
   #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -115,7 +115,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
+          kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 11);
         }
 
         // motor start
@@ -126,10 +126,10 @@ int main(void) {
 
         // ToDo
         motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
-        motor.CommutationDelay = 0; //timing 30°
-        //motor.CommutationDelay = motor.CommutationInterval >> 3; //timing 15°
+        //motor.CommutationDelay = 0; //timing 30°
+        motor.CommutationDelay = motor.CommutationInterval >> 3; //timing 15°
         //motor.CommutationDelay = motor.CommutationInterval >> 2; //timing 0°
-        //motor.CommutationDelay = constrain(motor.CommutationDelay, 17, 413);
+        motor.CommutationDelay = constrain(motor.CommutationDelay, 41, 401);
       } // input.Armed
     } // input.Protocol detected
 
@@ -218,13 +218,17 @@ int main(void) {
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");*/
 
-        /*
+
         uartPrint("MCI[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
+        uartPrint("MCD[");
+        uartPrintInteger(motor.CommutationDelay, 10, 1);
+        uartPrint("] ");
+
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
