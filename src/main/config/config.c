@@ -23,8 +23,8 @@ void configReset(void) {
   escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   escConfig()->motor3Dmode = false;
   escConfig()->input3Dneutral = 1000;
-  escConfig()->input3DdeadbandLow = 3;
-  escConfig()->input3DdeadbandHigh = 1003;
+  escConfig()->input3DdeadbandLow = 1;
+  escConfig()->input3DdeadbandHigh = 1001;
   escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
   escConfig()->limitTemperature = HBRIDGE_MAX_TEMPERATURE;
   escConfig()->led0 = false;
