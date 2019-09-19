@@ -118,7 +118,8 @@ int main(void) {
         // motor not running
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
           motor.BemfZeroCrossTimestamp = 0;
-            kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
+          motor.BemfCounter = 0;
+          kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 13);
           motor.Running = false;
         }
 

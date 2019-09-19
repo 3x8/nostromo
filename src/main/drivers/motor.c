@@ -451,11 +451,16 @@ void motorInputUpdate(void) {
         input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
       }
 
-      // output
-      input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      // stall protection and startup kick
+      if (motor.BemfCounter < 50) {
+        input.PwmValue = 71;
+      } else {
+        input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      }
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+
     }
   }
 }
