@@ -51,7 +51,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfZeroCrossTimestamp = motorTimestamp;
 
   // ToDo
-  //if ((motor.CommutationDelay > 31) && (motor.CommutationDelay < 613) && (input.PwmValue > 45) && (input.PwmValue < 707)) {
   if (motor.CommutationDelay > 40) {
     while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
       #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))

@@ -155,12 +155,16 @@ int main(void) {
     #endif
 
     if (msTimerHandle.Instance->CNT > 100) {
+      msTimerHandle.Instance->CNT = 0;
+      msIndex++;
+
+      #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
+        consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
+      #endif
+
       #if (defined(_DEBUG_) && defined(DEBUG_MS_TIMER))
         LED_TOGGLE(LED_GREEN);
       #endif
-      msTimerHandle.Instance->CNT = 0;
-      msIndex++;
-      consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
     }
 
     if (input.TelemetryRequest) {
@@ -168,25 +172,22 @@ int main(void) {
       input.TelemetryRequest = false;
     }
 
-    if (input.Armed) {
-      if ((msIndex % 10) == 0){
-        if ((msTimerHandle.Instance->CNT > 11) && msTimerHandle.Instance->CNT < 21) {
-          #if (!defined(_DEBUG_))
+    #if (!defined(_DEBUG_))
+      if (input.Armed) {
+        if ((msIndex % 10) == 0){
+          if ((msTimerHandle.Instance->CNT > 11) && msTimerHandle.Instance->CNT < 21) {
             LED_ON(LED_BLUE);
-          #endif
-        } else {
-          #if (!defined(_DEBUG_))
+          } else {
             LED_OFF(LED_BLUE);
-          #endif
+          }
         }
+      } else {
+        LED_OFF(LED_BLUE);
       }
-    }
+    #endif
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      static uint8_t  printIndex = 0;
-
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
-
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
@@ -234,7 +235,6 @@ int main(void) {
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");*/
 
-
         uartPrint("MCI[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
@@ -252,11 +252,7 @@ int main(void) {
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         }
         uartPrint("] ");
-
         uartPrint("\r\n");
-        printIndex = 0;
-      } else {
-        printIndex++;
       }
     #endif
 
