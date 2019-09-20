@@ -99,17 +99,12 @@ int main(void) {
         }
 
         // motor BEMF filter
-        if (input.PwmValue < 67) {
-          motor.BemfFilterLevel = 5;
-          motor.BemfFilterDelay = 5;
+        if ((motor.CommutationInterval < 401) && (input.PwmValue > 503)) {
+          motor.BemfFilterDelay = 1;
+          motor.BemfFilterLevel = 1;
         } else {
-          if ((motor.CommutationInterval < 401) && (input.PwmValue > 503)) {
-            motor.BemfFilterDelay = 1;
-            motor.BemfFilterLevel = 1;
-          } else {
-            motor.BemfFilterLevel = 3;
-            motor.BemfFilterDelay = 3;
-          }
+          motor.BemfFilterLevel = 3;
+          motor.BemfFilterDelay = 3;
         }
 
         // motor not running
@@ -128,9 +123,9 @@ int main(void) {
 
         // ToDo
         motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
-        motor.CommutationDelay = 0; //timing 30°
+        //motor.CommutationDelay = 0; //timing 30°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 3), 41, 401); //timing 15°
-        //motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
+        motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
       } // input.Armed
     } // input.Protocol detected
 
