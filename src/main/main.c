@@ -151,7 +151,7 @@ int main(void) {
         #endif
       }
 
-      if (msTimerHandle.Instance->CNT > 100) {
+      if (msTimerHandle.Instance->CNT > 1000) {
         #if (defined(_DEBUG_) && defined(DEBUG_MS_TIMER))
           LED_TOGGLE(LED_GREEN);
         #endif
@@ -163,6 +163,18 @@ int main(void) {
     if (input.TelemetryRequest) {
       telemetry();
       input.TelemetryRequest = false;
+    }
+
+    if (input.Armed) {
+      if ((msTimerHandle.Instance->CNT > 11) && msTimerHandle.Instance->CNT < 21) {
+        #if (!defined(_DEBUG_))
+          LED_ON(LED_BLUE);
+        #endif
+      } else {
+        #if (!defined(_DEBUG_))
+          LED_OFF(LED_BLUE);
+        #endif
+      }
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
