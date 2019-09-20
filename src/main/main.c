@@ -123,9 +123,9 @@ int main(void) {
 
         // ToDo
         motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
-        //motor.CommutationDelay = 0; //timing 30°
+        motor.CommutationDelay = 0; //timing 30°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 3), 41, 401); //timing 15°
-        motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
+        //motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
       } // input.Armed
     } // input.Protocol detected
 
