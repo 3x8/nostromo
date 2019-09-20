@@ -32,10 +32,6 @@ void inputDisarm(void) {
   motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
   motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
 
-  #if (!defined(_DEBUG_))
-    LED_OFF(LED_BLUE);
-  #endif
-
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
   input.Protocol = AUTODETECT;
   inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
