@@ -1,5 +1,7 @@
 #include "main.h"
 
+uint32_t msIndex;
+
 // filter
 kalman_t motorCommutationIntervalFilterState;
 #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A))
@@ -150,15 +152,16 @@ int main(void) {
           LED_ON(LED_RED);
         #endif
       }
-
-      if (msTimerHandle.Instance->CNT > 1000) {
-        #if (defined(_DEBUG_) && defined(DEBUG_MS_TIMER))
-          LED_TOGGLE(LED_GREEN);
-        #endif
-        msTimerHandle.Instance->CNT = 0;
-        consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
-      }
     #endif
+
+    if (msTimerHandle.Instance->CNT > 100) {
+      #if (defined(_DEBUG_) && defined(DEBUG_MS_TIMER))
+        LED_TOGGLE(LED_GREEN);
+      #endif
+      msTimerHandle.Instance->CNT = 0;
+      msIndex++;
+      consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
+    }
 
     if (input.TelemetryRequest) {
       telemetry();
@@ -166,14 +169,16 @@ int main(void) {
     }
 
     if (input.Armed) {
-      if ((msTimerHandle.Instance->CNT > 11) && msTimerHandle.Instance->CNT < 21) {
-        #if (!defined(_DEBUG_))
-          LED_ON(LED_BLUE);
-        #endif
-      } else {
-        #if (!defined(_DEBUG_))
-          LED_OFF(LED_BLUE);
-        #endif
+      if ((msIndex % 10) == 0){
+        if ((msTimerHandle.Instance->CNT > 11) && msTimerHandle.Instance->CNT < 21) {
+          #if (!defined(_DEBUG_))
+            LED_ON(LED_BLUE);
+          #endif
+        } else {
+          #if (!defined(_DEBUG_))
+            LED_OFF(LED_BLUE);
+          #endif
+        }
       }
     }
 

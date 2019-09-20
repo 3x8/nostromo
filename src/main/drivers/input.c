@@ -12,9 +12,6 @@ void inputArmCheck(void) {
       HAL_Delay(1);
       if (input.ArmingCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         input.Armed = true;
-        #if (!defined(_DEBUG_))
-          LED_ON(LED_BLUE);
-        #endif
         motorTuneInput(1);
       }
     }
