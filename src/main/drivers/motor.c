@@ -71,7 +71,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   #else
-    __HAL_COMP_COMP1_EXTI_ENABLE_IT()
+    __HAL_COMP_COMP1_EXTI_ENABLE_IT();
     //EXTI->IMR |= BIT_HI(21);
   #endif
 
