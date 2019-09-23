@@ -249,7 +249,7 @@ void inputProshot() {
 
     // only update if not active
     if (!input.TelemetryRequest) {
-      input.TelemetryRequest = (pulseValue[2] & BIT(0));
+      input.TelemetryRequest = (pulseValue[2] & BIT_HI(0));
     }
 
     motorInputUpdate();

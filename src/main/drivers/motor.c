@@ -14,8 +14,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
-      EXTI->IMR &= (0 << 21);
-      EXTI->PR &=(0 << 21);
+      EXTI->IMR &= BIT_LO(21);
+      EXTI->PR &= BIT_LO(21);
     #endif
 
     __enable_irq();
@@ -40,8 +40,8 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
   #else
-    EXTI->IMR &= (0 << 21);
-    EXTI->PR &=(0 << 21);
+    EXTI->IMR &= BIT_LO(21);
+    EXTI->PR &= BIT_LO(21);
   #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0xffff;
@@ -69,7 +69,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   #else
-    EXTI->IMR |= (1 << 21);
+    EXTI->IMR |= BIT_HI(21);
   #endif
 
   __enable_irq();
@@ -344,8 +344,8 @@ void motorStart() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
-      EXTI->IMR &= (0 << 21);
-      EXTI->PR &=(0 << 21);
+      EXTI->IMR &= BIT_LO(21);
+      EXTI->PR &= BIT_LO(21);
     #endif
 
     motor.SlowDecay = true;
@@ -358,7 +358,7 @@ void motorStart() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Start_IT(&motorBemfComparatorHandle);
     #else
-      EXTI->IMR |= (1 << 21);
+      EXTI->IMR |= BIT_HI(21);
     #endif
   }
   motor.SlowDecay = bufferDecaystate;

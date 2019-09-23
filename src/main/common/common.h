@@ -11,7 +11,8 @@
 #define UNUSED(x) (void)(x)
 #endif
 
-#define BIT(x) (1 << (x))
+#define BIT_HI(x) (1 << (x))
+#define BIT_LO(x) (0 << (x))
 
 // MCU UID
 #if defined(STM32F051x8)
