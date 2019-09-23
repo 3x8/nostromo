@@ -41,7 +41,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
   #else
-    __HAL_COMP_COMP1_EXTI_DISABLE_IT()
+    __HAL_COMP_COMP1_EXTI_DISABLE_IT();
     //EXTI->IMR &= BIT_LO(21);
     //EXTI->PR &= BIT_LO(21);
   #endif
