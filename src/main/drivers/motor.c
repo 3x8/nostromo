@@ -67,6 +67,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   #else
+    __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
     __HAL_COMP_COMP1_EXTI_ENABLE_IT();
   #endif
 
@@ -355,6 +356,7 @@ void motorStart() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Start_IT(&motorBemfComparatorHandle);
     #else
+      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
       __HAL_COMP_COMP1_EXTI_ENABLE_IT();
     #endif
   }
