@@ -15,8 +15,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
       __HAL_COMP_COMP1_EXTI_DISABLE_IT();
-      //EXTI->IMR &= BIT_LO(21);
-      //EXTI->PR &= BIT_LO(21);
     #endif
 
     __enable_irq();
@@ -42,8 +40,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
     HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
   #else
     __HAL_COMP_COMP1_EXTI_DISABLE_IT();
-    //EXTI->IMR &= BIT_LO(21);
-    //EXTI->PR &= BIT_LO(21);
   #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0xffff;
@@ -72,7 +68,6 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   #else
     __HAL_COMP_COMP1_EXTI_ENABLE_IT();
-    //EXTI->IMR |= BIT_HI(21);
   #endif
 
   __enable_irq();
@@ -297,15 +292,15 @@ void motorComparatorInputChange() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
     #else
-      EXTI->RTSR = 0x0;
-      EXTI->FTSR = 0x200000;
+      __HAL_COMP_COMP1_EXTI_DISABLE_RISING_EDGE();
+      __HAL_COMP_COMP1_EXTI_ENABLE_FALLING_EDGE();
     #endif
   } else {
     #if (!defined(COMPARATOR_OPTIMIZE))
       motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
     #else
-      EXTI->RTSR = 0x200000;
-      EXTI->FTSR = 0x0;
+      __HAL_COMP_COMP1_EXTI_DISABLE_FALLING_EDGE();
+      __HAL_COMP_COMP1_EXTI_ENABLE_RISING_EDGE();
     #endif
   }
   #if (!defined(COMPARATOR_OPTIMIZE))
@@ -348,8 +343,6 @@ void motorStart() {
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
       __HAL_COMP_COMP1_EXTI_DISABLE_IT();
-      //EXTI->IMR &= BIT_LO(21);
-      //EXTI->PR &= BIT_LO(21);
     #endif
 
     motor.SlowDecay = true;
@@ -363,7 +356,6 @@ void motorStart() {
       HAL_COMP_Start_IT(&motorBemfComparatorHandle);
     #else
       __HAL_COMP_COMP1_EXTI_ENABLE_IT();
-      //EXTI->IMR |= BIT_HI(21);
     #endif
   }
   motor.SlowDecay = bufferDecaystate;
