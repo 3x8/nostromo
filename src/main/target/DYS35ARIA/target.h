@@ -12,9 +12,9 @@
 // hw constants
 #define HBRIDGE_DEAD_TIME       11    // with 0 FD6288 builtin 200ns H_Bridge gets warm ??? (why)
 #define HBRIDGE_MAX_CURRENT     0     // disabled
-#define HBRIDGE_MAX_TEMPERATURE 77
+#define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      977   // max linearity //797~30.03kHz //911~26.31kHz //977~24.4kHz //997~24.1kHz
-#define MOTOR_START_THRESHOLD   17
+#define MOTOR_START_THRESHOLD   13
 #define LED_INVERTED
 
 // input ,Ok
