@@ -416,6 +416,7 @@ void motorInputUpdate(void) {
   if (input.Armed) {
     if (input.Data <= DSHOT_CMD_MAX) {
       motor.Startup = false;
+      input.DataNormed = 0;
       input.PwmValue = 0;
       if ((!motor.Running) || (!motor.Startup)) {
         inputDshotCommandRun();
