@@ -100,11 +100,11 @@ int main(void) {
 
         // motor BEMF filter
         if ((motor.CommutationInterval < 401) && (input.PwmValue > 503)) {
-          motor.BemfFilterDelay = 1;
-          motor.BemfFilterLevel = 1;
-        } else {
+          motor.BemfFilterDelay = 5;
+          motor.BemfFilterLevel = 2;
+        } else {s
+          motor.BemfFilterDelay = 7;
           motor.BemfFilterLevel = 3;
-          motor.BemfFilterDelay = 3;
         }
 
         // motor not running
