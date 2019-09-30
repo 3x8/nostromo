@@ -102,7 +102,7 @@ int main(void) {
         if ((motor.CommutationInterval < 401) && (input.PwmValue > 503)) {
           motor.BemfFilterDelay = 5;
           motor.BemfFilterLevel = 2;
-        } else {s
+        } else {
           motor.BemfFilterDelay = 7;
           motor.BemfFilterLevel = 3;
         }
