@@ -242,17 +242,18 @@ void inputProshot() {
   data = ((pulseValue[0] << 7 | pulseValue[1] << 3 | pulseValue[2] >> 1));
 
   if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
+    __disable_irq();
     input.DataValid = true;
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
     input.Data = data;
+    motorInputUpdate();
+    __enable_irq();
 
     // only update if not active
     if (!input.TelemetryRequest) {
       input.TelemetryRequest = (pulseValue[2] & BIT(0));
     }
-
-    motorInputUpdate();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_OFF(LED_GREEN);
@@ -279,12 +280,13 @@ void inputServoPwm() {
     pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
 
     if ((pulseWidthBuff >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuff <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
+      __disable_irq();
       input.DataValid = true;
       input.DataValidCounter++;
       input.TimeoutCounter = 0;
       input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 2;
-
       motorInputUpdate();
+      __enable_irq();
       return;
     } else {
       input.DataValid = false;
