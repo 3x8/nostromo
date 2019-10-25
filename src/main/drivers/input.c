@@ -28,9 +28,9 @@ void inputDisarm(void) {
   input.TimeoutCounter = 0;
 
   // output
-  motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
-  motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-  motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+  motorPwmTimerHandle.Instance->CCR1 = 0;
+  motorPwmTimerHandle.Instance->CCR2 = 0;
+  motorPwmTimerHandle.Instance->CCR3 = 0;
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
   input.Protocol = AUTODETECT;
