@@ -287,7 +287,7 @@ void inputServoPwm() {
       input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 2;
       __enable_irq();
       motorInputUpdate();
-      
+
       return;
     } else {
       input.DataValid = false;
