@@ -250,7 +250,6 @@ void inputProshot() {
     __enable_irq();
     motorInputUpdate();
 
-
     // only update if not active
     if (!input.TelemetryRequest) {
       input.TelemetryRequest = (pulseValue[2] & BIT(0));
@@ -288,6 +287,7 @@ void inputServoPwm() {
       input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 2;
       __enable_irq();
       motorInputUpdate();
+      
       return;
     } else {
       input.DataValid = false;
