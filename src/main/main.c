@@ -186,6 +186,9 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
+        uartPrint("INP[");
+        uartPrintInteger(input.Protocol, 10, 1);
+        uartPrint("] ");
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
