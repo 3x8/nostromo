@@ -43,7 +43,8 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
-  //LED_ON(LED_RED);
+  //debug
+  //LED_ON(LED_BLUE);
 
   // main loop
   while (true) {
