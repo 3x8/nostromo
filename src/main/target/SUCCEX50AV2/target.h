@@ -1,17 +1,17 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
-#define HBRIDGE_MAX_CURRENT     6719  // (in 10mA steps)
+#define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      1020  // max linearity
 #define MOTOR_START_THRESHOLD   21
@@ -24,11 +24,11 @@
 
 // LEDs
 #define LED_RED_GPIO    GPIOA
-#define LED_RED_PIN     GPIO_PIN_6
+#define LED_RED_PIN     GPIO_PIN_15
 #define LED_GREEN_GPIO  GPIOA
-#define LED_GREEN_PIN   GPIO_PIN_6
+#define LED_GREEN_PIN   GPIO_PIN_15
 #define LED_BLUE_GPIO   GPIOA
-#define LED_BLUE_PIN    GPIO_PIN_6
+#define LED_BLUE_PIN    GPIO_PIN_15
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok

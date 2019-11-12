@@ -43,6 +43,9 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
+  //debug
+  uartInit();
+
   // main loop
   while (true) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
