@@ -27,13 +27,9 @@ void systemClockConfig(void) {
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   while (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK);
 
-  // Configure the Systick interrupt time
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
-
   // Configure the Systick
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
-
-  // SysTick_IRQn interrupt configuration
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
