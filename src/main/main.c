@@ -239,13 +239,13 @@ int main(void) {
         uartPrint("] ");
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
           uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         }
-        uartPrint("] ");*/
+        uartPrint("] ");
         uartPrint("\r\n");
       }
     #endif
