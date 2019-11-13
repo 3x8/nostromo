@@ -1,34 +1,35 @@
 #pragma once
 
 // debug
-#define _DEBUG_
+//#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP // ~500us
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-#define DEBUG_DATA_UART
+//#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 
 // hw constants
-#define HBRIDGE_DEAD_TIME       0     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
+#define HBRIDGE_DEAD_TIME       11    // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 0     // °C
 #define TIMER1_INIT_PERIOD      1020  // max linearity
 #define MOTOR_START_THRESHOLD   21
+#define LED_INVERTED
 
-// input
+// input ,Ok
 #define INPUT_GPIO      GPIOB
 #define INPUT_PIN       GPIO_PIN_4
 #define INPUT_TIMER     TIM3
 #define INPUT_TIMER_CH  TIM_CHANNEL_1
 
-// LEDs blue ok
-#define LED_RED_GPIO    GPIOA
-#define LED_RED_PIN     GPIO_PIN_15
+// LEDs ,Ok
+#define LED_RED_GPIO    GPIOB
+#define LED_RED_PIN     GPIO_PIN_8
 #define LED_GREEN_GPIO  GPIOB
-#define LED_GREEN_PIN   GPIO_PIN_3
+#define LED_GREEN_PIN   GPIO_PIN_5
 #define LED_BLUE_GPIO   GPIOB
-#define LED_BLUE_PIN    GPIO_PIN_15
+#define LED_BLUE_PIN    GPIO_PIN_3
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok
@@ -46,7 +47,7 @@
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    GPIO_PIN_7
 
-// comparator
+// comparator , Ok
 #define COMPARATOR_OPTIMIZE
 #define COMPARATOR              COMP1
 #define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_IO1

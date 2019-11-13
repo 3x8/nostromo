@@ -43,9 +43,6 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
-  //debug
-  //LED_ON(LED_BLUE);
-
   // main loop
   while (true) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
