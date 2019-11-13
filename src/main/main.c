@@ -204,25 +204,25 @@ int main(void) {
         if (input.DataValidCounter > 0) {
           uartPrintInteger((input.DataErrorCounter * 100)/ input.DataValidCounter, 10, 1);
         }
-        uartPrint("] ");
-
+        uartPrint("] ");*/
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ifs[");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");
 
+        /*
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint("] ");
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] ");
-        /*
+
         uartPrint("mAh[");
         uartPrintInteger(ABS((int)consumptionMah), 10, 1);
         uartPrint("] ");
@@ -237,11 +237,9 @@ int main(void) {
         uartPrint("MCD[");
         uartPrintInteger(motor.CommutationDelay, 10, 1);
         uartPrint("] ");
-
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint("] ");
-
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
           uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
