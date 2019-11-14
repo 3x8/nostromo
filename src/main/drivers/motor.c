@@ -78,7 +78,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        if (!motor.SlowDecay || motor.BrakeActiveProportional) {
+        if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
           LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
           A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         } else {
@@ -104,7 +104,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   void motorPhaseB(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        if(!motor.SlowDecay  || motor.BrakeActiveProportional) {
+        if(!motor.ComplementaryPWM  || motor.BrakeActiveProportional) {
           LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
           B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
         } else {
@@ -130,7 +130,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   void motorPhaseC(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        if (!motor.SlowDecay || motor.BrakeActiveProportional) {
+        if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
           LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
           C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
         } else {
@@ -337,7 +337,7 @@ void motorCommutate() {
 }
 
 void motorStart() {
-  bool bufferDecaystate = motor.SlowDecay;
+  bool bufferDecaystate = motor.ComplementaryPWM;
 
   if (!motor.Running) {
     #if (!defined(COMPARATOR_OPTIMIZE))
@@ -346,7 +346,7 @@ void motorStart() {
       __HAL_COMP_COMP1_EXTI_DISABLE_IT();
     #endif
 
-    motor.SlowDecay = true;
+    motor.ComplementaryPWM = true;
 
     motorCommutate();
 
@@ -360,7 +360,7 @@ void motorStart() {
       __HAL_COMP_COMP1_EXTI_ENABLE_IT();
     #endif
   }
-  motor.SlowDecay = bufferDecaystate;
+  motor.ComplementaryPWM = bufferDecaystate;
 }
 
 void motorBrakeOff() {

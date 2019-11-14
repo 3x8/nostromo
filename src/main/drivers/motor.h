@@ -23,7 +23,7 @@ typedef struct {
   bool Startup;
   bool Running;
   bool Direction;
-  bool SlowDecay;
+  bool ComplementaryPWM;
   bool BrakeActiveProportional;
   bool BemfRising;
   uint8_t Step;

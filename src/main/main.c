@@ -35,7 +35,7 @@ int main(void) {
   motor.Step = 1;
   motor.BemfZeroCounterTimeoutThreshold = 27;
   motor.Direction = escConfig()->motorDirection;
-  motor.SlowDecay = escConfig()->motorSlowDecay;
+  motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;

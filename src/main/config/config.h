@@ -6,7 +6,7 @@
 
 typedef struct escConfig_s {
   bool motorDirection;
-  bool motorSlowDecay;
+  bool motorComplementaryPWM;
   uint8_t  motorBrake;
   uint16_t motorBrakeStrength;
   uint16_t motorStartThreshold;
