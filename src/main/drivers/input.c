@@ -128,13 +128,13 @@ void inputDshotCommandRun(void) {
       motor.Direction = !escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
-      escConfig()->motor3Dmode = 0;
+      escConfig()->motor3Dmode = false;
       uartPrint("# 3D OFF");
       uartPrint("\r\n");
       inputDisarm();
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
-      escConfig()->motor3Dmode = 1;
+      escConfig()->motor3Dmode = true;
       uartPrint("# 3D ON");
       uartPrint("\r\n");
       inputDisarm();
