@@ -56,7 +56,7 @@ void telemetry(void) {
   } else {
     telemetryData.consumption =  (int)consumptionMah;
   }
-  
+
   telemetryData.erpm = 542137.4/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
