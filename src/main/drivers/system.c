@@ -70,7 +70,7 @@ void systemAdcInit(void) {
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
-  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A) || defined(SUCCEX50AV2))
+  #if defined(USE_ADC)
     sConfig.Channel = ADC_CURRENT;
     while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
     sConfig.Channel = ADC_VOLTAGE;

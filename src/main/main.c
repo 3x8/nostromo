@@ -4,7 +4,7 @@ uint32_t msIndex;
 
 // filter
 kalman_t motorCommutationIntervalFilterState;
-#if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A) || defined(SUCCEX50AV2))
+#if defined(USE_ADC)
   kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
 
@@ -26,7 +26,7 @@ int main(void) {
   ledOff();
 
   kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 13);
-  #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A) || defined(SUCCEX50AV2))
+  #if defined(USE_ADC)
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
   #endif
@@ -78,18 +78,18 @@ int main(void) {
       inputArmCheck();
       inputDisarmCheck();
       if (input.Armed) {
-        #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A) || defined(SUCCEX50AV2))
-        // adcCurrent, auto offset at first arm after firmware write
-        if (escConfig()->adcCurrentOffset == 0) {
-          if (adcScaled.current != 0) {
-            escConfig()->adcCurrentOffset = -adcScaled.current;
-          } else {
-            escConfig()->adcCurrentOffset = 1;
+        #if defined(USE_ADC)
+          // adcCurrent, auto offset at first arm after firmware write
+          if (escConfig()->adcCurrentOffset == 0) {
+            if (adcScaled.current != 0) {
+              escConfig()->adcCurrentOffset = -adcScaled.current;
+            } else {
+              escConfig()->adcCurrentOffset = 1;
+            }
+            configWrite();
+            // reset esc, iwdg timeout
+            while(true);
           }
-          configWrite();
-          // reset esc, iwdg timeout
-          while(true);
-        }
         #endif
 
         // uart init (USART2 swd programming locked after arming)
@@ -138,7 +138,7 @@ int main(void) {
       #endif
     }
 
-    #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A) || defined(SUCCEX50AV2))
+    #if defined(USE_ADC)
       adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
       adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
       if ((escConfig()->limitCurrent > 0) && (adcScaled.current > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
@@ -153,7 +153,7 @@ int main(void) {
       msTimerHandle.Instance->CNT = 0;
       msIndex++;
 
-      #if (defined(WRAITH32) || defined(WRAITH32V2) || defined(TYPHOON32V2) || defined(FURLING45MINI) || defined(KISS24A) || defined(SUCCEX50AV2))
+      #if defined(USE_ADC)
         consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
       #endif
 

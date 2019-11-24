@@ -56,6 +56,7 @@
 #define COMPARATOR_MASK         GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5
 
 // adc ,Ko current
+#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_7
 #define ADC_CURRENT             ADC_CHANNEL_1
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
