@@ -22,7 +22,6 @@ int main(void) {
   systemMotorCommutationTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();
-
   ledOff();
 
   kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 13);

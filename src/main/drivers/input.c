@@ -19,6 +19,14 @@ void inputArmCheck(void) {
 }
 
 void inputDisarm(void) {
+  __disable_irq();
+
+  // output
+  motorPwmTimerHandle.Instance->CCR1 = 0;
+  motorPwmTimerHandle.Instance->CCR2 = 0;
+  motorPwmTimerHandle.Instance->CCR3 = 0;
+
+  // input
   input.DataValid = false;
   input.Data = 0;
   input.DataNormed = 0;
@@ -26,17 +34,14 @@ void inputDisarm(void) {
   input.Armed = false;
   input.ArmingCounter = 0;
   input.TimeoutCounter = 0;
-
-  // output
-  motorPwmTimerHandle.Instance->CCR1 = 0;
-  motorPwmTimerHandle.Instance->CCR2 = 0;
-  motorPwmTimerHandle.Instance->CCR3 = 0;
+  input.Protocol = AUTODETECT;
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-  input.Protocol = AUTODETECT;
   inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
   inputTimerHandle.Instance->CNT = 0xffff;
   HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+
+  __enable_irq();
 }
 
 void inputDisarmCheck(void) {
