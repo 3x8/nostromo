@@ -28,20 +28,20 @@ uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 #define MAX_WINDOW_SIZE 32
 
 typedef struct kalman_s {
-    uint32_t w;    // window size
-    float q;       // process noise covariance
-    float r;       // measurement noise covariance
-    float p;       // estimation error covariance matrix
-    float k;       // kalman gain
-    float x;       // state
-    float lastX;   // previous state
+  uint32_t w;    // window size
+  float q;       // process noise covariance
+  float r;       // measurement noise covariance
+  float p;       // estimation error covariance matrix
+  float k;       // kalman gain
+  float x;       // state
+  float lastX;   // previous state
 
-    float window[MAX_WINDOW_SIZE];
-    float variance;
-    float varianceSum;
-    float mean;
-    float meanSum;
-    uint32_t windowIndex;
+  float window[MAX_WINDOW_SIZE];
+  float variance;
+  float varianceSum;
+  float mean;
+  float meanSum;
+  uint32_t windowIndex;
 } kalman_t;
 
 void kalmanInit(kalman_t *filter, float q, uint32_t w);
