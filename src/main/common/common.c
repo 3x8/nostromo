@@ -5,7 +5,7 @@ const char *byteToString(uint8_t x) {
   b[0] = '\0';
 
   for (int z = 128; z > 0; z >>= 1){
-      strcat(b, ((x & z) == z) ? "1" : "0");
+    strcat(b, ((x & z) == z) ? "1" : "0");
   }
   return (b);
 }
@@ -25,8 +25,8 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
 // kalman filter
 void kalmanInit(kalman_t *filter, float q, uint32_t w) {
   memset(filter, 0, sizeof(kalman_t));
-  filter->q     = q * 0.000001f;
-  filter->w     = w;
+  filter->q = q * 0.000001f;
+  filter->w = w;
 }
 
 #pragma GCC push_options
@@ -56,7 +56,7 @@ FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
   filter->varianceSum = filter->varianceSum + (filter->window[filter->windowIndex] * filter->window[filter->windowIndex]);
 
   if (++filter->windowIndex >= filter->w) {
-      filter->windowIndex = 0;
+    filter->windowIndex = 0;
   }
 
   filter->meanSum -= filter->window[filter->windowIndex];

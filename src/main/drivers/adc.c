@@ -24,9 +24,9 @@ void adcRead(void) {
   #endif
 
   #if (defined(KISS24A))
-  adcRaw.voltage = adcDmaBuffer[1];
-  adcRaw.current = adcDmaBuffer[0];
-  adcRaw.temperature = adcDmaBuffer[2];
+    adcRaw.voltage = adcDmaBuffer[1];
+    adcRaw.current = adcDmaBuffer[0];
+    adcRaw.temperature = adcDmaBuffer[2];
   #endif
 }
 

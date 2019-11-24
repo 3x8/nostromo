@@ -4,22 +4,22 @@ telemetryData_t telemetryData;
 uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
 static uint8_t updateCrc8(uint8_t crc, uint8_t crc_seed) {
-    uint8_t crc_u = crc;
+  uint8_t crc_u = crc;
 
-    crc_u ^= crc_seed;
-    for (int i = 0; i < 8; i++) {
-        crc_u = ( crc_u & 0x80 ) ? 0x7 ^ ( crc_u << 1 ) : ( crc_u << 1 );
-    }
-    return (crc_u);
+  crc_u ^= crc_seed;
+  for (int i = 0; i < 8; i++) {
+    crc_u = ( crc_u & 0x80 ) ? 0x7 ^ ( crc_u << 1 ) : ( crc_u << 1 );
+  }
+  return (crc_u);
 }
 
 static uint8_t calculateCrc8(const uint8_t *buf, const uint8_t bufLen) {
-    uint8_t crc = 0;
+  uint8_t crc = 0;
 
-    for (int i = 0; i < bufLen; i++) {
-        crc = updateCrc8(buf[i], crc);
-    }
-    return (crc);
+  for (int i = 0; i < bufLen; i++) {
+    crc = updateCrc8(buf[i], crc);
+  }
+  return (crc);
 }
 
 static void telemetryTelegram(telemetryData_t *data) {
@@ -44,16 +44,19 @@ static void telemetryTelegram(telemetryData_t *data) {
 void telemetry(void) {
   telemetryData.temperature = adcScaled.temperature;
   telemetryData.voltage = adcScaled.voltage;
+
   if (adcScaled.current < 0) {
     telemetryData.current = 0;
   } else {
     telemetryData.current = adcScaled.current;
   }
+
   if (consumptionMah < 0) {
     telemetryData.consumption = 0;
   } else {
     telemetryData.consumption =  (int)consumptionMah;
   }
+  
   telemetryData.erpm = 542137.4/motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);

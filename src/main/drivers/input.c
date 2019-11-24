@@ -194,7 +194,7 @@ void inputDetectProtocol() {
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
-        LED_ON(LED_GREEN);
+      LED_ON(LED_GREEN);
     #endif
 
     return;
