@@ -227,9 +227,9 @@ void inputDetectProtocol() {
 }
 
 void inputProshot() {
+  uint8_t pulseValue[4] = {0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
-  uint8_t pulseValue[4] = {0, 0, 0, 0};
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
     LED_ON(LED_GREEN);
