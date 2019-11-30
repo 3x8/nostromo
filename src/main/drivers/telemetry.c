@@ -3,23 +3,23 @@
 telemetryData_t telemetryData;
 uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
-static uint8_t updateCrc8(uint8_t crc, uint8_t crc_seed) {
-  uint8_t crc_u = crc;
+static uint8_t updateCrc8(uint8_t crc, uint8_t crcSeed) {
+  uint8_t crcBuffer = crc;
 
-  crc_u ^= crc_seed;
+  crcBuffer ^= crcSeed;
   for (int i = 0; i < 8; i++) {
-    crc_u = ( crc_u & 0x80 ) ? 0x7 ^ ( crc_u << 1 ) : ( crc_u << 1 );
+    crcBuffer = ( crcBuffer & 0x80 ) ? 0x7 ^ ( crcBuffer << 1 ) : ( crcBuffer << 1 );
   }
-  return (crc_u);
+  return (crcBuffer);
 }
 
 static uint8_t calculateCrc8(const uint8_t *buf, const uint8_t bufLen) {
-  uint8_t crc = 0;
+  uint8_t crcBuffer = 0;
 
   for (int i = 0; i < bufLen; i++) {
-    crc = updateCrc8(buf[i], crc);
+    crcBuffer = updateCrc8(buf[i], crcBuffer);
   }
-  return (crc);
+  return (crcBuffer);
 }
 
 static void telemetryTelegram(telemetryData_t *data) {
