@@ -3,7 +3,7 @@
 telemetryData_t telemetryData;
 uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
-static uint8_t subtaskCrc8(uint8_t crc, uint8_t crcSeed) {
+static uint8_t crc8helper(uint8_t crc, uint8_t crcSeed) {
   uint8_t crcBuffer = crc;
 
   crcBuffer ^= crcSeed;
@@ -13,11 +13,11 @@ static uint8_t subtaskCrc8(uint8_t crc, uint8_t crcSeed) {
   return (crcBuffer);
 }
 
-static uint8_t calculateCrc8(const uint8_t *buf, const uint8_t bufLen) {
+static uint8_t crc8calculate(const uint8_t *buf, const uint8_t bufLen) {
   uint8_t crcBuffer = 0;
 
   for (int i = 0; i < bufLen; i++) {
-    crcBuffer = subtaskCrc8(buf[i], crcBuffer);
+    crcBuffer = crc8helper(buf[i], crcBuffer);
   }
   return (crcBuffer);
 }
@@ -32,7 +32,7 @@ static void telemetryTelegram(telemetryData_t *data) {
   telemetryBuffer[6] = data->consumption & 0xFF;
   telemetryBuffer[7] = data->erpm >> 8;
   telemetryBuffer[8] = data->erpm & 0xFF;
-  telemetryBuffer[9] = calculateCrc8(telemetryBuffer, 9);
+  telemetryBuffer[9] = crc8calculate(telemetryBuffer, 9);
 
   for(uint8_t i = 0; i < TELEMETRY_FRAME_SIZE; i++) {
     #if (!defined(DEBUG_DATA_UART))
