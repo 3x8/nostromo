@@ -3,7 +3,7 @@
 telemetryData_t telemetryData;
 uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
-static uint8_t updateCrc8(uint8_t crc, uint8_t crcSeed) {
+static uint8_t subtaskCrc8(uint8_t crc, uint8_t crcSeed) {
   uint8_t crcBuffer = crc;
 
   crcBuffer ^= crcSeed;
@@ -17,7 +17,7 @@ static uint8_t calculateCrc8(const uint8_t *buf, const uint8_t bufLen) {
   uint8_t crcBuffer = 0;
 
   for (int i = 0; i < bufLen; i++) {
-    crcBuffer = updateCrc8(buf[i], crcBuffer);
+    crcBuffer = subtaskCrc8(buf[i], crcBuffer);
   }
   return (crcBuffer);
 }
