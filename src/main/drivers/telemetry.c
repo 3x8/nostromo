@@ -42,7 +42,12 @@ static void telemetryTelegram(telemetryData_t *data) {
 }
 
 void telemetry(void) {
-  telemetryData.temperature = adcScaled.temperature;
+  #if (!defined(DEBUG_DATA_QUALITY))
+    telemetryData.temperature = adcScaled.temperature;
+  #else
+    telemetryData.temperature = input.DataErrorCounter
+  #endif
+
   telemetryData.voltage = adcScaled.voltage;
 
   if (adcScaled.current < 0) {
