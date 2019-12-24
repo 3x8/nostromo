@@ -45,7 +45,7 @@ void telemetry(void) {
   #if (!defined(DEBUG_DATA_QUALITY))
     telemetryData.temperature = adcScaled.temperature;
   #else
-    telemetryData.temperature = input.DataErrorCounter
+    telemetryData.temperature = input.DataErrorCounter;
   #endif
 
   telemetryData.voltage = adcScaled.voltage;
