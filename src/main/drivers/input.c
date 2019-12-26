@@ -251,7 +251,6 @@ void inputProshot() {
 
 
   if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
-
     input.DataValid = true;
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
@@ -292,7 +291,6 @@ void inputServoPwm() {
     pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
 
     if ((pulseWidthBuff >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuff <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
-
       input.DataValid = true;
       input.DataValidCounter++;
       input.TimeoutCounter = 0;
