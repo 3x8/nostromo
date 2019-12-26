@@ -285,6 +285,7 @@ void inputProshot() {
 // SERVOPWM (use only for thrust tests ...)
 void inputServoPwm() {
   __disable_irq();
+
   uint32_t pulseWidthBuff = 0;
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
@@ -296,7 +297,7 @@ void inputServoPwm() {
       input.DataValidCounter++;
       input.TimeoutCounter = 0;
       input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 2;
-
+      __enable_irq();
       motorInputUpdate();
 
       return;
