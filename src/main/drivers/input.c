@@ -248,8 +248,6 @@ void inputProshot() {
 
   data = ((pulseValue[0] << 7 | pulseValue[1] << 3 | pulseValue[2] >> 1));
 
-
-
   if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
     input.DataValid = true;
     input.DataValidCounter++;
