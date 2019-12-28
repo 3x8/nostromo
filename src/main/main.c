@@ -24,7 +24,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 7);
+  kalmanInit(&motorCommutationIntervalFilterState, 5000.0f, 11);
   #if defined(USE_ADC)
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
