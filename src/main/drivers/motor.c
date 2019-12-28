@@ -448,6 +448,7 @@ void motorInputUpdate(void) {
           input.PwmValue = 0;
         }
       } else {
+        //ToDo 3D changes
         //input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
         input.PwmValue = (input.DataNormed >> 2) + (escConfig()->motorStartThreshold);
       }
