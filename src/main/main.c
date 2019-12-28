@@ -242,7 +242,9 @@ int main(void) {
         uartPrint("] ");*/
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
-          uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
+          uartPrintInteger(7148227/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
+
+          //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
         }
         uartPrint("] ");
