@@ -24,7 +24,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 5000.0f, 7);
+  kalmanInit(&motorCommutationIntervalFilterState, 5000.0f, 8);
   #if defined(USE_ADC)
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -111,7 +111,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          kalmanInit(&motorCommutationIntervalFilterState, 5000.0f, 7);
+          kalmanInit(&motorCommutationIntervalFilterState, 5000.0f, 8);
         }
 
         // motor start
