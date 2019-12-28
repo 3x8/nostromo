@@ -182,7 +182,7 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
-        /*
+        
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
@@ -203,7 +203,8 @@ int main(void) {
         if (input.DataValidCounter > 0) {
           uartPrintInteger((input.DataErrorCounter * 100)/ input.DataValidCounter, 10, 1);
         }
-        uartPrint("] ");*/
+        uartPrint("] ");
+        /*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint("] ");
@@ -212,7 +213,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         /*
         uartPrint("Ur[");
