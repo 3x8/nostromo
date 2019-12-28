@@ -456,9 +456,13 @@ void motorInputUpdate(void) {
       // stall protection and startup kick
       if (motor.BemfCounter < 50) {
         #if (!defined(KISS24A))
-          input.PwmValue = 71;
+          //ToDo
+          //input.PwmValue = 71;
+          input.PwmValue = 37;
         #else
-          input.PwmValue = 81;
+          //ToDo
+          //input.PwmValue = 81;
+          input.PwmValue = 41;
         #endif
       } else {
         input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
