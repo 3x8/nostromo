@@ -24,7 +24,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 2500.0f, 13);
+  kalmanInit(&motorCommutationIntervalFilterState, 1500.0f, 7);
   #if defined(USE_ADC)
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -182,7 +182,7 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
-        
+
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
