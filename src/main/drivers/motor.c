@@ -448,7 +448,8 @@ void motorInputUpdate(void) {
           input.PwmValue = 0;
         }
       } else {
-        input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
+        //input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
+        input.PwmValue = (input.DataNormed >> 2) + (escConfig()->motorStartThreshold);
       }
 
       // stall protection and startup kick
