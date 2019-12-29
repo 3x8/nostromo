@@ -10,11 +10,18 @@
 //#define DEBUG_MS_TIMER
 //#define DEBUG_DATA_QUALITY
 
+// new
+#define PWM_FREQUENCY_48kHz
+
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     6719  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
-#define TIMER1_INIT_PERIOD      501  // max linearity
+#if !(defined(PWM_FREQUENCY_48kHz))
+  #define TIMER1_INIT_PERIOD      1001
+#else
+  #define TIMER1_INIT_PERIOD      501
+#endif
 #define MOTOR_START_THRESHOLD   13
 
 // input ,Ok

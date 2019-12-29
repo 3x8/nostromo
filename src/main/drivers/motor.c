@@ -433,7 +433,11 @@ void motorInputUpdate(void) {
             motor.Direction = escConfig()->motorDirection;
             motor.BemfCounter = 0;
           }
-          input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+          #if !(defined(PWM_FREQUENCY_48kHz))
+            input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+          #else
+            input.PwmValue = ((input.DataNormed >> 1) - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+          #endif
         }
         // down
         if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
@@ -441,28 +445,38 @@ void motorInputUpdate(void) {
             motor.Direction = !escConfig()->motorDirection;
             motor.BemfCounter = 0;
           }
-          input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
+          #if !(defined(PWM_FREQUENCY_48kHz))
+            input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
+          #else
+            input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
+          #endif
         }
         // deadband
         if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
           input.PwmValue = 0;
         }
       } else {
-        //ToDo 3D changes
-        //input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
-        input.PwmValue = (input.DataNormed >> 2) + (escConfig()->motorStartThreshold);
+        #if !(defined(PWM_FREQUENCY_48kHz))
+          input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
+        #else
+          input.PwmValue = (input.DataNormed >> 2) + (escConfig()->motorStartThreshold);
+        #endif
       }
 
       // stall protection and startup kick
       if (motor.BemfCounter < 50) {
         #if (!defined(KISS24A))
-          //ToDo
-          //input.PwmValue = 71;
-          input.PwmValue = 37;
+          #if !(defined(PWM_FREQUENCY_48kHz))
+            input.PwmValue = 71;
+          #else
+            input.PwmValue = 37;
+          #endif
         #else
-          //ToDo
-          //input.PwmValue = 81;
-          input.PwmValue = 41;
+          #if !(defined(PWM_FREQUENCY_48kHz))
+            input.PwmValue = 81;
+          #else
+            input.PwmValue = 41;
+          #endif
         #endif
       } else {
         input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
