@@ -23,7 +23,7 @@
   #define MOTOR_START_THRESHOLD   21
 #else
   #define TIMER1_INIT_PERIOD      501
-  #define MOTOR_START_THRESHOLD   11
+  #define MOTOR_START_THRESHOLD   13
 #endif
 
 
