@@ -436,7 +436,7 @@ void motorInputUpdate(void) {
           #if !(defined(PWM_FREQUENCY_48kHz))
             input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
           #else
-            input.PwmValue = ((input.DataNormed >> 1) - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
+            input.PwmValue = ((input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold) >> 1;
           #endif
         }
         // down
@@ -448,7 +448,7 @@ void motorInputUpdate(void) {
           #if !(defined(PWM_FREQUENCY_48kHz))
             input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
           #else
-            input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
+            input.PwmValue = (input.DataNormed + escConfig()->motorStartThreshold) >> 1;
           #endif
         }
         // deadband
@@ -457,9 +457,9 @@ void motorInputUpdate(void) {
         }
       } else {
         #if !(defined(PWM_FREQUENCY_48kHz))
-          input.PwmValue = (input.DataNormed >> 1) + (escConfig()->motorStartThreshold);
+          input.PwmValue = (input.DataNormed + (escConfig()->motorStartThreshold)) >> 1;
         #else
-          input.PwmValue = (input.DataNormed >> 2) + (escConfig()->motorStartThreshold);
+          input.PwmValue = (input.DataNormed + (escConfig()->motorStartThreshold)) >> 2;
         #endif
       }
 
