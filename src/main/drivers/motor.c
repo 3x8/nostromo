@@ -464,6 +464,7 @@ void motorInputUpdate(void) {
       }
 
       // stall protection and startup kick
+      /*
       if (motor.BemfCounter < 50) {
         #if (!defined(KISS24A))
           #if !(defined(PWM_FREQUENCY_48kHz))
@@ -483,7 +484,7 @@ void motorInputUpdate(void) {
       }
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;*/
     }
   }
 }
