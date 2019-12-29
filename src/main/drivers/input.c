@@ -238,7 +238,8 @@ void inputProshot() {
   #endif
 
   for (int i = 0; i < 4; i++) {
-    pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
+    //pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
+    pulseValue[i] = ( (inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) * 0.166666666667;
   }
 
   for (int i = 0; i < 4; i++) {
