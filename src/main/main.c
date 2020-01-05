@@ -242,10 +242,12 @@ int main(void) {
         uartPrint("] ");*/
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
-          uartPrintInteger(7149000/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
-
-          //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
+          #if !(defined(PWM_FREQUENCY_48kHz))
+            uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
+          #else
+            uartPrintInteger(7149000/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
+          #endif
         }
         uartPrint("] ");
         uartPrint("\r\n");
