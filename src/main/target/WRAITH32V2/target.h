@@ -83,7 +83,7 @@
 #if !(defined(PWM_FREQUENCY_48kHz))
   #define ADC_CURRENT_FACTOR    1.87
 #else
-  #define ADC_CURRENT_FACTOR    2.11
+  #define ADC_CURRENT_FACTOR    2.34
 #endif
 
 #define ADC_CONSUMPTION_FACTOR  0.00028
