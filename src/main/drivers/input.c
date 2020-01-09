@@ -267,10 +267,8 @@ void inputProshot() {
 
     return;
   } else {
-    __disable_irq();
     input.DataValid = false;
     input.DataErrorCounter++;
-    __enable_irq();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_OFF(LED_GREEN);
@@ -298,10 +296,8 @@ void inputServoPwm() {
 
       return;
     } else {
-      __disable_irq();
       input.DataValid = false;
       input.DataErrorCounter++;
-      __enable_irq();
     }
   }
 
