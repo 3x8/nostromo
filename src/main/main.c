@@ -164,21 +164,18 @@ int main(void) {
     if (input.TelemetryRequest) {
       telemetry();
       input.TelemetryRequest = false;
-    }
-
-    #if (!defined(_DEBUG_))
-      if (input.Armed) {
-        if ((msIndex % 10) == 0){
-          if ((msTimerHandle.Instance->CNT > 11) && msTimerHandle.Instance->CNT < 21) {
-            LED_ON(LED_BLUE);
-          } else {
-            LED_OFF(LED_BLUE);
-          }
+      #if (!defined(_DEBUG_))
+        if (input.Armed) {
+          LED_ON(LED_BLUE);
         }
-      } else {
-        LED_OFF(LED_BLUE);
-      }
-    #endif
+      #endif
+    } else {
+      #if (!defined(_DEBUG_))
+        if (input.Armed) {
+          LED_OFF(LED_BLUE);
+        }
+      #endif
+    }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if ((msTimerHandle.Instance->CNT % 101) == 0) {
