@@ -171,9 +171,7 @@ int main(void) {
       #endif
     } else {
       #if (!defined(_DEBUG_))
-        if (input.Armed) {
-          LED_OFF(LED_BLUE);
-        }
+        LED_OFF(LED_BLUE);
       #endif
     }
 
