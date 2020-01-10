@@ -227,6 +227,7 @@ void inputDetectProtocol() {
 }
 
 void inputProshot() {
+  __disable_irq();
   uint8_t pulseValue[4] = {0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
@@ -247,7 +248,6 @@ void inputProshot() {
   data = ((pulseValue[0] << 7 | pulseValue[1] << 3 | pulseValue[2] >> 1));
 
   if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
-    __disable_irq();
     input.DataValid = true;
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
@@ -268,6 +268,7 @@ void inputProshot() {
   } else {
     input.DataValid = false;
     input.DataErrorCounter++;
+    __enable_irq();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
       LED_OFF(LED_GREEN);
@@ -279,13 +280,13 @@ void inputProshot() {
 
 // SERVOPWM (use only for thrust tests ...)
 void inputServoPwm() {
+  __disable_irq();
   uint32_t pulseWidthBuff = 0;
 
   for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
     pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
 
     if ((pulseWidthBuff >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuff <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
-      __disable_irq();
       input.DataValid = true;
       input.DataValidCounter++;
       input.TimeoutCounter = 0;
@@ -297,6 +298,7 @@ void inputServoPwm() {
     } else {
       input.DataValid = false;
       input.DataErrorCounter++;
+      __enable_irq();
     }
   }
 
