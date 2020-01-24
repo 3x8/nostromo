@@ -8,7 +8,7 @@
 //#define DEBUG_INPUT_AUTODETECT
 //#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
-#define DEBUG_DATA_QUALITY
+//#define DEBUG_DATA_QUALITY
 
 // ToDo new
 //#define PWM_FREQUENCY_48kHz           //48kHz resolution 500 steps, 24kHz resolution 1000 steps
