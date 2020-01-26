@@ -1,28 +1,29 @@
 # nostromo
+![quad](icon.png)
 
 ***BLDC ESC firmware (GPLv3.0)***
 
 **features:**
-  1. PROSHOT1000 input protocol *(PWM for thrust tests only)*
-  2. DSHOT commands support
-  3. High input linearity:  *(24kHz 1000 steps, 48kHz 500 steps)*
-  4. Complementary PWM  *(regenerative braking)*
-  5. Configurable motor Brake
-  6. KISS telemetry protocol
-  7. Maximal Current,Temperature protection
-  8. 3D mode
-  9. kalman filter *(Voltage, Current, RPM)*
+  * PROSHOT1000 input protocol *(PWM for thrust tests only)*
+  * DSHOT commands support
+  * High input linearity:  *(24kHz 1000 steps, 48kHz 500 steps)*
+  * Complementary PWM  *(regenerative braking)*
+  * Configurable motor Brake
+  * KISS telemetry protocol
+  * Maximal Current,Temperature protection
+  * 3D mode
+  * kalman filter *(Voltage, Current, RPM)*
 
 **supported hardware:**
-  1. WRAITH32V2
-  2. TYPHOON32V2
-  3. WRAITH32
-  4. WRAITH32MINI
-  5. SUCCEX50AV2
-  6. DYS35ARIA
-  7. KISS24A  *(testing)*
-  8. FURLING45MINI  *(hardware modification)*
+  * WRAITH32V2
+  * TYPHOON32V2
+  * WRAITH32
+  * WRAITH32MINI
+  * SUCCEX50AV2
+  * DYS35ARIA
+  * KISS24A  *(testing)*
+  * FURLING45MINI  *(hardware modification)*
 
-forked from: <br />
-<https://github.com/conuthead/f051bldc> <br />
-<https://github.com/betaflight/betaflight-esc> <br />
+forked from: <br/>
+<https://github.com/conuthead/f051bldc> <br/>
+<https://github.com/betaflight/betaflight-esc> <br/>
