@@ -176,7 +176,7 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      if ((msTimerHandle.Instance->CNT % 101) == 0) {
+      if ((msTimerHandle.Instance->CNT % 11) == 0) {
 
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
@@ -184,8 +184,9 @@ int main(void) {
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+        /*
         uartPrint("INN[");
-        uartPrintInteger(input.DataNormed, 10, 1);
+        uartPrintInteger(input.DataNormed, 10, 1);*/
         uartPrint("] ");
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
@@ -225,7 +226,6 @@ int main(void) {
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");*/
 
-        /*
         uartPrint("MCI[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
@@ -234,7 +234,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("ZCT[");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
