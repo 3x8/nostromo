@@ -176,8 +176,9 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      if ((msTimerHandle.Instance->CNT % 11) == 0) {
+      if ((msTimerHandle.Instance->CNT % 3) == 0) {
 
+        // debug CSV
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
