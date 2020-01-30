@@ -11,7 +11,7 @@
 //#define DEBUG_DATA_QUALITY
 
 // ToDo new
-//#define PWM_FREQUENCY_48kHz           //48kHz resolution 500 steps, 24kHz resolution 1000 steps
+#define PWM_FREQUENCY_48kHz           //48kHz resolution 500 steps, 24kHz resolution 1000 steps
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 21.26ns cycles ~47.017MHz) (FD6288 has a builtin 200ns deadtime)

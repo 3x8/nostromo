@@ -188,6 +188,7 @@ int main(void) {
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1);
         uartPrint("\r\n");
 
+        // debug cleartext
         /*
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
