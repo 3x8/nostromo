@@ -24,7 +24,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 100000.0f, 5);
+  kalmanInit(&motorCommutationIntervalFilterState, 1000000.0f, 5);
   #if defined(USE_ADC)
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -111,7 +111,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          kalmanInit(&motorCommutationIntervalFilterState, 100000.0f, 5);
+          kalmanInit(&motorCommutationIntervalFilterState, 1000000.0f, 5);
         }
 
         // motor start
@@ -176,7 +176,7 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      if ((msTimerHandle.Instance->CNT % 3) == 0) {
+      if ((msTimerHandle.Instance->CNT % 2) == 0) {
 
         // debug CSV
         uartPrintInteger(input.PwmValue, 10, 1);
