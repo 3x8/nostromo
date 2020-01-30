@@ -178,16 +178,27 @@ int main(void) {
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if ((msTimerHandle.Instance->CNT % 11) == 0) {
 
+        uartPrintInteger(input.PwmValue, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.CommutationInterval, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(7744820/motor.CommutationInterval, 10, 1);
+        uartPrint("\r\n");
+
+        /*
         uartPrint("ARM[");
         uartPrintInteger(input.Armed, 10, 1);
         uartPrint("] ");
         uartPrint("IN[");
         uartPrintInteger(input.Data, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
         /*
         uartPrint("INN[");
-        uartPrintInteger(input.DataNormed, 10, 1);*/
-        uartPrint("] ");
+        uartPrintInteger(input.DataNormed, 10, 1);
+        uartPrint("] ");*/
+        /*
         uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
@@ -199,7 +210,7 @@ int main(void) {
         if (input.DataValidCounter > 0) {
           uartPrintInteger((input.DataErrorCounter * 100)/ input.DataValidCounter, 10, 1);
         }
-        uartPrint("] ");
+        uartPrint("] ");*/
         /*
         uartPrint("Ufs[");
         uartPrintInteger(adcScaled.voltage, 10, 1);
@@ -210,7 +221,6 @@ int main(void) {
         uartPrint("Ts[");
         uartPrintInteger(adcScaled.temperature, 10, 1);
         uartPrint("] ");*/
-
         /*
         uartPrint("Ur[");
         uartPrintInteger(adcRaw.voltage, 10, 1);
@@ -218,14 +228,13 @@ int main(void) {
         uartPrint("Ir[");
         uartPrintInteger(adcRaw.current, 10, 1);
         uartPrint("] ");
-
         uartPrint("mAh[");
         uartPrintInteger(ABS((int)consumptionMah), 10, 1);
         uartPrint("] ");
         uartPrint("telemAh[");
         uartPrintInteger(telemetryData.consumption, 10, 1);
         uartPrint("] ");*/
-
+        /*
         uartPrint("MCI[");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
         uartPrint("] ");
@@ -245,7 +254,7 @@ int main(void) {
           #endif
         }
         uartPrint("] ");
-        uartPrint("\r\n");
+        uartPrint("\r\n");*/
       }
     #endif
 
