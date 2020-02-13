@@ -1,7 +1,5 @@
 #include "main.h"
 
-uint32_t msIndex;
-
 // filter
 kalman_t motorCommutationIntervalFilterState;
 #if defined(USE_ADC)
@@ -150,7 +148,6 @@ int main(void) {
 
     if (msTimerHandle.Instance->CNT > 100) {
       msTimerHandle.Instance->CNT = 0;
-      msIndex++;
 
       #if defined(USE_ADC)
         consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
