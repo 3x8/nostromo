@@ -1,6 +1,5 @@
 #include "config.h"
 
-// master config struct with data independent from profiles
 master_t masterConfig;
 
 void configValidateOrReset(void) {
