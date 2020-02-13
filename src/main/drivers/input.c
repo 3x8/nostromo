@@ -3,7 +3,7 @@
 TIM_HandleTypeDef inputTimerHandle;
 DMA_HandleTypeDef inputTimerDmaHandle;
 input_t input;
-uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
+uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE];
 
 void inputArmCheck(void) {
   if (!input.Armed) {
@@ -39,7 +39,7 @@ void inputDisarm(void) {
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
   inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
   inputTimerHandle.Instance->CNT = 0xffff;
-  HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+  HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
 
   __enable_irq();
 }
@@ -170,12 +170,12 @@ void inputCallbackDMA() {
     case PROSHOT:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputProshot();
-      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT);
       break;
     case SERVOPWM:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputServoPwm();
-      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PWM);
       break;
   }
 }
@@ -190,8 +190,8 @@ void inputDetectProtocol() {
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
 
-  for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_AUTODETECT - 1); i++) {
-    pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+  for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_AUTODETECT - 1); i++) {
+    pulseWidthBuff = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
     if(pulseWidthBuff < pulseWidthMin) {
       pulseWidthMin = pulseWidthBuff;
     }
@@ -201,7 +201,7 @@ void inputDetectProtocol() {
     input.Protocol = PROSHOT;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PROSHOT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
@@ -214,7 +214,7 @@ void inputDetectProtocol() {
     input.Protocol = SERVOPWM;
     inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_PWM);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PWM);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
@@ -227,7 +227,7 @@ void inputDetectProtocol() {
   if (input.Protocol == AUTODETECT) {
     inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
   }
 }
 
@@ -242,7 +242,7 @@ void inputProshot() {
   #endif
 
   for (int i = 0; i < 4; i++) {
-    pulseValue[i] = ((inputBufferDMA[i*2 + 1] - inputBufferDMA[i*2]) - 45) / 6;
+    pulseValue[i] = ((inputDmaBuffer[i*2 + 1] - inputDmaBuffer[i*2]) - 45) / 6;
   }
 
   for (int i = 0; i < 4; i++) {
@@ -288,8 +288,8 @@ void inputServoPwm() {
   __disable_irq();
   uint32_t pulseWidthBuff = 0;
 
-  for (int i = 0; i < (INPUT_BUFFER_DMA_SIZE_PWM - 1); i++) {
-    pulseWidthBuff = inputBufferDMA[i + 1] - inputBufferDMA[i];
+  for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_PWM - 1); i++) {
+    pulseWidthBuff = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
 
     if ((pulseWidthBuff >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuff <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
       input.DataValid = true;

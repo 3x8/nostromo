@@ -5,10 +5,10 @@ COMP_HandleTypeDef motorBemfComparatorHandle;
 motor_t motor;
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-  uint32_t motorTimestamp;
+  uint32_t motorCommutationTimestamp;
 
   __disable_irq();
-  motorTimestamp = motorCommutationTimerHandle.Instance->CNT;
+  motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
   if ((!motor.Running) || (!motor.Startup)) {
     #if (!defined(COMPARATOR_OPTIMIZE))
@@ -21,7 +21,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
     return;
   }
 
-  while ((motorCommutationTimerHandle.Instance->CNT - motorTimestamp) < motor.BemfFilterDelay);
+  while ((motorCommutationTimerHandle.Instance->CNT - motorCommutationTimestamp) < motor.BemfFilterDelay);
 
   for (int i = 0; i < motor.BemfFilterLevel; i++) {
     if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
@@ -46,7 +46,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
 
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
-  motor.BemfZeroCrossTimestamp = motorTimestamp;
+  motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
 
   // ToDo
   if (motor.CommutationDelay > 40) {
@@ -337,7 +337,7 @@ void motorCommutate() {
 }
 
 void motorStart() {
-  bool bufferDecaystate = motor.ComplementaryPWM;
+  bool bufferComplementaryPWM = motor.ComplementaryPWM;
 
   if (!motor.Running) {
     #if (!defined(COMPARATOR_OPTIMIZE))
@@ -360,7 +360,7 @@ void motorStart() {
       __HAL_COMP_COMP1_EXTI_ENABLE_IT();
     #endif
   }
-  motor.ComplementaryPWM = bufferDecaystate;
+  motor.ComplementaryPWM = bufferComplementaryPWM;
 }
 
 void motorBrakeOff() {

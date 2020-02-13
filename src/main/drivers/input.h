@@ -17,10 +17,10 @@
 #define INPUT_NORMED_MAX 2000
 #define OUTPUT_PWM_MIN 0
 #define OUTPUT_PWM_MAX TIMER1_INIT_PERIOD
-#define INPUT_BUFFER_DMA_SIZE 9
-#define INPUT_BUFFER_DMA_SIZE_PWM 3
-#define INPUT_BUFFER_DMA_SIZE_PROSHOT 8
-#define INPUT_BUFFER_DMA_SIZE_AUTODETECT 7
+#define INPUT_DMA_BUFFER_SIZE 9
+#define INPUT_DMA_BUFFER_SIZE_PWM 3
+#define INPUT_DMA_BUFFER_SIZE_PROSHOT 8
+#define INPUT_DMA_BUFFER_SIZE_AUTODETECT 7
 
 typedef enum {
   DSHOT_CMD_MOTOR_STOP = 0,
@@ -80,7 +80,7 @@ typedef struct {
 extern TIM_HandleTypeDef  inputTimerHandle;
 extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern input_t input;
-extern uint32_t inputBufferDMA[INPUT_BUFFER_DMA_SIZE];
+extern uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE];
 
 void inputArmCheck(void);
 void inputDisarm(void);

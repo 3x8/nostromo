@@ -219,7 +219,7 @@ void systemInputTimerInit(void) {
   sConfigIC.ICFilter = 0;
   while (HAL_TIM_IC_ConfigChannel(&inputTimerHandle, &sConfigIC, INPUT_TIMER_CH) != HAL_OK);
 
-  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle,INPUT_TIMER_CH, inputBufferDMA, INPUT_BUFFER_DMA_SIZE_AUTODETECT) != HAL_OK);
+  while (HAL_TIM_IC_Start_DMA(&inputTimerHandle,INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT) != HAL_OK);
 }
 
 void systemMsTimerInit(void) {
