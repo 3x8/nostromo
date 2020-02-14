@@ -120,10 +120,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
 
     //  there is only one channel to perform all the requested DMAs.
     #if (INPUT_TIMER_CH == TIM_CHANNEL_1)
-    __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
+      __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC1],inputTimerDmaHandle);
     #endif
     #if (INPUT_TIMER_CH == TIM_CHANNEL_2)
-    __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC2],inputTimerDmaHandle);
+      __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC2],inputTimerDmaHandle);
     #endif
   }
 }
