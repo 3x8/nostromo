@@ -70,7 +70,7 @@ void systemAdcInit(void) {
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
-  #if defined(USE_ADC)
+  #if (defined(USE_ADC))
     sConfig.Channel = ADC_CURRENT;
     while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
     sConfig.Channel = ADC_VOLTAGE;
@@ -147,7 +147,6 @@ void systemMotorPwmTimerInit(void) {
   while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_1) != HAL_OK);
   while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_2) != HAL_OK);
   while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_3) != HAL_OK);
-  //while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_4) != HAL_OK);
 
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
@@ -166,7 +165,6 @@ void systemMotorPwmTimerInit(void) {
   while (HAL_TIMEx_PWMN_Start(&motorPwmTimerHandle, TIM_CHANNEL_2) != HAL_OK);
   while (HAL_TIM_PWM_Start(&motorPwmTimerHandle, TIM_CHANNEL_3) != HAL_OK);
   while (HAL_TIMEx_PWMN_Start(&motorPwmTimerHandle, TIM_CHANNEL_3) != HAL_OK);
-  //while (HAL_TIM_OC_Start_IT(&motorPwmTimerHandle, TIM_CHANNEL_4) != HAL_OK);
 }
 
 void systemMotorCommutationTimerInit(void) {

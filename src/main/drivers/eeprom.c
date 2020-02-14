@@ -1,7 +1,6 @@
 #include "eeprom.h"
 
 #define FLASH_PAGE_COUNT                64
-
 #define FLASH_TO_RESERVE_FOR_CONFIG     0x800
 #define CONFIG_START_FLASH_ADDRESS      (0x08000000 + (uint32_t)((FLASH_PAGE_SIZE * FLASH_PAGE_COUNT) - FLASH_TO_RESERVE_FOR_CONFIG))
 
@@ -37,7 +36,7 @@ bool eepromValid(void) {
 void eepromRead(void) {
   if (!eepromValid()) {
     // reset esc, iwdg timeout
-    while(true);
+    while (true);
   }
   memcpy(&masterConfig, (char *) CONFIG_START_FLASH_ADDRESS, sizeof(master_t));
 }

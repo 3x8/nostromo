@@ -3,7 +3,7 @@
 #include "main.h"
 
 typedef enum {
-  HBRIDGE_PWM = 1,
+  HBRIDGE_PWM = 0,
   HBRIDGE_FLOATING,
   HBRIDGE_LOWSIDE
 } motorHbridgeStateEnum;

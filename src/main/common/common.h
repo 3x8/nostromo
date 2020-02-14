@@ -7,14 +7,14 @@
 #define MAX(a,b) __extension__ ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
 #define ABS(x) __extension__ ({ __typeof__ (x) _x = (x); _x > 0 ? _x : -_x; })
 
-#if !defined(UNUSED)
-#define UNUSED(x) (void)(x)
+#if (!defined(UNUSED))
+  #define UNUSED(x) (void)(x)
 #endif
 
 #define BIT(x) (1 << (x))
 
 // MCU UID
-#if defined(STM32F051x8)
+#if (defined(STM32F051x8))
   #define U_ID_0 (*(uint32_t*)0x1FFFF7AC)
   #define U_ID_1 (*(uint32_t*)0x1FFFF7B0)
   #define U_ID_2 (*(uint32_t*)0x1FFFF7B4)
