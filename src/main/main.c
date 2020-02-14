@@ -246,7 +246,7 @@ int main(void) {
         uartPrint("RPM[");
         if (motor.CommutationInterval > 0) {
           //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
-          #if !(defined(PWM_FREQUENCY_48kHz))
+          #if (!defined(PWM_FREQUENCY_48kHz))
             uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
           #else
             uartPrintInteger(7149000/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated

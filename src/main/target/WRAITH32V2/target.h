@@ -18,7 +18,7 @@
 #define HBRIDGE_MAX_CURRENT     6719  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 
-#if !(defined(PWM_FREQUENCY_48kHz))
+#if (!defined(PWM_FREQUENCY_48kHz))
   #define TIMER1_INIT_PERIOD    1001
   #define MOTOR_START_THRESHOLD 21
 #else
@@ -80,7 +80,7 @@
 #define ADC_VOLTAGE_OFFSET      46.5
 #define ADC_VOLTAGE_FACTOR      0.6
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
-#if !(defined(PWM_FREQUENCY_48kHz))
+#if (!defined(PWM_FREQUENCY_48kHz))
   #define ADC_CURRENT_FACTOR    1.87
 #else
   #define ADC_CURRENT_FACTOR    2.41
