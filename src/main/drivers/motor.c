@@ -5,10 +5,9 @@ COMP_HandleTypeDef motorBemfComparatorHandle;
 motor_t motor;
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-  uint32_t motorCommutationTimestamp;
-
   __disable_irq();
-  motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
+
+  uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
   if ((!motor.Running) || (!motor.Startup)) {
     #if (!defined(COMPARATOR_OPTIMIZE))
