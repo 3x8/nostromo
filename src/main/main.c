@@ -2,7 +2,7 @@
 
 // filter
 kalman_t motorCommutationIntervalFilterState;
-#if defined(USE_ADC)
+#if (defined(USE_ADC))
   kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
 
@@ -23,7 +23,7 @@ int main(void) {
   ledOff();
 
   kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
-  #if defined(USE_ADC)
+  #if (defined(USE_ADC))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
   #endif
@@ -50,7 +50,7 @@ int main(void) {
 
     // brake
     if ((!motor.Startup) && (!motor.Running)) {
-      switch(escConfig()->motorBrake) {
+      switch (escConfig()->motorBrake) {
         case BRAKE_FULL:
           motor.BrakeActiveProportional = false;
           motorBrakeFull();
@@ -75,7 +75,7 @@ int main(void) {
       inputArmCheck();
       inputDisarmCheck();
       if (input.Armed) {
-        #if defined(USE_ADC)
+        #if (defined(USE_ADC))
           // adcCurrent, auto offset at first arm after firmware write
           if (escConfig()->adcCurrentOffset == 0) {
             if (adcScaled.current != 0) {
@@ -85,7 +85,7 @@ int main(void) {
             }
             configWrite();
             // reset esc, iwdg timeout
-            while(true);
+            while (true);
           }
         #endif
 
@@ -135,7 +135,7 @@ int main(void) {
       #endif
     }
 
-    #if defined(USE_ADC)
+    #if (defined(USE_ADC))
       adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
       adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
       if ((escConfig()->limitCurrent > 0) && (adcScaled.current > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
@@ -149,7 +149,7 @@ int main(void) {
     if (msTimerHandle.Instance->CNT > 100) {
       msTimerHandle.Instance->CNT = 0;
 
-      #if defined(USE_ADC)
+      #if (defined(USE_ADC))
         consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
       #endif
 
