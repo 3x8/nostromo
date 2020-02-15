@@ -8,6 +8,7 @@
 //#define DEBUG_INPUT_AUTODETECT
 //#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
+//#define DEBUG_DATA_QUALITY
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       7     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)

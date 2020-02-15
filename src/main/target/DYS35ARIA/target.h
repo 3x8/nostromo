@@ -8,6 +8,7 @@
 //#define DEBUG_INPUT_AUTODETECT
 //#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
+//#define DEBUG_DATA_QUALITY
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       11    // with 0 FD6288 builtin 200ns H_Bridge gets warm ??? (why)
