@@ -181,7 +181,7 @@ void inputCallbackDMA() {
 }
 
 void inputDetectProtocol() {
-  uint32_t pulseWidthBuff;
+  uint32_t pulseWidthBuffer;
   uint32_t pulseWidthMin = 20000;
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
@@ -191,9 +191,9 @@ void inputDetectProtocol() {
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
 
   for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_AUTODETECT - 1); i++) {
-    pulseWidthBuff = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
-    if(pulseWidthBuff < pulseWidthMin) {
-      pulseWidthMin = pulseWidthBuff;
+    pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
+    if(pulseWidthBuffer < pulseWidthMin) {
+      pulseWidthMin = pulseWidthBuffer;
     }
   }
 
@@ -286,16 +286,16 @@ void inputProshot() {
 // SERVOPWM (use only for thrust tests ...)
 void inputServoPwm() {
   __disable_irq();
-  uint32_t pulseWidthBuff = 0;
+  uint32_t pulseWidthBuffer = 0;
 
   for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_PWM - 1); i++) {
-    pulseWidthBuff = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
+    pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
 
-    if ((pulseWidthBuff >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuff <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
+    if ((pulseWidthBuffer >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuffer <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
       input.DataValid = true;
       input.DataValidCounter++;
       input.TimeoutCounter = 0;
-      input.Data = (pulseWidthBuff - INPUT_PWM_WIDTH_MIN_US) << 2;
+      input.Data = (pulseWidthBuffer - INPUT_PWM_WIDTH_MIN_US) << 2;
       __enable_irq();
       motorInputUpdate();
 
