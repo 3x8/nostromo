@@ -173,7 +173,9 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      if ((msTimerHandle.Instance->CNT % 2) == 0) {
+
+      //if ((msTimerHandle.Instance->CNT % 2) == 0) {
+      if (true) {       // CSV 500uS test
 
         // debug CSV
         uartPrintInteger(input.PwmValue, 10, 1);
