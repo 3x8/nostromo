@@ -1,7 +1,9 @@
 #include "main.h"
 
 // filter
-kalman_t motorCommutationIntervalFilterState;
+//kalman_t motorCommutationIntervalFilterState;
+median_t motorCommutationIntervalFilterState;
+
 #if (defined(USE_ADC))
   kalman_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
@@ -22,7 +24,8 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
+  //kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
+  medianInit(&motorCommutationIntervalFilterState, 4);
   #if (defined(USE_ADC))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -109,7 +112,8 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
+          //kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
+          medianInit(&motorCommutationIntervalFilterState, 4);
         }
 
         // motor start
@@ -119,7 +123,8 @@ int main(void) {
         }
 
         // ToDo
-        motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
+        //motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
+        motor.CommutationInterval = medianCalculate(&motorCommutationIntervalFilterState);
         motor.CommutationDelay = 0; //timing 30°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 3), 41, 401); //timing 15°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°

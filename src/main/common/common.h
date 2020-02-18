@@ -46,3 +46,14 @@ typedef struct kalman_s {
 
 void kalmanInit(kalman_t *filter, float q, uint32_t w);
 FAST_CODE float kalmanUpdate(kalman_t *filter, float input);
+
+// median filter
+typedef struct median_s {
+  uint32_t window[MAX_WINDOW_SIZE];
+  uint32_t w;
+  uint32_t windowIndex;
+} median_t;
+
+void medianInit(median_t *filter, uint32_t w);
+void medianPush(median_t *filter, uint32_t newValue);
+uint32_t medianCalculate(median_t *filter);
