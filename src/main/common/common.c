@@ -31,7 +31,6 @@ void kalmanInit(kalman_t *filter, float q, uint32_t w) {
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
-
 FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
   const float windowSizeInverse = 1.0f/(filter->w - 1);
 
@@ -68,11 +67,12 @@ FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
 
   return (filter->x);
 }
-
 #pragma GCC pop_options
 
 
 // median filter
+#pragma GCC push_options
+#pragma GCC optimize("O3")
 void medianInit(median_t *filter, uint32_t w) {
   memset(filter, 0, sizeof(median_t));
   filter->w = w;
@@ -96,3 +96,4 @@ uint32_t medianCalculate(median_t *filter) {
 
   return(medianSumm / filter->w);
 }
+#pragma GCC pop_options
