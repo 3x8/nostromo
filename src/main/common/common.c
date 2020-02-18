@@ -23,14 +23,14 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
 }
 
 // kalman filter
+#pragma GCC push_options
+#pragma GCC optimize("O3")
 void kalmanInit(kalman_t *filter, float q, uint32_t w) {
   memset(filter, 0, sizeof(kalman_t));
   filter->q = q * 0.000001f;
   filter->w = w;
 }
 
-#pragma GCC push_options
-#pragma GCC optimize("O3")
 FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
   const float windowSizeInverse = 1.0f/(filter->w - 1);
 
