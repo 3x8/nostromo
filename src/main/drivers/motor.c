@@ -3,6 +3,7 @@
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motor_t motor;
+extern median_t motorCommutationIntervalFilterState;
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
@@ -46,6 +47,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
+  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
 
   // ToDo
   if (motor.CommutationDelay > 40) {
