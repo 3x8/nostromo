@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx_hal_flash.h"
