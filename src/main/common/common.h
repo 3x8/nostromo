@@ -50,7 +50,7 @@ FAST_CODE float kalmanUpdate(kalman_t *filter, float input);
 // median filter
 typedef struct median_s {
   uint32_t window[MAX_WINDOW_SIZE];
-  uint32_t w;
+  uint32_t windowSize;
   uint32_t windowIndex;
 } median_t;
 

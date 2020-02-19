@@ -75,13 +75,13 @@ FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
 #pragma GCC optimize("O3")
 void medianInit(median_t *filter, uint32_t w) {
   memset(filter, 0, sizeof(median_t));
-  filter->w = w;
+  filter->windowSize = w;
 }
 
 void medianPush(median_t *filter, uint32_t newValue) {
   filter->window[filter->windowIndex] = newValue;
 
-  if (++filter->windowIndex >= filter->w) {
+  if (++filter->windowIndex >= filter->windowSize) {
     filter->windowIndex = 0;
   }
 }
@@ -90,10 +90,10 @@ uint32_t medianCalculate(median_t *filter) {
   uint32_t medianSumm;
   uint8_t i;
 
-  for (i = 0; i < filter->w; i++) {
+  for (i = 0; i < filter->windowSize; i++) {
     medianSumm += filter->window[i];
   }
 
-  return(medianSumm / filter->w);
+  return(medianSumm / filter->windowSize);
 }
 #pragma GCC pop_options
