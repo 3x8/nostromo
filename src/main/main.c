@@ -185,10 +185,10 @@ int main(void) {
         // debug CSV
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
+        /*uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationInterval, 10, 1);
-        uartPrint(",");
+        uartPrint(",");*/
         uartPrintInteger(7744820/motor.CommutationInterval, 10, 1);
         uartPrint("\r\n");
 
