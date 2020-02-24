@@ -25,7 +25,7 @@ int main(void) {
   ledOff();
 
   //kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
-  medianInit(&motorCommutationIntervalFilterState, 4);
+  medianInit(&motorCommutationIntervalFilterState, 8);
   #if (defined(USE_ADC))
     kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
@@ -113,7 +113,7 @@ int main(void) {
           motor.BemfCounter = 0;
           motor.Running = false;
           //kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
-          medianInit(&motorCommutationIntervalFilterState, 4);
+          medianInit(&motorCommutationIntervalFilterState, 8);
         }
 
         // motor start
