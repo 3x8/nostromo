@@ -187,10 +187,6 @@ int main(void) {
         uartPrint(",");
         //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); kalman
         uartPrintInteger(8250702/motor.CommutationInterval, 10, 1);
-        /*uartPrint(",");
-        uartPrintInteger(adcScaled.voltage, 10, 1);
-        uartPrint(",");
-        uartPrintInteger(adcScaled.current, 10, 1);*/
         uartPrint("\r\n");
 
         // debug cleartext
