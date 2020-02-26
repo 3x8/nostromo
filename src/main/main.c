@@ -133,7 +133,7 @@ int main(void) {
 
     // adc limits
     adcScaled.temperature = ((adcRaw.temperature  * ADC_TEMPERATURE_FACTOR) + ADC_TEMPERATURE_OFFSET);
-    if ((adcScaled.temperature > 0) && (escConfig()->limitTemperature > 0) && (adcScaled.temperature > escConfig()->limitTemperature)) {
+    if ((escConfig()->limitTemperature > 0) && (ABS(adcScaled.temperature) > escConfig()->limitTemperature)) {
       inputDisarm();
       #if (!defined(_DEBUG_))
         LED_ON(LED_GREEN);
@@ -143,7 +143,7 @@ int main(void) {
     #if (defined(USE_ADC))
       adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
       adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
-      if ((escConfig()->limitCurrent > 0) && (adcScaled.current > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
+      if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
           LED_ON(LED_RED);
