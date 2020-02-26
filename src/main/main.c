@@ -191,72 +191,13 @@ int main(void) {
 
         // debug cleartext
         /*
-        uartPrint("ARM[");
-        uartPrintInteger(input.Armed, 10, 1);
-        uartPrint("] ");
-        uartPrint("IN[");
-        uartPrintInteger(input.Data, 10, 1);
-        uartPrint("] ");*/
-        /*
-        uartPrint("INN[");
-        uartPrintInteger(input.DataNormed, 10, 1);
-        uartPrint("] ");*/
-        /*
-        uartPrint("PWM[");
         uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint("] ");
-        uartPrint("STA[");
-        uartPrintInteger(input.DataValidCounter, 10, 1);
-        uartPrint("->");
-        uartPrintInteger(input.DataErrorCounter, 10, 1);
-        uartPrint("->");
-        if (input.DataValidCounter > 0) {
-          uartPrintInteger((input.DataErrorCounter * 100)/ input.DataValidCounter, 10, 1);
-        }
-        uartPrint("] ");*/
-        /*
-        uartPrint("Ufs[");
+        uartPrint(",");
+        uartPrintInteger(8250702/motor.CommutationInterval, 10, 1);
+        uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
-        uartPrint("] ");
-        uartPrint("Ifs[");
-        uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint("] ");
-        uartPrint("Ts[");
-        uartPrintInteger(adcScaled.temperature, 10, 1);
-        uartPrint("] ");*/
-        /*
-        uartPrint("Ur[");
-        uartPrintInteger(adcRaw.voltage, 10, 1);
-        uartPrint("] ");
-        uartPrint("Ir[");
-        uartPrintInteger(adcRaw.current, 10, 1);
-        uartPrint("] ");
-        uartPrint("mAh[");
-        uartPrintInteger(ABS((int)consumptionMah), 10, 1);
-        uartPrint("] ");
-        uartPrint("telemAh[");
-        uartPrintInteger(telemetryData.consumption, 10, 1);
-        uartPrint("] ");*/
-        /*
-        uartPrint("MCI[");
-        uartPrintInteger(motor.CommutationInterval, 10, 1);
-        uartPrint("] ");
-        uartPrint("MCD[");
-        uartPrintInteger(motor.CommutationDelay, 10, 1);
-        uartPrint("] ");
-        uartPrint("ZCT[");
-        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
-        uartPrint("] ");
-        uartPrint("RPM[");
-        if (motor.CommutationInterval > 0) {
-          //uartPrintInteger(9276437/motor.CommutationInterval, 10, 1); //calculated
-          #if (!defined(PWM_FREQUENCY_48kHz))
-            uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
-          #else
-            uartPrintInteger(7149000/motor.CommutationInterval, 10, 1); // RCBenchmark calibrated
-          #endif
-        }
-        uartPrint("] ");
+        uartPrint(",");
+        uartPrintInteger(adcScaled.current, 10, 1);
         uartPrint("\r\n");*/
       }
     #endif
