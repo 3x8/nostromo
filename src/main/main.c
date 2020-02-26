@@ -179,21 +179,14 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
 
-      if ((msTimerHandle.Instance->CNT % 11) == 0) {
-      //if (true) {       // CSV 500uS test
+      if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
+      //if (true) {       // high speed CSV (500uS)
 
-        // debug CSV
-        /*
+        // CSV
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
-        //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); kalman
-        uartPrintInteger(8250702/motor.CommutationInterval, 10, 1);
-        uartPrint("\r\n");*/
-
-        // debug cleartext
-        uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint(",");
-        uartPrintInteger(8250702/motor.CommutationInterval, 10, 1);
+        //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // kalman
+        uartPrintInteger(8250702/motor.CommutationInterval, 10, 1); // median
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
