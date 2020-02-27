@@ -18,6 +18,7 @@
 #define HBRIDGE_MAX_CURRENT     6719  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define MEDIAN_RPM_CONSTANT     7616032
+#define MOTOR_POLES             14
 
 #if (!defined(PWM_FREQUENCY_48kHz))
   #define TIMER1_INIT_PERIOD    1001
