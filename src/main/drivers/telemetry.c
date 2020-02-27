@@ -63,7 +63,7 @@ void telemetry(void) {
   }
 
   //telemetryData.erpm = 542137.4/motor.CommutationInterval; kalman
-  telemetryData.erpm = 589335.8/motor.CommutationInterval;
+  telemetryData.erpm = (MEDIAN_RPM_CONSTANT / MOTOR_POLES) /motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
 }

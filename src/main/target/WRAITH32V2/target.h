@@ -17,6 +17,7 @@
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     6719  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
+#define MEDIAN_RPM_CONSTANT     7616032
 
 #if (!defined(PWM_FREQUENCY_48kHz))
   #define TIMER1_INIT_PERIOD    1001

@@ -184,7 +184,7 @@ int main(void) {
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         //uartPrintInteger(7744820/motor.CommutationInterval, 10, 1); // kalman
-        uartPrintInteger(8250702/motor.CommutationInterval, 10, 1); // median
+        uartPrintInteger((MEDIAN_RPM_CONSTANT / motor.CommutationInterval), 10, 1); // median
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
