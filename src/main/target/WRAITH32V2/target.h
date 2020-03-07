@@ -2,7 +2,7 @@
 
 // debug
 //#define _DEBUG_
-//#define DEBUG_CYCLETIME_MAINLOOP // ~500us
+//#define DEBUG_CYCLETIME_MAINLOOP // 400us (+-10%)
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
