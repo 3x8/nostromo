@@ -153,11 +153,9 @@ int main(void) {
 
     if (msTimerHandle.Instance->CNT > 100) {
       msTimerHandle.Instance->CNT = 0;
-
       #if (defined(USE_ADC))
         consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
       #endif
-
       #if (defined(_DEBUG_) && defined(DEBUG_MS_TIMER))
         LED_TOGGLE(LED_GREEN);
       #endif
