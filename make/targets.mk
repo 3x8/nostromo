@@ -1,4 +1,4 @@
-OFFICIAL_TARGETS  = FISHDRONE
+OFFICIAL_TARGETS  = WRAITH32V2 TYPHOON32V2
 
 VALID_TARGETS   = $(dir $(wildcard $(ROOT)/src/main/target/*/target.mk))
 VALID_TARGETS  := $(subst /,, $(subst ./src/main/target/,, $(VALID_TARGETS)))
