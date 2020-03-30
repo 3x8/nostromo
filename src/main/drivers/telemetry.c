@@ -8,7 +8,7 @@ static uint8_t crc8helper(uint8_t crc, uint8_t crcSeed) {
 
   crcBuffer ^= crcSeed;
   for (int i = 0; i < 8; i++) {
-    crcBuffer = ( crcBuffer & 0x80 ) ? 0x7 ^ ( crcBuffer << 1 ) : ( crcBuffer << 1 );
+    crcBuffer = (crcBuffer & 0x80) ? (0x7 ^ (crcBuffer << 1)) : (crcBuffer << 1);
   }
   return (crcBuffer);
 }
