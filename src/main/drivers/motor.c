@@ -463,7 +463,7 @@ void motorInputUpdate(void) {
       }
 
       // stall protection and startup kick
-      if (motor.BemfCounter < 50) {
+      if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
         #if (!defined(KISS24A))
           #if (!defined(PWM_FREQUENCY_48kHz))
             input.PwmValue = 71;

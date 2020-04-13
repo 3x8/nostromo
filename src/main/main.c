@@ -36,7 +36,8 @@ int main(void) {
 
   // start with motor off
   motor.Step = 1;
-  motor.BemfZeroCounterTimeoutThreshold = 27;
+  //motor.BemfZeroCounterTimeoutThreshold = 27;
+  motor.BemfZeroCounterTimeoutThreshold = 50;
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
   input.Data = 0;
@@ -111,6 +112,7 @@ int main(void) {
         }
 
         // motor not running
+
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
@@ -187,13 +189,15 @@ int main(void) {
       if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
       //if (true) {       // high speed CSV (500uS)
         // CSV
-        uartPrintInteger(input.PwmValue, 10, 1);
+        /*uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         uartPrintInteger((MEDIAN_RPM_CONSTANT / motor.CommutationInterval), 10, 1);
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
+        uartPrint("\r\n");*/
+        uartPrintInteger(motor.BemfCounter, 10, 1);
         uartPrint("\r\n");
       }
     #endif
