@@ -5,7 +5,8 @@
 median_t motorCommutationIntervalFilterState;
 
 #if (defined(USE_ADC))
-  kalman_t adcVoltageFilterState, adcCurrentFilterState;
+  //kalman_t adcVoltageFilterState, adcCurrentFilterState;
+  median_t adcVoltageFilterState, adcCurrentFilterState;
 #endif
 
 int main(void) {
@@ -27,8 +28,10 @@ int main(void) {
   //kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
   medianInit(&motorCommutationIntervalFilterState, 8);
   #if (defined(USE_ADC))
-    kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
-    kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
+    //kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
+    //kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
+    medianInit(&adcVoltageFilterState, 13);
+    medianInit(&adcCurrentFilterState, 13);
   #endif
 
   // start with motor off
@@ -141,8 +144,13 @@ int main(void) {
     }
 
     #if (defined(USE_ADC))
-      adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
-      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
+      //adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
+      //adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
+      medianPush(&adcCurrentFilterState, adcRaw.current);
+      adcScaled.current = medianCalculate(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
+      medianPush(&adcVoltageFilterState, adcRaw.voltage);
+      adcScaled.voltage = medianCalculate(&adcVoltageFilterState) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET;
+
       if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();
         #if (!defined(_DEBUG_))
