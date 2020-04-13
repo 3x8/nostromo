@@ -423,8 +423,6 @@ void motorInputUpdate(void) {
       }
     } else {
       motor.Startup = true;
-      // ToDo
-      //motor.BrakeActiveProportional = false;
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
       if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
