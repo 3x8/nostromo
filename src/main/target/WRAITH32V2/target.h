@@ -26,8 +26,11 @@
   #define TIMER1_INIT_PERIOD    501
   #define MOTOR_START_THRESHOLD 13
 #endif
-#define MEDIAN_RPM_CONSTANT     7616032 // median
-//#define MEDIAN_RPM_CONSTANT     7744820 // kalman
+#if (defined(USE_RPM_MEDIAN))
+  #define RPM_CONSTANT     7616032
+#else
+  #define RPM_CONSTANT     7744820
+#endif
 #define MOTOR_POLES             14
 
 // input ,Ok

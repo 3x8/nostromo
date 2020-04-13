@@ -16,7 +16,7 @@
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      1001
 #define MOTOR_START_THRESHOLD   21
-#define MEDIAN_RPM_CONSTANT     7616032
+#define RPM_CONSTANT     7616032
 #define MOTOR_POLES             14
 
 // input ,Ok

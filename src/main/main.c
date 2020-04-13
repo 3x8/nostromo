@@ -216,7 +216,7 @@ int main(void) {
         // CSV
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
-        uartPrintInteger((MEDIAN_RPM_CONSTANT / motor.CommutationInterval), 10, 1);
+        uartPrintInteger((RPM_CONSTANT / motor.CommutationInterval), 10, 1);
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");

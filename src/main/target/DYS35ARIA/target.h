@@ -17,7 +17,7 @@
 #define TIMER1_INIT_PERIOD      1001
 #define MOTOR_START_THRESHOLD   13
 #define LED_INVERTED
-#define MEDIAN_RPM_CONSTANT     7616032
+#define RPM_CONSTANT     7616032
 #define MOTOR_POLES             14
 
 // input ,Ok
