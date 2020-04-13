@@ -145,13 +145,13 @@ int main(void) {
           motorStart();
         }
 
-        // ToDo
         #if (defined(USE_RPM_MEDIAN))
           motor.CommutationInterval = medianCalculate(&motorCommutationIntervalFilterState);
         #else
           motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
         #endif
 
+        // ToDo
         motor.CommutationDelay = 0; //timing 30°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 3), 41, 401); //timing 15°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
