@@ -3,7 +3,9 @@
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motor_t motor;
-extern median_t motorCommutationIntervalFilterState;
+#if (defined(USE_RPM_MEDIAN))
+  extern median_t motorCommutationIntervalFilterState;
+#endif
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
@@ -47,7 +49,9 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
-  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
+  #if (defined(USE_RPM_MEDIAN))
+    medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
+  #endif
 
   // ToDo
   if (motor.CommutationDelay > 40) {
@@ -432,7 +436,7 @@ void motorInputUpdate(void) {
             motor.Direction = escConfig()->motorDirection;
             motor.BemfCounter = 0;
           }
-          #if (!defined(PWM_FREQUENCY_48kHz))
+          #if (!defined(USE_PWM_FREQUENCY_48kHz))
             input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
           #else
             input.PwmValue = ((input.DataNormed - escConfig()->input3Dneutral) >> 1) + escConfig()->motorStartThreshold;
@@ -444,7 +448,7 @@ void motorInputUpdate(void) {
             motor.Direction = !escConfig()->motorDirection;
             motor.BemfCounter = 0;
           }
-          #if (!defined(PWM_FREQUENCY_48kHz))
+          #if (!defined(USE_PWM_FREQUENCY_48kHz))
             input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
           #else
             input.PwmValue = (input.DataNormed  >> 1) + escConfig()->motorStartThreshold;
@@ -455,7 +459,7 @@ void motorInputUpdate(void) {
           input.PwmValue = 0;
         }
       } else {
-        #if (!defined(PWM_FREQUENCY_48kHz))
+        #if (!defined(USE_PWM_FREQUENCY_48kHz))
           input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
         #else
           input.PwmValue = (input.DataNormed >> 2) + escConfig()->motorStartThreshold;
@@ -465,13 +469,13 @@ void motorInputUpdate(void) {
       // stall protection and startup kick
       if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
         #if (!defined(KISS24A))
-          #if (!defined(PWM_FREQUENCY_48kHz))
+          #if (!defined(USE_PWM_FREQUENCY_48kHz))
             input.PwmValue = 71;
           #else
             input.PwmValue = 37;
           #endif
         #else
-          #if (!defined(PWM_FREQUENCY_48kHz))
+          #if (!defined(USE_PWM_FREQUENCY_48kHz))
             input.PwmValue = 81;
           #else
             input.PwmValue = 41;
