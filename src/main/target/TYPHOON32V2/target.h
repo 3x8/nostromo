@@ -11,7 +11,7 @@
 //#define DEBUG_UART1
 //#define DEBUG_DATA_QUALITY
 
-// ToDo new implement to other targets
+// ToDo new
 //#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
 #define USE_RPM_MEDIAN
 #define USE_ADC_MEDIAN
