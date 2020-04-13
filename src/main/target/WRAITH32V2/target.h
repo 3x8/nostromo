@@ -13,7 +13,7 @@
 // ToDo new implement to other targets
 //#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
 #define USE_RPM_MEDIAN
-//#define USE_ADC_MEDIAN
+#define USE_ADC_MEDIAN
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
