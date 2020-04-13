@@ -30,8 +30,8 @@ int main(void) {
   #if (defined(USE_ADC))
     //kalmanInit(&adcVoltageFilterState, 1500.0f, 13);
     //kalmanInit(&adcCurrentFilterState, 1500.0f, 13);
-    medianInit(&adcVoltageFilterState, 13);
-    medianInit(&adcCurrentFilterState, 13);
+    medianInit(&adcVoltageFilterState, 8);
+    medianInit(&adcCurrentFilterState, 8);
   #endif
 
   // start with motor off
