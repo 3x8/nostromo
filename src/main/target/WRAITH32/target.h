@@ -86,12 +86,7 @@
 #define ADC_VOLTAGE_OFFSET      1.0
 #define ADC_VOLTAGE_FACTOR      0.6
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
-#if (!defined(USE_PWM_FREQUENCY_48kHz))
-  #define ADC_CURRENT_FACTOR    2.13
-#else
-  #define ADC_CURRENT_FACTOR    3.21
-#endif
-
+#define ADC_CURRENT_FACTOR      2.13
 #define ADC_CONSUMPTION_FACTOR  0.00028
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04
