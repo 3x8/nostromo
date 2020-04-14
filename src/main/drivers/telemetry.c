@@ -62,7 +62,7 @@ void telemetry(void) {
     telemetryData.consumption =  (int)consumptionMah;
   }
 
-  telemetryData.erpm = (MEDIAN_RPM_CONSTANT / MOTOR_POLES) / motor.CommutationInterval;
+  telemetryData.erpm = (RPM_CONSTANT / MOTOR_POLES) / motor.CommutationInterval;
 
   telemetryTelegram(&telemetryData);
 }

@@ -10,15 +10,29 @@
 //#define DEBUG_MS_TIMER
 //#define DEBUG_DATA_QUALITY
 
+// ToDo new
+//#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
+#define USE_RPM_MEDIAN
+#define USE_ADC_MEDIAN
+
 // hw constants
 #define HBRIDGE_DEAD_TIME       11    // with 0 FD6288 builtin 200ns H_Bridge gets warm ??? (why)
 #define HBRIDGE_MAX_CURRENT     0     // disabled
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
-#define TIMER1_INIT_PERIOD      1001
-#define MOTOR_START_THRESHOLD   13
-#define LED_INVERTED
-#define MEDIAN_RPM_CONSTANT     7616032
+#if (!defined(USE_PWM_FREQUENCY_48kHz))
+  #define TIMER1_INIT_PERIOD    1001
+  #define MOTOR_START_THRESHOLD 21
+#else
+  #define TIMER1_INIT_PERIOD    501
+  #define MOTOR_START_THRESHOLD 13
+#endif
+#if (defined(USE_RPM_MEDIAN))
+#define RPM_CONSTANT     7616032
+#else
+  #define RPM_CONSTANT     7744820
+#endif
 #define MOTOR_POLES             14
+#define LED_INVERTED
 
 // input ,Ok
 #define INPUT_GPIO      GPIOA

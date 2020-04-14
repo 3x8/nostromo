@@ -11,21 +11,30 @@
 //#define DEBUG_DATA_QUALITY
 
 // ToDo new
-//#define PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
+#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
+#define USE_RPM_MEDIAN
+#define USE_ADC_MEDIAN
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     6719  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
-#if (!defined(PWM_FREQUENCY_48kHz))
+#if (!defined(USE_PWM_FREQUENCY_48kHz))
   #define TIMER1_INIT_PERIOD    1001
   #define MOTOR_START_THRESHOLD 21
 #else
   #define TIMER1_INIT_PERIOD    501
   #define MOTOR_START_THRESHOLD 13
 #endif
-#define MEDIAN_RPM_CONSTANT     7616032 // median
-//#define MEDIAN_RPM_CONSTANT     7744820 // kalman
+#if (defined(USE_RPM_MEDIAN))
+  #if (!defined(USE_PWM_FREQUENCY_48kHz))
+    #define RPM_CONSTANT     7616032
+  #else
+    #define RPM_CONSTANT     7235231
+  #endif
+#else
+  #define RPM_CONSTANT       7744820
+#endif
 #define MOTOR_POLES             14
 
 // input ,Ok
@@ -81,12 +90,7 @@
 #define ADC_VOLTAGE_OFFSET      40.5
 #define ADC_VOLTAGE_FACTOR      0.595
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
-#if (!defined(PWM_FREQUENCY_48kHz))
-  #define ADC_CURRENT_FACTOR    1.87
-#else
-  #define ADC_CURRENT_FACTOR    2.41
-#endif
-
+#define ADC_CURRENT_FACTOR      1.87
 #define ADC_CONSUMPTION_FACTOR  0.00028
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04

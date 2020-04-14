@@ -11,13 +11,27 @@
 //#define DEBUG_UART1
 //#define DEBUG_DATA_QUALITY
 
+// ToDo new
+//#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
+#define USE_RPM_MEDIAN
+#define USE_ADC_MEDIAN
+
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
-#define TIMER1_INIT_PERIOD      1001
-#define MOTOR_START_THRESHOLD   13
-#define MEDIAN_RPM_CONSTANT     7616032
+#if (!defined(USE_PWM_FREQUENCY_48kHz))
+  #define TIMER1_INIT_PERIOD    1001
+  #define MOTOR_START_THRESHOLD 21
+#else
+  #define TIMER1_INIT_PERIOD    501
+  #define MOTOR_START_THRESHOLD 13
+#endif
+#if (defined(USE_RPM_MEDIAN))
+#define RPM_CONSTANT     7616032
+#else
+  #define RPM_CONSTANT     7744820
+#endif
 #define MOTOR_POLES             14
 
 // input ,Ok

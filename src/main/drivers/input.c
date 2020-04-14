@@ -95,7 +95,7 @@ void inputDshotCommandRun(void) {
       uartPrintInteger(U_ID_1, 16, 1);
       uartPrintInteger(U_ID_0, 16, 1);
       uartPrint("\r\n");
-      #if (!defined(PWM_FREQUENCY_48kHz))
+      #if (!defined(USE_PWM_FREQUENCY_48kHz))
         uartPrint("# 24kHz ");
       #else
         uartPrint("# 48kHz ");
