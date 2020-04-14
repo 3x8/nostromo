@@ -49,9 +49,9 @@ int main(void) {
 
   // start with motor off
   #if (defined(USE_ADC_MEDIAN))
-    motor.BemfZeroCounterTimeoutThreshold = 50;
+    motor.BemfZeroCounterTimeoutThreshold = 71;
   #else
-    motor.BemfZeroCounterTimeoutThreshold = 27;
+    motor.BemfZeroCounterTimeoutThreshold = 29;
   #endif
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;

@@ -15,8 +15,8 @@
   * kalman filter *(Voltage, Current, RPM)*
 
 **supported hardware:**
-  * WRAITH32V2
-  * TYPHOON32V2
+  * WRAITH32V2  *(official)*
+  * TYPHOON32V2  *(official)*
   * WRAITH32
   * WRAITH32MINI
   * SUCCEX50AV2
