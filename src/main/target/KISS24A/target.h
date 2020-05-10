@@ -12,7 +12,7 @@
 //#define DEBUG_DATA_QUALITY
 
 // ToDo new
-#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
+#define USE_PWM_FREQUENCY_48kHz       // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
 #define USE_RPM_MEDIAN
 #define USE_ADC_MEDIAN
 
@@ -75,7 +75,7 @@
 #define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5
 
-// adc ,Ko current
+// adc ,Ko current ,Ko voltage
 #define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_7
 #define ADC_CURRENT             ADC_CHANNEL_1
@@ -83,8 +83,8 @@
 #define ADC_MASK                GPIO_PIN_7 | GPIO_PIN_1
 
 // adc calibration
-#define ADC_VOLTAGE_OFFSET      96.5
-#define ADC_VOLTAGE_FACTOR      1.388
+#define ADC_VOLTAGE_OFFSET      1
+#define ADC_VOLTAGE_FACTOR      1
 #define ADC_CURRENT_OFFSET      1  // 0 -> auto offset
 #define ADC_CURRENT_FACTOR      1
 #define ADC_CONSUMPTION_FACTOR  0.00028
