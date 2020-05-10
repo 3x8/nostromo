@@ -49,7 +49,11 @@ int main(void) {
 
   // start with motor off
   #if (defined(USE_ADC_MEDIAN))
-    motor.BemfZeroCounterTimeoutThreshold = 71;
+    #if (!defined(KISS24A))
+      motor.BemfZeroCounterTimeoutThreshold = 71;
+    #else
+      motor.BemfZeroCounterTimeoutThreshold = 101;
+    #endif
   #else
     motor.BemfZeroCounterTimeoutThreshold = 29;
   #endif
