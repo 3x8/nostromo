@@ -283,28 +283,27 @@ void inputProshot() {
   }
 }
 
-// SERVOPWM (use only for thrust tests ...)
+// SERVOPWM (used only for thrust tests ...)
 void inputServoPwm() {
-  __disable_irq();
-  uint32_t pulseWidthBuffer = 0;
+  #if (defined(_DEBUG_))
+    __disable_irq();
+    uint32_t pulseWidthBuffer = 0;
 
-  for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_PWM - 1); i++) {
-    pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
-
-    if ((pulseWidthBuffer >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuffer <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
-      input.DataValid = true;
-      input.DataValidCounter++;
-      input.TimeoutCounter = 0;
-      input.Data = (pulseWidthBuffer - INPUT_PWM_WIDTH_MIN_US) << 2;
-      __enable_irq();
-      motorInputUpdate();
-
-      return;
-    } else {
-      input.DataValid = false;
-      input.DataErrorCounter++;
-      __enable_irq();
+    for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_PWM - 1); i++) {
+      pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
+      if ((pulseWidthBuffer >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuffer <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
+        input.DataValid = true;
+        input.DataValidCounter++;
+        input.TimeoutCounter = 0;
+        input.Data = (pulseWidthBuffer - INPUT_PWM_WIDTH_MIN_US) << 2;
+        __enable_irq();
+        motorInputUpdate();
+        return;
+      } else {
+        input.DataValid = false;
+        input.DataErrorCounter++;
+        __enable_irq();
+      }
     }
-  }
-
+  #endif
 }
