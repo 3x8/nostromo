@@ -5,12 +5,12 @@
 #define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct escConfig_s {
-  bool motorDirection;
-  bool motorComplementaryPWM;
+  uint8_t motorDirection;
+  uint8_t motorComplementaryPWM;
   uint8_t  motorBrake;
   uint16_t motorBrakeStrength;
   uint16_t motorStartThreshold;
-  bool motor3Dmode;
+  uint8_t motor3Dmode;
   uint32_t input3Dneutral;
   uint32_t input3DdeadbandLow;
   uint32_t input3DdeadbandHigh;
