@@ -88,7 +88,7 @@ void inputDshotCommandRun(void) {
       uartPrintInteger(__GNUC_MINOR__, 10, 1);
       uartPrint(".");
       uartPrintInteger(__GNUC_PATCHLEVEL__, 10, 1);
-      uartPrint(") (gitID ");
+      uartPrint(") (git ");
       uartPrint(__REVISION__);
       uartPrint(")");
       uartPrint("\r\n");
