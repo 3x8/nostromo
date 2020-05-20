@@ -22,7 +22,7 @@ bool eepromValid(void) {
     return (false);
   }
 
-  if (temp->size != sizeof(master_t) || temp->magic_be != 0xBE || temp->magic_ef != 0xEF) {
+  if (temp->size != sizeof(master_t) || temp->magic_be != 0xbe || temp->magic_ef != 0xef) {
     return (false);
   }
 

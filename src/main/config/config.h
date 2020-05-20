@@ -16,22 +16,14 @@ typedef struct escConfig_s {
   uint32_t input3DdeadbandHigh;
   uint32_t limitCurrent;
   uint32_t limitTemperature;
-  bool led0;
-  bool led1;
-  bool led2;
   int32_t adcCurrentOffset;
 } escConfig_t;
 
 typedef struct master_s {
   uint8_t version;
   uint16_t size;
-
-  // magic number, should be 0xBE
   uint8_t magic_be;
-
   escConfig_t escConfig;
-
-  // magic number, should be 0xEF
   uint8_t magic_ef;
   uint8_t chk;
 } master_t;
