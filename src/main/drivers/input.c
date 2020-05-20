@@ -82,11 +82,13 @@ void inputDshotCommandRun(void) {
       uartPrintInteger(FW_VERSION_MINOR, 10, 1);
       uartPrint(".");
       uartPrintInteger(FW_VERSION_PATCH, 10, 1);
-      uartPrint(" ");
-      uartPrint(__DATE__);
-      uartPrint(" / ");
-      uartPrint(__TIME__);
-      uartPrint(" (");
+      uartPrint(" (gcc v");
+      uartPrintInteger(__GNUC__, 10, 1);
+      uartPrint(".");
+      uartPrintInteger(__GNUC_MINOR__, 10, 1);
+      uartPrint(".");
+      uartPrintInteger(__GNUC_PATCHLEVEL__, 10, 1);
+      uartPrint(") (gitID");
       uartPrint(__REVISION__);
       uartPrint(")");
       uartPrint("\r\n");
