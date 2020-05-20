@@ -25,9 +25,6 @@ void configReset(void) {
   escConfig()->input3DdeadbandHigh = 1001;
   escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
   escConfig()->limitTemperature = HBRIDGE_MAX_TEMPERATURE;
-  escConfig()->led0 = false;
-  escConfig()->led1 = false;
-  escConfig()->led2 = false;
   escConfig()->adcCurrentOffset = ADC_CURRENT_OFFSET;
 
   eepromWrite();
