@@ -87,10 +87,9 @@ void medianPush(median_t *filter, uint32_t newValue) {
 }
 
 uint32_t medianCalculate(median_t *filter) {
-  uint32_t medianSumm;
-  uint8_t i;
+  uint32_t medianSumm = 0;
 
-  for (i = 0; i < filter->windowSize; i++) {
+  for (uint8_t i = 0; i < filter->windowSize; i++) {
     medianSumm += filter->window[i];
   }
 
