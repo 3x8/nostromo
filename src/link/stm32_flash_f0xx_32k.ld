@@ -38,10 +38,20 @@ _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
 
 /* Specify the memory areas */
+/*
 MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 8K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 32K
+}*/
+
+/* USE_BOOTLOADER */
+MEMORY
+{
+SRAM (xrw) : ORIGIN = 0x20000000, LENGTH = 192
+RAM (xrw) : ORIGIN = 0x200000C0, LENGTH = 8K - 192
+FLASH (rx) : ORIGIN = 0x8002000, LENGTH = 27K
+/* EEPROM (rx) : ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH) LENGTH = 1K */
 }
 
 /* Define output sections */
@@ -113,7 +123,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -124,7 +134,7 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
 
-  
+
   /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
@@ -152,7 +162,7 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
-  
+
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
@@ -164,5 +174,3 @@ SECTIONS
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
-
-
