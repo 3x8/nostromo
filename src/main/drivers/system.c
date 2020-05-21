@@ -243,15 +243,14 @@ void systemMsTimerInit(void) {
 }
 
 #if (defined(USE_BOOTLOADER))
-  void systemInitAfterJump() {
+  void systemInitAfterBootloaderJump() {
     volatile uint32_t *VectorTable = (volatile uint32_t *)0x20000000;
-    uint32_t vector_index = 0;
-    for(vector_index = 0; vector_index < 48; vector_index++) {
-      VectorTable[vector_index ] = *(__IO uint32_t*)(APPLICATION_ADDRESS + (vector_index <<2)); // no VTOR on cortex-MO so need to copy vector table
+
+    for(uint8_t i = 0; i < 48; i++) {
+      VectorTable[i ] = *(__IO uint32_t*)(APPLICATION_ADDRESS + (i <<2));
     }
     __HAL_RCC_SYSCFG_CLK_ENABLE();
     __HAL_SYSCFG_REMAPMEMORY_SRAM();
-
     __enable_irq();
   }
 #endif

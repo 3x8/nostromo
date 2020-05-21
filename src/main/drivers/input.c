@@ -97,10 +97,15 @@ void inputDshotCommandRun(void) {
       uartPrintInteger(U_ID_1, 16, 1);
       uartPrintInteger(U_ID_0, 16, 1);
       uartPrint("\r\n");
-      #if (!defined(USE_PWM_FREQUENCY_48kHz))
-        uartPrint("# 24kHz ");
+      #if (defined(USE_BOOTLOADER))
+        uartPrint("# BL ");
       #else
-        uartPrint("# 48kHz ");
+        uartPrint("# ");
+      #endif
+      #if (!defined(USE_PWM_FREQUENCY_48kHz))
+        uartPrint("24kHz ");
+      #else
+        uartPrint("48kHz ");
       #endif
       if (escConfig()->motorDirection == SPIN_CW) {
         uartPrint("CW ");

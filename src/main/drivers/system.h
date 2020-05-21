@@ -1,9 +1,8 @@
 #pragma once
 
-#define USE_BOOTLOADER
-#define APPLICATION_ADDRESS (uint32_t)0x08002000
-
 #include "main.h"
+
+#define APPLICATION_ADDRESS (uint32_t)0x08002000
 
 extern TIM_HandleTypeDef msTimerHandle;
 
@@ -17,5 +16,5 @@ void systemInputTimerInit(void);
 void systemMsTimerInit(void);
 
 #if (defined(USE_BOOTLOADER))
-  void systemInitAfterJump();
+  void systemInitAfterBootloaderJump();
 #endif

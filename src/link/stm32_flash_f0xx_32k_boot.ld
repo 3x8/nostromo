@@ -38,10 +38,12 @@ _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
 
 /* Specify the memory areas */
+/* USE_BOOTLOADER */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 8K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 32K
+SRAM (xrw) : ORIGIN = 0x20000000, LENGTH = 192
+RAM (xrw) : ORIGIN = 0x200000C0, LENGTH = 8K - 192
+FLASH (rx) : ORIGIN = 0x8002000, LENGTH = 27K
 }
 
 /* Define output sections */

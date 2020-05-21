@@ -26,7 +26,11 @@ INCLUDE_DIRS    := $(INCLUDE_DIRS) \
                    $(CMSIS_DIR)/Include \
                    $(CMSIS_DIR)/Device/ST/STM32F0xx/Include
 
+ifneq ($(USE_BOOTLOADER),true)
 LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k.ld
+else
+LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k_boot.ld
+endif
 ARCH_FLAGS      = -mthumb -mcpu=cortex-m0
 
 DEVICE_FLAGS   += -DSTM32F051x8 \

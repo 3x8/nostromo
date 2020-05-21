@@ -18,7 +18,7 @@
 int main(void) {
   // init
   #if (defined(USE_BOOTLOADER))
-    systemInitAfterJump();
+    systemInitAfterBootloaderJump();
   #endif
   HAL_Init();
   systemClockConfig();
