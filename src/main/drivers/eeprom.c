@@ -1,9 +1,5 @@
 #include "eeprom.h"
 
-#define FLASH_PAGE_COUNT                64
-#define FLASH_TO_RESERVE_FOR_CONFIG     0x800
-#define CONFIG_START_FLASH_ADDRESS      (0x08000000 + (uint32_t)((FLASH_PAGE_SIZE * FLASH_PAGE_COUNT) - FLASH_TO_RESERVE_FOR_CONFIG))
-
 static uint8_t calculateChecksum(const uint8_t *data, uint32_t length) {
   uint8_t checksum = 0;
   const uint8_t *byteOffset;
