@@ -76,6 +76,6 @@ void eepromWrite(void) {
   }
 
   HAL_FLASH_Lock();
-  if (status != HAL_OK || !eepromValid()) {
+  if ((status != HAL_OK) || !eepromValid()) {
   }
 }
