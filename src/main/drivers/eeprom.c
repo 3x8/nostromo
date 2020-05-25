@@ -11,7 +11,7 @@ static uint8_t calculateChecksum(const uint8_t *data, uint32_t length) {
 }
 
 bool eepromValid(void) {
-  const master_t *temp = (const master_t *) CONFIG_START_FLASH_ADDRESS;
+  const master_t *temp = (const master_t *) FLASH_EEPROM_ADDRESS;
   uint8_t checksum = 0;
 
   if (EEPROM_CONF_VERSION != temp->version) {
@@ -34,7 +34,7 @@ void eepromRead(void) {
     // reset esc, iwdg timeout
     while (true);
   }
-  memcpy(&masterConfig, (char *) CONFIG_START_FLASH_ADDRESS, sizeof(master_t));
+  memcpy(&masterConfig, (char *) FLASH_EEPROM_ADDRESS, sizeof(master_t));
 }
 
 void eepromWrite(void) {
@@ -54,7 +54,7 @@ void eepromWrite(void) {
       if (wordOffset % FLASH_PAGE_SIZE == 0) {
         FLASH_EraseInitTypeDef eraseInit;
         eraseInit.TypeErase   = FLASH_TYPEERASE_PAGES;
-        eraseInit.PageAddress = CONFIG_START_FLASH_ADDRESS + wordOffset;
+        eraseInit.PageAddress = FLASH_EEPROM_ADDRESS + wordOffset;
         eraseInit.NbPages = 1;
         uint32_t eraseError = 0;
 
@@ -64,7 +64,7 @@ void eepromWrite(void) {
         }
       }
 
-      status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, CONFIG_START_FLASH_ADDRESS + wordOffset, *(uint32_t *) ((char *) &masterConfig + wordOffset));
+      status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_EEPROM_ADDRESS + wordOffset, *(uint32_t *) ((char *) &masterConfig + wordOffset));
       if (status != HAL_OK) {
         break;
       }
