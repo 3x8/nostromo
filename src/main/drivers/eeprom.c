@@ -14,11 +14,11 @@ bool eepromValid(void) {
   const master_t *temp = (const master_t *) FLASH_EEPROM_ADDRESS;
   uint8_t checksum = 0;
 
-  if (EEPROM_CONF_VERSION != temp->version) {
+  if (EEPROM_VERSION != temp->version) {
     return (false);
   }
 
-  if (temp->size != sizeof(master_t) || temp->magic_be != 0xbe || temp->magic_ef != 0xef) {
+  if ((temp->size != sizeof(master_t)) || (temp->magic_be != 0xbe) || (temp->magic_ef != 0xef)) {
     return (false);
   }
 
@@ -41,10 +41,10 @@ void eepromWrite(void) {
   HAL_StatusTypeDef status;
   int8_t attemptsRemaining = 3;
 
-  masterConfig.version = EEPROM_CONF_VERSION;
+  masterConfig.version = EEPROM_VERSION;
   masterConfig.size = sizeof(master_t);
-  masterConfig.magic_be = 0xBE;
-  masterConfig.magic_ef = 0xEF;
+  masterConfig.magic_be = 0xbe;
+  masterConfig.magic_ef = 0xef;
   masterConfig.chk = 0;
   masterConfig.chk = calculateChecksum((const uint8_t *) &masterConfig, sizeof(master_t));
 
