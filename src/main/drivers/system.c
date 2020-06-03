@@ -247,7 +247,7 @@ void systemMsTimerInit(void) {
     volatile uint32_t *VectorTable = (volatile uint32_t *)0x20000000;
 
     for(uint8_t i = 0; i < 48; i++) {
-      VectorTable[i ] = *(__IO uint32_t*)(APPLICATION_ADDRESS + (i <<2));
+      VectorTable[i] = *(__IO uint32_t*)(APPLICATION_ADDRESS + (i << 2));
     }
     __HAL_RCC_SYSCFG_CLK_ENABLE();
     __HAL_SYSCFG_REMAPMEMORY_SRAM();
