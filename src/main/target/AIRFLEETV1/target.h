@@ -55,7 +55,7 @@
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok
-#define FD6288
+#define FD6288  // STSPIN32F0
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    GPIO_PIN_8
 #define B_FET_HI_GPIO   GPIOA
@@ -66,7 +66,7 @@
 #define A_FET_LO_PIN    GPIO_PIN_13
 #define B_FET_LO_GPIO   GPIOB
 #define B_FET_LO_PIN    GPIO_PIN_14
-#define C_FET_LO_GPIO   GPIOA
+#define C_FET_LO_GPIO   GPIOB
 #define C_FET_LO_PIN    GPIO_PIN_15
 
 // comparator
@@ -88,7 +88,7 @@
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
 #define ADC_MASK                GPIO_PIN_3 | GPIO_PIN_6
 
-// adc calibration 
+// adc calibration
 #define ADC_VOLTAGE_OFFSET      40.5
 #define ADC_VOLTAGE_FACTOR      0.595
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
