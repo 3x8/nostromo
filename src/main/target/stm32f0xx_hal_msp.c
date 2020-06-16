@@ -45,25 +45,27 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
   }
 }
 
-void HAL_COMP_MspInit(COMP_HandleTypeDef* comparatorHandle) {
-  GPIO_InitTypeDef GPIO_InitStruct;
+#if (defined(FD6288) || defined(NCP3420))
+  void HAL_COMP_MspInit(COMP_HandleTypeDef* comparatorHandle) {
+    GPIO_InitTypeDef GPIO_InitStruct;
 
-  if (comparatorHandle->Instance == COMPARATOR) {
-    GPIO_InitStruct.Pin = COMPARATOR_MASK;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    if (comparatorHandle->Instance == COMPARATOR) {
+      GPIO_InitStruct.Pin = COMPARATOR_MASK;
+      GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 1, 0);
-    HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
+      HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 1, 0);
+      HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
+    }
   }
-}
 
-void HAL_COMP_MspDeInit(COMP_HandleTypeDef* comparatorHandle) {
-  if (comparatorHandle->Instance == COMPARATOR) {
-    HAL_GPIO_DeInit(GPIOA, COMPARATOR_MASK);
+  void HAL_COMP_MspDeInit(COMP_HandleTypeDef* comparatorHandle) {
+    if (comparatorHandle->Instance == COMPARATOR) {
+      HAL_GPIO_DeInit(GPIOA, COMPARATOR_MASK);
+    }
   }
-}
+#endif
 
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
   GPIO_InitTypeDef GPIO_InitStruct;
