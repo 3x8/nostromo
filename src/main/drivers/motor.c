@@ -99,8 +99,8 @@ motor_t motor;
     while ((motorCommutationTimerHandle.Instance->CNT - motorCommutationTimestamp) < motor.BemfFilterDelay);
 
     for (int i = 0; i < motor.BemfFilterLevel; i++) {
-      if ( (motor.BemfRising && (HAL_GPIO_ReadPin(GPIOA, Current_GPIO_Pin) == false)) ||
-           ((!motor.BemfRising) && (HAL_GPIO_ReadPin(GPIOA, Current_GPIO_Pin) == true)) ) {
+      if ( (motor.BemfRising && (HAL_GPIO_ReadPin(OPAMP_EXTI_GPIO, motor.ExtiPin) == false)) ||
+           ((!motor.BemfRising) && (HAL_GPIO_ReadPin(OPAMP_EXTI_GPIO, motor.ExtiPin) == true)) ) {
 
         __enable_irq();
         return;
@@ -390,7 +390,7 @@ void motorCommutationStep(uint8_t stepBuffer) {
           EXTI->FTSR |= (1 << 0);
           EXTI->RTSR &= (1 << 0);
         }
-        Current_GPIO_Pin = GPIO_PIN_0;
+        motor.ExtiPin = OPAMP_EXTI_PINA;
         break;
       case 2:
       case 5:
@@ -403,7 +403,7 @@ void motorCommutationStep(uint8_t stepBuffer) {
           EXTI->FTSR |= (1 << 2);
           EXTI->RTSR &= (0 << 2);
         }
-        Current_GPIO_Pin = GPIO_PIN_2;
+        motor.ExtiPin = OPAMP_EXTI_PINC;
         break;
       case 3:
       case 6:
@@ -416,7 +416,7 @@ void motorCommutationStep(uint8_t stepBuffer) {
           EXTI->FTSR |= (1 << 1);
           EXTI->RTSR &= (0 << 1);
         }
-        Current_GPIO_Pin = GPIO_PIN_1;
+        motor.ExtiPin = OPAMP_EXTI_PINB;
         break;
     }
   }

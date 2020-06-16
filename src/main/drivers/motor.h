@@ -35,6 +35,10 @@ typedef struct {
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t CommutationInterval;
   uint32_t CommutationDelay;
+  #if defined(STSPIN32F0)
+    uint8_t ExtiPin;
+  #endif
+
 } motor_t;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
