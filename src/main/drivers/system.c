@@ -98,20 +98,22 @@ void systemAdcInit(void) {
   #endif
 }
 
-void systemBemfComparatorInit(void) {
-  motorBemfComparatorHandle.Instance = COMPARATOR;
-  motorBemfComparatorHandle.Init.NonInvertingInput = COMPARATOR_COMMON;
-  motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
-  motorBemfComparatorHandle.Init.Output = COMP_OUTPUT_NONE;
-  motorBemfComparatorHandle.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
-  motorBemfComparatorHandle.Init.Hysteresis = COMP_HYSTERESIS_LOW;
-  motorBemfComparatorHandle.Init.Mode = COMP_MODE_HIGHSPEED;
-  motorBemfComparatorHandle.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
-  motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
-  while (HAL_COMP_Init(&motorBemfComparatorHandle) != HAL_OK);
+#if (defined(FD6288) || defined(NCP3420))
+  void systemBemfComparatorInit(void) {
+    motorBemfComparatorHandle.Instance = COMPARATOR;
+    motorBemfComparatorHandle.Init.NonInvertingInput = COMPARATOR_COMMON;
+    motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+    motorBemfComparatorHandle.Init.Output = COMP_OUTPUT_NONE;
+    motorBemfComparatorHandle.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+    motorBemfComparatorHandle.Init.Hysteresis = COMP_HYSTERESIS_LOW;
+    motorBemfComparatorHandle.Init.Mode = COMP_MODE_HIGHSPEED;
+    motorBemfComparatorHandle.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
+    motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+    while (HAL_COMP_Init(&motorBemfComparatorHandle) != HAL_OK);
 
-  while (HAL_COMP_Start_IT(&motorBemfComparatorHandle) != HAL_OK);
-}
+    while (HAL_COMP_Start_IT(&motorBemfComparatorHandle) != HAL_OK);
+  }
+#endif
 
 void systemMotorPwmTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;

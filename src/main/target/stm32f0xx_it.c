@@ -23,6 +23,27 @@ void DMA1_Channel1_IRQHandler(void) {
   HAL_DMA_IRQHandler(&adcDmaHandle);
 }
 
+#if defined(STSPIN32F0)
+  void EXTI0_1_IRQHandler(void) {
+    if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_0) != RESET) {
+      LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_0);
+      interruptRoutine();
+    }
+
+    if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_1) != RESET){
+      LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_1);
+      interruptRoutine();
+    }
+  }
+
+  void EXTI2_3_IRQHandler(void) {
+    if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_2) != RESET) {
+      LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_2);
+      interruptRoutine();
+    }
+  }
+#endif
+
 void DMA1_Channel2_3_IRQHandler(void) {
   if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
     LL_DMA_ClearFlag_TC2(DMA1);
@@ -57,7 +78,9 @@ void DMA1_Channel4_5_IRQHandler(void) {
 
 void ADC1_COMP_IRQHandler(void) {
   HAL_ADC_IRQHandler(&adcHandle);
-  HAL_COMP_IRQHandler(&motorBemfComparatorHandle);
+  #if (defined(FD6288) || defined(NCP3420))
+    HAL_COMP_IRQHandler(&motorBemfComparatorHandle);
+  #endif
 }
 
 void TIM1_CC_IRQHandler(void) {

@@ -38,7 +38,9 @@ typedef struct {
 } motor_t;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
-extern COMP_HandleTypeDef motorBemfComparatorHandle;
+#if (defined(FD6288) || defined(NCP3420))
+  extern COMP_HandleTypeDef motorBemfComparatorHandle;
+#endif
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
 extern motor_t motor;
 
@@ -60,3 +62,5 @@ void motorTuneStartup();
 void motorTuneInput(uint8_t motorStepDebug);
 
 void motorInputUpdate(void);
+
+void motorExtiInputChange();

@@ -2,6 +2,8 @@
 
 #include "main.h"
 
+extern void interruptRoutine();
+
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void SVC_Handler(void);

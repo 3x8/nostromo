@@ -1,85 +1,145 @@
 #include "motor.h"
 
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
-COMP_HandleTypeDef motorBemfComparatorHandle;
-motor_t motor;
+#if (defined(FD6288) || defined(NCP3420))
+  COMP_HandleTypeDef motorBemfComparatorHandle;
+#endif
 #if (defined(USE_RPM_MEDIAN))
   extern median_t motorCommutationIntervalFilterState;
 #endif
+motor_t motor;
 
-void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-  __disable_irq();
+#if (defined(FD6288) || defined(NCP3420))
+  void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+    __disable_irq();
 
-  uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
+    uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
-  if ((!motor.Running) || (!motor.Startup)) {
+    if ((!motor.Running) || (!motor.Startup)) {
+      #if (!defined(COMPARATOR_OPTIMIZE))
+        HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #endif
+
+      __enable_irq();
+      return;
+    }
+
+    while ((motorCommutationTimerHandle.Instance->CNT - motorCommutationTimestamp) < motor.BemfFilterDelay);
+
+    for (int i = 0; i < motor.BemfFilterLevel; i++) {
+      if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
+          (!motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
+
+        __enable_irq();
+        return;
+      }
+    }
+
+    #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+      LED_ON(LED_GREEN);
+    #endif
+
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
       __HAL_COMP_COMP1_EXTI_DISABLE_IT();
     #endif
 
+    motorCommutationTimerHandle.Instance->CNT = 0xffff;
+
+    motor.BemfCounter++;
+    motor.BemfZeroCounterTimeout = 0;
+    motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
+    #if (defined(USE_RPM_MEDIAN))
+      medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
+    #endif
+
+    // ToDo
+    if (motor.CommutationDelay > 40) {
+      while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
+        #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+          LED_TOGGLE(LED_BLUE);
+        #endif
+      }
+    }
+
+    #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+      LED_OFF(LED_GREEN);
+      LED_OFF(LED_BLUE);
+    #endif
+
+    motorCommutate();
+
+    #if (!defined(COMPARATOR_OPTIMIZE))
+      HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+    #else
+      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
+      __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+    #endif
+
     __enable_irq();
-    return;
   }
+#endif
 
-  while ((motorCommutationTimerHandle.Instance->CNT - motorCommutationTimestamp) < motor.BemfFilterDelay);
+#if defined(STSPIN32F0)
+  void interruptRoutine() {
+    __disable_irq();
 
-  for (int i = 0; i < motor.BemfFilterLevel; i++) {
-    if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
-        (!motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
+    if ((!motor.Running) || (!motor.Startup)) {
+      maskPhaseInterrupts();
 
       __enable_irq();
       return;
     }
-  }
 
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_ON(LED_GREEN);
-  #endif
+    uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-  #else
-    __HAL_COMP_COMP1_EXTI_DISABLE_IT();
-  #endif
+    while ((motorCommutationTimerHandle.Instance->CNT - motorCommutationTimestamp) < motor.BemfFilterDelay);
 
-  motorCommutationTimerHandle.Instance->CNT = 0xffff;
+    for (int i = 0; i < motor.BemfFilterLevel; i++) {
+      if ( (motor.BemfRising && (HAL_GPIO_ReadPin(GPIOA, Current_GPIO_Pin) == false)) ||
+           ((!motor.BemfRising) && (HAL_GPIO_ReadPin(GPIOA, Current_GPIO_Pin) == true)) ) {
 
-  motor.BemfCounter++;
-  motor.BemfZeroCounterTimeout = 0;
-  motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
-  #if (defined(USE_RPM_MEDIAN))
-    medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
-  #endif
-
-  // ToDo
-  if (motor.CommutationDelay > 40) {
-    while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
-      #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-        LED_TOGGLE(LED_BLUE);
-      #endif
+        __enable_irq();
+        return;
+      }
     }
+
+    motorCommutationTimerHandle.Instance->CNT = 0;
+
+    motor.BemfCounter++;
+    motor.BemfZeroCounterTimeout = 0;
+    motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
+    #if (defined(USE_RPM_MEDIAN))
+      medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
+    #endif
+
+    // ToDo
+    if (motor.CommutationDelay > 40) {
+      while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
+        #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+          LED_TOGGLE(LED_BLUE);
+        #endif
+      }
+    }
+
+    #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+      LED_OFF(LED_GREEN);
+      LED_OFF(LED_BLUE);
+    #endif
+
+    motorCommutate();
+
+    motorExtiInputChange();
+
+    __enable_irq();
   }
+#endif
 
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_OFF(LED_GREEN);
-    LED_OFF(LED_BLUE);
-  #endif
 
-  motorCommutate();
-
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
-  #else
-    __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
-    __HAL_COMP_COMP1_EXTI_ENABLE_IT();
-  #endif
-
-  __enable_irq();
-}
-
-#if defined(FD6288)
+#if (defined(FD6288) || defined(STSPIN32F0))
   void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
@@ -262,57 +322,105 @@ void motorCommutationStep(uint8_t stepBuffer) {
   }
 }
 
-void motorComparatorInputChange() {
-  switch (motor.Step) {
-    case 1:
-    case 4:
-      // C floating
-      #if (!defined(COMPARATOR_OPTIMIZE))
-        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
-      #else
-        COMP->CSR = COMPARATOR_PHASE_C_CSR;
-      #endif
-      break;
-    case 2:
-    case 5:
-      // B floating
-      #if (!defined(COMPARATOR_OPTIMIZE))
-        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
-      #else
-        COMP->CSR = COMPARATOR_PHASE_B_CSR;
-      #endif
-      break;
-    case 3:
-    case 6:
-      // A floating
-      #if (!defined(COMPARATOR_OPTIMIZE))
-        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
-      #else
-        COMP->CSR = COMPARATOR_PHASE_A_CSR;
-      #endif
-      break;
-  }
+#if (defined(FD6288) || defined(NCP3420))
+  void motorComparatorInputChange() {
+    switch (motor.Step) {
+      case 1:
+      case 4:
+        // C floating
+        #if (!defined(COMPARATOR_OPTIMIZE))
+          motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
+        #else
+          COMP->CSR = COMPARATOR_PHASE_C_CSR;
+        #endif
+        break;
+      case 2:
+      case 5:
+        // B floating
+        #if (!defined(COMPARATOR_OPTIMIZE))
+          motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
+        #else
+          COMP->CSR = COMPARATOR_PHASE_B_CSR;
+        #endif
+        break;
+      case 3:
+      case 6:
+        // A floating
+        #if (!defined(COMPARATOR_OPTIMIZE))
+          motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+        #else
+          COMP->CSR = COMPARATOR_PHASE_A_CSR;
+        #endif
+        break;
+    }
 
-  // input comparator polarity is reversed
-  if (motor.BemfRising) {
+    // input comparator polarity is reversed
+    if (motor.BemfRising) {
+      #if (!defined(COMPARATOR_OPTIMIZE))
+        motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_RISING_EDGE();
+        __HAL_COMP_COMP1_EXTI_ENABLE_FALLING_EDGE();
+      #endif
+    } else {
+      #if (!defined(COMPARATOR_OPTIMIZE))
+        motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_FALLING_EDGE();
+        __HAL_COMP_COMP1_EXTI_ENABLE_RISING_EDGE();
+      #endif
+    }
     #if (!defined(COMPARATOR_OPTIMIZE))
-      motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
-    #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_RISING_EDGE();
-      __HAL_COMP_COMP1_EXTI_ENABLE_FALLING_EDGE();
-    #endif
-  } else {
-    #if (!defined(COMPARATOR_OPTIMIZE))
-      motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
-    #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_FALLING_EDGE();
-      __HAL_COMP_COMP1_EXTI_ENABLE_RISING_EDGE();
+      HAL_COMP_Init(&motorBemfComparatorHandle);
     #endif
   }
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Init(&motorBemfComparatorHandle);
-  #endif
-}
+#endif
+
+#if (defined(STSPIN32F0))
+  void motorExtiInputChange() {
+    switch (motor.Step) {
+      case 1:
+      case 4:
+        // C floating
+        EXTI->IMR |= (1 << 0);
+        if (motor.BemfRising) {
+          EXTI->RTSR |= (1 << 0);
+          EXTI->FTSR &= (1 << 0);
+        } else {
+          EXTI->FTSR |= (1 << 0);
+          EXTI->RTSR &= (1 << 0);
+        }
+        Current_GPIO_Pin = GPIO_PIN_0;
+        break;
+      case 2:
+      case 5:
+        // B floating
+        EXTI->IMR |= (1 << 2);
+        if (motor.BemfRising) {
+          EXTI->RTSR |= (1 << 2);
+          EXTI->FTSR &= (0 << 2);
+        } else {
+          EXTI->FTSR |= (1 << 2);
+          EXTI->RTSR &= (0 << 2);
+        }
+        Current_GPIO_Pin = GPIO_PIN_2;
+        break;
+      case 3:
+      case 6:
+        // A floating
+        EXTI->IMR |= (1 << 1);
+        if (motor.BemfRising){
+          EXTI->RTSR |= (1 << 1);
+          EXTI->FTSR &= (0 << 1);
+        } else {
+          EXTI->FTSR |= (1 << 1);
+          EXTI->RTSR &= (0 << 1);
+        }
+        Current_GPIO_Pin = GPIO_PIN_1;
+        break;
+    }
+  }
+#endif
 
 void motorCommutate() {
   if (motor.Direction == SPIN_CW) {
@@ -338,7 +446,12 @@ void motorCommutate() {
   }
 
   motorCommutationStep(motor.Step);
-  motorComparatorInputChange();
+  #if (defined(FD6288) || defined(NCP3420))
+    motorComparatorInputChange();
+  #endif
+  #if (defined(STSPIN32F0))
+    motorExtiInputChange();
+  #endif
 }
 
 void motorStart() {
