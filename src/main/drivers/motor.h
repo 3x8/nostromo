@@ -49,7 +49,13 @@ void motorPhaseB(uint8_t phaseBuffer);
 void motorPhaseC(uint8_t phaseBuffer);
 
 void motorCommutationStep(uint8_t stepBuffer);
-void motorComparatorInputChange();
+#if (defined(FD6288) || defined(NCP3420))
+  void motorComparatorInputChange();
+#endif
+#if defined(STSPIN32F0)
+  void motorExtiInputChange();
+  void motorExtiMaskInterrupts();
+#endif
 void motorCommutate();
 
 void motorStart();
@@ -62,5 +68,3 @@ void motorTuneStartup();
 void motorTuneInput(uint8_t motorStepDebug);
 
 void motorInputUpdate(void);
-
-void motorExtiInputChange();

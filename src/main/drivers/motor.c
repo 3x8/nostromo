@@ -88,7 +88,7 @@ motor_t motor;
     __disable_irq();
 
     if ((!motor.Running) || (!motor.Startup)) {
-      maskPhaseInterrupts();
+      motorExtiMaskInterrupts();
 
       __enable_irq();
       return;
@@ -419,6 +419,12 @@ void motorCommutationStep(uint8_t stepBuffer) {
         Current_GPIO_Pin = GPIO_PIN_1;
         break;
     }
+  }
+
+  void motorExtiMaskInterrupts() {
+    EXTI->IMR &= (0 << 1);
+    EXTI->IMR &= (0 << 2);
+    EXTI->IMR &= (0 << 0);
   }
 #endif
 
