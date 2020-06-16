@@ -4,11 +4,15 @@
 #include <string.h>
 #include <math.h>
 
+#include "target.h"
+
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx_hal_flash.h"
 #include "stm32f0xx_hal_dma.h"
 #include "stm32f0xx_hal_tim.h"
-#include "stm32f0xx_hal_comp.h"
+#if (defined(FD6288) || defined(NCP3420))
+  #include "stm32f0xx_hal_comp.h"
+#endif
 #include "stm32f0xx_hal_adc.h"
 
 #include "stm32f0xx.h"
@@ -24,7 +28,6 @@
 #include "stm32f0xx_ll_usart.h"
 #include "stm32f0xx_ll_adc.h"
 
-#include "target.h"
 #include "build/version.h"
 #include "common/common.h"
 #include "config/config.h"
