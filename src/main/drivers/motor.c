@@ -464,10 +464,12 @@ void motorStart() {
   bool bufferComplementaryPWM = motor.ComplementaryPWM;
 
   if (!motor.Running) {
-    #if (!defined(COMPARATOR_OPTIMIZE))
-      HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-    #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+    #if (defined(FD6288) || defined(NCP3420))
+      #if (!defined(COMPARATOR_OPTIMIZE))
+        HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #endif
     #endif
 
     motor.ComplementaryPWM = true;
@@ -477,11 +479,13 @@ void motorStart() {
     motorCommutationTimerHandle.Instance->CNT = 0xffff;
     motor.BemfCounter = 0;
     motor.Running = true;
-    #if (!defined(COMPARATOR_OPTIMIZE))
-      HAL_COMP_Start_IT(&motorBemfComparatorHandle);
-    #else
-      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
-      __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+    #if (defined(FD6288) || defined(NCP3420))
+      #if (!defined(COMPARATOR_OPTIMIZE))
+        HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+      #else
+        __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
+        __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+      #endif
     #endif
   }
   motor.ComplementaryPWM = bufferComplementaryPWM;

@@ -33,8 +33,7 @@ LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k_boot.ld
 endif
 ARCH_FLAGS      = -mthumb -mcpu=cortex-m0
 
-DEVICE_FLAGS   += -DSTM32F051x8 \
-                  -DUSE_HAL_DRIVER \
+DEVICE_FLAGS   += -DUSE_HAL_DRIVER \
                   -DUSE_FULL_LL_DRIVER
 
 MCU_SRC        := target/system_stm32f0xx.c \
