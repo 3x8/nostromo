@@ -84,8 +84,8 @@ motor_t motor;
 #endif
 
 #if defined(STSPIN32F0)
-  void interruptRoutine() {
-    __disable_irq();
+  void motorExtiCallback() {
+    //__disable_irq();
 
     if ((!motor.Running) || (!motor.Startup)) {
       motorExtiMaskInterrupts();
@@ -102,7 +102,7 @@ motor_t motor;
       if ( (motor.BemfRising && (HAL_GPIO_ReadPin(OPAMP_EXTI_GPIO, motor.ExtiPin) == false)) ||
            ((!motor.BemfRising) && (HAL_GPIO_ReadPin(OPAMP_EXTI_GPIO, motor.ExtiPin) == true)) ) {
 
-        __enable_irq();
+        //__enable_irq();
         return;
       }
     }
@@ -134,7 +134,7 @@ motor_t motor;
 
     motorExtiInputChange();
 
-    __enable_irq();
+    //__enable_irq();
   }
 #endif
 

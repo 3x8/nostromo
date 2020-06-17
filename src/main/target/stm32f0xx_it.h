@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-extern void interruptRoutine();
+extern void motorExtiCallback();
 
 void NMI_Handler(void);
 void HardFault_Handler(void);

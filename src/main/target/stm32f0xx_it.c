@@ -27,19 +27,19 @@ void DMA1_Channel1_IRQHandler(void) {
   void EXTI0_1_IRQHandler(void) {
     if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_0) != RESET) {
       LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_0);
-      interruptRoutine();
+      motorExtiCallback();
     }
 
     if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_1) != RESET){
       LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_1);
-      interruptRoutine();
+      motorExtiCallback();
     }
   }
 
   void EXTI2_3_IRQHandler(void) {
     if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_2) != RESET) {
       LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_2);
-      interruptRoutine();
+      motorExtiCallback();
     }
   }
 #endif

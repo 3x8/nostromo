@@ -59,6 +59,7 @@ void motorCommutationStep(uint8_t stepBuffer);
 #if defined(STSPIN32F0)
   void motorExtiInputChange();
   void motorExtiMaskInterrupts();
+  void motorExtiCallback();
 #endif
 void motorCommutate();
 
