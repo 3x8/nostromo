@@ -13,13 +13,13 @@
 // ToDo new
 // CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
 // PWM_FREQUENCY 48kHz resolution 500 steps, 24kHz resolution 1000 steps
-#define USE_PWM_FREQUENCY_48kHz
+//#define USE_PWM_FREQUENCY_48kHz
 #define USE_RPM_MEDIAN
 #define USE_ADC_MEDIAN
 
 // hw constants
-#define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
-#define HBRIDGE_MAX_CURRENT     6607  // (in 10mA steps)
+#define HBRIDGE_DEAD_TIME       11     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
+#define HBRIDGE_MAX_CURRENT     1111  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #if (!defined(USE_PWM_FREQUENCY_48kHz))
   #define TIMER1_INIT_PERIOD    1001
@@ -39,19 +39,19 @@
 #endif
 #define MOTOR_POLES             14
 
-// input begin
+// input ,begin
 #define INPUT_GPIO      GPIOA
 #define INPUT_PIN       GPIO_PIN_3
 #define INPUT_TIMER     TIM2
 #define INPUT_TIMER_CH  TIM_CHANNEL_4
 
-// LEDs
+// LEDs ,ko
 #define LED_RED_GPIO    GPIOA
 #define LED_RED_PIN     GPIO_PIN_15
-#define LED_GREEN_GPIO  GPIOB
-#define LED_GREEN_PIN   GPIO_PIN_3
-#define LED_BLUE_GPIO   GPIOB
-#define LED_BLUE_PIN    GPIO_PIN_4
+#define LED_GREEN_GPIO  GPIOA
+#define LED_GREEN_PIN   GPIO_PIN_15
+#define LED_BLUE_GPIO   GPIOA
+#define LED_BLUE_PIN    GPIO_PIN_15
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,done
@@ -76,7 +76,7 @@
 #define OPAMP_EXTI_PINC GPIO_PIN_2
 
 // adc
-#define USE_ADC
+//#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
