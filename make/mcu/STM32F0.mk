@@ -13,7 +13,7 @@ EXCLUDES         = \
                    stm32f0xx_hal_timebase_tim_template.c \
                    stm32f0xx_hal_msp_template.c
 
-STARTUP_SRC      = startup_$(STM_CHIP)_gcc.s
+STARTUP_SRC      = startup_$(STM_CHIP).s
 DRIVER_SRC      := $(filter-out ${EXCLUDES}, $(DRIVER_SRC))
 
 # Search path and source files for the CMSIS sources
@@ -27,9 +27,9 @@ INCLUDE_DIRS    := $(INCLUDE_DIRS) \
                    $(CMSIS_DIR)/Device/ST/STM32F0xx/Include
 
 ifneq ($(USE_BOOTLOADER),true)
-LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k.ld
+LD_SCRIPT       = $(LINKER_DIR)/$(STM_CHIP)_$(FLASH_SIZE)k.ld
 else
-LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k_boot.ld
+LD_SCRIPT       = $(LINKER_DIR)/$(STM_CHIP)_$(FLASH_SIZE)k_bl.ld
 endif
 ARCH_FLAGS      = -mthumb -mcpu=cortex-m0
 
