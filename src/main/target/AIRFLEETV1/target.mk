@@ -1,8 +1,8 @@
-USE_BOOTLOADER := true
+USE_BOOTLOADER := false
 
 F0_TARGETS  := $(TARGET)
 
-FLASH_SIZE  := 64
+FLASH_SIZE  := 32
 STM_CHIP    := stm32f031x6
 TARGET_SRC  := \
 
