@@ -88,10 +88,12 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
       __HAL_RCC_TIM3_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
     }
-    if (INPUT_TIMER == TIM15){
-      __HAL_RCC_TIM15_CLK_ENABLE();
-      GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
-    }
+    #if !defined(STSPIN32F0)
+      if (INPUT_TIMER == TIM15){
+        __HAL_RCC_TIM15_CLK_ENABLE();
+        GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
+      }
+    #endif
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -108,9 +110,11 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
     if (INPUT_TIMER == TIM3){
       inputTimerDmaHandle.Instance = DMA1_Channel4;
     }
-    if (INPUT_TIMER == TIM15){
-      inputTimerDmaHandle.Instance = DMA1_Channel5;
-    }
+    #if !defined(STSPIN32F0)
+      if (INPUT_TIMER == TIM15){
+        inputTimerDmaHandle.Instance = DMA1_Channel5;
+      }
+    #endif
     inputTimerDmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
     inputTimerDmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
     inputTimerDmaHandle.Init.MemInc = DMA_MINC_ENABLE;
@@ -139,7 +143,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timerHandle) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
 
-    #if defined(FD6288)
+    #if (defined(FD6288) || defined(STSPIN32F0))
       GPIO_InitStruct.Pin = A_FET_LO_PIN;
       HAL_GPIO_Init(A_FET_LO_GPIO, &GPIO_InitStruct);
       GPIO_InitStruct.Pin = A_FET_HI_PIN;
@@ -189,9 +193,11 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
     if (INPUT_TIMER == TIM3) {
       __HAL_RCC_TIM3_CLK_DISABLE();
     }
-    if (INPUT_TIMER == TIM15) {
-      __HAL_RCC_TIM15_CLK_DISABLE();
-    }
+    #if !defined(STSPIN32F0)
+      if (INPUT_TIMER == TIM15) {
+        __HAL_RCC_TIM15_CLK_DISABLE();
+      }
+    #endif
 
     // input timer
     HAL_GPIO_DeInit(INPUT_GPIO, INPUT_PIN);

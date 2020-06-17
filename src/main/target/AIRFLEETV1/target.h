@@ -39,11 +39,11 @@
 #endif
 #define MOTOR_POLES             14
 
-// input
+// input begin
 #define INPUT_GPIO      GPIOA
-#define INPUT_PIN       GPIO_PIN_2
-#define INPUT_TIMER     TIM15
-#define INPUT_TIMER_CH  TIM_CHANNEL_1
+#define INPUT_PIN       GPIO_PIN_3
+#define INPUT_TIMER     TIM2
+#define INPUT_TIMER_CH  TIM_CHANNEL_4
 
 // LEDs
 #define LED_RED_GPIO    GPIOA

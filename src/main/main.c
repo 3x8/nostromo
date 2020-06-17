@@ -21,12 +21,17 @@ int main(void) {
     systemInitAfterBootloaderJump();
   #endif
   HAL_Init();
+  #if defined(STSPIN32F0)
+    systemGpioInit();
+  #endif
   systemClockConfig();
   configValidateOrReset();
   configRead();
   ledInit();
   systemDmaInit();
-  systemBemfComparatorInit();
+  #if !defined(STSPIN32F0)
+    systemBemfComparatorInit();
+  #endif
   systemAdcInit();
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
