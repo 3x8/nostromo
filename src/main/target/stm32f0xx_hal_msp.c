@@ -88,7 +88,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
       __HAL_RCC_TIM3_CLK_ENABLE();
       GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
     }
-    #if !defined(STSPIN32F0)
+    #if (defined(FD6288) || defined(NCP3420))
       if (INPUT_TIMER == TIM15){
         __HAL_RCC_TIM15_CLK_ENABLE();
         GPIO_InitStruct.Alternate = GPIO_AF0_TIM15;
@@ -110,7 +110,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
     if (INPUT_TIMER == TIM3){
       inputTimerDmaHandle.Instance = DMA1_Channel4;
     }
-    #if !defined(STSPIN32F0)
+    #if (defined(FD6288) || defined(NCP3420))
       if (INPUT_TIMER == TIM15){
         inputTimerDmaHandle.Instance = DMA1_Channel5;
       }
@@ -193,7 +193,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
     if (INPUT_TIMER == TIM3) {
       __HAL_RCC_TIM3_CLK_DISABLE();
     }
-    #if !defined(STSPIN32F0)
+    #if (defined(FD6288) || defined(NCP3420))
       if (INPUT_TIMER == TIM15) {
         __HAL_RCC_TIM15_CLK_DISABLE();
       }

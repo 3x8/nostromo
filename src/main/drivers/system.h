@@ -7,7 +7,7 @@ extern TIM_HandleTypeDef msTimerHandle;
 void systemClockConfig(void);
 void systemDmaInit(void);
 void systemAdcInit(void);
-#if !defined(STSPIN32F0)
+#if (defined(FD6288) || defined(NCP3420))
   void systemBemfComparatorInit(void);
 #endif
 void systemMotorPwmTimerInit(void);

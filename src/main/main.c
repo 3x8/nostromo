@@ -29,7 +29,7 @@ int main(void) {
   configRead();
   ledInit();
   systemDmaInit();
-  #if !defined(STSPIN32F0)
+  #if (defined(FD6288) || defined(NCP3420))
     systemBemfComparatorInit();
   #endif
   systemAdcInit();

@@ -76,7 +76,7 @@
 #define OPAMP_EXTI_PINC GPIO_PIN_2
 
 // adc
-//#define USE_ADC
+#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
