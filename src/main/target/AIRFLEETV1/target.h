@@ -41,17 +41,17 @@
 
 // input ,begin
 #define INPUT_GPIO      GPIOA
-#define INPUT_PIN       GPIO_PIN_3
-#define INPUT_TIMER     TIM2
-#define INPUT_TIMER_CH  TIM_CHANNEL_4
+#define INPUT_PIN       GPIO_PIN_6
+#define INPUT_TIMER     TIM3
+#define INPUT_TIMER_CH  TIM_CHANNEL_1
 
 // LEDs ,ko
 #define LED_RED_GPIO    GPIOA
-#define LED_RED_PIN     GPIO_PIN_15
+#define LED_RED_PIN     GPIO_PIN_3
 #define LED_GREEN_GPIO  GPIOA
-#define LED_GREEN_PIN   GPIO_PIN_15
+#define LED_GREEN_PIN   GPIO_PIN_3
 #define LED_BLUE_GPIO   GPIOA
-#define LED_BLUE_PIN    GPIO_PIN_15
+#define LED_BLUE_PIN    GPIO_PIN_3
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,done
@@ -76,7 +76,7 @@
 #define OPAMP_EXTI_PINC GPIO_PIN_2
 
 // adc
-#define USE_ADC
+//#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
