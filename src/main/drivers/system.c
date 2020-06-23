@@ -266,10 +266,10 @@ void systemMsTimerInit(void) {
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
 
-    LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
-    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_11);
-    LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_6);
-    LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_7);
+    //LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
+    //LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_11);
+    //LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_6);
+    //LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_7);
 
     /*
     GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
@@ -279,26 +279,29 @@ void systemMsTimerInit(void) {
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOF, &GPIO_InitStruct);*/
 
+    /*
     GPIO_InitStruct.Pin = LL_GPIO_PIN_11;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);*/
 
+    /*
     GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOF, &GPIO_InitStruct);*/
 
+    /*
     GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOF, &GPIO_InitStruct);*/
 
     LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE0);
     LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE1);
