@@ -13,6 +13,7 @@
   * Maximal Current,Temperature protection
   * 3D mode
   * kalman filter *(Voltage, Current, RPM)*
+  * bootloader enabled (4way interface uploader)
 
 **supported hardware:**
   * WRAITH32V2  *(official)*
