@@ -12,6 +12,5 @@
 
 #define LED_TOGGLE(X)   LL_GPIO_TogglePin(X ## _GPIO, X ## _PIN)
 
-
 void ledInit(void);
 void ledOff(void);
