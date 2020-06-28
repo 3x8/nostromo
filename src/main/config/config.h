@@ -17,6 +17,7 @@ typedef struct {
   uint32_t limitCurrent;
   uint32_t limitTemperature;
   int32_t adcCurrentOffset;
+  uint8_t motorPoles;
 } escConfigStructure;
 
 typedef struct {

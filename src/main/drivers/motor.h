@@ -2,8 +2,8 @@
 
 #include "main.h"
 
-#define MOTOR_POLES 14 // ToDo move to eeprom
-#define BLDC_STEPS  6
+#define MOTOR_POLES 14
+#define MOTOR_BLDC_STEPS  6
 
 typedef enum {
   HBRIDGE_PWM = 0,

@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-#define EEPROM_VERSION 5
+#define EEPROM_VERSION 7
 
 #define FLASH_PAGE_COUNT      64
 #define FLASH_EEPROM_SIZE     0x400  // 1x1K page

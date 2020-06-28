@@ -30,7 +30,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  medianInit(&motorCommutationIntervalFilterState, BLDC_STEPS);
+  medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_STEPS);
 
   #if (defined(USE_ADC))
     #if (defined(USE_ADC_MEDIAN))
@@ -56,7 +56,7 @@ int main(void) {
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
-  motor.RpmFactor = ((60000000 / (MOTOR_POLES / 2)) / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
+  motor.RpmFactor = ((60000000 / (escConfig()->motorPoles / 2)) / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;
@@ -133,7 +133,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          medianInit(&motorCommutationIntervalFilterState, BLDC_STEPS);
+          medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_STEPS);
         }
 
         // motor start

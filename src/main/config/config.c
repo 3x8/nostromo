@@ -26,6 +26,7 @@ void configReset(void) {
   escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
   escConfig()->limitTemperature = HBRIDGE_MAX_TEMPERATURE;
   escConfig()->adcCurrentOffset = ADC_CURRENT_OFFSET;
+  escConfig()->motorPoles = MOTOR_POLES;
 
   eepromWrite();
 }
