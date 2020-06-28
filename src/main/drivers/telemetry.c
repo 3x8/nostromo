@@ -62,7 +62,7 @@ void telemetry(void) {
     telemetryData.consumption =  (int)consumptionMah;
   }
 
-  telemetryData.erpm = motorGetRpm() / 10;
+  telemetryData.erpm = (uint16_t)(motorGetErpm() / 100);
 
   telemetryTelegram(&telemetryData);
 }

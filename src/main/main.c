@@ -57,6 +57,7 @@ int main(void) {
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
   motor.RpmFactor = ((60000000 / (escConfig()->motorPoles / 2)) / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
+  motor.ErpmFactor = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;

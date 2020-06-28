@@ -39,6 +39,7 @@ typedef struct {
   uint32_t CommutationInterval;
   uint32_t CommutationDelay;
   float RpmFactor;
+  float ErpmFactor;
 } motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
@@ -65,3 +66,4 @@ void motorTuneInput(uint8_t motorStepDebug);
 
 void motorInputUpdate(void);
 uint32_t motorGetRpm(void);
+uint32_t motorGetErpm(void);
