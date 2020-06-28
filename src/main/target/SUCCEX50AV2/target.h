@@ -12,7 +12,6 @@
 
 // ToDo new
 //#define USE_PWM_FREQUENCY_48kHz           // 48kHz resolution 500 steps, 24kHz resolution 1000 steps
-#define USE_RPM_MEDIAN
 #define USE_ADC_MEDIAN
 
 // hw constants
@@ -26,12 +25,6 @@
   #define TIMER1_INIT_PERIOD    501
   #define MOTOR_START_THRESHOLD 13
 #endif
-#if (defined(USE_RPM_MEDIAN))
-#define RPM_CONSTANT     7616032
-#else
-  #define RPM_CONSTANT     7744820
-#endif
-#define MOTOR_POLES             14
 
 // input ,Ok
 #define INPUT_GPIO      GPIOB

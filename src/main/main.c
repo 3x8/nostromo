@@ -1,11 +1,7 @@
 #include "main.h"
 
 // filter
-#if (defined(USE_RPM_MEDIAN))
-  medianStructure motorCommutationIntervalFilterState;
-#else
-  kalmanStructure motorCommutationIntervalFilterState;
-#endif
+medianStructure motorCommutationIntervalFilterState;
 
 #if (defined(USE_ADC))
   #if (defined(USE_ADC_MEDIAN))
@@ -34,11 +30,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  #if (defined(USE_RPM_MEDIAN))
-    medianInit(&motorCommutationIntervalFilterState, 8);
-  #else
-    kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
-  #endif
+  medianInit(&motorCommutationIntervalFilterState, BLDC_STEPS);
 
   #if (defined(USE_ADC))
     #if (defined(USE_ADC_MEDIAN))
@@ -60,9 +52,11 @@ int main(void) {
   #else
     motor.BemfZeroCounterTimeoutThreshold = 29;
   #endif
+
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
+  motor.RpmFactor = ((60000000 / (MOTOR_POLES / 2)) / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;
@@ -126,7 +120,7 @@ int main(void) {
         }
 
         // motor BEMF filter
-        if ((motor.CommutationInterval < 401) && (input.PwmValue > 503)) {
+        if ((motor.CommutationInterval < 2411) && (input.PwmValue > 503)) {
           motor.BemfFilterDelay = 5;
           motor.BemfFilterLevel = 2;
         } else {
@@ -139,11 +133,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          #if (defined(USE_RPM_MEDIAN))
-            medianInit(&motorCommutationIntervalFilterState, 8);
-          #else
-            kalmanInit(&motorCommutationIntervalFilterState, 200000.0f, 5);
-          #endif
+          medianInit(&motorCommutationIntervalFilterState, BLDC_STEPS);
         }
 
         // motor start
@@ -152,11 +142,7 @@ int main(void) {
           motorStart();
         }
 
-        #if (defined(USE_RPM_MEDIAN))
-          motor.CommutationInterval = medianCalculate(&motorCommutationIntervalFilterState);
-        #else
-          motor.CommutationInterval = kalmanUpdate(&motorCommutationIntervalFilterState, (float)motor.BemfZeroCrossTimestamp);
-        #endif
+        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState);
 
         // ToDo
         motor.CommutationDelay = 0; //timing 30°
@@ -223,7 +209,12 @@ int main(void) {
         // CSV
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
-        uartPrintInteger((RPM_CONSTANT / motor.CommutationInterval), 10, 1);
+        if (motor.CommutationInterval > 0) {
+          uartPrintInteger(motorGetRpm(), 10, 1);
+        } else {
+          uartPrintInteger(0, 10, 1);
+        }
+
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");

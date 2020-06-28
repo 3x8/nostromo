@@ -2,6 +2,9 @@
 
 #include "main.h"
 
+#define MOTOR_POLES 14 // ToDo move to eeprom
+#define BLDC_STEPS  6
+
 typedef enum {
   HBRIDGE_PWM = 0,
   HBRIDGE_FLOATING,
@@ -35,6 +38,7 @@ typedef struct {
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t CommutationInterval;
   uint32_t CommutationDelay;
+  float RpmFactor;
 } motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
@@ -60,3 +64,4 @@ void motorTuneStartup();
 void motorTuneInput(uint8_t motorStepDebug);
 
 void motorInputUpdate(void);
+uint32_t motorGetRpm(void);

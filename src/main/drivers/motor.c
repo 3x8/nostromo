@@ -3,9 +3,12 @@
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motorStructure motor;
-#if (defined(USE_RPM_MEDIAN))
-  extern medianStructure motorCommutationIntervalFilterState;
-#endif
+
+extern medianStructure motorCommutationIntervalFilterState;
+
+//const float motorCommutationTimerUsFactor = ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001));
+
+
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
@@ -49,9 +52,7 @@ void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
-  #if (defined(USE_RPM_MEDIAN))
-    medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
-  #endif
+  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
 
   // ToDo
   if (motor.CommutationDelay > 40) {
@@ -489,4 +490,13 @@ void motorInputUpdate(void) {
       motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
     }
   }
+}
+
+uint32_t motorGetRpm(void) {
+  if (motor.CommutationInterval > 0) {
+    return((motor.RpmFactor / motor.CommutationInterval));
+  } else {
+    return(0));
+  }
+
 }

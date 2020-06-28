@@ -1,12 +1,12 @@
 #pragma once
 
 // debug
-//#define _DEBUG_
+#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP
-//#define DEBUG_MOTOR_TIMING
+#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-//#define DEBUG_DATA_UART
+#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 //#define DEBUG_DATA_QUALITY
 
@@ -14,7 +14,6 @@
 // CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
 // PWM_FREQUENCY 48kHz resolution 500 steps, 24kHz resolution 1000 steps
 #define USE_PWM_FREQUENCY_48kHz
-#define USE_RPM_MEDIAN
 #define USE_ADC_MEDIAN
 
 // hw constants
@@ -28,16 +27,6 @@
   #define TIMER1_INIT_PERIOD    501
   #define MOTOR_START_THRESHOLD 13
 #endif
-#if (defined(USE_RPM_MEDIAN))
-  #if (!defined(USE_PWM_FREQUENCY_48kHz))
-    #define RPM_CONSTANT     7616032
-  #else
-    #define RPM_CONSTANT     7235231
-  #endif
-#else
-  #define RPM_CONSTANT       7744820
-#endif
-#define MOTOR_POLES             14
 
 // input ,Ok
 #define INPUT_GPIO      GPIOA

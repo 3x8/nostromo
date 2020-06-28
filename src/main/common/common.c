@@ -95,4 +95,14 @@ uint32_t medianCalculate(medianStructure *filter) {
 
   return(medianSumm / filter->windowSize);
 }
+
+uint32_t medianSumm(medianStructure *filter) {
+  uint32_t medianSumm = 0;
+
+  for (uint8_t i = 0; i < filter->windowSize; i++) {
+    medianSumm += filter->window[i];
+  }
+
+  return(medianSumm);
+}
 #pragma GCC pop_options
