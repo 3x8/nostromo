@@ -496,7 +496,7 @@ uint32_t motorGetRpm(void) {
   if (motor.CommutationInterval > 0) {
     return((motor.RpmFactor / motor.CommutationInterval));
   } else {
-    return(0));
+    return(0);
   }
 
 }
