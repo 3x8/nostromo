@@ -14,7 +14,7 @@
 // ToDo new
 // CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
 // PWM_FREQUENCY 48kHz resolution 500 steps, 24kHz resolution 1000 steps
-#define USE_PWM_FREQUENCY_48kHz
+//#define USE_PWM_FREQUENCY_48kHz
 #define USE_ADC_MEDIAN
 
 // hw constants
@@ -23,7 +23,7 @@
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #if (!defined(USE_PWM_FREQUENCY_48kHz))
   #define TIMER1_INIT_PERIOD    1001
-  #define MOTOR_START_THRESHOLD 21
+  #define MOTOR_START_THRESHOLD 26
 #else
   #define TIMER1_INIT_PERIOD    501
   #define MOTOR_START_THRESHOLD 13
