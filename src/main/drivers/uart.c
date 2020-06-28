@@ -1,6 +1,6 @@
 #include "uart.h"
 
-uart_t serialPort;
+uartStructure serialPort;
 
 void uartStartTxDMA(void) {
   LL_DMA_SetMemoryAddress(DMA1, USART_TX_DMA_CHANNEL, (uint32_t)&serialPort.txBuf[serialPort.txTail]);

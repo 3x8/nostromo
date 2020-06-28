@@ -35,12 +35,12 @@ typedef struct {
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t CommutationInterval;
   uint32_t CommutationDelay;
-} motor_t;
+} motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
-extern motor_t motor;
+extern motorStructure motor;
 
 void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);

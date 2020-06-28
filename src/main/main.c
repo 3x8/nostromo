@@ -2,16 +2,16 @@
 
 // filter
 #if (defined(USE_RPM_MEDIAN))
-  median_t motorCommutationIntervalFilterState;
+  medianStructure motorCommutationIntervalFilterState;
 #else
-  kalman_t motorCommutationIntervalFilterState;
+  kalmanStructure motorCommutationIntervalFilterState;
 #endif
 
 #if (defined(USE_ADC))
   #if (defined(USE_ADC_MEDIAN))
-    median_t adcVoltageFilterState, adcCurrentFilterState;
+    medianStructure adcVoltageFilterState, adcCurrentFilterState;
   #else
-    kalman_t adcVoltageFilterState, adcCurrentFilterState;
+    kalmanStructure adcVoltageFilterState, adcCurrentFilterState;
   #endif
 #endif
 

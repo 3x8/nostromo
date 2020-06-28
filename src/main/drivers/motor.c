@@ -2,9 +2,9 @@
 
 TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
-motor_t motor;
+motorStructure motor;
 #if (defined(USE_RPM_MEDIAN))
-  extern median_t motorCommutationIntervalFilterState;
+  extern medianStructure motorCommutationIntervalFilterState;
 #endif
 
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {

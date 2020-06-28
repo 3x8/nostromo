@@ -4,7 +4,7 @@ ADC_HandleTypeDef adcHandle;
 DMA_HandleTypeDef adcDmaHandle;
 
 uint32_t adcDmaBuffer[3];
-adcData_t adcRaw, adcScaled;
+adcDataStructure adcRaw, adcScaled;
 float consumptionMah;
 
 void adcRead(void) {

@@ -25,13 +25,13 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
 // kalman filter
 #pragma GCC push_options
 #pragma GCC optimize("O3")
-void kalmanInit(kalman_t *filter, float q, uint32_t w) {
-  memset(filter, 0, sizeof(kalman_t));
+void kalmanInit(kalmanStructure *filter, float q, uint32_t w) {
+  memset(filter, 0, sizeof(kalmanStructure));
   filter->q = q * 0.000001f;
   filter->w = w;
 }
 
-FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
+FAST_CODE float kalmanUpdate(kalmanStructure *filter, float input) {
   const float windowSizeInverse = 1.0f/(filter->w - 1);
 
   // project the state ahead using acceleration
@@ -73,12 +73,12 @@ FAST_CODE float kalmanUpdate(kalman_t *filter, float input) {
 // median filter
 #pragma GCC push_options
 #pragma GCC optimize("O3")
-void medianInit(median_t *filter, uint32_t w) {
-  memset(filter, 0, sizeof(median_t));
+void medianInit(medianStructure *filter, uint32_t w) {
+  memset(filter, 0, sizeof(medianStructure));
   filter->windowSize = w;
 }
 
-void medianPush(median_t *filter, uint32_t newValue) {
+void medianPush(medianStructure *filter, uint32_t newValue) {
   filter->window[filter->windowIndex] = newValue;
 
   if (++filter->windowIndex >= filter->windowSize) {
@@ -86,7 +86,7 @@ void medianPush(median_t *filter, uint32_t newValue) {
   }
 }
 
-uint32_t medianCalculate(median_t *filter) {
+uint32_t medianCalculate(medianStructure *filter) {
   uint32_t medianSumm = 0;
 
   for (uint8_t i = 0; i < filter->windowSize; i++) {

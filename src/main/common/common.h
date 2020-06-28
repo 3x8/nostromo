@@ -26,7 +26,7 @@ uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 #define FAST_CODE                   __attribute__((section(".tcm_code")))
 #define MAX_WINDOW_SIZE 32
 
-typedef struct kalman_s {
+typedef struct {
   uint32_t w;    // window size
   float q;       // process noise covariance
   float r;       // measurement noise covariance
@@ -41,18 +41,18 @@ typedef struct kalman_s {
   float mean;
   float meanSum;
   uint32_t windowIndex;
-} kalman_t;
+} kalmanStructure;
 
-void kalmanInit(kalman_t *filter, float q, uint32_t w);
-FAST_CODE float kalmanUpdate(kalman_t *filter, float input);
+void kalmanInit(kalmanStructure *filter, float q, uint32_t w);
+FAST_CODE float kalmanUpdate(kalmanStructure *filter, float input);
 
 // median filter
-typedef struct median_s {
+typedef struct {
   uint32_t window[MAX_WINDOW_SIZE];
   uint32_t windowSize;
   uint32_t windowIndex;
-} median_t;
+} medianStructure;
 
-void medianInit(median_t *filter, uint32_t w);
-void medianPush(median_t *filter, uint32_t newValue);
-uint32_t medianCalculate(median_t *filter);
+void medianInit(medianStructure *filter, uint32_t w);
+void medianPush(medianStructure *filter, uint32_t newValue);
+uint32_t medianCalculate(medianStructure *filter);

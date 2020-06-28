@@ -11,18 +11,18 @@ static uint8_t calculateChecksum(const uint8_t *data, uint32_t length) {
 }
 
 bool eepromValid(void) {
-  const master_t *temp = (const master_t *) FLASH_EEPROM_ADDRESS;
+  const eepromStructure *temp = (const eepromStructure *) FLASH_EEPROM_ADDRESS;
   uint8_t checksum = 0;
 
   if (EEPROM_VERSION != temp->version) {
     return (false);
   }
 
-  if ((temp->size != sizeof(master_t)) || (temp->magic_be != 0xbe) || (temp->magic_ef != 0xef)) {
+  if ((temp->size != sizeof(eepromStructure)) || (temp->magic_be != 0xbe) || (temp->magic_ef != 0xef)) {
     return (false);
   }
 
-  checksum = calculateChecksum((const uint8_t *) temp, sizeof(master_t));
+  checksum = calculateChecksum((const uint8_t *) temp, sizeof(eepromStructure));
   if (checksum != 0) {
     return (false);
   }
@@ -34,7 +34,7 @@ void eepromRead(void) {
     // reset esc, iwdg timeout
     while (true);
   }
-  memcpy(&masterConfig, (char *) FLASH_EEPROM_ADDRESS, sizeof(master_t));
+  memcpy(&masterConfig, (char *) FLASH_EEPROM_ADDRESS, sizeof(eepromStructure));
 }
 
 void eepromWrite(void) {
@@ -42,15 +42,15 @@ void eepromWrite(void) {
   int8_t attemptsRemaining = 3;
 
   masterConfig.version = EEPROM_VERSION;
-  masterConfig.size = sizeof(master_t);
+  masterConfig.size = sizeof(eepromStructure);
   masterConfig.magic_be = 0xbe;
   masterConfig.magic_ef = 0xef;
   masterConfig.chk = 0;
-  masterConfig.chk = calculateChecksum((const uint8_t *) &masterConfig, sizeof(master_t));
+  masterConfig.chk = calculateChecksum((const uint8_t *) &masterConfig, sizeof(eepromStructure));
 
   HAL_FLASH_Unlock();
   while (attemptsRemaining--) {
-    for (uint32_t wordOffset = 0; wordOffset < sizeof(master_t); wordOffset += 4) {
+    for (uint32_t wordOffset = 0; wordOffset < sizeof(eepromStructure); wordOffset += 4) {
       if (wordOffset % FLASH_PAGE_SIZE == 0) {
         FLASH_EraseInitTypeDef eraseInit;
         eraseInit.TypeErase   = FLASH_TYPEERASE_PAGES;

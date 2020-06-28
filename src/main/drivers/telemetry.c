@@ -1,6 +1,6 @@
 #include "telemetry.h"
 
-telemetryData_t telemetryData;
+telemetryDataStructure telemetryData;
 uint8_t telemetryBuffer[TELEMETRY_FRAME_SIZE];
 
 static uint8_t crc8helper(uint8_t crc, uint8_t crcSeed) {
@@ -22,7 +22,7 @@ static uint8_t crc8calculate(const uint8_t *buf, const uint8_t bufLen) {
   return (crcBuffer);
 }
 
-static void telemetryTelegram(telemetryData_t *data) {
+static void telemetryTelegram(telemetryDataStructure *data) {
   telemetryBuffer[0] = data->temperature;
   telemetryBuffer[1] = data->voltage >> 8;
   telemetryBuffer[2] = data->voltage & 0xFF;

@@ -9,9 +9,9 @@ typedef struct {
   volatile char txBuf[SERIAL_TX_BUFSIZE];
   uint16_t  txHead, txTail;
   bool InitDone;
-} uart_t;
+} uartStructure;
 
-extern uart_t serialPort;
+extern uartStructure serialPort;
 
 void uartStartTxDMA(void);
 void uartInit(void);

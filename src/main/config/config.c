@@ -1,6 +1,6 @@
 #include "config.h"
 
-master_t masterConfig;
+eepromStructure masterConfig;
 
 void configValidateOrReset(void) {
   if (eepromValid()) {
@@ -11,7 +11,7 @@ void configValidateOrReset(void) {
 }
 
 void configReset(void) {
-  memset(&masterConfig, 0, sizeof(master_t));
+  memset(&masterConfig, 0, sizeof(eepromStructure));
 
   // default config
   escConfig()->motorDirection = SPIN_CW;

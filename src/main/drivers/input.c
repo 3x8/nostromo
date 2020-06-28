@@ -2,7 +2,7 @@
 
 TIM_HandleTypeDef inputTimerHandle;
 DMA_HandleTypeDef inputTimerDmaHandle;
-input_t input;
+inputStructure input;
 uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE];
 
 void inputArmCheck(void) {

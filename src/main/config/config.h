@@ -4,7 +4,7 @@
 
 #define escConfig(x) (&masterConfig.escConfig)
 
-typedef struct escConfig_s {
+typedef struct {
   uint8_t motorDirection;
   uint8_t motorComplementaryPWM;
   uint8_t  motorBrake;
@@ -17,18 +17,18 @@ typedef struct escConfig_s {
   uint32_t limitCurrent;
   uint32_t limitTemperature;
   int32_t adcCurrentOffset;
-} escConfig_t;
+} escConfigStructure;
 
-typedef struct master_s {
+typedef struct {
   uint8_t version;
   uint16_t size;
   uint8_t magic_be;
-  escConfig_t escConfig;
+  escConfigStructure escConfig;
   uint8_t magic_ef;
   uint8_t chk;
-} master_t;
+} eepromStructure;
 
-extern master_t masterConfig;
+extern eepromStructure masterConfig;
 
 void configValidateOrReset(void);
 void configReset(void);

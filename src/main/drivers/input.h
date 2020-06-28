@@ -75,11 +75,11 @@ typedef struct {
   uint32_t PwmValue;
   uint32_t DataValidCounter;
   uint32_t DataErrorCounter;
-} input_t;
+} inputStructure;
 
 extern TIM_HandleTypeDef  inputTimerHandle;
 extern DMA_HandleTypeDef inputTimerDmaHandle;
-extern input_t input;
+extern inputStructure input;
 extern uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE];
 
 void inputArmCheck(void);
