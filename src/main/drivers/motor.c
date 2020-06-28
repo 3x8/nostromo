@@ -494,7 +494,7 @@ void motorInputUpdate(void) {
 
 uint32_t motorGetRpm(void) {
   if (motor.CommutationInterval > 0) {
-    return((uint16_t)(motor.RpmFactor / motor.CommutationInterval));
+    return(motor.RpmFactor / motor.CommutationInterval);
   } else {
     return(0);
   }
@@ -502,7 +502,7 @@ uint32_t motorGetRpm(void) {
 
 uint32_t motorGetErpm(void) {
   if (motor.CommutationInterval > 0) {
-    return((uint16_t)(motor.ErpmFactor / motor.CommutationInterval));
+    return(motor.ErpmFactor / motor.CommutationInterval);
   } else {
     return(0);
   }
