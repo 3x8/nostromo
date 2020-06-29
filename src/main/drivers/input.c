@@ -163,6 +163,13 @@ void inputDshotCommandRun(void) {
       configWrite();
       // reset esc, iwdg timeout
       while(true);
+    case DSHOT_CMD_SETTING_EEPROM_RESET:
+      uartPrint("# EEPROM RESET");
+      uartPrint("\r\n");
+      HAL_Delay(11);
+      configReset();
+      // reset esc, iwdg timeout
+      while(true);
     default:
       break;
     }

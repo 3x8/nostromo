@@ -14,7 +14,7 @@
 // ToDo new
 // CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
 // PWM_FREQUENCY 48kHz resolution 500 steps, 24kHz resolution 1000 steps
-#define USE_PWM_FREQUENCY_48kHz
+//#define USE_PWM_FREQUENCY_48kHz
 #define USE_ADC_MEDIAN
 
 // hw constants
