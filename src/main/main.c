@@ -121,8 +121,8 @@ int main(void) {
         }
 
         // motor BEMF filter
-        if ((motor.CommutationInterval < 2411) && (input.PwmValue > 503)) {
-          motor.BemfFilterDelay = 5;
+        if ((motor.CommutationInterval < 2411) && (input.DataNormed > 1000)) {
+          motor.BemfFilterDelay = 3;
           motor.BemfFilterLevel = 2;
         } else {
           motor.BemfFilterDelay = 7;
@@ -205,12 +205,13 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
-      //if (true) {       // high speed CSV (500uS)
+      //if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
+      if (true) {       // high speed CSV (500uS)
         // CSV
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         if (motor.CommutationInterval > 0) {
+          //uartPrintInteger(motor.CommutationInterval, 10, 1);
           uartPrintInteger(motorGetRpm(), 10, 1);
         } else {
           uartPrintInteger(0, 10, 1);
