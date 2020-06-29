@@ -494,12 +494,7 @@ void motorInputUpdate(void) {
 
 uint32_t motorGetErpm(void) {
   if (motor.CommutationInterval > 0) {
-    if ((input.DataNormed >> 1) < 1000) {
-      return(motor.ErpmFactorLow / motor.CommutationInterval);
-    } else {
-      return(motor.ErpmFactorHigh / motor.CommutationInterval);
-    }
-
+    return(motor.ErpmFactor / motor.CommutationInterval);
   } else {
     return(0);
   }
@@ -507,11 +502,7 @@ uint32_t motorGetErpm(void) {
 
 uint32_t motorGetRpm(void) {
   if (motor.CommutationInterval > 0) {
-    if ((input.DataNormed >> 1) < 1000) {
-      return((motor.ErpmFactorLow / motor.CommutationInterval) / (escConfig()->motorPoles >> 1));
-    } else {
-      return((motor.ErpmFactorHigh / motor.CommutationInterval) / (escConfig()->motorPoles >> 1));
-    }
+    return((motor.ErpmFactor / motor.CommutationInterval) / (escConfig()->motorPoles >> 1));
   } else {
     return(0);
   }
