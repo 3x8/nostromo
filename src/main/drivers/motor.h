@@ -38,8 +38,8 @@ typedef struct {
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t CommutationInterval;
   uint32_t CommutationDelay;
-  float RpmFactor;
-  float ErpmFactor;
+  float ErpmFactorLow;
+  float ErpmFactorHigh;
 } motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle;
@@ -65,5 +65,5 @@ void motorTuneStartup();
 void motorTuneInput(uint8_t motorStepDebug);
 
 void motorInputUpdate(void);
-uint32_t motorGetRpm(void);
 uint32_t motorGetErpm(void);
+uint32_t motorGetRpm(void);
