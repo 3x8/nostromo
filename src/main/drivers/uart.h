@@ -2,8 +2,15 @@
 
 #include "main.h"
 
-#define SERIAL_TX_BUFSIZE   64
-#define SERIAL_RX_BUFSIZE   64
+#if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+  #define SERIAL_TX_BUFSIZE   64
+  #define SERIAL_RX_BUFSIZE   64
+#else
+  #define SERIAL_TX_BUFSIZE   313
+  #define SERIAL_RX_BUFSIZE   313
+#endif
+
+4
 
 typedef struct {
   volatile char txBuf[SERIAL_TX_BUFSIZE];
