@@ -206,9 +206,9 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       //if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
-      if (true) {       // high speed CSV (500uS)
+      if (input.DataNormed > 0) {       // high speed CSV (500uS)
         // CSV
-        uartPrintInteger(input.PwmValue, 10, 1);
+        uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint(",");
         if (motor.CommutationInterval > 0) {
           //uartPrintInteger(motor.CommutationInterval, 10, 1);
