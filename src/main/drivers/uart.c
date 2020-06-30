@@ -75,7 +75,11 @@ void uartInit(void) {
 
   // USARTx Configuration 115200, 8, 1, n, no flow control,rx-tx enabled
   LL_USART_InitTypeDef USART_InitStructure;
-  USART_InitStructure.BaudRate = 115200;
+  #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+    USART_InitStructure.BaudRate = 460800;
+  #else
+    USART_InitStructure.BaudRate = 115200;
+  #endif
   USART_InitStructure.DataWidth = LL_USART_DATAWIDTH_8B;
   USART_InitStructure.StopBits = LL_USART_STOPBITS_1;
   USART_InitStructure.Parity = LL_USART_PARITY_NONE;
