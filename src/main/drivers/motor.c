@@ -6,10 +6,6 @@ motorStructure motor;
 
 extern medianStructure motorCommutationIntervalFilterState;
 
-//const float motorCommutationTimerUsFactor = ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001));
-
-
-
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
 
