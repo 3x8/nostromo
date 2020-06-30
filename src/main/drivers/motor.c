@@ -53,13 +53,14 @@ inline void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
 
   // ToDo
+  /*
   if (motor.CommutationDelay > 40) {
     while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
       #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
         LED_TOGGLE(LED_BLUE);
       #endif
     }
-  }
+  }*/
 
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
     LED_OFF(LED_GREEN);
