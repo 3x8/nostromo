@@ -10,8 +10,6 @@
   #define SERIAL_RX_BUFSIZE   313
 #endif
 
-4
-
 typedef struct {
   volatile char txBuf[SERIAL_TX_BUFSIZE];
   uint16_t  txHead, txTail;
