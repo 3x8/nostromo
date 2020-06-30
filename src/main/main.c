@@ -210,6 +210,8 @@ int main(void) {
       //if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
       if (input.DataNormed > 0) {       // high speed CSV (500uS)
         // CSV
+        uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
+        uartPrint(",");
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint(",");
         if (motor.CommutationInterval > 0) {
