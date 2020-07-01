@@ -56,10 +56,6 @@ int main(void) {
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
-  // (Prescaler + 2) -> 10% tolerance low RPM  (Prescaler + 1) -> 20% tolerance max RPM   (CPU load)
-  //motor.ErpmFactor = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 2) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
-  motor.ErpmFactor = 320000000; // 4kB size reduction
-
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;
