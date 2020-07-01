@@ -82,7 +82,7 @@ void inputDshotCommandRun(void) {
       uartPrintInteger(FW_VERSION_MINOR, 10, 1);
       uartPrint(".");
       uartPrintInteger(FW_VERSION_PATCH, 10, 1);
-      uartPrint("(");
+      uartPrint(" (");
       uartPrint(__REVISION__);
       uartPrint(")");
       uartPrint("\r\n");
