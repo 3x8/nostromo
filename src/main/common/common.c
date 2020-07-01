@@ -31,7 +31,7 @@ void kalmanInit(kalmanStructure *filter, float q, uint32_t w) {
   filter->w = w;
 }
 
-__attribute__((always_inline)) inline float kalmanUpdate(kalmanStructure *filter, float input) {
+INLINE_CODE float kalmanUpdate(kalmanStructure *filter, float input) {
   const float windowSizeInverse = 1.0f/(filter->w - 1);
 
   // project the state ahead using acceleration
@@ -78,7 +78,7 @@ void medianInit(medianStructure *filter, uint32_t w) {
   filter->windowSize = w;
 }
 
-__attribute__((always_inline)) inline void medianPush(medianStructure *filter, uint32_t newValue) {
+INLINE_CODE void medianPush(medianStructure *filter, uint32_t newValue) {
   filter->window[filter->windowIndex] = newValue;
 
   if (++filter->windowIndex >= filter->windowSize) {
@@ -86,7 +86,7 @@ __attribute__((always_inline)) inline void medianPush(medianStructure *filter, u
   }
 }
 
-__attribute__((always_inline)) inline uint32_t medianCalculate(medianStructure *filter) {
+INLINE_CODE uint32_t medianCalculate(medianStructure *filter) {
   uint32_t medianSumm = 0;
 
   for (uint8_t i = 0; i < filter->windowSize; i++) {
@@ -96,7 +96,7 @@ __attribute__((always_inline)) inline uint32_t medianCalculate(medianStructure *
   return(medianSumm / filter->windowSize);
 }
 
-__attribute__((always_inline)) inline uint32_t medianSumm(medianStructure *filter) {
+INLINE_CODE uint32_t medianSumm(medianStructure *filter) {
   uint32_t medianSumm = 0;
 
   for (uint8_t i = 0; i < filter->windowSize; i++) {

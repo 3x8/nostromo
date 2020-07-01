@@ -8,7 +8,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 
 #pragma GCC push_options
 #pragma GCC optimize("Ofast")
-__attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
 
   uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
@@ -80,7 +80,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
 }
 
 #if defined(FD6288)
-  __attribute__((always_inline)) inline void motorPhaseA(uint8_t hBridgeMode) {
+  INLINE_CODE void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
         if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
@@ -106,7 +106,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
     }
   }
 
-  __attribute__((always_inline)) inline void motorPhaseB(uint8_t hBridgeMode) {
+  INLINE_CODE void motorPhaseB(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
         if(!motor.ComplementaryPWM  || motor.BrakeActiveProportional) {
@@ -132,7 +132,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
     }
   }
 
-  __attribute__((always_inline)) inline void motorPhaseC(uint8_t hBridgeMode) {
+  INLINE_CODE void motorPhaseC(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
         if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
@@ -160,7 +160,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
 #endif
 
 #if defined(NCP3420)
-  __attribute__((always_inline)) inline void motorPhaseA(uint8_t hBridgeMode) {
+  INLINE_CODE void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
         LL_GPIO_SetPinMode(A_FET_OE_GPIO, A_FET_OE_PIN, LL_GPIO_MODE_OUTPUT);
@@ -180,7 +180,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
     }
   }
 
-  __attribute__((always_inline)) inline void motorPhaseB(uint8_t hBridgeMode) {
+  INLINE_CODE void motorPhaseB(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
         LL_GPIO_SetPinMode(B_FET_OE_GPIO, B_FET_OE_PIN, LL_GPIO_MODE_OUTPUT);
@@ -200,7 +200,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
     }
   }
 
-  __attribute__((always_inline)) inline void motorPhaseC(uint8_t hBridgeMode) {
+  INLINE_CODE void motorPhaseC(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
         LL_GPIO_SetPinMode(C_FET_OE_GPIO, C_FET_OE_PIN, LL_GPIO_MODE_OUTPUT);
@@ -221,7 +221,7 @@ __attribute__((always_inline)) inline void HAL_COMP_TriggerCallback(COMP_HandleT
   }
 #endif
 
-__attribute__((always_inline)) inline void motorCommutationStep(uint8_t stepBuffer) {
+INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
   switch (stepBuffer) {
     case 1:
       // A-B
@@ -262,7 +262,7 @@ __attribute__((always_inline)) inline void motorCommutationStep(uint8_t stepBuff
   }
 }
 
-__attribute__((always_inline)) inline void motorComparatorInputChange() {
+INLINE_CODE void motorComparatorInputChange() {
   switch (motor.Step) {
     case 1:
     case 4:
@@ -314,7 +314,7 @@ __attribute__((always_inline)) inline void motorComparatorInputChange() {
   #endif
 }
 
-__attribute__((always_inline)) inline void motorCommutate() {
+INLINE_CODE void motorCommutate() {
   if (motor.Direction == SPIN_CW) {
     if (++motor.Step > 6) {
       motor.Step = 1;
@@ -419,7 +419,7 @@ void motorTuneInput(uint8_t motorStepDebug) {
 
 #pragma GCC push_options
 #pragma GCC optimize("Ofast")
-__attribute__((always_inline)) inline void motorInputUpdate(void) {
+INLINE_CODE void motorInputUpdate(void) {
   if (input.Armed) {
     if (input.Data <= DSHOT_CMD_MAX) {
       motor.Startup = false;

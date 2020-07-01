@@ -22,8 +22,10 @@
 const char *byteToString(uint8_t x);
 uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 
+#define FAST_CODE __attribute__((section(".tcm_code")))
+#define INLINE_CODE __attribute__((always_inline)) inline
 // kalman filter
-#define FAST_CODE                   __attribute__((section(".tcm_code")))
+
 #define MAX_WINDOW_SIZE 32
 
 typedef struct {
