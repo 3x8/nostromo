@@ -121,7 +121,11 @@ void systemMotorPwmTimerInit(void) {
 
   motorPwmTimerHandle.Instance = TIM1;
   motorPwmTimerHandle.Init.Prescaler = 0;
-  motorPwmTimerHandle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
+  #if (defined(USE_PWM_FREQUENCY_48kHz))
+    motorPwmTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  #else
+    motorPwmTimerHandle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
+  #endif
   motorPwmTimerHandle.Init.Period = TIMER1_INIT_PERIOD;
   motorPwmTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorPwmTimerHandle.Init.RepetitionCounter = 0;

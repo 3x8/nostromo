@@ -439,11 +439,7 @@ INLINE_CODE void motorInputUpdate(void) {
             motor.Direction = escConfig()->motorDirection;
             motor.BemfCounter = 0;
           }
-          #if (!defined(USE_PWM_FREQUENCY_48kHz))
-            input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
-          #else
-            input.PwmValue = ((input.DataNormed - escConfig()->input3Dneutral) >> 1) + escConfig()->motorStartThreshold;
-          #endif
+          input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
         }
         // down
         if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
@@ -451,39 +447,19 @@ INLINE_CODE void motorInputUpdate(void) {
             motor.Direction = !escConfig()->motorDirection;
             motor.BemfCounter = 0;
           }
-          #if (!defined(USE_PWM_FREQUENCY_48kHz))
-            input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
-          #else
-            input.PwmValue = (input.DataNormed  >> 1) + escConfig()->motorStartThreshold;
-          #endif
+          input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
         }
         // deadband
         if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
           input.PwmValue = 0;
         }
       } else {
-        #if (!defined(USE_PWM_FREQUENCY_48kHz))
-          input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
-        #else
-          input.PwmValue = (input.DataNormed >> 2) + escConfig()->motorStartThreshold;
-        #endif
+        input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
       }
 
       // stall protection and startup kick
       if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
-        #if (!defined(KISS24A))
-          #if (!defined(USE_PWM_FREQUENCY_48kHz))
-            input.PwmValue = 71;
-          #else
-            input.PwmValue = 37;
-          #endif
-        #else
-          #if (!defined(USE_PWM_FREQUENCY_48kHz))
-            input.PwmValue = 81;
-          #else
-            input.PwmValue = 41;
-          #endif
-        #endif
+        input.PwmValue = 71;
       } else {
         input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
       }
