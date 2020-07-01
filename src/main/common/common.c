@@ -24,7 +24,7 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
 
 // kalman filter
 #pragma GCC push_options
-#pragma GCC optimize("Ofast")
+#pragma GCC optimize("O3")
 void kalmanInit(kalmanStructure *filter, float q, uint32_t w) {
   memset(filter, 0, sizeof(kalmanStructure));
   filter->q = q * 0.000001f;
@@ -72,7 +72,7 @@ INLINE_CODE float kalmanUpdate(kalmanStructure *filter, float input) {
 
 // median filter
 #pragma GCC push_options
-#pragma GCC optimize("Ofast")
+#pragma GCC optimize("O3")
 void medianInit(medianStructure *filter, uint32_t w) {
   memset(filter, 0, sizeof(medianStructure));
   filter->windowSize = w;

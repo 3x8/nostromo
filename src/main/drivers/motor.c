@@ -7,7 +7,7 @@ motorStructure motor;
 extern medianStructure motorCommutationIntervalFilterState;
 
 #pragma GCC push_options
-#pragma GCC optimize("Ofast")
+#pragma GCC optimize("O3")
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
 
@@ -418,7 +418,7 @@ void motorTuneInput(uint8_t motorStepDebug) {
 }
 
 #pragma GCC push_options
-#pragma GCC optimize("Ofast")
+#pragma GCC optimize("O3")
 INLINE_CODE void motorInputUpdate(void) {
   if (input.Armed) {
     if (input.Data <= DSHOT_CMD_MAX) {
