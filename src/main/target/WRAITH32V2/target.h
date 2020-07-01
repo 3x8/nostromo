@@ -21,7 +21,7 @@
 #define HBRIDGE_MAX_CURRENT     6607  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 #define TIMER1_INIT_PERIOD      1051
-#define MOTOR_START_THRESHOLD   23
+#define MOTOR_START_THRESHOLD   26
 
 // input ,Ok
 #define INPUT_GPIO      GPIOA
