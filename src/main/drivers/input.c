@@ -102,6 +102,11 @@ void inputDshotCommandRun(void) {
       #else
         uartPrint("# ");
       #endif
+      #if (!defined(USE_ADC_MEDIAN))
+        uartPrint("kalman ");
+      #else
+        uartPrint("median ");
+      #endif
       #if (!defined(USE_PWM_FREQUENCY_48kHz))
         uartPrint("24kHz ");
       #else
