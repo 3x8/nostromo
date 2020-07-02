@@ -459,7 +459,7 @@ INLINE_CODE void motorInputUpdate(void) {
 
       // stall protection and startup kick
       if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
-        input.PwmValue = MOTOR_STARTUP_POWER;
+        input.PwmValue = escConfig()->motorStartupPover;
       } else {
         input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
       }
