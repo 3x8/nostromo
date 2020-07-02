@@ -126,7 +126,7 @@ void systemMotorPwmTimerInit(void) {
   #else
     motorPwmTimerHandle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
   #endif
-  motorPwmTimerHandle.Init.Period = TIMER1_INIT_PERIOD;
+  motorPwmTimerHandle.Init.Period = MOTOR_PWM_RESOLUTION;
   motorPwmTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorPwmTimerHandle.Init.RepetitionCounter = 0;
   motorPwmTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

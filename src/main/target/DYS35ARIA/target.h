@@ -18,10 +18,6 @@
 #define HBRIDGE_DEAD_TIME       11    // with 0 FD6288 builtin 200ns H_Bridge gets warm ??? (why)
 #define HBRIDGE_MAX_CURRENT     0     // disabled
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
-#define TIMER1_INIT_PERIOD      1027
-#define MOTOR_START_THRESHOLD   26
-
-#define LED_INVERTED
 
 // input ,Ok
 #define INPUT_GPIO      GPIOA
@@ -30,6 +26,7 @@
 #define INPUT_TIMER_CH  TIM_CHANNEL_1
 
 // LEDs ,Ok
+#define LED_INVERTED
 #define LED_RED_GPIO    GPIOA
 #define LED_RED_PIN     GPIO_PIN_15
 #define LED_GREEN_GPIO  GPIOB

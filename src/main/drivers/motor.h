@@ -2,8 +2,10 @@
 
 #include "main.h"
 
-#define MOTOR_POLES       14
+#define MOTOR_POLES 14
 #define MOTOR_BLDC_STEPS  6
+#define MOTOR_START_THRESHOLD 27
+#define MOTOR_PWM_RESOLUTION  1003
 #define MOTOR_ERPM_FACTOR 320000000 // 4kB size reduction
 // MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 2) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
 // (Prescaler + 2) -> 10% tolerance low RPM  (Prescaler + 1) -> 20% tolerance max RPM   (CPU load)
