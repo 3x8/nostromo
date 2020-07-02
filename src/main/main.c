@@ -44,13 +44,9 @@ int main(void) {
 
   // start with motor off
   #if (defined(USE_ADC_MEDIAN))
-    #if (!defined(KISS24A))
-      motor.BemfZeroCounterTimeoutThreshold = 71;
-    #else
-      motor.BemfZeroCounterTimeoutThreshold = 101;
-    #endif
+    motor.BemfZeroCounterTimeoutThreshold = 71;
   #else
-    motor.BemfZeroCounterTimeoutThreshold = 29;
+    motor.BemfZeroCounterTimeoutThreshold = 27;
   #endif
 
   motor.Step = 1;
@@ -216,7 +212,6 @@ int main(void) {
         } else {
           uartPrintInteger(0, 10, 1);
         }
-
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
