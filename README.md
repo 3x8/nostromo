@@ -6,14 +6,18 @@
 **features:**
   * PROSHOT1000 input protocol *(PWM for thrust tests only)*
   * DSHOT commands support
-  * High input linearity:  *(24kHz 1000 steps, 48kHz 500 steps)*
+  * High input linearity:  *(1000 steps)*
   * Complementary PWM  *(regenerative braking)*
   * Configurable motor Brake
   * KISS telemetry protocol
   * Maximal Current,Temperature protection
   * 3D mode
-  * kalman filter *(Voltage, Current, RPM)*
+  * kalman filter *(Voltage, Current)*
+
+**new:**
   * bootloader enabled (4way interface uploader)
+  * max speed 280000ERPM
+  * median filter *(ERPM)*
 
 **supported hardware:**
   * WRAITH32V2  *(official)*
