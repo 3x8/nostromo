@@ -19,11 +19,7 @@ void configReset(void) {
   escConfig()->motorComplementaryPWM = true;
   escConfig()->motorBrake = BRAKE_FULL;
   escConfig()->motorBrakeStrength = 501;
-  #if (defined(USE_PWM_FREQUENCY_48kHz))
-    escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD * 2;
-  #else
-    escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
-  #endif
+  escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   escConfig()->motorStartupPower = MOTOR_STARTUP_POWER;
   escConfig()->motor3Dmode = false;
   escConfig()->input3Dneutral = 1000;
