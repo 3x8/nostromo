@@ -14,6 +14,7 @@ void configReset(void) {
   memset(&masterConfig, 0, sizeof(eepromStructure));
 
   // default config
+  escConfig()->motorPoles = MOTOR_POLES;
   escConfig()->motorDirection = SPIN_CW;
   escConfig()->motorComplementaryPWM = true;
   escConfig()->motorBrake = BRAKE_FULL;
@@ -23,7 +24,7 @@ void configReset(void) {
   #else
     escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   #endif
-  escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
+  escConfig()->motorStartupPower = MOTOR_STARTUP_POWER;
   escConfig()->motor3Dmode = false;
   escConfig()->input3Dneutral = 1000;
   escConfig()->input3DdeadbandLow = 1;
@@ -31,7 +32,6 @@ void configReset(void) {
   escConfig()->limitCurrent = HBRIDGE_MAX_CURRENT;
   escConfig()->limitTemperature = HBRIDGE_MAX_TEMPERATURE;
   escConfig()->adcCurrentOffset = ADC_CURRENT_OFFSET;
-  escConfig()->motorPoles = MOTOR_POLES;
 
   eepromWrite();
 }

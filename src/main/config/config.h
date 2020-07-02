@@ -5,11 +5,13 @@
 #define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct {
+  uint8_t motorPoles;
   uint8_t motorDirection;
   uint8_t motorComplementaryPWM;
-  uint8_t  motorBrake;
+  uint8_t motorBrake;
   uint16_t motorBrakeStrength;
   uint16_t motorStartThreshold;
+  uint16_t motorStartupPower;
   uint8_t motor3Dmode;
   uint32_t input3Dneutral;
   uint32_t input3DdeadbandLow;
@@ -17,7 +19,6 @@ typedef struct {
   uint32_t limitCurrent;
   uint32_t limitTemperature;
   int32_t adcCurrentOffset;
-  uint8_t motorPoles;
 } escConfigStructure;
 
 typedef struct {

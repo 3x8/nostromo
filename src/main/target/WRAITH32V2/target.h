@@ -20,7 +20,6 @@
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
 #define HBRIDGE_MAX_CURRENT     6607  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
-#define MOTOR_START_THRESHOLD   27
 
 // input ,Ok
 #define INPUT_GPIO      GPIOA
