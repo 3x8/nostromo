@@ -27,9 +27,9 @@ INCLUDE_DIRS    := $(INCLUDE_DIRS) \
                    $(CMSIS_DIR)/Device/ST/STM32F0xx/Include
 
 ifneq ($(USE_BOOTLOADER),true)
-LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k.ld
+LD_SCRIPT       = $(LINKER_DIR)/$(STM_CHIP)_$(FLASH_SIZE)K.ld
 else
-LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f0xx_$(FLASH_SIZE)k_boot.ld
+LD_SCRIPT       = $(LINKER_DIR)/$(STM_CHIP)_$(FLASH_SIZE)K_BL.ld
 endif
 ARCH_FLAGS      = -mthumb -mcpu=cortex-m0
 
