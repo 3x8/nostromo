@@ -123,8 +123,8 @@ int main(void) {
           motor.BemfFilterDelay = 0;
           motor.BemfFilterLevel = 0;
         } else {
-          motor.BemfFilterDelay = 7;
-          motor.BemfFilterLevel = 3;
+          motor.BemfFilterDelay = 5;
+          motor.BemfFilterLevel = 2;
         }
 
         // motor not running
