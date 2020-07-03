@@ -45,8 +45,6 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     __HAL_COMP_COMP1_EXTI_DISABLE_IT();
   #endif
 
-  motorCommutationTimerHandle.Instance->CNT = 0xffff;
-
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
@@ -75,6 +73,8 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
     __HAL_COMP_COMP1_EXTI_ENABLE_IT();
   #endif
+
+  motorCommutationTimerHandle.Instance->CNT = 0;
 
   __enable_irq();
 }
