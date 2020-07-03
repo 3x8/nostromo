@@ -6,12 +6,17 @@ motorStructure motor;
 
 extern medianStructure motorCommutationIntervalFilterState;
 
+//debug
+uint32_t motorDebugTime;
+
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
 
   uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
+
+
 
   if ((!motor.Running) || (!motor.Startup)) {
     #if (!defined(COMPARATOR_OPTIMIZE))
@@ -45,12 +50,15 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     __HAL_COMP_COMP1_EXTI_DISABLE_IT();
   #endif
 
-  motorCommutationTimerHandle.Instance->CNT = 0xffff;
+
+
 
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
+
+
 
   // ToDo
   /*
@@ -67,7 +75,10 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     LED_OFF(LED_BLUE);
   #endif
 
+
+
   motorCommutate();
+
 
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
@@ -75,6 +86,10 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
     __HAL_COMP_COMP1_EXTI_ENABLE_IT();
   #endif
+
+
+
+  motorCommutationTimerHandle.Instance->CNT = 0;
 
   __enable_irq();
 }
@@ -222,12 +237,17 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 #endif
 
 INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
+  uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
   switch (stepBuffer) {
     case 1:
       // A-B
+      //debug
+
       motorPhaseA(HBRIDGE_LOWSIDE);
+
       motorPhaseB(HBRIDGE_PWM);
       motorPhaseC(HBRIDGE_FLOATING);
+      motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
       break;
     case 2:
       // A-C
@@ -337,8 +357,12 @@ INLINE_CODE void motorCommutate() {
     }
   }
 
+
   motorCommutationStep(motor.Step);
+
+
   motorComparatorInputChange();
+
 }
 #pragma GCC pop_options
 
