@@ -14,7 +14,7 @@ bool eepromValid(void) {
   const eepromStructure *temp = (const eepromStructure *) FLASH_EEPROM_ADDRESS;
   uint8_t checksum = 0;
 
-  if (EEPROM_VERSION != temp->version) {
+  if (CONFIG_EEPROM_VERSION != temp->version) {
     return (false);
   }
 
@@ -41,7 +41,7 @@ void eepromWrite(void) {
   HAL_StatusTypeDef status;
   int8_t attemptsRemaining = 3;
 
-  masterConfig.version = EEPROM_VERSION;
+  masterConfig.version = CONFIG_EEPROM_VERSION;
   masterConfig.size = sizeof(eepromStructure);
   masterConfig.magic_be = 0xbe;
   masterConfig.magic_ef = 0xef;

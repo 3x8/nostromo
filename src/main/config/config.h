@@ -4,6 +4,8 @@
 
 #define escConfig(x) (&masterConfig.escConfig)
 
+#define CONFIG_EEPROM_VERSION 13
+
 typedef struct {
   uint8_t motorPoles;
   uint8_t motorDirection;
