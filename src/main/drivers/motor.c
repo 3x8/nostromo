@@ -195,12 +195,12 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 #if defined(NCP3420)
 // precomputed H_BRIDGE masks
 const uint32_t aFetOeClearmask = (~((A_FET_OE_PIN * A_FET_OE_PIN) * GPIO_MODER_MODER0));
-const uint32_t aFetOwSetmaskOutput = ((A_FET_OE_PIN * A_FET_OE_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t aFetOeSetmaskOutput = ((A_FET_OE_PIN * A_FET_OE_PIN) * LL_GPIO_MODE_OUTPUT);
 const uint32_t aFetOeSetmaskAlternate = ((A_FET_OE_PIN * A_FET_OE_PIN) * LL_GPIO_MODE_ALTERNATE);
 const uint32_t aFetInClearmask = (~((A_FET_IN_PIN * A_FET_IN_PIN) * GPIO_MODER_MODER0));
 const uint32_t aFetInSetmaskOutput = ((A_FET_IN_PIN * A_FET_IN_PIN) * LL_GPIO_MODE_OUTPUT);
 const uint32_t aFetInSetmaskAlternate = ((A_FET_IN_PIN * A_FET_IN_PIN) * LL_GPIO_MODE_ALTERNATE);
-const uint32_t bFetOeClearmask = (~((B_FET_OE_PIN * B_FET_OE_PINN) * GPIO_MODER_MODER0));
+const uint32_t bFetOeClearmask = (~((B_FET_OE_PIN * B_FET_OE_PIN) * GPIO_MODER_MODER0));
 const uint32_t bFetOeSetmaskOutput = ((B_FET_OE_PIN * B_FET_OE_PIN) * LL_GPIO_MODE_OUTPUT);
 const uint32_t bFetOeSetmaskAlternate = ((B_FET_OE_PIN * B_FET_OE_PIN) * LL_GPIO_MODE_ALTERNATE);
 const uint32_t bFetInClearmask = (~((B_FET_IN_PIN * B_FET_IN_PIN) * GPIO_MODER_MODER0));
