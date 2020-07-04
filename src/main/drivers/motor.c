@@ -6,40 +6,25 @@ motorStructure motor;
 
 extern medianStructure motorCommutationIntervalFilterState;
 
-const uint32_t outputAFetLoClearmask = (~((A_FET_LO_PIN * A_FET_LO_PIN) * GPIO_MODER_MODER0));
-const uint32_t outputAFetLoSetmask = ((A_FET_LO_PIN * A_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT);
-const uint32_t alternateAFetLoClearmask = (~((A_FET_LO_PIN * A_FET_LO_PIN) * GPIO_MODER_MODER0));
-const uint32_t alternateAFetLoSetmask = ((A_FET_LO_PIN * A_FET_LO_PIN) * LL_GPIO_MODE_ALTERNATE);
-
-const uint32_t outputAFetHiClearmask = (~((A_FET_HI_PIN * A_FET_HI_PIN) * GPIO_MODER_MODER0));
-const uint32_t outputAFetHiSetmask = ((A_FET_HI_PIN * A_FET_HI_PIN) * LL_GPIO_MODE_OUTPUT);
-const uint32_t alternateAFetHiClearmask = (~((A_FET_HI_PIN * A_FET_HI_PIN) * GPIO_MODER_MODER0));
-const uint32_t alternateAFetHiSetmask = ((A_FET_HI_PIN * A_FET_HI_PIN) * LL_GPIO_MODE_ALTERNATE);
-
-
-
-const uint32_t outputBFetLoClearmask = (~((B_FET_LO_PIN * B_FET_LO_PIN) * GPIO_MODER_MODER0));
-const uint32_t outputBFetLoSetmask = ((B_FET_LO_PIN * B_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT);
-const uint32_t alternateBFetLoClearmask = (~((B_FET_LO_PIN * B_FET_LO_PIN) * GPIO_MODER_MODER0));
-const uint32_t alternateBFetLoSetmask = ((B_FET_LO_PIN * B_FET_LO_PIN) * LL_GPIO_MODE_ALTERNATE);
-
-const uint32_t outputBFetHiClearmask = (~((B_FET_HI_PIN * B_FET_HI_PIN) * GPIO_MODER_MODER0));
-const uint32_t outputBFetHiSetmask = ((B_FET_HI_PIN * B_FET_HI_PIN) * LL_GPIO_MODE_OUTPUT);
-const uint32_t alternateBFetHiClearmask = (~((B_FET_HI_PIN * B_FET_HI_PIN) * GPIO_MODER_MODER0));
-const uint32_t alternateBFetHiSetmask = ((B_FET_HI_PIN * B_FET_HI_PIN) * LL_GPIO_MODE_ALTERNATE);
-
-
-
-const uint32_t outputCFetLoClearmask = (~((C_FET_LO_PIN * C_FET_LO_PIN) * GPIO_MODER_MODER0));
-const uint32_t outputCFetLoSetmask = ((C_FET_LO_PIN * C_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT);
-const uint32_t alternateCFetLoClearmask = (~((C_FET_LO_PIN * C_FET_LO_PIN) * GPIO_MODER_MODER0));
-const uint32_t alternateCFetLoSetmask = ((C_FET_LO_PIN * C_FET_LO_PIN) * LL_GPIO_MODE_ALTERNATE);
-
-const uint32_t outputCFetHiClearmask = (~((C_FET_HI_PIN * C_FET_HI_PIN) * GPIO_MODER_MODER0));
-const uint32_t outputCFetHiSetmask = ((C_FET_HI_PIN * C_FET_HI_PIN) * LL_GPIO_MODE_OUTPUT);
-const uint32_t alternateCFetHiClearmask = (~((C_FET_HI_PIN * C_FET_HI_PIN) * GPIO_MODER_MODER0));
-const uint32_t alternateCFetHiSetmask = ((C_FET_HI_PIN * C_FET_HI_PIN) * LL_GPIO_MODE_ALTERNATE);
-
+// pre computed H_BRIDGE masks
+const uint32_t aFetLoClearmask = (~((A_FET_LO_PIN * A_FET_LO_PIN) * GPIO_MODER_MODER0));
+const uint32_t aFetLoSetmaskOutput = ((A_FET_LO_PIN * A_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t aFetLoSetmaskAlternate = ((A_FET_LO_PIN * A_FET_LO_PIN) * LL_GPIO_MODE_ALTERNATE);
+const uint32_t aFetHiClearmask = (~((A_FET_HI_PIN * A_FET_HI_PIN) * GPIO_MODER_MODER0));
+const uint32_t aFetHiSetmaskOutput = ((A_FET_HI_PIN * A_FET_HI_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t aFetHiSetmaskAlternate = ((A_FET_HI_PIN * A_FET_HI_PIN) * LL_GPIO_MODE_ALTERNATE);
+const uint32_t bFetLoClearmask = (~((B_FET_LO_PIN * B_FET_LO_PIN) * GPIO_MODER_MODER0));
+const uint32_t bFetLoSetmaskOutput = ((B_FET_LO_PIN * B_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t bFetLoSetmaskAlternate = ((B_FET_LO_PIN * B_FET_LO_PIN) * LL_GPIO_MODE_ALTERNATE);
+const uint32_t bFetHiClearmask = (~((B_FET_HI_PIN * B_FET_HI_PIN) * GPIO_MODER_MODER0));
+const uint32_t bFetHiSetmaskOutput = ((B_FET_HI_PIN * B_FET_HI_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t bFetHiSetmaskAlternate = ((B_FET_HI_PIN * B_FET_HI_PIN) * LL_GPIO_MODE_ALTERNATE);
+const uint32_t cFetLoClearmask = (~((C_FET_LO_PIN * C_FET_LO_PIN) * GPIO_MODER_MODER0));
+const uint32_t cFetLoSetmaskOutput = ((C_FET_LO_PIN * C_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t cFetLoSetmaskAlternate = ((C_FET_LO_PIN * C_FET_LO_PIN) * LL_GPIO_MODE_ALTERNATE);
+const uint32_t cFetHiClearmask = (~((C_FET_HI_PIN * C_FET_HI_PIN) * GPIO_MODER_MODER0));
+const uint32_t cFetHiSetmaskOutput = ((C_FET_HI_PIN * C_FET_HI_PIN) * LL_GPIO_MODE_OUTPUT);
+const uint32_t cFetHiSetmaskAlternate = ((C_FET_HI_PIN * C_FET_HI_PIN) * LL_GPIO_MODE_ALTERNATE);
 
 //debug
 uint32_t motorDebugTime;
@@ -129,29 +114,29 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
       case HBRIDGE_PWM:
         if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
           //LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-          A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & outputAFetLoClearmask) | outputAFetLoSetmask);
+          A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
           A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         } else {
           //LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
-          A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & alternateAFetLoClearmask) | alternateAFetLoSetmask);
+          A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskAlternate);
         }
         //LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-        A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & alternateAFetHiClearmask) | alternateAFetHiSetmask);
+        A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskAlternate);
         break;
       case HBRIDGE_FLOATING:
         //LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & outputAFetLoClearmask) | outputAFetLoSetmask);
+        A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
         A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         //LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & outputAFetHiClearmask) | outputAFetHiSetmask);
+        A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
         A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
         break;
       case HBRIDGE_LOWSIDE:
         //LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & outputAFetLoClearmask) | outputAFetLoSetmask);
+        A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
         A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
         //LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & outputAFetHiClearmask) | outputAFetHiSetmask);
+        A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
         A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
         break;
     }
@@ -162,29 +147,29 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
       case HBRIDGE_PWM:
         if(!motor.ComplementaryPWM  || motor.BrakeActiveProportional) {
           //LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-          B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & outputBFetLoClearmask) | outputBFetLoSetmask);
+          B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskOutput);
           B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
         } else {
           //LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
-          B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & alternateBFetLoClearmask) | alternateBFetLoSetmask);
+          B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskAlternate);
         }
         //LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-        B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & alternateBFetHiClearmask) | alternateBFetHiSetmask);
+        B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & bFetHiClearmask) | bFetHiSetmaskAlternate);
         break;
       case HBRIDGE_FLOATING:
         //LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & outputBFetLoClearmask) | outputBFetLoSetmask);
+        B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskOutput);
         B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
         //LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & outputBFetHiClearmask) | outputBFetHiSetmask);
+        B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & bFetHiClearmask) | bFetHiSetmaskOutput);
         B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
         break;
       case HBRIDGE_LOWSIDE:
         //LL_GPIO_SetPinMode(B_FET_LO_GPIO, B_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & outputBFetLoClearmask) | outputBFetLoSetmask);
+        B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskOutput);
         B_FET_LO_GPIO->BSRR = B_FET_LO_PIN;
         //LL_GPIO_SetPinMode(B_FET_HI_GPIO, B_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & outputBFetHiClearmask) | outputBFetHiSetmask);
+        B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & bFetHiClearmask) | bFetHiSetmaskOutput);
         B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
         break;
     }
@@ -195,29 +180,29 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
       case HBRIDGE_PWM:
         if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
           //LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-          C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & outputCFetLoClearmask) | outputCFetLoSetmask);
+          C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskOutput);
           C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
         } else {
           //LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_ALTERNATE);
-          C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & alternateCFetLoClearmask) | alternateCFetLoSetmask);
+          C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskAlternate);
         }
         //LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_ALTERNATE);
-        C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & alternateCFetHiClearmask) | alternateCFetHiSetmask);
+        C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & cFetHiClearmask) | cFetHiSetmaskAlternate);
         break;
       case HBRIDGE_FLOATING:
         //LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & outputCFetLoClearmask) | outputCFetLoSetmask);
+        C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskOutput);
         C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
         //LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & outputCFetHiClearmask) | outputCFetHiSetmask);
+        C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & cFetHiClearmask) | cFetHiSetmaskOutput);
         C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
         break;
       case HBRIDGE_LOWSIDE:
         //LL_GPIO_SetPinMode(C_FET_LO_GPIO, C_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & outputCFetLoClearmask) | outputCFetLoSetmask);
+        C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskOutput);
         C_FET_LO_GPIO->BSRR = C_FET_LO_PIN;
         //LL_GPIO_SetPinMode(C_FET_HI_GPIO, C_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & outputCFetHiClearmask) | outputCFetHiSetmask);
+        C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & cFetHiClearmask) | cFetHiSetmaskOutput);
         C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
         break;
     }
@@ -422,7 +407,7 @@ void motorStart() {
 
     motorCommutate();
 
-    motorCommutationTimerHandle.Instance->CNT = 0xffff;
+    motorCommutationTimerHandle.Instance->CNT = 0;
     motor.BemfCounter = 0;
     motor.Running = true;
     #if (!defined(COMPARATOR_OPTIMIZE))
