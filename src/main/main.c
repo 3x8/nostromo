@@ -210,10 +210,10 @@ int main(void) {
         }
         uartPrint(",");
         uartPrintInteger(motorDebugTime, 10, 1);
-        /*uartPrint(",");
+        uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
-        uartPrintInteger(ABS(adcScaled.current), 10, 1);*/
+        uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("\r\n");
       }
     #endif
