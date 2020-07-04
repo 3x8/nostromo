@@ -6,8 +6,9 @@ motorStructure motor;
 
 extern medianStructure motorCommutationIntervalFilterState;
 
-//debug
-uint32_t motorDebugTime;
+#if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+  uint32_t motorDebugTime;
+#endif
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
@@ -16,8 +17,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
-  //debug
-  uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
+  #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+    uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
+  #endif
 
   if ((!motor.Running) || (!motor.Startup)) {
     #if (!defined(COMPARATOR_OPTIMIZE))
@@ -80,8 +82,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     __HAL_COMP_COMP1_EXTI_ENABLE_IT();
   #endif
 
-  //debug
-  motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
+  #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+    motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
+  #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0;
 
