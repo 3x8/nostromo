@@ -12,6 +12,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
+// ISR takes 7us, 300ns jitter
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   __disable_irq();
 

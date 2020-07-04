@@ -109,7 +109,7 @@ int main(void) {
           serialPort.InitDone = true;
         }
 
-        // motor BEMF filter
+        // motor BEMF filter (1 tick 0.167 us)
         if ((motor.CommutationInterval < 2411) && (input.DataNormed > 500)) {
           motor.BemfFilterDelay = 3;
           motor.BemfFilterLevel = 1;
@@ -135,7 +135,7 @@ int main(void) {
         motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState);
 
         // ToDo
-        motor.CommutationDelay = 0; //timing 30°
+        //motor.CommutationDelay = 0; //timing 30°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 3), 41, 401); //timing 15°
         //motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
       } // input.Armed
