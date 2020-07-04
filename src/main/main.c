@@ -1,9 +1,5 @@
 #include "main.h"
 
-//debug
-extern uint32_t motorDebugTime;
-
-
 // filter
 medianStructure motorCommutationIntervalFilterState;
 
@@ -203,6 +199,7 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+      extern uint32_t motorDebugTime;
       //if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
       if (input.DataNormed > 0) {       // high speed CSV (500uS)
         // CSV

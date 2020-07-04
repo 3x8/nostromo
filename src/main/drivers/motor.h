@@ -11,9 +11,6 @@
 // MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 2) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
 // (Prescaler + 2) -> 10% tolerance low RPM  (Prescaler + 1) -> 20% tolerance max RPM   (CPU load)
 
-//debug
-//#define A_FET_LO_OUTPUT (A_FET_LO_GPIO->MODER) = ((A_FET_LO_GPIO->MODER & (~((A_FET_LO_PIN * A_FET_LO_PIN) * GPIO_MODER_MODER0))) | ((A_FET_LO_PIN * A_FET_LO_PIN) * LL_GPIO_MODE_OUTPUT))
-
 typedef enum {
   HBRIDGE_PWM = 0,
   HBRIDGE_FLOATING,
