@@ -43,15 +43,10 @@ int main(void) {
   #endif
 
   // start with motor off
-  #if (defined(USE_ADC_MEDIAN))
-    motor.BemfZeroCounterTimeoutThreshold = 71;
-  #else
-    motor.BemfZeroCounterTimeoutThreshold = 27;
-  #endif
-
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
+  motor.BemfZeroCounterTimeoutThreshold = 11;
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;
