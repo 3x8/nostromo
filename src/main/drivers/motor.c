@@ -26,7 +26,11 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #if defined(KISS24A)
+        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #endif
     #endif
 
     __enable_irq();
@@ -51,7 +55,11 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
   #else
-    __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+    #if defined(KISS24A)
+      __HAL_COMP_COMP2_EXTI_DISABLE_IT();
+    #else
+      __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+    #endif
   #endif
 
   motor.BemfCounter++;
@@ -79,8 +87,13 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
   #else
-    __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
-    __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+    #if defined(KISS24A)
+      __HAL_COMP_COMP2_EXTI_CLEAR_FLAG();
+      __HAL_COMP_COMP2_EXTI_ENABLE_IT();
+    #else
+      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
+      __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+    #endif
   #endif
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
@@ -213,16 +226,16 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
   INLINE_CODE void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
+        //A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
         A_FET_OE_GPIO->BSRR = A_FET_OE_PIN;
         A_FET_IN_GPIO->MODER = ((A_FET_IN_GPIO->MODER & aFetInClearmask) | aFetInSetmaskAlternate);
         break;
       case HBRIDGE_FLOATING:
-        A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
+        //A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
         A_FET_OE_GPIO->BRR = A_FET_OE_PIN;
         break;
       case HBRIDGE_LOWSIDE:
-        A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
+        //A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
         A_FET_OE_GPIO->BSRR = A_FET_OE_PIN;
         A_FET_IN_GPIO->MODER = ((A_FET_IN_GPIO->MODER & aFetInClearmask) | aFetInSetmaskOutput);
         A_FET_IN_GPIO->BRR = A_FET_IN_PIN;
@@ -233,16 +246,16 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
   INLINE_CODE void motorPhaseB(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
+        //B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
         B_FET_OE_GPIO->BSRR = B_FET_OE_PIN;
         B_FET_IN_GPIO->MODER = ((B_FET_IN_GPIO->MODER & bFetInClearmask) | bFetInSetmaskAlternate);
         break;
       case HBRIDGE_FLOATING:
-        B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
+        //B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
         B_FET_OE_GPIO->BRR = B_FET_OE_PIN;
         break;
       case HBRIDGE_LOWSIDE:
-        B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
+        //B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
         B_FET_OE_GPIO->BSRR = B_FET_OE_PIN;
         B_FET_IN_GPIO->MODER = ((B_FET_IN_GPIO->MODER & bFetInClearmask) | bFetInSetmaskOutput);
         B_FET_IN_GPIO->BRR = B_FET_IN_PIN;
@@ -253,16 +266,16 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
   INLINE_CODE void motorPhaseC(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
+        //C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
         C_FET_OE_GPIO->BSRR = C_FET_OE_PIN;
         C_FET_IN_GPIO->MODER = ((C_FET_IN_GPIO->MODER & cFetInClearmask) | cFetInSetmaskAlternate);
         break;
       case HBRIDGE_FLOATING:
-        C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
+        //C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
         C_FET_OE_GPIO->BRR = C_FET_OE_PIN;
         break;
       case HBRIDGE_LOWSIDE:
-        C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
+        //C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
         C_FET_OE_GPIO->BSRR = C_FET_OE_PIN;
         C_FET_IN_GPIO->MODER = ((C_FET_IN_GPIO->MODER & cFetInClearmask) | cFetInSetmaskOutput);
         C_FET_IN_GPIO->BRR = C_FET_IN_PIN;
@@ -409,7 +422,7 @@ void motorStart() {
     motorCommutationTimerHandle.Instance->CNT = 0;
     motor.BemfCounter = 0;
     motor.Running = true;
-    
+
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Start_IT(&motorBemfComparatorHandle);
     #else
@@ -439,6 +452,12 @@ void motorBrakeProportional() {
 }
 
 void motorTuneStartup() {
+  #if defined(NCP3420)
+    A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
+    B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
+    C_FET_OE_GPIO->MODER = ((C_FET_OE_GPIO->MODER & cFetOeClearmask) | cFetOeSetmaskOutput);
+  #endif
+
   motorPwmTimerHandle.Instance->CCR1 = 5;
   motorPwmTimerHandle.Instance->CCR2 = 5;
   motorPwmTimerHandle.Instance->CCR3 = 5;
