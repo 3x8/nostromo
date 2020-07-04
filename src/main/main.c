@@ -214,7 +214,6 @@ int main(void) {
           uartPrintInteger(0, 10, 1);
         }
         uartPrint(",");
-        //debug
         uartPrintInteger(motorDebugTime, 10, 1);
         /*uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
