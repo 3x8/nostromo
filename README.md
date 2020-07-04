@@ -16,7 +16,7 @@
 
 **new:**
   * bootloader enabled (4way interface uploader)
-  * max speed 300000ERPM
+  * 500K ERPM
   * median filter *(ERPM)*
 
 **supported hardware:**
