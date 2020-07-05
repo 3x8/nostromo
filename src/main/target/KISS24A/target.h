@@ -62,7 +62,7 @@
 #define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5
 
-// adc ,Ko current ,Ko voltage
+// adc ,Ok voltage, Ko current 
 #define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_7
 #define ADC_CURRENT             ADC_CHANNEL_1
