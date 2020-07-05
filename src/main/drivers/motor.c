@@ -27,7 +27,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
       #if defined(KISS24A)
-        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+        __HAL_COMP_COMP2_EXTI_DISABLE_IT();
       #else
         __HAL_COMP_COMP1_EXTI_DISABLE_IT();
       #endif
@@ -361,15 +361,25 @@ INLINE_CODE void motorComparatorInputChange() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;
     #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_RISING_EDGE();
-      __HAL_COMP_COMP1_EXTI_ENABLE_FALLING_EDGE();
+      #if defined(KISS24A)
+        __HAL_COMP_COMP2_EXTI_DISABLE_RISING_EDGE();
+        __HAL_COMP_COMP2_EXTI_ENABLE_FALLING_EDGE();
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_RISING_EDGE();
+        __HAL_COMP_COMP1_EXTI_ENABLE_FALLING_EDGE();
+      #endif
     #endif
   } else {
     #if (!defined(COMPARATOR_OPTIMIZE))
       motorBemfComparatorHandle.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING;
     #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_FALLING_EDGE();
-      __HAL_COMP_COMP1_EXTI_ENABLE_RISING_EDGE();
+      #if defined(KISS24A)
+        __HAL_COMP_COMP2_EXTI_DISABLE_FALLING_EDGE();
+        __HAL_COMP_COMP2_EXTI_ENABLE_RISING_EDGE();
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_FALLING_EDGE();
+        __HAL_COMP_COMP1_EXTI_ENABLE_RISING_EDGE();
+      #endif
     #endif
   }
   #if (!defined(COMPARATOR_OPTIMIZE))
@@ -412,7 +422,11 @@ void motorStart() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #if defined(KISS24A)
+        __HAL_COMP_COMP2_EXTI_DISABLE_IT();
+      #else
+        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
+      #endif
     #endif
 
     motor.ComplementaryPWM = true;
@@ -426,8 +440,13 @@ void motorStart() {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Start_IT(&motorBemfComparatorHandle);
     #else
-      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
-      __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+      #if defined(KISS24A)
+        __HAL_COMP_COMP2_EXTI_CLEAR_FLAG();
+        __HAL_COMP_COMP2_EXTI_ENABLE_IT();
+      #else
+        __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
+        __HAL_COMP_COMP1_EXTI_ENABLE_IT();
+      #endif
     #endif
   }
   motor.ComplementaryPWM = bufferComplementaryPWM;
