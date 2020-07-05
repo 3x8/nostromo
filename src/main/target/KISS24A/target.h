@@ -70,8 +70,8 @@
 #define ADC_MASK                GPIO_PIN_7 | GPIO_PIN_1
 
 // adc calibration
-#define ADC_VOLTAGE_OFFSET      1
-#define ADC_VOLTAGE_FACTOR      1
+#define ADC_VOLTAGE_OFFSET      66
+#define ADC_VOLTAGE_FACTOR      0.705
 #define ADC_CURRENT_OFFSET      1  // 0 -> auto offset
 #define ADC_CURRENT_FACTOR      1
 #define ADC_CONSUMPTION_FACTOR  0.00028
