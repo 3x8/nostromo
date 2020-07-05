@@ -16,7 +16,7 @@
 #define USE_ADC_MEDIAN
 
 // hw constants
-#define HBRIDGE_DEAD_TIME       11    // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
+#define HBRIDGE_DEAD_TIME       11    // (in 20.833ns cycles at 48MHz)
 #define HBRIDGE_MAX_CURRENT     0     // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 
