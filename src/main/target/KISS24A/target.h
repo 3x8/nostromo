@@ -1,5 +1,7 @@
 #pragma once
 
+// needs supplementary Cappacitor (breaking overvoltage damages power supply)
+
 // debug
 #define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP
