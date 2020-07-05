@@ -1,6 +1,7 @@
 #pragma once
 
 // needs additional capacitor (breaking overvoltage damages power supply)
+// bootloader does not work !
 
 // debug
 #define _DEBUG_
