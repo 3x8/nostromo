@@ -1,6 +1,6 @@
 #pragma once
 
-// needs supplementary Cappacitor (breaking overvoltage damages power supply)
+// needs additional capacitor (breaking overvoltage damages power supply)
 
 // debug
 #define _DEBUG_
