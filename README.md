@@ -17,6 +17,7 @@
 **new:**
   * bootloader enabled (4way interface uploader)
   * 500K ERPM
+  * 48KHz, 24KHz
   * median filter *(ERPM)*
 
 **supported hardware:**
