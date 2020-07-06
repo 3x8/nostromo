@@ -111,6 +111,7 @@ int main(void) {
 
         // motor BEMF filter (1 tick 0.167 us)
         if ((motor.CommutationInterval < 2411) && (input.DataNormed > 500)) {
+          // ERpm > 140K
           motor.BemfFilterDelay = 3;
           motor.BemfFilterLevel = 1;
         } else {
@@ -118,7 +119,7 @@ int main(void) {
           motor.BemfFilterLevel = 3;
         }
 
-        // motor not running
+        // motor stopped
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
