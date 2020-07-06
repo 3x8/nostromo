@@ -509,37 +509,38 @@ INLINE_CODE void motorInputUpdate(void) {
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
       if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
-        // up
+        // 3D
         if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
+          // up
           motor.Startup = true;
           if (motor.Direction == !escConfig()->motorDirection) {
             motor.Direction = escConfig()->motorDirection;
-            //motor.BemfCounter = 0;
           }
           input.PwmValue = (input.DataNormed - escConfig()->input3Dneutral) + escConfig()->motorStartThreshold;
         }
-        // down
+
         if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
+          // down
           motor.Startup = true;
           if (motor.Direction == escConfig()->motorDirection) {
             motor.Direction = !escConfig()->motorDirection;
-            //motor.BemfCounter = 0;
           }
           input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
         }
-        // deadband
+
         /*
         if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
-          // noop
+          // deadband
         }*/
       } else {
+        // 2D
         motor.Startup = true;
         input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
       }
 
-      // stall protection and startup kick
       if (motor.Startup) {
         if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
+          // stall protection and startup kick
           input.PwmValue = escConfig()->motorStartupPower;
         } else {
           input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
