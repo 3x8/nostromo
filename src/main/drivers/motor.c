@@ -549,9 +549,8 @@ INLINE_CODE void motorInputUpdate(void) {
     }
   }
 }
-#pragma GCC pop_options
 
-uint32_t motorGetErpm(void) {
+INLINE_CODE uint32_t motorGetErpm(void) {
   if (motor.CommutationInterval > 0) {
     return(MOTOR_ERPM_FACTOR / motor.CommutationInterval);
   } else {
@@ -559,10 +558,11 @@ uint32_t motorGetErpm(void) {
   }
 }
 
-uint32_t motorGetRpm(void) {
+INLINE_CODE uint32_t motorGetRpm(void) {
   if (motor.CommutationInterval > 0) {
     return((MOTOR_ERPM_FACTOR / (motor.CommutationInterval * escConfig()->motorPoles >> 1)));
   } else {
     return(0);
   }
 }
+#pragma GCC pop_options
