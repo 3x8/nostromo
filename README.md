@@ -6,17 +6,17 @@
 **features:**
   * PROSHOT1000 input protocol *(PWM for thrust tests only)*
   * DSHOT commands support
-  * High input linearity:  *(1000 steps)*
-  * Complementary PWM  *(regenerative braking)*
-  * Configurable motor Brake
+  * high input linearity:  *(1000 steps)*
+  * complementary PWM  *(regenerative braking)*
+  * configurable motor Brake
   * KISS telemetry protocol
-  * Maximal Current,Temperature protection
+  * max current, max temperature *(protection)*
   * 3D mode
   * kalman filter *(Voltage, Current)*
 
 **new:**
-  * bootloader enabled (4way interface uploader)
-  * 500K ERPM
+  * bootloader *(betaflight 4way interface uploader)*
+  * 600K ERpm
   * 48KHz, 24KHz
   * median filter *(ERPM)*
 
