@@ -71,16 +71,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   /*
   if (motor.CommutationDelay > 40) {
     while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
-      #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-        LED_TOGGLE(LED_BLUE);
-      #endif
+      //nop
     }
   }*/
-
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_OFF(LED_GREEN);
-    LED_OFF(LED_BLUE);
-  #endif
 
   motorCommutate();
 
@@ -98,6 +91,10 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
     motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
+  #endif
+
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_OFF(LED_GREEN);
   #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0;
