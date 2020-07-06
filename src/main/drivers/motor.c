@@ -71,7 +71,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   /*
   if (motor.CommutationDelay > 40) {
     while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
-      //nop
+      // noop
     }
   }*/
 
@@ -506,12 +506,12 @@ INLINE_CODE void motorInputUpdate(void) {
         inputDshotCommandRun();
       }
     } else {
-      motor.Startup = true;
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
       if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
         // up
         if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
+          motor.Startup = true;
           if (motor.Direction == !escConfig()->motorDirection) {
             motor.Direction = escConfig()->motorDirection;
             motor.BemfCounter = 0;
@@ -520,6 +520,7 @@ INLINE_CODE void motorInputUpdate(void) {
         }
         // down
         if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
+          motor.Startup = true;
           if (motor.Direction == escConfig()->motorDirection) {
             motor.Direction = !escConfig()->motorDirection;
             motor.BemfCounter = 0;
@@ -527,19 +528,24 @@ INLINE_CODE void motorInputUpdate(void) {
           input.PwmValue = input.DataNormed + escConfig()->motorStartThreshold;
         }
         // deadband
+        /*
         if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
-          input.PwmValue = 0;
-        }
+          // noop
+        }*/
       } else {
+        motor.Startup = true;
         input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
       }
 
       // stall protection and startup kick
-      if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
-        input.PwmValue = escConfig()->motorStartupPower;
-      } else {
-        input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+      if (motor.Startup) {
+        if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
+          input.PwmValue = escConfig()->motorStartupPower;
+        } else {
+          input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+        }
       }
+
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
