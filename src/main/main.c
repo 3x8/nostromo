@@ -210,8 +210,8 @@ int main(void) {
           uartPrintInteger(0, 10, 1);
         }
         uartPrint(",");
-        //uartPrintInteger(motorDebugTime, 10, 1);
-        uartPrintInteger(input.PwmValue, 10, 1);
+        uartPrintInteger(motorDebugTime, 10, 1);
+        //uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
