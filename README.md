@@ -18,7 +18,7 @@
   * bootloader *(betaflight 4way interface uploader)*
   * 600K ERpm
   * 48KHz, 24KHz
-  * median filter *(ERPM)*
+  * median filter *(ERpm)*
 
 **supported hardware:**
   * WRAITH32V2  *(official)*
