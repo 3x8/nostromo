@@ -12,7 +12,7 @@
   * KISS telemetry protocol
   * max current, max temperature *(protection)*
   * 3D mode
-  * kalman filter *(Voltage, Current)*
+  * kalman filter *(voltage, current)*
 
 **new:**
   * bootloader *(betaflight 4way interface uploader)*
