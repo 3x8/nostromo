@@ -196,7 +196,7 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       extern uint32_t motorDebugTime;
-      if ((msTimerHandle.Instance->CNT % 2) == 0) {
+      if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
         // each 1ms
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
