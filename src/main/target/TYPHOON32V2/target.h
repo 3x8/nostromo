@@ -1,19 +1,19 @@
 #pragma once
 
 // debug
-#define _DEBUG_
+//#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP
 //#define DEBUG_MOTOR_TIMING
 //#define DEBUG_INPUT_PROSHOT
 //#define DEBUG_INPUT_AUTODETECT
-#define DEBUG_DATA_UART
+//#define DEBUG_DATA_UART
 //#define DEBUG_MS_TIMER
 //#define DEBUG_UART1
 //#define DEBUG_DATA_QUALITY
 
 // CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
 #define USE_PWM_FREQUENCY_48kHz
-//#define USE_ADC_MEDIAN
+#define USE_ADC_MEDIAN
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)

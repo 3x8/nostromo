@@ -514,6 +514,7 @@ INLINE_CODE void motorInputUpdate(void) {
         if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
           // up
           motor.Startup = true;
+          motor.BemfCounter = 0;
           if (motor.Direction == !escConfig()->motorDirection) {
             motor.Direction = escConfig()->motorDirection;
           }
@@ -523,6 +524,7 @@ INLINE_CODE void motorInputUpdate(void) {
         if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
           // down
           motor.Startup = true;
+          motor.BemfCounter = 0;
           if (motor.Direction == escConfig()->motorDirection) {
             motor.Direction = !escConfig()->motorDirection;
           }
@@ -536,6 +538,7 @@ INLINE_CODE void motorInputUpdate(void) {
       } else {
         // 2D
         motor.Startup = true;
+        motor.BemfCounter = 0;
         input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
       }
 
