@@ -34,8 +34,8 @@ int main(void) {
 
   #if (defined(USE_ADC))
     #if (defined(USE_ADC_MEDIAN))
-      medianInit(&adcVoltageFilterState, 8);
-      medianInit(&adcCurrentFilterState, 8);
+      medianInit(&adcVoltageFilterState, 16);
+      medianInit(&adcCurrentFilterState, 16);
     #else
       kalmanInit(&adcVoltageFilterState, 5000.0f, 11);
       kalmanInit(&adcCurrentFilterState, 5000.0f, 11);
