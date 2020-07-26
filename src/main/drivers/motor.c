@@ -404,9 +404,9 @@ INLINE_CODE void motorCommutate() {
 #pragma GCC pop_options
 
 void motorStart() {
-  bool bufferComplementaryPWM = motor.ComplementaryPWM;
-
   if (!motor.Running) {
+    bool bufferComplementaryPWM = motor.ComplementaryPWM;
+
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
@@ -436,8 +436,9 @@ void motorStart() {
         __HAL_COMP_COMP1_EXTI_ENABLE_IT();
       #endif
     #endif
+
+    motor.ComplementaryPWM = bufferComplementaryPWM;
   }
-  motor.ComplementaryPWM = bufferComplementaryPWM;
 }
 
 void motorBrakeOff() {
