@@ -49,7 +49,7 @@ int main(void) {
   #if (defined(USE_ADC_MEDIAN))
     motor.BemfZeroCounterTimeoutThreshold = 71;
   #else
-    motor.BemfZeroCounterTimeoutThreshold = 21;
+    motor.BemfZeroCounterTimeoutThreshold = 13;
   #endif
   input.Data = 0;
   input.PwmValue = 0;
