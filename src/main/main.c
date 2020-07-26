@@ -37,8 +37,8 @@ int main(void) {
       medianInit(&adcVoltageFilterState, 30);
       medianInit(&adcCurrentFilterState, 30);
     #else
-      kalmanInit(&adcVoltageFilterState, 5000.0f, 11);
-      kalmanInit(&adcCurrentFilterState, 5000.0f, 11);
+      kalmanInit(&adcVoltageFilterState, 2500.0f, 11);
+      kalmanInit(&adcCurrentFilterState, 2500.0f, 11);
     #endif
   #endif
 
@@ -49,7 +49,7 @@ int main(void) {
   #if (defined(USE_ADC_MEDIAN))
     motor.BemfZeroCounterTimeoutThreshold = 71;
   #else
-    motor.BemfZeroCounterTimeoutThreshold = 23;
+    motor.BemfZeroCounterTimeoutThreshold = 21;
   #endif
   input.Data = 0;
   input.PwmValue = 0;
