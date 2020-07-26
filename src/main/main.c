@@ -37,8 +37,8 @@ int main(void) {
       medianInit(&adcVoltageFilterState, 30);
       medianInit(&adcCurrentFilterState, 30);
     #else
-      kalmanInit(&adcVoltageFilterState, 2500.0f, 11);
-      kalmanInit(&adcCurrentFilterState, 2500.0f, 11);
+      kalmanInit(&adcVoltageFilterState, 1013.0f, 11);
+      kalmanInit(&adcCurrentFilterState, 1013.0f, 11);
     #endif
   #endif
 
