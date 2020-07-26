@@ -34,8 +34,8 @@ int main(void) {
 
   #if (defined(USE_ADC))
     #if (defined(USE_ADC_MEDIAN))
-      medianInit(&adcVoltageFilterState, 32);
-      medianInit(&adcCurrentFilterState, 32);
+      medianInit(&adcVoltageFilterState, 30);
+      medianInit(&adcCurrentFilterState, 30);
     #else
       kalmanInit(&adcVoltageFilterState, 5000.0f, 11);
       kalmanInit(&adcCurrentFilterState, 5000.0f, 11);
@@ -47,9 +47,9 @@ int main(void) {
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
   #if (defined(USE_ADC_MEDIAN))
-    motor.BemfZeroCounterTimeoutThreshold = 31;
+    motor.BemfZeroCounterTimeoutThreshold = 71;
   #else
-    motor.BemfZeroCounterTimeoutThreshold = 13;
+    motor.BemfZeroCounterTimeoutThreshold = 23;
   #endif
   input.Data = 0;
   input.PwmValue = 0;
