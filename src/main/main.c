@@ -37,8 +37,8 @@ int main(void) {
       medianInit(&adcVoltageFilterState, 8);
       medianInit(&adcCurrentFilterState, 8);
     #else
-      kalmanInit(&adcVoltageFilterState, 500.0f, 7);
-      kalmanInit(&adcCurrentFilterState, 500.0f, 7);
+      kalmanInit(&adcVoltageFilterState, 5000.0f, 11);
+      kalmanInit(&adcCurrentFilterState, 5000.0f, 11);
     #endif
   #endif
 
@@ -170,7 +170,7 @@ int main(void) {
       }
     #endif
 
-    if (msTimerHandle.Instance->CNT > 100) {
+    if (msTimerHandle.Instance->CNT > 200) {
       msTimerHandle.Instance->CNT = 0;
       #if (defined(USE_ADC))
         consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
@@ -196,9 +196,8 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       extern uint32_t motorDebugTime;
-      //if ((msTimerHandle.Instance->CNT % 11) == 0) { // low speed CSV (10ms)
-      if (input.DataNormed > 0) {       // high speed CSV (500uS)
-        // CSV
+      if ((msTimerHandle.Instance->CNT % 2) == 0) {
+        // each 1ms
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
         uartPrintInteger(input.DataNormed, 10, 1);
@@ -211,7 +210,6 @@ int main(void) {
         }
         uartPrint(",");
         uartPrintInteger(motorDebugTime, 10, 1);
-        //uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");

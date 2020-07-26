@@ -229,7 +229,7 @@ void systemMsTimerInit(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
 
   msTimerHandle.Instance = TIM16;
-  msTimerHandle.Init.Prescaler = 47017;   // 1ms counter
+  msTimerHandle.Init.Prescaler = 24001;   // 500us
   msTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   msTimerHandle.Init.Period = 0xffffffff;
   msTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
