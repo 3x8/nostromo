@@ -54,6 +54,7 @@ typedef struct {
   uint32_t window[MAX_WINDOW_SIZE];
   uint32_t windowSize;
   uint32_t windowIndex;
+  uint32_t meanSum;
 } medianStructure;
 
 void medianInit(medianStructure *filter, uint32_t w);
