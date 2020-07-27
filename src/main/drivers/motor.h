@@ -3,7 +3,7 @@
 #include "main.h"
 
 #define MOTOR_POLES 14
-#define MOTOR_BLDC_STEPS  6
+#define MOTOR_BLDC_STEPS  6 * 4
 #define MOTOR_START_THRESHOLD 27
 #define MOTOR_STARTUP_POWER 151
 #define MOTOR_PWM_RESOLUTION  1003

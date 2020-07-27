@@ -34,8 +34,8 @@ int main(void) {
 
   #if (defined(USE_ADC))
     #if (defined(USE_ADC_MEDIAN))
-      medianInit(&adcVoltageFilterState, 30);
-      medianInit(&adcCurrentFilterState, 30);
+      medianInit(&adcVoltageFilterState, 113);
+      medianInit(&adcCurrentFilterState, 113);
     #else
       kalmanInit(&adcVoltageFilterState, 503.0f, 11);
       kalmanInit(&adcCurrentFilterState, 503.0f, 11);
@@ -137,7 +137,7 @@ int main(void) {
           motorStart();
         }
 
-        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState);
+        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 2;
 
         // ToDo
         //motor.CommutationDelay = 0; //timing 30°
