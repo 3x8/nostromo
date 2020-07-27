@@ -28,7 +28,7 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
 // kalman filter
 void kalmanInit(kalmanStructure *filter, float q, uint32_t w) {
   memset(filter, 0, sizeof(kalmanStructure));
-  filter->q = q * 0.001f;
+  filter->q = q * 0.000001f;
   filter->w = w + 1;
   if (filter->w > MAX_WINDOW_SIZE) {
     filter->w = MAX_WINDOW_SIZE;
