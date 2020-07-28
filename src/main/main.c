@@ -215,7 +215,7 @@ int main(void) {
           #if (defined(DEBUG_CYCLETIME_MAINLOOP))
             uartPrintInteger(mainTime * 0.17, 10, 1);
           #else
-          //uartPrintInteger(motor.CommutationInterval, 10, 1);
+            //uartPrintInteger(motor.CommutationInterval, 10, 1);
             uartPrintInteger(motorGetRpm(), 10, 1);
           #endif
         } else {
