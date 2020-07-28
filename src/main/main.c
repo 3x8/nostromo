@@ -12,6 +12,10 @@ medianStructure motorCommutationIntervalFilterState;
 #endif
 
 int main(void) {
+  #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
+    uint32_t mainBegin, mainTime;
+  #endif
+
   // init
   #if (defined(USE_BOOTLOADER))
     systemInitAfterBootloaderJump();
@@ -57,10 +61,6 @@ int main(void) {
 
   watchdogInit(2000);
   motorTuneStartup();
-
-  #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-    uint32_t mainBegin, mainTime;
-  #endif
 
   // main loop
   while (true) {
