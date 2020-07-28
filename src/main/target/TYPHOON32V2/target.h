@@ -11,7 +11,7 @@
 //#define DEBUG_UART1
 //#define DEBUG_DATA_QUALITY
 
-// CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
+// CYCLETIME_MAINLOOP kalman->500us, median->100us
 #define USE_PWM_FREQUENCY_48kHz
 //#define USE_ADC_MEDIAN
 

@@ -58,10 +58,15 @@ int main(void) {
   watchdogInit(2000);
   motorTuneStartup();
 
+  #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
+    uint32_t mainBegin, mainTime;
+  #endif
+
   // main loop
   while (true) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
+      mainBegin = motorCommutationTimerHandle.Instance->CNT;
     #endif
 
     watchdogFeed();
@@ -207,8 +212,12 @@ int main(void) {
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint(",");
         if (motor.CommutationInterval > 0) {
+          #if (defined(DEBUG_CYCLETIME_MAINLOOP))
+            uartPrintInteger(mainTime * 0.17, 10, 1);
+          #else
           //uartPrintInteger(motor.CommutationInterval, 10, 1);
-          uartPrintInteger(motorGetRpm(), 10, 1);
+            uartPrintInteger(motorGetRpm(), 10, 1);
+          #endif
         } else {
           uartPrintInteger(0, 10, 1);
         }
@@ -224,6 +233,10 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
+      mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
+      if (mainTime > 100000) {
+        mainTime = mainBegin - motorCommutationTimerHandle.Instance->CNT ;
+      }
     #endif
   } // main loop
 
