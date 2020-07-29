@@ -71,6 +71,7 @@ typedef struct {
   uint8_t Protocol;
   uint32_t Data;
   uint32_t DataNormed;
+  uint32_t DataNormedLast;
   uint32_t ArmingCounter;
   uint32_t TimeoutCounter;
   uint32_t PwmValue;

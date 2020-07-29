@@ -508,6 +508,8 @@ INLINE_CODE void motorInputUpdate(void) {
       }
     } else {
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
+      input.DataNormed = (input.DataNormed + input.DataNormedLast) >> 1;
+      input.DataNormedLast = input.DataNormed;
 
       if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
         // 3D
