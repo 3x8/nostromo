@@ -502,6 +502,7 @@ INLINE_CODE void motorInputUpdate(void) {
     if (input.Data <= DSHOT_CMD_MAX) {
       motor.Startup = false;
       input.DataNormed = 0;
+      input.DataNormedLast = 0;
       input.PwmValue = 0;
       if ((!motor.Running) || (!motor.Startup)) {
         inputDshotCommandRun();
@@ -557,6 +558,11 @@ INLINE_CODE void motorInputUpdate(void) {
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
     }
+  } else {
+    motor.Startup = false;
+    input.DataNormed = 0;
+    input.DataNormedLast = 0;
+    input.PwmValue = 0;
   }
 }
 
