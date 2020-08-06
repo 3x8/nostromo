@@ -233,9 +233,10 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
-      mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
-      if (mainTime > 100000) {
-        mainTime = mainBegin - motorCommutationTimerHandle.Instance->CNT ;
+      if (mainTime < 100000) {
+        mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
+      } else {
+        mainTime = mainBegin - motorCommutationTimerHandle.Instance->CNT;
       }
     #endif
   } // main loop
