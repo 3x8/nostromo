@@ -29,7 +29,7 @@ typedef enum {
 } motorDirectionEnum;
 
 typedef struct {
-  bool Startup;
+  bool Start;
   bool Running;
   bool Direction;
   bool ComplementaryPWM;
