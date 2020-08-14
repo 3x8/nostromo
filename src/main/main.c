@@ -72,7 +72,7 @@ int main(void) {
     watchdogFeed();
 
     // brake
-    if ((!motor.Startup) && (!motor.Running)) {
+    if ((!motor.Start) && (!motor.Running)) {
       switch (escConfig()->motorBrake) {
         case BRAKE_FULL:
           motor.BrakeActiveProportional = false;
@@ -137,7 +137,7 @@ int main(void) {
         }
 
         // motor start
-        if ((motor.Startup) && (!motor.Running)) {
+        if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
           motorStart();
         }

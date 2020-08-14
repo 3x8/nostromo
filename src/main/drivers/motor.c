@@ -22,7 +22,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
   #endif
 
-  if ((!motor.Running) || (!motor.Startup)) {
+  if ((!motor.Running) || (!motor.Start)) {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
@@ -500,11 +500,11 @@ void motorTuneInput(uint8_t motorStepDebug) {
 INLINE_CODE void motorInputUpdate(void) {
   if (input.Armed) {
     if (input.Data <= DSHOT_CMD_MAX) {
-      motor.Startup = false;
+      motor.Start = false;
       input.DataNormed = 0;
       input.DataNormedLast = 0;
       input.PwmValue = 0;
-      if ((!motor.Running) || (!motor.Startup)) {
+      if ((!motor.Running) || (!motor.Start)) {
         inputDshotCommandRun();
       }
     } else {
@@ -517,7 +517,7 @@ INLINE_CODE void motorInputUpdate(void) {
         // 3D
         if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
           // up
-          motor.Startup = true;
+          motor.Start = true;
           if (motor.Direction == !escConfig()->motorDirection) {
             motor.BemfCounter = 0;
             motor.Direction = escConfig()->motorDirection;
@@ -527,7 +527,7 @@ INLINE_CODE void motorInputUpdate(void) {
 
         if ((input.DataNormed < escConfig()->input3Dneutral) && (input.DataNormed >= escConfig()->input3DdeadbandLow)) {
           // down
-          motor.Startup = true;
+          motor.Start = true;
           if (motor.Direction == escConfig()->motorDirection) {
             motor.BemfCounter = 0;
             motor.Direction = !escConfig()->motorDirection;
@@ -541,11 +541,11 @@ INLINE_CODE void motorInputUpdate(void) {
         }*/
       } else {
         // 2D
-        motor.Startup = true;
+        motor.Start = true;
         input.PwmValue = (input.DataNormed >> 1) + escConfig()->motorStartThreshold;
       }
 
-      if (motor.Startup) {
+      if (motor.Start) {
         if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
           // stall protection and startup kick
           input.PwmValue = escConfig()->motorStartupPower;
@@ -559,7 +559,7 @@ INLINE_CODE void motorInputUpdate(void) {
       motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
     }
   } else {
-    motor.Startup = false;
+    motor.Start = false;
     input.DataNormed = 0;
     input.DataNormedLast = 0;
     input.PwmValue = 0;
