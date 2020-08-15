@@ -34,7 +34,7 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_STEPS);
+  medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
     #if (defined(USE_ADC_MEDIAN))
@@ -133,7 +133,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_STEPS);
+          medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
         }
 
         // motor start
@@ -142,7 +142,7 @@ int main(void) {
           motorStart();
         }
 
-        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 2;
+        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
         // ToDo
         //motor.CommutationDelay = 0; //timing 30°
