@@ -24,7 +24,7 @@ const int pwmSin[] = {
   uint32_t motorDebugTime;
 #endif
 
-int32_t motorPhaseAstep, motorPhaseBstep, motorPhaseCstep;
+int32_t motorPhaseAstep  = 0, motorPhaseBstep = 120, motorPhaseCstep = 240;
 int32_t gateDriveOffset = 0;
 
 #pragma GCC push_options
@@ -605,7 +605,7 @@ INLINE_CODE uint32_t motorGetRpm(void) {
 
 // ToDo
 void motorComutateSin() {
-  //if (motor.Start  && (!motor.Running)) {
+  if (motor.Start  && (!motor.Running)) {
     if (motor.Direction == SPIN_CW) {
       if (++motorPhaseAstep > 359) {
         motorPhaseAstep = 0 ;
@@ -633,5 +633,6 @@ void motorComutateSin() {
     motorPwmTimerHandle.Instance->CCR3 = pwmSin[motorPhaseCstep] + gateDriveOffset;
 
     motorCommutate();
-  //}
+
+  }
 }

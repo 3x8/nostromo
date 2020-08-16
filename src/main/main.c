@@ -144,6 +144,7 @@ int main(void) {
         // motor start
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
+          motor.ComplementaryPWM = false;
           //motorStart();
         }
 
