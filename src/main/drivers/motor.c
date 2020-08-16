@@ -565,8 +565,8 @@ INLINE_CODE void motorInputUpdate(void) {
   } else {
     motor.Start = false;
     input.DataNormed = 0;
-    input.DataNormedLast = 0;
     input.PwmValue = 0;
+    input.PwmValueLast = 0;
   }
 }
 
