@@ -1,6 +1,6 @@
 #include "motor.h"
 
-TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
+TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, motorSinTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motorStructure motor;
 
@@ -24,7 +24,7 @@ const int pwmSin[] = {
 #endif
 
 int32_t motorPhaseAstep, motorPhaseBstep, motorPhaseCstep;
-int32_t gateDriveOffset = 100;
+int32_t gateDriveOffset = 10;
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")

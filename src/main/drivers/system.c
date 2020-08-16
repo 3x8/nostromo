@@ -1,6 +1,6 @@
 #include "system.h"
 
-TIM_HandleTypeDef msTimerHandle, motorSinTimerHandle;
+TIM_HandleTypeDef msTimerHandle;
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timerHandle);
 
 void systemClockConfig(void) {

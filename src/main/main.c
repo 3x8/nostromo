@@ -30,6 +30,7 @@ int main(void) {
   systemAdcInit();
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
+  // ToDo
   systemMotorSinTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();

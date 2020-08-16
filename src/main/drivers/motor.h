@@ -48,7 +48,7 @@ typedef struct {
   uint32_t CommutationDelay;
 } motorStructure;
 
-extern TIM_HandleTypeDef motorPwmTimerHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle, motorSinTimerHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
 extern motorStructure motor;

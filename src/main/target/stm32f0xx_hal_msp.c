@@ -126,6 +126,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
       __HAL_LINKDMA(timerHandle,hdma[TIM_DMA_ID_CC2],inputTimerDmaHandle);
     #endif
   }
+  else if (timerHandle->Instance == motorSinTimerHandle.Instance) {
+    __HAL_RCC_TIM17_CLK_ENABLE();
+  }
 }
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timerHandle) {
@@ -199,5 +202,8 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
     #if (INPUT_TIMER_CH == TIM_CHANNEL_2)
       HAL_DMA_DeInit(timerHandle->hdma[TIM_DMA_ID_CC2]);
     #endif
+  }
+  else if (timerHandle->Instance == motorSinTimerHandle.Instance) {
+    __HAL_RCC_TIM17_CLK_DISABLE();
   }
 }
