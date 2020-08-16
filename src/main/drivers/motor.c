@@ -419,7 +419,10 @@ void motorStart() {
 
     motor.ComplementaryPWM = true;
 
-    motorCommutate();
+    for (uint32_t i = 1; i < MOTOR_BLDC_STEPS; i++) {
+      motorCommutate();
+      HAL_Delay(2);
+    }
 
     motorCommutationTimerHandle.Instance->CNT = 0;
     motor.BemfCounter = 0;
@@ -546,7 +549,7 @@ INLINE_CODE void motorInputUpdate(void) {
       }
 
       if (motor.Start) {
-        if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
+        if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
           // stall protection and startup kick
           input.PwmValue = escConfig()->motorStartupPower;
         } else {
