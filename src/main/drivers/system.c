@@ -251,7 +251,7 @@ void systemMotorSinTimerInit(void) {
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
 
-  motorSinTimerHandle.Instance = TIM17;
+  motorSinTimerHandle.Instance = TIM6;
   motorSinTimerHandle.Init.Prescaler = 10;
   motorSinTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   motorSinTimerHandle.Init.Period = 4000;

@@ -31,7 +31,7 @@ int main(void) {
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
   // ToDo
-  systemMotorSinTimerInit();
+  //systemMotorSinTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();
   ledOff();
@@ -141,6 +141,7 @@ int main(void) {
         // motor start
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
+          motorComutateSin();
           //motorStart();
         }
 

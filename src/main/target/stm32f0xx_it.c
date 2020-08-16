@@ -66,6 +66,6 @@ void TIM1_CC_IRQHandler(void) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == motorSinTimerHandle.Instance) {
-    motorComutateSin();
+    //motorComutateSin();
   }
 }

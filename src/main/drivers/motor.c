@@ -24,7 +24,7 @@ const int pwmSin[] = {
 #endif
 
 int32_t motorPhaseAstep, motorPhaseBstep, motorPhaseCstep;
-int32_t gateDriveOffset = 10;
+int32_t gateDriveOffset = 100;
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
@@ -38,7 +38,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
   #endif
 
-  if ((!motor.Running) || (!motor.Start)) {
+  // ToDO
+  //if ((!motor.Running) || (!motor.Start)) {
+  if (!motor.Running) {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
@@ -602,7 +604,7 @@ INLINE_CODE uint32_t motorGetRpm(void) {
 
 // ToDo
 void motorComutateSin() {
-  if (motor.Start  && (!motor.Running)) {
+  //if (motor.Start  && (!motor.Running)) {
     if (motor.Direction == SPIN_CW) {
       if (++motorPhaseAstep > 359) {
         motorPhaseAstep = 0 ;
@@ -625,8 +627,10 @@ void motorComutateSin() {
       }
     }
 
-    TIM1->CCR1 = (pwmSin[motorPhaseAstep]) + gateDriveOffset;
-    TIM1->CCR2 = (pwmSin[motorPhaseBstep]) + gateDriveOffset;
-    TIM1->CCR3 = (pwmSin[motorPhaseCstep]) + gateDriveOffset;
-  }
+    motorPwmTimerHandle.Instance->CCR1 = pwmSin[motorPhaseAstep] + gateDriveOffset;
+    motorPwmTimerHandle.Instance->CCR2 = pwmSin[motorPhaseBstep] + gateDriveOffset;
+    motorPwmTimerHandle.Instance->CCR3 = pwmSin[motorPhaseCstep] + gateDriveOffset;
+
+    motorCommutate();
+  //}
 }
