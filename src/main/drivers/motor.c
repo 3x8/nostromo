@@ -505,8 +505,8 @@ INLINE_CODE void motorInputUpdate(void) {
     if (input.Data <= DSHOT_CMD_MAX) {
       motor.Start = false;
       input.DataNormed = 0;
-      input.DataNormedLast = 0;
       input.PwmValue = 0;
+      input.PwmValueLast = 0;
       if ((!motor.Running) || (!motor.Start)) {
         inputDshotCommandRun();
       }
