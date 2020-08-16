@@ -512,9 +512,6 @@ INLINE_CODE void motorInputUpdate(void) {
       }
     } else {
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
-      // trapezium rule
-      input.DataNormed = (input.DataNormed + input.DataNormedLast) >> 1;
-      input.DataNormedLast = input.DataNormed;
 
       if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
         // 3D
@@ -556,6 +553,10 @@ INLINE_CODE void motorInputUpdate(void) {
           input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         }
       }
+
+      // trapezium rule
+      input.PwmValue = (input.PwmValue + input.PwmValueLast) >> 1;
+      input.PwmValueLast = input.PwmValue;
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
