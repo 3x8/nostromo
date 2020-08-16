@@ -2,6 +2,7 @@
 
 // filter
 medianStructure motorCommutationIntervalFilterState;
+uint32_t counter;
 
 #if (defined(USE_ADC))
   #if (defined(USE_ADC_MEDIAN))
@@ -30,10 +31,12 @@ int main(void) {
   systemAdcInit();
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
-  // ToDo
-  //systemMotorSinTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();
+
+  // ToDo
+  //systemMotorSinTimerInit();
+
   ledOff();
 
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
@@ -141,7 +144,10 @@ int main(void) {
         // motor start
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
-          motorComutateSin();
+          if ((msTimerHandle.Instance->CNT % 33) == 0) {
+            // ToDo
+            motorComutateSin();
+          }
           //motorStart();
         }
 

@@ -17,14 +17,15 @@ const int pwmSin[] = {
    53, 51, 49, 47, 46, 44, 42, 41, 39, 37, 36, 34, 33, 31, 30, 28, 27, 26, 24, 23, 22, 21, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  8,  7,
     6,  6,  5,  4,  4,  3,  3,  2,  2,  2,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  2,  2,  2,  3,  3,  4,  4,  5,  6,
     6,  7,  8,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 30, 31, 33, 34, 36, 37, 39, 41, 42, 44, 46, 47, 49, 51,
-   53, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 95, 97, 99,101,103,105,108,110,112,114,116,119,121,123,125};
+   53, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 95, 97, 99,101,103,105,108,110,112,114,116,119,121,123,125
+};
 
 #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
   uint32_t motorDebugTime;
 #endif
 
 int32_t motorPhaseAstep, motorPhaseBstep, motorPhaseCstep;
-int32_t gateDriveOffset = 100;
+int32_t gateDriveOffset = 0;
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
@@ -38,7 +39,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
   #endif
 
-  // ToDO
+  // ToDo
   //if ((!motor.Running) || (!motor.Start)) {
   if (!motor.Running) {
     #if (!defined(COMPARATOR_OPTIMIZE))

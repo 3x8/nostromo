@@ -127,7 +127,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
     #endif
   }
   else if (timerHandle->Instance == motorSinTimerHandle.Instance) {
-    __HAL_RCC_TIM6_CLK_ENABLE();
+    __HAL_RCC_TIM17_CLK_ENABLE();
   }
 }
 
@@ -204,6 +204,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
     #endif
   }
   else if (timerHandle->Instance == motorSinTimerHandle.Instance) {
-    __HAL_RCC_TIM6_CLK_DISABLE();
+    __HAL_RCC_TIM17_CLK_DISABLE();
   }
 }
