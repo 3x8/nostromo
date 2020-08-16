@@ -30,6 +30,7 @@ int main(void) {
   systemAdcInit();
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
+  systemMotorSinTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();
   ledOff();
@@ -139,7 +140,7 @@ int main(void) {
         // motor start
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
-          motorStart();
+          //motorStart();
         }
 
         motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 3;

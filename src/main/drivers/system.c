@@ -1,6 +1,6 @@
 #include "system.h"
 
-TIM_HandleTypeDef msTimerHandle;
+TIM_HandleTypeDef msTimerHandle, motorSinTimerHandle;
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timerHandle);
 
 void systemClockConfig(void) {
@@ -244,6 +244,31 @@ void systemMsTimerInit(void) {
   while (HAL_TIMEx_MasterConfigSynchronization(&msTimerHandle, &sMasterConfig) != HAL_OK);
 
   while (HAL_TIM_Base_Start(&msTimerHandle) != HAL_OK);
+}
+
+// ToDo
+void systemMotorSinTimerInit(void) {
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  motorSinTimerHandle.Instance = TIM17;
+  motorSinTimerHandle.Init.Prescaler = 10;
+  motorSinTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  motorSinTimerHandle.Init.Period = 4000;
+  motorSinTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  motorSinTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+  while (HAL_TIM_Base_Init(&motorSinTimerHandle) != HAL_OK);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  while (HAL_TIM_ConfigClockSource(&motorSinTimerHandle, &sClockSourceConfig) != HAL_OK);
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  while (HAL_TIMEx_MasterConfigSynchronization(&motorSinTimerHandle, &sMasterConfig) != HAL_OK);
+
+  while (HAL_TIM_Base_Start_IT(&motorSinTimerHandle) != HAL_OK);
+
 }
 
 #if (defined(USE_BOOTLOADER))

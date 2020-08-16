@@ -73,3 +73,5 @@ void motorTuneInput(uint8_t motorStepDebug);
 void motorInputUpdate(void);
 uint32_t motorGetErpm(void);
 uint32_t motorGetRpm(void);
+
+void motorComutateSin();
