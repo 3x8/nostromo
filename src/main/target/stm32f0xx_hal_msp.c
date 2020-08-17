@@ -128,6 +128,8 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
   }
   else if (timerHandle->Instance == motorSinTimerHandle.Instance) {
     __HAL_RCC_TIM17_CLK_ENABLE();
+    HAL_NVIC_SetPriority(TIM17_IRQn, 1, 0);
+    HAL_NVIC_EnableIRQ(TIM17_IRQn);
   }
 }
 
@@ -205,5 +207,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* timerHandle) {
   }
   else if (timerHandle->Instance == motorSinTimerHandle.Instance) {
     __HAL_RCC_TIM17_CLK_DISABLE();
+    HAL_NVIC_DisableIRQ(TIM17_IRQn);
   }
 }
