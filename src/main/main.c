@@ -35,7 +35,7 @@ int main(void) {
   systemMsTimerInit();
 
   // ToDo
-  //systemMotorSinTimerInit();
+  systemMotorSinTimerInit();
 
   ledOff();
 
@@ -144,7 +144,6 @@ int main(void) {
         // motor start
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
-          motor.ComplementaryPWM = false;
           //motorStart();
         }
 
@@ -191,7 +190,7 @@ int main(void) {
       // ToDo
       if ((motor.Start) && (!motor.Running)) {
         motor.BemfZeroCounterTimeout = 0;
-        motorComutateSin();
+        //motorComutateSin();
       }
 
 
