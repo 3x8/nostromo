@@ -24,7 +24,7 @@ const int pwmSin[] = {
   uint32_t motorDebugTime;
 #endif
 
-int32_t motorPhaseAstep  = 0, motorPhaseBstep = 120, motorPhaseCstep = 240;
+int32_t motorPhaseAstep  = 0, motorPhaseBstep = 0, motorPhaseCstep = 0;
 int32_t gateDriveOffset = 0;
 
 #pragma GCC push_options
@@ -628,9 +628,9 @@ void motorComutateSin() {
       }
     }
 
-    motorPwmTimerHandle.Instance->CCR1 = pwmSin[motorPhaseAstep] + gateDriveOffset;
-    motorPwmTimerHandle.Instance->CCR2 = pwmSin[motorPhaseBstep] + gateDriveOffset;
-    motorPwmTimerHandle.Instance->CCR3 = pwmSin[motorPhaseCstep] + gateDriveOffset;
+    motorPwmTimerHandle.Instance->CCR1 = (pwmSin[motorPhaseAstep] + gateDriveOffset);
+    motorPwmTimerHandle.Instance->CCR2 = (pwmSin[motorPhaseBstep] + gateDriveOffset);
+    motorPwmTimerHandle.Instance->CCR3 = (pwmSin[motorPhaseCstep] + gateDriveOffset);
 
     motorCommutate();
 

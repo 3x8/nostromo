@@ -70,3 +70,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     motorComutateSin();
   }
 }
+
+void TIM17_IRQHandler(void) {
+  HAL_TIM_IRQHandler(&motorSinTimerHandle);
+}

@@ -268,7 +268,6 @@ void systemMotorSinTimerInit(void) {
   while (HAL_TIMEx_MasterConfigSynchronization(&motorSinTimerHandle, &sMasterConfig) != HAL_OK);
 
   while (HAL_TIM_Base_Start_IT(&motorSinTimerHandle) != HAL_OK);
-
 }
 
 #if (defined(USE_BOOTLOADER))
