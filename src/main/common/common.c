@@ -94,6 +94,4 @@ INLINE_CODE uint32_t medianGetSumm(medianStructure *filter) {
 INLINE_CODE uint32_t medianGetLast(medianStructure *filter) {
   return(filter->window[filter->windowIndex]);
 }
-
-
 #pragma GCC pop_options

@@ -41,6 +41,15 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     LED_ON(LED_GREEN);
   #endif
 
+  // ToDo
+  if (motor.OneErpmTime > 600) {
+    motorSinTimerHandle.Instance->ARR = (motor.BemfZeroCrossTimestamp >> 1) & 0xfffff;
+    //motorSinTimerHandle.Instance->ARR = 0xfff;
+    motorSinTimerHandle.Instance->CNT = 0x0;
+    //LED_OFF(LED_GREEN);
+    //HAL_NVIC_EnableIRQ(TIM17_IRQn);
+  }
+
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
@@ -72,17 +81,6 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0;
-
-  // ToDo
-  if (motor.OneErpmTime > 600) {
-    ///motorSinTimerHandle.Instance->ARR = (medianGetLast(&motorCommutationIntervalFilterState) >> 2) & 0xfffff;
-    motorSinTimerHandle.Instance->ARR = 0xfff;
-    motorSinTimerHandle.Instance->CNT = 0x0;
-    //LED_OFF(LED_GREEN);
-    //HAL_NVIC_EnableIRQ(TIM17_IRQn);
-  }
-
-
   __enable_irq();
 }
 
