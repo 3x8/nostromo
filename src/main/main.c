@@ -119,7 +119,7 @@ int main(void) {
         }
 
         // motor BEMF filter (1 tick 0.167 us)
-        if ((motor.CommutationInterval < 2411) && (input.DataNormed > 500)) {
+        if ((motor.OneErpmTime < 2411) && (input.DataNormed > 500)) {
           // ERpm > 140K
           motor.BemfFilterDelay = 3;
           motor.BemfFilterLevel = 1;
@@ -142,12 +142,12 @@ int main(void) {
           motorStart();
         }
 
-        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 3;
+        motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
         // ToDo
         //motor.CommutationDelay = 0; //timing 30°
-        //motor.CommutationDelay = constrain((motor.CommutationInterval >> 3), 41, 401); //timing 15°
-        //motor.CommutationDelay = constrain((motor.CommutationInterval >> 2), 41, 401); //timing 0°
+        //motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 15°
+        //motor.CommutationDelay = constrain((motor.OneErpmTime >> 2), 41, 401); //timing 0°
       } // input.Armed
     } // input.Protocol detected
 
@@ -211,11 +211,11 @@ int main(void) {
         uartPrint(",");
         uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint(",");
-        if (motor.CommutationInterval > 0) {
+        if (motor.OneErpmTime > 0) {
           #if (defined(DEBUG_CYCLETIME_MAINLOOP))
             uartPrintInteger(mainTime * 0.17, 10, 1);
           #else
-            //uartPrintInteger(motor.CommutationInterval, 10, 1);
+            //uartPrintInteger(motor.OneErpmTime, 10, 1);
             uartPrintInteger(motorGetRpm(), 10, 1);
           #endif
         } else {
