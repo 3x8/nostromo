@@ -10,14 +10,12 @@ extern medianStructure motorCommutationIntervalFilterState;
   uint32_t motorDebugTime;
 #endif
 
-int32_t motorPhaseAstep  = 0, motorPhaseBstep = 0, motorPhaseCstep = 0;
-int32_t gateDriveOffset = 0;
-
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
+
   __disable_irq();
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
@@ -57,6 +55,13 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   }*/
 
   motorCommutate();
+
+  #if defined(KISS24A)
+    __HAL_COMP_COMP2_EXTI_CLEAR_FLAG();
+  #else
+    __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
+  #endif
+
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
     motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
