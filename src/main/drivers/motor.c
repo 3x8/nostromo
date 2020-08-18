@@ -42,7 +42,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   // ToDo
-  if ((motor.Running) && (motor.OneErpmTime > 600)) {
+  if ((motor.Running) && (motor.BemfZeroCrossTimestamp < 8001) && (motor.BemfZeroCrossTimestamp > 51)) {
     motorSinTimerHandle.Instance->ARR = (motor.BemfZeroCrossTimestamp >> 1) & 0xfffff;
     //motorSinTimerHandle.Instance->ARR = 0xfff;
     motorSinTimerHandle.Instance->CNT = 0x0;
