@@ -42,14 +42,14 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   // ToDo
-  if ((motor.Running) && (motor.BemfZeroCrossTimestamp < 8001) && (motor.BemfZeroCrossTimestamp > 51)) {
+  //if ((motor.Running) && (motor.BemfZeroCrossTimestamp < 8001) && (motor.BemfZeroCrossTimestamp > 51)) {
     motorSinTimerHandle.Instance->ARR = (motor.BemfZeroCrossTimestamp >> 1) & 0xfffff;
     //motorSinTimerHandle.Instance->ARR = 0xfff;
     motorSinTimerHandle.Instance->CNT = 0x0;
-    //LED_OFF(LED_GREEN);
+    LED_TOGGLE(LED_GREEN);
     HAL_TIM_Base_Start_IT(&motorSinTimerHandle);
     //HAL_NVIC_EnableIRQ(TIM17_IRQn);
-  }
+  //}
 
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
