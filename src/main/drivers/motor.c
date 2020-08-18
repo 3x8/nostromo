@@ -67,8 +67,16 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0;
-  motorSinTimerHandle.Instance->ARR = 0xff; //medianGetLast(&motorCommutationIntervalFilterState);
-  HAL_NVIC_EnableIRQ(TIM17_IRQn);
+
+  // ToDo
+  if (motor.OneRotationInterval > 600) {
+    ///motorSinTimerHandle.Instance->ARR = (medianGetLast(&motorCommutationIntervalFilterState) >> 2) & 0xfffff;
+    motorSinTimerHandle.Instance->ARR = 0xfff;
+    motorSinTimerHandle.Instance->CNT = 0x0;
+    //LED_OFF(LED_GREEN);
+    //HAL_NVIC_EnableIRQ(TIM17_IRQn);
+  }
+
 
   __enable_irq();
 }
@@ -542,16 +550,16 @@ INLINE_CODE void motorInputUpdate(void) {
 }
 
 INLINE_CODE uint32_t motorGetErpm(void) {
-  if (motor.CommutationInterval > 0) {
-    return(MOTOR_ERPM_FACTOR / motor.CommutationInterval);
+  if (motor.OneRotationInterval > 0) {
+    return(MOTOR_ERPM_FACTOR / motor.OneRotationInterval);
   } else {
     return(0);
   }
 }
 
 INLINE_CODE uint32_t motorGetRpm(void) {
-  if (motor.CommutationInterval > 0) {
-    return((MOTOR_ERPM_FACTOR / (motor.CommutationInterval * escConfig()->motorPoles >> 1)));
+  if (motor.OneRotationInterval > 0) {
+    return((MOTOR_ERPM_FACTOR / (motor.OneRotationInterval * escConfig()->motorPoles >> 1)));
   } else {
     return(0);
   }
