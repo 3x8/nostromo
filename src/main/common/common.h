@@ -59,5 +59,6 @@ typedef struct {
 
 void medianInit(medianStructure *filter, uint32_t w);
 void medianPush(medianStructure *filter, uint32_t newValue);
-uint32_t medianCalculate(medianStructure *filter);
-uint32_t medianSumm(medianStructure *filter);
+uint32_t medianGetMean(medianStructure *filter);
+uint32_t medianGetSumm(medianStructure *filter);
+uint32_t medianGetLast(medianStructure *filter);

@@ -17,25 +17,14 @@ int32_t gateDriveOffset = 0;
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-  __disable_irq();
-
   uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
+  __disable_irq();
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
     uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
   #endif
 
   if ((!motor.Running) || (!motor.Start)) {
-    #if (!defined(COMPARATOR_OPTIMIZE))
-      HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-    #else
-      #if defined(KISS24A)
-        __HAL_COMP_COMP2_EXTI_DISABLE_IT();
-      #else
-        __HAL_COMP_COMP1_EXTI_DISABLE_IT();
-      #endif
-    #endif
-
     __enable_irq();
     return;
   }
@@ -45,7 +34,6 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   for (int i = 0; i < motor.BemfFilterLevel; i++) {
     if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
         (!motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_LOW)) {
-
       __enable_irq();
       return;
     }
@@ -53,16 +41,6 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
     LED_ON(LED_GREEN);
-  #endif
-
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
-  #else
-    #if defined(KISS24A)
-      __HAL_COMP_COMP2_EXTI_DISABLE_IT();
-    #else
-      __HAL_COMP_COMP1_EXTI_DISABLE_IT();
-    #endif
   #endif
 
   motor.BemfCounter++;
@@ -80,18 +58,6 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   motorCommutate();
 
-  #if (!defined(COMPARATOR_OPTIMIZE))
-    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
-  #else
-    #if defined(KISS24A)
-      __HAL_COMP_COMP2_EXTI_CLEAR_FLAG();
-      __HAL_COMP_COMP2_EXTI_ENABLE_IT();
-    #else
-      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
-      __HAL_COMP_COMP1_EXTI_ENABLE_IT();
-    #endif
-  #endif
-
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
     motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
   #endif
@@ -101,6 +67,8 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   motorCommutationTimerHandle.Instance->CNT = 0;
+  motorSinTimerHandle.Instance->ARR = 0xff; //medianGetLast(&motorCommutationIntervalFilterState);
+  HAL_NVIC_EnableIRQ(TIM17_IRQn);
 
   __enable_irq();
 }

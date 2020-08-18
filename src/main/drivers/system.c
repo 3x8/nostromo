@@ -254,7 +254,7 @@ void systemMotorSinTimerInit(void) {
   motorSinTimerHandle.Instance = TIM17;
   motorSinTimerHandle.Init.Prescaler = 7;
   motorSinTimerHandle.Init.CounterMode = TIM_COUNTERMODE_DOWN;
-  motorSinTimerHandle.Init.Period = 0xffff;
+  motorSinTimerHandle.Init.Period = 0xff;
   motorSinTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorSinTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
@@ -274,7 +274,7 @@ void systemMotorSinTimerInit(void) {
   void systemInitAfterBootloaderJump() {
     volatile uint32_t *VectorTable = (volatile uint32_t *)0x20000000;
 
-    for(uint8_t i = 0; i < 48; i++) {
+    for (uint8_t i = 0; i < 48; i++) {
       VectorTable[i] = *(__IO uint32_t*)(APPLICATION_ADDRESS + (i << 2));
     }
     __HAL_RCC_SYSCFG_CLK_ENABLE();

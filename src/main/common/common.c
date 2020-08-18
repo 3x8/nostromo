@@ -83,11 +83,17 @@ INLINE_CODE void medianPush(medianStructure *filter, uint32_t newValue) {
   filter->meanSum -= filter->window[filter->windowIndex];
 }
 
-INLINE_CODE uint32_t medianCalculate(medianStructure *filter) {
+INLINE_CODE uint32_t medianGetMean(medianStructure *filter) {
   return(filter->meanSum / (filter->windowSize - 1));
 }
 
-INLINE_CODE uint32_t medianSumm(medianStructure *filter) {
+INLINE_CODE uint32_t medianGetSumm(medianStructure *filter) {
   return(filter->meanSum);
 }
+
+INLINE_CODE uint32_t medianGetLast(medianStructure *filter) {
+  return(filter->window[filter->windowIndex]);
+}
+
+
 #pragma GCC pop_options

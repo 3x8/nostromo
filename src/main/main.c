@@ -147,7 +147,7 @@ int main(void) {
           motorStart();
         }
 
-        motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 3;
+        motor.CommutationInterval = medianGetSumm(&motorCommutationIntervalFilterState) >> 3;
 
         // ToDo
         //motor.CommutationDelay = 0; //timing 30°
@@ -168,9 +168,9 @@ int main(void) {
     #if (defined(USE_ADC))
       #if (defined(USE_ADC_MEDIAN))
         medianPush(&adcCurrentFilterState, adcRaw.current);
-        adcScaled.current = medianCalculate(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
+        adcScaled.current = medianGetMean(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
         medianPush(&adcVoltageFilterState, adcRaw.voltage);
-        adcScaled.voltage = medianCalculate(&adcVoltageFilterState) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET;
+        adcScaled.voltage = medianGetMean(&adcVoltageFilterState) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET;
       #else
         adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
         adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
@@ -199,7 +199,7 @@ int main(void) {
       input.TelemetryRequest = false;
       #if (!defined(_DEBUG_))
         if (input.Armed) {
-          LED_ON(LED_BLUE);
+          //LED_ON(LED_BLUE);
         }
       #endif
     } else {
