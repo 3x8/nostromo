@@ -71,6 +71,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     //LED_ON(LED_GREEN);
     //LED_OFF(LED_GREEN);
     //HAL_NVIC_DisableIRQ(TIM17_IRQn);
+    HAL_TIM_Base_Stop_IT(&motorSinTimerHandle);
   }
 }
 

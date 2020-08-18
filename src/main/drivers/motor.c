@@ -47,6 +47,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     //motorSinTimerHandle.Instance->ARR = 0xfff;
     motorSinTimerHandle.Instance->CNT = 0x0;
     //LED_OFF(LED_GREEN);
+    HAL_TIM_Base_Start_IT(&motorSinTimerHandle);
     //HAL_NVIC_EnableIRQ(TIM17_IRQn);
   }
 
