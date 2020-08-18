@@ -144,7 +144,7 @@ int main(void) {
         // motor start
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
-          //motorStart();
+          motorStart();
         }
 
         motor.CommutationInterval = medianSumm(&motorCommutationIntervalFilterState) >> 3;
@@ -185,15 +185,6 @@ int main(void) {
     #endif
 
     if (msTimerHandle.Instance->CNT > 200) {
-
-
-      // ToDo
-      if ((motor.Start) && (!motor.Running)) {
-        motor.BemfZeroCounterTimeout = 0;
-        //motorComutateSin();
-      }
-
-
       msTimerHandle.Instance->CNT = 0;
       #if (defined(USE_ADC))
         consumptionMah += adcScaled.current * ADC_CONSUMPTION_FACTOR;
