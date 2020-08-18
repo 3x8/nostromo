@@ -438,7 +438,10 @@ void motorStart() {
 
     motor.ComplementaryPWM = true;
 
-    motorCommutate();
+    for (uint32_t i = 1; i < MOTOR_BLDC_STEPS; i++) {
+      motorCommutate();
+      HAL_Delay(2);
+    }
 
     motorCommutationTimerHandle.Instance->CNT = 0;
     motor.BemfCounter = 0;
@@ -521,16 +524,13 @@ INLINE_CODE void motorInputUpdate(void) {
     if (input.Data <= DSHOT_CMD_MAX) {
       motor.Start = false;
       input.DataNormed = 0;
-      input.DataNormedLast = 0;
       input.PwmValue = 0;
+      input.PwmValueLast = 0;
       if ((!motor.Running) || (!motor.Start)) {
         inputDshotCommandRun();
       }
     } else {
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
-      // trapezium rule
-      input.DataNormed = (input.DataNormed + input.DataNormedLast) >> 1;
-      input.DataNormedLast = input.DataNormed;
 
       if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
         // 3D
@@ -565,13 +565,17 @@ INLINE_CODE void motorInputUpdate(void) {
       }
 
       if (motor.Start) {
-        if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
+        if (motor.BemfCounter < motor.BemfZeroCounterTimeoutThreshold) {
           // stall protection and startup kick
           input.PwmValue = escConfig()->motorStartupPower;
         } else {
           input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         }
       }
+
+      // trapezium rule
+      input.PwmValue = (input.PwmValue + input.PwmValueLast) >> 1;
+      input.PwmValueLast = input.PwmValue;
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
@@ -580,8 +584,8 @@ INLINE_CODE void motorInputUpdate(void) {
   } else {
     motor.Start = false;
     input.DataNormed = 0;
-    input.DataNormedLast = 0;
     input.PwmValue = 0;
+    input.PwmValueLast = 0;
   }
 }
 
