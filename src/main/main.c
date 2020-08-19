@@ -83,13 +83,6 @@ int main(void) {
           motor.BrakeActiveProportional = false;
           motorBrakeFull();
           break;
-        case BRAKE_PROPORTIONAL:
-          motor.BrakeActiveProportional = true;
-          motorPwmTimerHandle.Instance->CCR1 = escConfig()->motorBrakeStrength;
-          motorPwmTimerHandle.Instance->CCR2 = escConfig()->motorBrakeStrength;
-          motorPwmTimerHandle.Instance->CCR3 = escConfig()->motorBrakeStrength;
-          motorBrakeProportional();
-          break;
         case BRAKE_OFF:
           motor.BrakeActiveProportional = false;
           motorBrakeOff();

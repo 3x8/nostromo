@@ -14,14 +14,16 @@
 // (Prescaler + 2) -> 10% tolerance low RPM  (Prescaler + 1) -> 20% tolerance max RPM   (CPU load)
 
 typedef enum {
-  HBRIDGE_PWM = 0,
-  HBRIDGE_FLOATING,
-  HBRIDGE_LOWSIDE
+  HBRIDGE_FLOAT = 0,
+  HBRIDGE_LO,
+  HBRIDGE_HI,
+  HBRIDGE_PWM_LO,
+  HBRIDGE_PWM_HI,
+  HBRIDGE_PWM_COMPLEMENTARY,
 } motorHbridgeStateEnum;
 
 typedef enum {
   BRAKE_OFF = 0,
-  BRAKE_PROPORTIONAL,
   BRAKE_FULL
 } motorBrakeStateEnum;
 
@@ -65,7 +67,6 @@ void motorStart();
 
 void motorBrakeOff();
 void motorBrakeFull();
-void motorBrakeProportional();
 
 void motorTuneStartup();
 void motorTuneInput(uint8_t motorStepDebug);
