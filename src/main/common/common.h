@@ -26,7 +26,7 @@ uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
 #define INLINE_CODE __attribute__((always_inline)) inline
 //#define INLINE_CODE inline
 
-#define MAX_WINDOW_SIZE 128
+#define MAX_WINDOW_SIZE 256
 
 // kalman filter
 typedef struct {
