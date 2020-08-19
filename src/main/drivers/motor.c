@@ -238,10 +238,6 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
 
   INLINE_CODE void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
-      case HBRIDGE_PWM:
-        A_FET_OE_GPIO->BSRR = A_FET_OE_PIN;
-        A_FET_IN_GPIO->MODER = ((A_FET_IN_GPIO->MODER & aFetInClearmask) | aFetInSetmaskAlternate);
-        break;
       case HBRIDGE_FLOAT:
         A_FET_OE_GPIO->BRR = A_FET_OE_PIN;
         break;
@@ -250,15 +246,20 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
         A_FET_IN_GPIO->MODER = ((A_FET_IN_GPIO->MODER & aFetInClearmask) | aFetInSetmaskOutput);
         A_FET_IN_GPIO->BRR = A_FET_IN_PIN;
         break;
+      case HBRIDGE_HI:
+        A_FET_OE_GPIO->BSRR = A_FET_OE_PIN;
+        A_FET_IN_GPIO->MODER = ((A_FET_IN_GPIO->MODER & aFetInClearmask) | aFetInSetmaskOutput);
+        A_FET_IN_GPIO->BSRR = A_FET_IN_PIN;
+        break;
+      case HBRIDGE_PWM_COMPLEMENTARY:
+        A_FET_OE_GPIO->BSRR = A_FET_OE_PIN;
+        A_FET_IN_GPIO->MODER = ((A_FET_IN_GPIO->MODER & aFetInClearmask) | aFetInSetmaskAlternate);
+        break;
     }
   }
 
   INLINE_CODE void motorPhaseB(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
-      case HBRIDGE_PWM:
-        B_FET_OE_GPIO->BSRR = B_FET_OE_PIN;
-        B_FET_IN_GPIO->MODER = ((B_FET_IN_GPIO->MODER & bFetInClearmask) | bFetInSetmaskAlternate);
-        break;
       case HBRIDGE_FLOAT:
         B_FET_OE_GPIO->BRR = B_FET_OE_PIN;
         break;
@@ -267,15 +268,20 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
         B_FET_IN_GPIO->MODER = ((B_FET_IN_GPIO->MODER & bFetInClearmask) | bFetInSetmaskOutput);
         B_FET_IN_GPIO->BRR = B_FET_IN_PIN;
         break;
+      case HBRIDGE_HI:
+        B_FET_OE_GPIO->BSRR = B_FET_OE_PIN;
+        B_FET_IN_GPIO->MODER = ((B_FET_IN_GPIO->MODER & bFetInClearmask) | bFetInSetmaskOutput);
+        B_FET_IN_GPIO->BSRR = B_FET_IN_PIN;
+        break;
+      case HBRIDGE_PWM_COMPLEMENTARY:
+        B_FET_OE_GPIO->BSRR = B_FET_OE_PIN;
+        B_FET_IN_GPIO->MODER = ((B_FET_IN_GPIO->MODER & bFetInClearmask) | bFetInSetmaskAlternate);
+        break;
     }
   }
 
   INLINE_CODE void motorPhaseC(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
-      case HBRIDGE_PWM:
-        C_FET_OE_GPIO->BSRR = C_FET_OE_PIN;
-        C_FET_IN_GPIO->MODER = ((C_FET_IN_GPIO->MODER & cFetInClearmask) | cFetInSetmaskAlternate);
-        break;
       case HBRIDGE_FLOAT:
         C_FET_OE_GPIO->BRR = C_FET_OE_PIN;
         break;
@@ -283,6 +289,15 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
         C_FET_OE_GPIO->BSRR = C_FET_OE_PIN;
         C_FET_IN_GPIO->MODER = ((C_FET_IN_GPIO->MODER & cFetInClearmask) | cFetInSetmaskOutput);
         C_FET_IN_GPIO->BRR = C_FET_IN_PIN;
+        break;
+      case HBRIDGE_HI:
+        C_FET_OE_GPIO->BSRR = C_FET_OE_PIN;
+        C_FET_IN_GPIO->MODER = ((C_FET_IN_GPIO->MODER & cFetInClearmask) | cFetInSetmaskOutput);
+        C_FET_IN_GPIO->BSRR = C_FET_IN_PIN;
+        break;
+      case HBRIDGE_PWM_COMPLEMENTARY:
+        C_FET_OE_GPIO->BSRR = C_FET_OE_PIN;
+        C_FET_IN_GPIO->MODER = ((C_FET_IN_GPIO->MODER & cFetInClearmask) | cFetInSetmaskAlternate);
         break;
     }
   }
