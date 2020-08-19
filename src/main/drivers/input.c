@@ -12,7 +12,7 @@ void inputArmCheck(void) {
       HAL_Delay(1);
       if (input.ArmingCounter > INPUT_ARM_COUNTER_THRESHOLD) {
         input.Armed = true;
-        motorTuneInput(1);
+        motorTuneInput(2);
       }
     }
   }
@@ -124,6 +124,24 @@ void inputDshotCommandRun(void) {
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
       motorTuneInput(6);
+      break;
+    case DSHOT_CMD_SETTING_LED1_ON:
+      motorTuneInput(7);
+      break;
+    case DSHOT_CMD_SETTING_LED2_ON:
+      motorTuneInput(8);
+      break;
+    case DSHOT_CMD_SETTING_LED3_ON:
+      motorTuneInput(9);
+      break;
+    case DSHOT_CMD_SETTING_LED0_OFF:
+      motorTuneInput(10);
+      break;
+    case DSHOT_CMD_SETTING_LED1_OFF:
+      motorTuneInput(11);
+      break;
+    case DSHOT_CMD_SETTING_LED2_OFF:
+      motorTuneInput(12);
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;

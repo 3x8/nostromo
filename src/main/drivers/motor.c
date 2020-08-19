@@ -46,7 +46,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     motorSinTimerHandle.Instance->ARR = (motor.BemfZeroCrossTimestamp >> 1) & 0xfffff;
     //motorSinTimerHandle.Instance->ARR = 0xfff;
     motorSinTimerHandle.Instance->CNT = 0x0;
-    LED_TOGGLE(LED_GREEN);
+    //LED_TOGGLE(LED_GREEN);
     HAL_TIM_Base_Start_IT(&motorSinTimerHandle);
     //HAL_NVIC_EnableIRQ(TIM17_IRQn);
   //}
@@ -306,64 +306,64 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
 INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
   switch (stepBuffer) {
     case 1:
-      motorPhaseA(HBRIDGE_LO);
-      motorPhaseB(HBRIDGE_HI_PWM);
-      motorPhaseC(HBRIDGE_FLOAT);
+      motorPhaseA(HBRIDGE_FLOAT);
+      motorPhaseB(HBRIDGE_LO_PWM);
+      motorPhaseC(HBRIDGE_HI);
       break;
     case 2:
-      motorPhaseA(HBRIDGE_LO);
-      motorPhaseB(HBRIDGE_FLOAT);
+      motorPhaseA(HBRIDGE_FLOAT);
+      motorPhaseB(HBRIDGE_LO);
       motorPhaseC(HBRIDGE_HI_PWM);
       break;
     case 3:
-      motorPhaseA(HBRIDGE_LO_PWM);
-      motorPhaseB(HBRIDGE_FLOAT);
-      motorPhaseC(HBRIDGE_HI);
-      break;
-    case 4:
-      motorPhaseA(HBRIDGE_FLOAT);
-      motorPhaseB(HBRIDGE_LO_PWM);
-      motorPhaseC(HBRIDGE_HI);
-      break;
-    case 5:
-      motorPhaseA(HBRIDGE_FLOAT);
-      motorPhaseB(HBRIDGE_LO);
-      motorPhaseC(HBRIDGE_HI_PWM);
-      break;
-    case 6:
       motorPhaseA(HBRIDGE_HI_PWM);
       motorPhaseB(HBRIDGE_LO);
       motorPhaseC(HBRIDGE_FLOAT);
       break;
-    case 7:
+    case 4:
       motorPhaseA(HBRIDGE_HI);
       motorPhaseB(HBRIDGE_LO_PWM);
       motorPhaseC(HBRIDGE_FLOAT);
       break;
-    case 8:
+    case 5:
       motorPhaseA(HBRIDGE_HI);
       motorPhaseB(HBRIDGE_FLOAT);
       motorPhaseC(HBRIDGE_LO_PWM);
       break;
-    case 9:
+    case 6:
       motorPhaseA(HBRIDGE_HI_PWM);
       motorPhaseB(HBRIDGE_FLOAT);
       motorPhaseC(HBRIDGE_LO);
       break;
-    case 10:
+    case 7:
       motorPhaseA(HBRIDGE_FLOAT);
       motorPhaseB(HBRIDGE_HI_PWM);
       motorPhaseC(HBRIDGE_LO);
       break;
-    case 11:
+    case 8:
       motorPhaseA(HBRIDGE_FLOAT);
       motorPhaseB(HBRIDGE_HI);
       motorPhaseC(HBRIDGE_LO_PWM);
       break;
-    case 12:
+    case 9:
       motorPhaseA(HBRIDGE_LO_PWM);
       motorPhaseB(HBRIDGE_HI);
       motorPhaseC(HBRIDGE_FLOAT);
+      break;
+    case 10:
+      motorPhaseA(HBRIDGE_LO);
+      motorPhaseB(HBRIDGE_HI_PWM);
+      motorPhaseC(HBRIDGE_FLOAT);
+      break;
+    case 11:
+      motorPhaseA(HBRIDGE_LO);
+      motorPhaseB(HBRIDGE_FLOAT);
+      motorPhaseC(HBRIDGE_HI_PWM);
+      break;
+    case 12:
+      motorPhaseA(HBRIDGE_LO_PWM);
+      motorPhaseB(HBRIDGE_FLOAT);
+      motorPhaseC(HBRIDGE_HI);
       break;
   }
 }
@@ -372,15 +372,15 @@ INLINE_CODE void motorComparatorInputChange() {
   switch (motor.Step) {
     case 1:
     case 7:
-      // C floating
+      // A floating
       #if (!defined(COMPARATOR_OPTIMIZE))
-        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
+        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
       #else
-        COMP->CSR = COMPARATOR_PHASE_C_CSR;
+        COMP->CSR = COMPARATOR_PHASE_A_CSR;
       #endif
       break;
-    case 3:
-    case 9:
+    case 5:
+    case 11:
       // B floating
       #if (!defined(COMPARATOR_OPTIMIZE))
         motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
@@ -388,13 +388,13 @@ INLINE_CODE void motorComparatorInputChange() {
         COMP->CSR = COMPARATOR_PHASE_B_CSR;
       #endif
       break;
-    case 5:
-    case 11:
-      // A floating
+    case 3:
+    case 9:
+      // C floating
       #if (!defined(COMPARATOR_OPTIMIZE))
-        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
+        motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
       #else
-        COMP->CSR = COMPARATOR_PHASE_A_CSR;
+        COMP->CSR = COMPARATOR_PHASE_C_CSR;
       #endif
       break;
   }
@@ -464,7 +464,6 @@ INLINE_CODE void motorCommutate() {
 
 void motorStart() {
   if (!motor.Running) {
-    bool bufferComplementaryPWM = motor.ComplementaryPWM;
 
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
@@ -476,9 +475,7 @@ void motorStart() {
       #endif
     #endif
 
-    motor.ComplementaryPWM = true;
-
-    for (uint32_t i = 1; i < 12; i++) {
+    for (uint32_t i = 1; i < 6; i++) {
       motorCommutate();
       HAL_Delay(2);
     }
@@ -499,7 +496,6 @@ void motorStart() {
       #endif
     #endif
 
-    motor.ComplementaryPWM = bufferComplementaryPWM;
   }
 }
 
@@ -526,7 +522,7 @@ void motorTuneStartup() {
   motorPwmTimerHandle.Instance->CCR2 = 5;
   motorPwmTimerHandle.Instance->CCR3 = 5;
 
-  motorCommutationStep(motor.Step);
+  motorCommutationStep(2);
   motorPwmTimerHandle.Instance->PSC = 100;
   HAL_Delay(100);
   motorPwmTimerHandle.Instance->PSC = 75;

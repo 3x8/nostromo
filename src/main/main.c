@@ -64,6 +64,9 @@ int main(void) {
   input.PwmValue = 0;
   serialPort.InitDone = false;
 
+  //ToDo
+  motor.BemfZeroCounterTimeoutThreshold = 22;
+
   watchdogInit(2000);
   motorTuneStartup();
 
@@ -80,11 +83,9 @@ int main(void) {
     if ((!motor.Start) && (!motor.Running)) {
       switch (escConfig()->motorBrake) {
         case BRAKE_FULL:
-          motor.BrakeActiveProportional = false;
           motorBrakeFull();
           break;
         case BRAKE_OFF:
-          motor.BrakeActiveProportional = false;
           motorBrakeOff();
           break;
       }
@@ -119,11 +120,11 @@ int main(void) {
         // motor BEMF filter (1 tick 0.167 us)
         if ((motor.OneErpmTime < 2411) && (input.DataNormed > 500)) {
           // ERpm > 140K
-          motor.BemfFilterDelay = 3;
+          motor.BemfFilterDelay = 1;
           motor.BemfFilterLevel = 1;
         } else {
-          motor.BemfFilterDelay = 7;
-          motor.BemfFilterLevel = 3;
+          motor.BemfFilterDelay = 1;
+          motor.BemfFilterLevel = 1;
         }
 
         // motor stopped
@@ -204,7 +205,29 @@ int main(void) {
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       extern uint32_t motorDebugTime;
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
+      //if ((msTimerHandle.Instance->CNT % 2) == 0) {
+        uartPrint("in[");
+        uartPrintInteger(input.DataNormed, 10, 1);
+        uartPrint("]");
+        uartPrint("step[");
+        uartPrintInteger(motor.Step, 10, 1);
+        uartPrint("]");
+        uartPrint(" zct[");
+        uartPrintInteger(motor.BemfZeroCrossTimestamp, 10, 1);
+        uartPrint("]");
+        uartPrint(" run[");
+        uartPrintInteger(motor.Running, 10, 1);
+        uartPrint("]");
+        uartPrint(" to[");
+        uartPrintInteger(motor.BemfZeroCounterTimeout, 10, 1);
+        uartPrint("]");
+        uartPrint(" bemf[");
+        uartPrintInteger(motor.BemfCounter, 10, 1);
+        uartPrint("]");
+
+        uartPrint("\r\n");
         // each 1ms
+        /*
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
         uartPrintInteger(input.DataNormed, 10, 1);
@@ -227,7 +250,7 @@ int main(void) {
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint("\r\n");
+        uartPrint("\r\n");*/
       }
     #endif
 

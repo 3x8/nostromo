@@ -37,7 +37,6 @@ typedef struct {
   bool Running;
   bool Direction;
   bool ComplementaryPWM;
-  bool BrakeActiveProportional;
   bool BemfRising;
   uint8_t Step;
   uint32_t BemfCounter;
