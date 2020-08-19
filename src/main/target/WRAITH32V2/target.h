@@ -11,8 +11,8 @@
 //#define DEBUG_DATA_QUALITY
 
 // CYCLETIME_MAINLOOP kalman->500us, median->100us
-#define USE_PWM_FREQUENCY_48kHz
-//#define USE_ADC_MEDIAN
+//#define USE_PWM_FREQUENCY_48kHz
+#define USE_ADC_MEDIAN
 
 // hw constants
 #define HBRIDGE_DEAD_TIME       0     // (in 20.833ns cycles at 48MHz) (FD6288 has a builtin 200ns deadtime)
