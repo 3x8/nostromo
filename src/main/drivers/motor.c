@@ -126,12 +126,12 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
         A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
         A_FET_HI_GPIO->BSRR = A_FET_HI_PIN;
         break;
-      case HBRIDGE_PWM_LO:
+      case HBRIDGE_LO_PWM:
         A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
         A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
         A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskAlternate);
         break;
-      case HBRIDGE_PWM_HI:
+      case HBRIDGE_HI_PWM:
         A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
         A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskAlternate);
@@ -163,12 +163,12 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
         B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & bFetHiClearmask) | bFetHiSetmaskOutput);
         B_FET_HI_GPIO->BSRR = B_FET_HI_PIN;
         break;
-      case HBRIDGE_PWM_LO:
+      case HBRIDGE_LO_PWM:
         B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & bFetHiClearmask) | bFetHiSetmaskOutput);
         B_FET_HI_GPIO->BRR = B_FET_HI_PIN;
         B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskAlternate);
         break;
-      case HBRIDGE_PWM_HI:
+      case HBRIDGE_HI_PWM:
         B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskOutput);
         B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
         B_FET_HI_GPIO->MODER = ((B_FET_HI_GPIO->MODER & bFetHiClearmask) | bFetHiSetmaskAlternate);
@@ -200,12 +200,12 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
         C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & cFetHiClearmask) | cFetHiSetmaskOutput);
         C_FET_HI_GPIO->BSRR = C_FET_HI_PIN;
         break;
-      case HBRIDGE_PWM_LO:
+      case HBRIDGE_LO_PWM:
         C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & cFetHiClearmask) | cFetHiSetmaskOutput);
         C_FET_HI_GPIO->BRR = C_FET_HI_PIN;
         C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskAlternate);
         break;
-      case HBRIDGE_PWM_HI:
+      case HBRIDGE_HI_PWM:
         C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskOutput);
         C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
         C_FET_HI_GPIO->MODER = ((C_FET_HI_GPIO->MODER & cFetHiClearmask) | cFetHiSetmaskAlternate);
@@ -306,40 +306,64 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
 INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
   switch (stepBuffer) {
     case 1:
-      // A-B
       motorPhaseA(HBRIDGE_LO);
-      motorPhaseB(HBRIDGE_PWM_COMPLEMENTARY);
+      motorPhaseB(HBRIDGE_HI_PWM);
       motorPhaseC(HBRIDGE_FLOAT);
       break;
     case 2:
-      // A-C
       motorPhaseA(HBRIDGE_LO);
       motorPhaseB(HBRIDGE_FLOAT);
-      motorPhaseC(HBRIDGE_PWM_COMPLEMENTARY);
+      motorPhaseC(HBRIDGE_HI_PWM);
       break;
     case 3:
-      // B-C
-      motorPhaseA(HBRIDGE_FLOAT);
-      motorPhaseB(HBRIDGE_LO);
-      motorPhaseC(HBRIDGE_PWM_COMPLEMENTARY);
+      motorPhaseA(HBRIDGE_LO_PWM);
+      motorPhaseB(HBRIDGE_FLOAT);
+      motorPhaseC(HBRIDGE_HI);
       break;
     case 4:
-      // B-A
-      motorPhaseA(HBRIDGE_PWM_COMPLEMENTARY);
+      motorPhaseA(HBRIDGE_FLOAT);
+      motorPhaseB(HBRIDGE_LO_PWM);
+      motorPhaseC(HBRIDGE_HI);
+      break;
+    case 5:
+      motorPhaseA(HBRIDGE_FLOAT);
+      motorPhaseB(HBRIDGE_LO);
+      motorPhaseC(HBRIDGE_HI_PWM);
+      break;
+    case 6:
+      motorPhaseA(HBRIDGE_HI_PWM);
       motorPhaseB(HBRIDGE_LO);
       motorPhaseC(HBRIDGE_FLOAT);
       break;
-    case 5:
-      // C-A
-      motorPhaseA(HBRIDGE_PWM_COMPLEMENTARY);
+    case 7:
+      motorPhaseA(HBRIDGE_HI);
+      motorPhaseB(HBRIDGE_LO_PWM);
+      motorPhaseC(HBRIDGE_FLOAT);
+      break;
+    case 8:
+      motorPhaseA(HBRIDGE_HI);
+      motorPhaseB(HBRIDGE_FLOAT);
+      motorPhaseC(HBRIDGE_LO_PWM);
+      break;
+    case 9:
+      motorPhaseA(HBRIDGE_HI_PWM);
       motorPhaseB(HBRIDGE_FLOAT);
       motorPhaseC(HBRIDGE_LO);
       break;
-    case 6:
-      // C-B
+    case 10:
       motorPhaseA(HBRIDGE_FLOAT);
-      motorPhaseB(HBRIDGE_PWM_COMPLEMENTARY);
+      motorPhaseB(HBRIDGE_HI_PWM);
       motorPhaseC(HBRIDGE_LO);
+      break;
+    case 11:
+      motorPhaseA(HBRIDGE_FLOAT);
+      motorPhaseB(HBRIDGE_HI);
+      motorPhaseC(HBRIDGE_LO_PWM);
+      break;
+    case 12:
+      motorPhaseA(HBRIDGE_LO_PWM);
+      motorPhaseB(HBRIDGE_HI);
+      motorPhaseC(HBRIDGE_FLOAT);
       break;
   }
 }
