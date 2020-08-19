@@ -371,7 +371,7 @@ INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
 INLINE_CODE void motorComparatorInputChange() {
   switch (motor.Step) {
     case 1:
-    case 4:
+    case 7:
       // C floating
       #if (!defined(COMPARATOR_OPTIMIZE))
         motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_C;
@@ -379,8 +379,8 @@ INLINE_CODE void motorComparatorInputChange() {
         COMP->CSR = COMPARATOR_PHASE_C_CSR;
       #endif
       break;
-    case 2:
-    case 5:
+    case 3:
+    case 9:
       // B floating
       #if (!defined(COMPARATOR_OPTIMIZE))
         motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_B;
@@ -388,8 +388,8 @@ INLINE_CODE void motorComparatorInputChange() {
         COMP->CSR = COMPARATOR_PHASE_B_CSR;
       #endif
       break;
-    case 3:
-    case 6:
+    case 5:
+    case 11:
       // A floating
       #if (!defined(COMPARATOR_OPTIMIZE))
         motorBemfComparatorHandle.Init.InvertingInput = COMPARATOR_PHASE_A;
@@ -432,29 +432,33 @@ INLINE_CODE void motorComparatorInputChange() {
 
 INLINE_CODE void motorCommutate() {
   if (motor.Direction == SPIN_CW) {
-    if (++motor.Step > 6) {
+    if (++motor.Step > 12) {
       motor.Step = 1;
     }
 
-    if ((motor.Step == 1) || (motor.Step == 3) || (motor.Step == 5)) {
+    if ((motor.Step == 1) || (motor.Step == 5) || (motor.Step == 9)) {
       motor.BemfRising = true;
-    } else {
+    }
+    if ((motor.Step == 3) || (motor.Step == 7) || (motor.Step == 11)) {
       motor.BemfRising = false;
     }
   } else {
     if (--motor.Step < 1) {
-      motor.Step = 6;
+      motor.Step = 12;
     }
 
-    if ((motor.Step == 1) || (motor.Step == 3) || (motor.Step == 5)) {
+    if ((motor.Step == 1) || (motor.Step == 5) || (motor.Step == 9)) {
       motor.BemfRising = false;
-    } else {
+    }
+    if ((motor.Step == 3) || (motor.Step == 7) || (motor.Step == 11)) {
       motor.BemfRising = true;
     }
   }
 
   motorCommutationStep(motor.Step);
-  motorComparatorInputChange();
+  if ((motor.Step == 1) || (motor.Step == 3) || (motor.Step == 5) || (motor.Step == 7) || (motor.Step == 9) || (motor.Step == 11)) {
+    motorComparatorInputChange();
+  }
 }
 #pragma GCC pop_options
 
@@ -474,7 +478,7 @@ void motorStart() {
 
     motor.ComplementaryPWM = true;
 
-    for (uint32_t i = 1; i < MOTOR_BLDC_STEPS; i++) {
+    for (uint32_t i = 1; i < 12; i++) {
       motorCommutate();
       HAL_Delay(2);
     }
