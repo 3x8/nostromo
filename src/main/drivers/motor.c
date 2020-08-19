@@ -24,7 +24,7 @@ const int pwmSin[] = {
   uint32_t motorDebugTime;
 #endif
 
-int32_t motorPhaseAstep  = 0, motorPhaseBstep = 0, motorPhaseCstep = 0;
+int32_t motorPhaseAstep  = 0, motorPhaseBstep = 119, motorPhaseCstep = 239;
 int32_t gateDriveOffset = 0;
 
 #pragma GCC push_options
@@ -295,39 +295,39 @@ INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
   switch (stepBuffer) {
     case 1:
       // A-B
-      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseA(HBRIDGE_PWM);
       motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_FLOATING);
+      motorPhaseC(HBRIDGE_PWM);
       break;
     case 2:
       // A-C
-      motorPhaseA(HBRIDGE_LOWSIDE);
-      motorPhaseB(HBRIDGE_FLOATING);
+      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_PWM);
       motorPhaseC(HBRIDGE_PWM);
       break;
     case 3:
       // B-C
-      motorPhaseA(HBRIDGE_FLOATING);
-      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_PWM);
       motorPhaseC(HBRIDGE_PWM);
       break;
     case 4:
       // B-A
       motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_LOWSIDE);
-      motorPhaseC(HBRIDGE_FLOATING);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_PWM);
       break;
     case 5:
       // C-A
       motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_FLOATING);
-      motorPhaseC(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_PWM);
       break;
     case 6:
       // C-B
-      motorPhaseA(HBRIDGE_FLOATING);
+      motorPhaseA(HBRIDGE_PWM);
       motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_PWM);
       break;
   }
 }
