@@ -252,9 +252,9 @@ void systemMotorSinTimerInit(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
 
   motorSinTimerHandle.Instance = TIM17;
-  motorSinTimerHandle.Init.Prescaler = 10;
+  motorSinTimerHandle.Init.Prescaler = 13;
   motorSinTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  motorSinTimerHandle.Init.Period = 4000;
+  motorSinTimerHandle.Init.Period = 16000;
   motorSinTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorSinTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 

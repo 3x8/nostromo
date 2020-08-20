@@ -39,9 +39,8 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
   #endif
 
-  // ToDo
-  //if ((!motor.Running) || (!motor.Start)) {
-  if (!motor.Running) {
+
+  if ((!motor.Running) || (!motor.Start)) {
     #if (!defined(COMPARATOR_OPTIMIZE))
       HAL_COMP_Stop_IT(&motorBemfComparatorHandle);
     #else
@@ -580,9 +579,9 @@ INLINE_CODE void motorInputUpdate(void) {
         }
       }
 
-      motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+      //motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
+      //motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
+      //motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
     }
   } else {
     motor.Start = false;
@@ -612,7 +611,9 @@ INLINE_CODE uint32_t motorGetRpm(void) {
 
 // ToDo
 void motorComutateSin() {
-  if (motor.Start  && (!motor.Running)) {
+  if (motor.Start) {
+    motorBrakeOff();
+
     if (motor.Direction == SPIN_CW) {
       if (++step > 36) {
         step = 0 ;
@@ -623,9 +624,9 @@ void motorComutateSin() {
       }
     }
 
-    motorPwmTimerHandle.Instance->CCR1 = (phA[step] + 1000) >> 3;
-    motorPwmTimerHandle.Instance->CCR2 = (phB[step] + 1000) >> 3;
-    motorPwmTimerHandle.Instance->CCR3 = (phC[step] + 1000) >> 3;
+    motorPwmTimerHandle.Instance->CCR1 = (phA[step] + 1000) >> 6;
+    motorPwmTimerHandle.Instance->CCR2 = (phB[step] + 1000) >> 6;
+    motorPwmTimerHandle.Instance->CCR3 = (phC[step] + 1000) >> 6;
     motorCommutationStep(11);
   }
 }
