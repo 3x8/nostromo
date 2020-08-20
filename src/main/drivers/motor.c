@@ -14,6 +14,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+#ifdef TODOTEST
   uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
   __disable_irq();
@@ -83,6 +84,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   motorCommutationTimerHandle.Instance->CNT = 0;
   __enable_irq();
+#endif
 }
 
 #if defined(FD6288)
@@ -124,6 +126,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
         A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
         A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
+        A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         A_FET_HI_GPIO->BSRR = A_FET_HI_PIN;
         break;
       case HBRIDGE_LO_PWM:
@@ -306,9 +309,9 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
 INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
   switch (stepBuffer) {
     case 1:
-      motorPhaseA(HBRIDGE_FLOAT);
-      motorPhaseB(HBRIDGE_LO_PWM);
-      motorPhaseC(HBRIDGE_HI);
+      motorPhaseA(HBRIDGE_HI);
+      motorPhaseC(HBRIDGE_FLOAT);
+      motorPhaseB(HBRIDGE_PWM_COMPLEMENTARY);
       break;
     case 2:
       motorPhaseA(HBRIDGE_FLOAT);
@@ -597,10 +600,12 @@ INLINE_CODE void motorInputUpdate(void) {
       if (motor.Start) {
         if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
           // stall protection and startup kick
-          input.PwmValue = escConfig()->motorStartupPower;
+          //input.PwmValue = escConfig()->motorStartupPower;
         } else {
-          input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          //input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         }
+        //ToDo
+        input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
       }
 
       // trapezium rule

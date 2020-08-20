@@ -120,11 +120,11 @@ int main(void) {
         // motor BEMF filter (1 tick 0.167 us)
         if ((motor.OneErpmTime < 2411) && (input.DataNormed > 500)) {
           // ERpm > 140K
-          motor.BemfFilterDelay = 11;
-          motor.BemfFilterLevel = 21;
+          motor.BemfFilterDelay = 1;
+          motor.BemfFilterLevel = 1;
         } else {
-          motor.BemfFilterDelay = 11;
-          motor.BemfFilterLevel = 21;
+          motor.BemfFilterDelay = 1;
+          motor.BemfFilterLevel = 1;
         }
 
         // motor stopped
@@ -136,10 +136,20 @@ int main(void) {
         }
 
         // motor start
+        /*
         if ((motor.Start) && (!motor.Running)) {
           motor.BemfZeroCounterTimeout = 0;
           motorBrakeOff();
           motorStart();
+        }*/
+
+        // motor start
+        if (motor.Start) {
+          motorBrakeOff();
+          HAL_TIM_Base_Start_IT(&motorSinTimerHandle);
+        } else {
+          HAL_TIM_Base_Stop_IT(&motorSinTimerHandle);
+          motorBrakeFull();
         }
 
         motor.OneErpmTime = medianGetSumm(&motorCommutationIntervalFilterState) >> 3;
@@ -208,7 +218,7 @@ int main(void) {
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
       //if ((msTimerHandle.Instance->CNT % 2) == 0) {
         uartPrint("in[");
-        uartPrintInteger(input.DataNormed, 10, 1);
+        uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("]");
         uartPrint("step[");
         uartPrintInteger(motor.Step, 10, 1);

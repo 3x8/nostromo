@@ -67,10 +67,11 @@ void TIM1_CC_IRQHandler(void) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == motorSinTimerHandle.Instance) {
     // ToDo
-    motorCommutate();
-    LED_OFF(LED_GREEN);
+    //LED_OFF(LED_GREEN);
+    LED_TOGGLE(LED_GREEN);
+    motorCommutationStep(1);
     //HAL_NVIC_DisableIRQ(TIM17_IRQn);
-    HAL_TIM_Base_Stop_IT(&motorSinTimerHandle);
+    //HAL_TIM_Base_Stop_IT(&motorSinTimerHandle);
   }
 }
 

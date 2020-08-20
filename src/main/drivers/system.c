@@ -254,7 +254,7 @@ void systemMotorSinTimerInit(void) {
   motorSinTimerHandle.Instance = TIM17;
   motorSinTimerHandle.Init.Prescaler = 7;
   motorSinTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  motorSinTimerHandle.Init.Period = 0xfff;
+  motorSinTimerHandle.Init.Period = 0xff;
   motorSinTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorSinTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
@@ -267,7 +267,7 @@ void systemMotorSinTimerInit(void) {
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&motorSinTimerHandle, &sMasterConfig) != HAL_OK);
 
-  while (HAL_TIM_Base_Start_IT(&motorSinTimerHandle) != HAL_OK);
+  //while (HAL_TIM_Base_Start_IT(&motorSinTimerHandle) != HAL_OK);
 }
 
 #if (defined(USE_BOOTLOADER))
