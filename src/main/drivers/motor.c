@@ -23,12 +23,13 @@ extern medianStructure motorCommutationIntervalFilterState;
   uint32_t motorDebugTime;
 #endif
 
-int32_t step = 0;
+uint32_t step = 0;
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+// ToDo
 #ifdef NONONO
   __disable_irq();
 
@@ -293,41 +294,47 @@ const uint32_t cFetInSetmaskAlternate = ((C_FET_IN_PIN * C_FET_IN_PIN) * LL_GPIO
 
 INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
   switch (stepBuffer) {
-    case 1:
-      // A-B
+    case 11:
+      // sin
       motorPhaseA(HBRIDGE_PWM);
       motorPhaseB(HBRIDGE_PWM);
       motorPhaseC(HBRIDGE_PWM);
       break;
+    case 1:
+      // A-B
+      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_FLOATING);
+      break;
     case 2:
       // A-C
-      motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseA(HBRIDGE_LOWSIDE);
+      motorPhaseB(HBRIDGE_FLOATING);
       motorPhaseC(HBRIDGE_PWM);
       break;
     case 3:
       // B-C
-      motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_PWM);
+      motorPhaseA(HBRIDGE_FLOATING);
+      motorPhaseB(HBRIDGE_LOWSIDE);
       motorPhaseC(HBRIDGE_PWM);
       break;
     case 4:
       // B-A
       motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_LOWSIDE);
+      motorPhaseC(HBRIDGE_FLOATING);
       break;
     case 5:
       // C-A
       motorPhaseA(HBRIDGE_PWM);
-      motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_PWM);
+      motorPhaseB(HBRIDGE_FLOATING);
+      motorPhaseC(HBRIDGE_LOWSIDE);
       break;
     case 6:
       // C-B
-      motorPhaseA(HBRIDGE_PWM);
+      motorPhaseA(HBRIDGE_FLOATING);
       motorPhaseB(HBRIDGE_PWM);
-      motorPhaseC(HBRIDGE_PWM);
+      motorPhaseC(HBRIDGE_LOWSIDE);
       break;
   }
 }
@@ -616,11 +623,9 @@ void motorComutateSin() {
       }
     }
 
-    motorPwmTimerHandle.Instance->CCR1 = (phA[step] + 1000) >> 2;
-    motorPwmTimerHandle.Instance->CCR2 = (phB[step] + 1000) >> 2;
-    motorPwmTimerHandle.Instance->CCR3 = (phC[step] + 1000) >> 2;
-
-    motorCommutationStep(1);
-
+    motorPwmTimerHandle.Instance->CCR1 = (phA[step] + 1000) >> 3;
+    motorPwmTimerHandle.Instance->CCR2 = (phB[step] + 1000) >> 3;
+    motorPwmTimerHandle.Instance->CCR3 = (phC[step] + 1000) >> 3;
+    motorCommutationStep(11);
   }
 }
