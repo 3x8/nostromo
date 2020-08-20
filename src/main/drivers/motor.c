@@ -124,9 +124,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
         break;
       case HBRIDGE_HI:
         LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
-        A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
+        A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
-        A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
+        A_FET_HI_GPIO->BSRR = A_FET_HI_PIN;
       /*
         A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
         A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
