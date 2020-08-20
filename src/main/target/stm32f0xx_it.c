@@ -69,7 +69,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // ToDo
     //LED_OFF(LED_GREEN);
     LED_TOGGLE(LED_GREEN);
-    motorCommutationStep(1);
+    motorCommutationStep(4);
     //HAL_NVIC_DisableIRQ(TIM17_IRQn);
     //HAL_TIM_Base_Stop_IT(&motorSinTimerHandle);
   }

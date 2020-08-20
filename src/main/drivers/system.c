@@ -145,7 +145,7 @@ void systemMotorPwmTimerInit(void) {
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
   while (HAL_TIM_PWM_ConfigChannel(&motorPwmTimerHandle, &sConfigOC, TIM_CHANNEL_1) != HAL_OK);
@@ -254,7 +254,7 @@ void systemMotorSinTimerInit(void) {
   motorSinTimerHandle.Instance = TIM17;
   motorSinTimerHandle.Init.Prescaler = 7;
   motorSinTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  motorSinTimerHandle.Init.Period = 0xff;
+  motorSinTimerHandle.Init.Period = 0x2ff;
   motorSinTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorSinTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
