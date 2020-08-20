@@ -123,10 +123,15 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
         A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
         break;
       case HBRIDGE_HI:
+        LL_GPIO_SetPinMode(A_FET_LO_GPIO, A_FET_LO_PIN, LL_GPIO_MODE_OUTPUT);
+        A_FET_LO_GPIO->BSRR = A_FET_LO_PIN;
+        LL_GPIO_SetPinMode(A_FET_HI_GPIO, A_FET_HI_PIN, LL_GPIO_MODE_OUTPUT);
+        A_FET_HI_GPIO->BRR = A_FET_HI_PIN;
+      /*
         A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
         A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
-        A_FET_HI_GPIO->BSRR = A_FET_HI_PIN;
+        A_FET_HI_GPIO->BSRR = A_FET_HI_PIN;*/
         break;
       case HBRIDGE_LO_PWM:
         A_FET_HI_GPIO->MODER = ((A_FET_HI_GPIO->MODER & aFetHiClearmask) | aFetHiSetmaskOutput);
@@ -324,7 +329,7 @@ INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
       break;
     case 4:
       motorPhaseA(HBRIDGE_HI);
-      motorPhaseB(HBRIDGE_LO_PWM);
+      motorPhaseB(HBRIDGE_PWM_COMPLEMENTARY);
       motorPhaseC(HBRIDGE_FLOAT);
       break;
     case 5:
