@@ -329,7 +329,7 @@ INLINE_CODE void motorCommutationStep(uint8_t stepBuffer) {
       break;
     case 4:
       motorPhaseA(HBRIDGE_HI);
-      motorPhaseB(HBRIDGE_PWM_COMPLEMENTARY);
+      motorPhaseB(HBRIDGE_LO_PWM);
       motorPhaseC(HBRIDGE_FLOAT);
       break;
     case 5:
