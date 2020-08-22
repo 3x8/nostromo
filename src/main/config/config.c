@@ -18,7 +18,6 @@ void configReset(void) {
   escConfig()->motorDirection = SPIN_CW;
   escConfig()->motorComplementaryPWM = true;
   escConfig()->motorBrake = BRAKE_FULL;
-  escConfig()->motorBrakeStrength = 501;
   escConfig()->motorStartThreshold = MOTOR_START_THRESHOLD;
   escConfig()->motorStartupPower = MOTOR_STARTUP_POWER;
   escConfig()->motor3Dmode = false;

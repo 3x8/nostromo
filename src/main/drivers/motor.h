@@ -21,7 +21,6 @@ typedef enum {
 
 typedef enum {
   BRAKE_OFF = 0,
-  BRAKE_PROPORTIONAL,
   BRAKE_FULL
 } motorBrakeStateEnum;
 
@@ -35,7 +34,6 @@ typedef struct {
   bool Running;
   bool Direction;
   bool ComplementaryPWM;
-  bool BrakeActiveProportional;
   bool BemfRising;
   uint8_t Step;
   uint32_t BemfCounter;
@@ -65,7 +63,6 @@ void motorStart();
 
 void motorBrakeOff();
 void motorBrakeFull();
-void motorBrakeProportional();
 
 void motorTuneStartup();
 void motorTuneInput(uint8_t motorStepDebug);

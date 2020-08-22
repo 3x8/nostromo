@@ -4,14 +4,13 @@
 
 #define escConfig(x) (&masterConfig.escConfig)
 
-#define CONFIG_EEPROM_VERSION 13
+#define CONFIG_EEPROM_VERSION 14
 
 typedef struct {
   uint8_t motorPoles;
   uint8_t motorDirection;
   uint8_t motorComplementaryPWM;
   uint8_t motorBrake;
-  uint16_t motorBrakeStrength;
   uint16_t motorStartThreshold;
   uint16_t motorStartupPower;
   uint8_t motor3Dmode;

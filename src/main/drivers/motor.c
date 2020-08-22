@@ -102,7 +102,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   INLINE_CODE void motorPhaseA(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
+        if (!motor.ComplementaryPWM) {
           A_FET_LO_GPIO->MODER = ((A_FET_LO_GPIO->MODER & aFetLoClearmask) | aFetLoSetmaskOutput);
           A_FET_LO_GPIO->BRR = A_FET_LO_PIN;
         } else {
@@ -128,7 +128,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   INLINE_CODE void motorPhaseB(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        if(!motor.ComplementaryPWM  || motor.BrakeActiveProportional) {
+        if(!motor.ComplementaryPWM) {
           B_FET_LO_GPIO->MODER = ((B_FET_LO_GPIO->MODER & bFetLoClearmask) | bFetLoSetmaskOutput);
           B_FET_LO_GPIO->BRR = B_FET_LO_PIN;
         } else {
@@ -154,7 +154,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   INLINE_CODE void motorPhaseC(uint8_t hBridgeMode) {
     switch (hBridgeMode) {
       case HBRIDGE_PWM:
-        if (!motor.ComplementaryPWM || motor.BrakeActiveProportional) {
+        if (!motor.ComplementaryPWM) {
           C_FET_LO_GPIO->MODER = ((C_FET_LO_GPIO->MODER & cFetLoClearmask) | cFetLoSetmaskOutput);
           C_FET_LO_GPIO->BRR = C_FET_LO_PIN;
         } else {
@@ -430,12 +430,6 @@ void motorBrakeFull() {
   motorPhaseA(HBRIDGE_LOWSIDE);
   motorPhaseB(HBRIDGE_LOWSIDE);
   motorPhaseC(HBRIDGE_LOWSIDE);
-}
-
-void motorBrakeProportional() {
-  motorPhaseA(HBRIDGE_PWM);
-  motorPhaseB(HBRIDGE_PWM);
-  motorPhaseC(HBRIDGE_PWM);
 }
 
 void motorTuneStartup() {
