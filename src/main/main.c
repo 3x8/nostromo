@@ -1,6 +1,5 @@
 #include "main.h"
 
-// filter
 medianStructure motorCommutationIntervalFilterState;
 
 #if (defined(USE_ADC))
@@ -16,10 +15,11 @@ int main(void) {
     uint32_t mainBegin, mainTime;
   #endif
 
-  // init
   #if (defined(USE_BOOTLOADER))
     systemInitAfterBootloaderJump();
   #endif
+
+  // basic initialization
   HAL_Init();
   systemClockConfig();
   configValidateOrReset();
