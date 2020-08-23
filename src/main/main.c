@@ -137,7 +137,7 @@ int main(void) {
 
         // ToDo
         //motor.CommutationDelay = 0; //timing 30°
-        motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 15°
+        //motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 15°
         //motor.CommutationDelay = constrain((motor.OneErpmTime >> 2), 41, 401); //timing 0°
       } // input.Armed
     } // input.Protocol detected
