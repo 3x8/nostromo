@@ -1,7 +1,5 @@
 #pragma once
 
-// changed MCU to stm32f051
-
 // debug
 //#define _DEBUG_
 //#define DEBUG_CYCLETIME_MAINLOOP
@@ -27,13 +25,13 @@
 #define INPUT_TIMER     TIM3
 #define INPUT_TIMER_CH  TIM_CHANNEL_1
 
-// LEDs ,no
+// LEDs ,No
 #define LED_RED_GPIO    GPIOA
-#define LED_RED_PIN     GPIO_PIN_15
+#define LED_RED_PIN     LL_GPIO_PIN_15
 #define LED_GREEN_GPIO  GPIOA
-#define LED_GREEN_PIN   GPIO_PIN_15
+#define LED_GREEN_PIN   LL_GPIO_PIN_15
 #define LED_BLUE_GPIO   GPIOA
-#define LED_BLUE_PIN    GPIO_PIN_15
+#define LED_BLUE_PIN    LL_GPIO_PIN_15
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
 // H_BRIDGE ,Ok
@@ -51,7 +49,7 @@
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    GPIO_PIN_7
 
-// comparator ,Ok
+// comparator, Ok
 #define COMPARATOR_OPTIMIZE
 #define COMPARATOR              COMP1
 #define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_IO1
@@ -63,8 +61,8 @@
 #define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5
 
-// adc ,Ok
-#define USE_ADC
+// adc, Ko
+//#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR

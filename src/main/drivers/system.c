@@ -81,7 +81,7 @@ void systemAdcInit(void) {
     while (HAL_ADC_Start_DMA(&adcHandle, (uint32_t*)adcDmaBuffer, 3) != HAL_OK);
   #endif
 
-  #if (defined(WRAITH32MINI))
+  #if (defined(WRAITH32MINI) || defined(SUCCEXMINI40A))
     sConfig.Channel = ADC_TEMPERATURE;
     while (HAL_ADC_ConfigChannel(&adcHandle, &sConfig) != HAL_OK);
 
