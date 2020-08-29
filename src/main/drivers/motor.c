@@ -398,7 +398,12 @@ void motorStart() {
 
     for (uint32_t i = 1; i < MOTOR_BLDC_STEPS; i++) {
       motorCommutate();
-      HAL_Delay(2);
+      #if defined(SUCCEXMINI40A)
+        HAL_Delay(4);
+      #else
+        HAL_Delay(2);
+      #endif
+
     }
 
     motorCommutationTimerHandle.Instance->CNT = 0;
