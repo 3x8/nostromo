@@ -55,6 +55,9 @@ int main(void) {
   #else
     motor.BemfZeroCounterTimeoutThreshold = 13;
   #endif
+  #if defined(SUCCEXMINI40A)
+    motor.BemfZeroCounterTimeoutThreshold = 313;
+  #endif
   input.Data = 0;
   input.PwmValue = 0;
   serialPort.InitDone = false;
