@@ -49,7 +49,7 @@
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    GPIO_PIN_7
 
-// comparator ,Ok
+// comparator, Ok
 #define COMPARATOR_OPTIMIZE
 #define COMPARATOR              COMP1
 #define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_IO1
@@ -61,7 +61,7 @@
 #define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5
 
-// adc ,Ok
+// adc, Ok
 #define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6

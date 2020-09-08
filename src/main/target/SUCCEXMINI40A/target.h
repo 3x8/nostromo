@@ -10,7 +10,7 @@
 //#define DEBUG_MS_TIMER
 //#define DEBUG_DATA_QUALITY
 
-// CYCLETIME_MAINLOOP kalman->400us (+-10%), median->150us (+-10%)
+// CYCLETIME_MAINLOOP kalman->500us, median->100us
 #define USE_PWM_FREQUENCY_48kHz
 //#define USE_ADC_MEDIAN
 
@@ -61,7 +61,7 @@
 #define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5
 
-// adc, Ko
+// adc, No
 //#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6
