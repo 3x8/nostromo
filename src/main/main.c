@@ -63,7 +63,7 @@ int main(void) {
   serialPort.InitDone = false;
 
   watchdogInit(2000);
-  motorTuneStartup();
+  motorTuneReady();
 
   // main loop
   while (true) {

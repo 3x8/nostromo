@@ -438,7 +438,7 @@ void motorBrakeFull() {
   motorPhaseC(HBRIDGE_LOWSIDE);
 }
 
-void motorTuneStartup() {
+void motorTuneReady() {
   #if defined(NCP3420)
     A_FET_OE_GPIO->MODER = ((A_FET_OE_GPIO->MODER & aFetOeClearmask) | aFetOeSetmaskOutput);
     B_FET_OE_GPIO->MODER = ((B_FET_OE_GPIO->MODER & bFetOeClearmask) | bFetOeSetmaskOutput);
@@ -524,7 +524,7 @@ INLINE_CODE void motorInputUpdate(void) {
       if (motor.Start) {
         if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
           // stall protection and startup kick
-          input.PwmValue = escConfig()->motorStartupPower;
+          input.PwmValue = escConfig()->motorStartPower;
         } else {
           input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
         }
