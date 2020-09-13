@@ -26,6 +26,7 @@
   * WRAITH32
   * WRAITH32MINI
   * SUCCEX50AV2
+  * SUCCEXMINI40A
   * DYS35ARIA
   * KISS24A  *(testing)*
   * FURLING45MINI  *(hardware modification)*
