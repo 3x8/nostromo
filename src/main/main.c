@@ -140,18 +140,20 @@ int main(void) {
 
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
-        // ToDo timing (input.PwmValue, adcScaled.currentFast) ??? ,30° - timing
-        //motor.CommutationDelay = 0; //timing 30°
-        // autoTiming
-        if (ABS(adcScaled.currentFast) > 2003) {
-          motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 41, 401); //timing 2.5°
-        } else {
-          if (ABS(adcScaled.currentFast) > 1303) {
-            motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
-          } else  {
-            motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
+        // ToDo auto timing (input.PwmValue, adcScaled.currentFast) ??? ,30° - timing
+        #if (defined(USE_ADC))
+          if (ABS(adcScaled.currentFast) > 3313) {
+            motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 41, 401); //timing 2.5°
+          } else {
+            if (ABS(adcScaled.currentFast) > 1303) {
+              motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
+            } else  {
+              motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
+            }
           }
-        }
+        #else
+          motor.CommutationDelay = 0;
+        #endif
 
       } // input.Armed
     } // input.Protocol detected

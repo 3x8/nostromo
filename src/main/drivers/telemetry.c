@@ -63,7 +63,8 @@ void telemetry(void) {
   }
 
   //telemetryData.erpm = (uint32_t)(motorGetErpm() / 100);
-  telemetryData.erpm = adcScaled.currentFast >> 7;
+  // debug
+  telemetryData.erpm = adcScaled.currentFast;
 
   telemetryTelegram(&telemetryData);
 }
