@@ -47,7 +47,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
 
   // ToDo timing
-  if (motor.CommutationDelay > 40) {
+  if (motor.CommutationDelay > 37) {
     while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
       // noop
     }

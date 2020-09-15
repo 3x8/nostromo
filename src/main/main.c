@@ -143,12 +143,12 @@ int main(void) {
         // ToDo auto timing (input.PwmValue, adcScaled.currentFast) ??? ,30° - timing
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast) > 3313) {
-            motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 41, 401); //timing 2.5°
+            motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 37, 401); //timing 2.5°
           } else {
             if (ABS(adcScaled.currentFast) > 1303) {
-              motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
+              motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 37, 401); //timing 5.5°
             } else  {
-              motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
+              motor.CommutationDelay = constrain((motor.OneErpmTime >> 3),37, 401); //timing 22.5°
             }
           }
         #else
