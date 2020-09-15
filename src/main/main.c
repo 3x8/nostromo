@@ -1,6 +1,7 @@
 #include "main.h"
 
 medianStructure motorCommutationIntervalFilterState;
+medianStructure adcCurrentFastFilterState;
 
 #if (defined(USE_ADC))
   #if (defined(USE_ADC_MEDIAN))
@@ -37,6 +38,7 @@ int main(void) {
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
+    medianInit(&adcCurrentFastFilterState, 5);
     #if (defined(USE_ADC_MEDIAN))
       medianInit(&adcVoltageFilterState, 113);
       medianInit(&adcCurrentFilterState, 113);
@@ -138,13 +140,13 @@ int main(void) {
 
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
-        // ToDo timing
+        // ToDo timing (input.PwmValue, adcScaled.currentFast) ??? ,30° - timing
         //motor.CommutationDelay = 0; //timing 30°
         // autoTiming
-        if (ABS(input.PwmValueLast - input.PwmValue) > 83) {
+        if (ABS(adcScaled.currentFast) > 2003) {
           motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 41, 401); //timing 2.5°
         } else {
-          if (ABS(input.PwmValueLast - input.PwmValue) > 47) {
+          if (ABS(adcScaled.currentFast) > 1303) {
             motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
           } else  {
             motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
@@ -164,6 +166,8 @@ int main(void) {
     }
 
     #if (defined(USE_ADC))
+      medianPush(&adcCurrentFastFilterState, adcRaw.current);
+      adcScaled.currentFast = medianCalculate(&adcCurrentFastFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
       #if (defined(USE_ADC_MEDIAN))
         medianPush(&adcCurrentFilterState, adcRaw.current);
         adcScaled.current = medianCalculate(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
