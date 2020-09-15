@@ -140,7 +140,7 @@ int main(void) {
 
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
-        // ToDo auto timing (input.PwmValue, adcScaled.currentFast) ??? ,30° - timing
+        // ToDo motor timing automatic (input.PwmValue, adcScaled.currentFast) ??? ,30° - timing
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast) > 3313) {
             motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 37, 401); //timing 2.5°

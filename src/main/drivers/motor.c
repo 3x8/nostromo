@@ -46,12 +46,8 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
 
-  // ToDo timing
-  if (motor.CommutationDelay > 37) {
-    while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay) {
-      // noop
-    }
-  }
+  // ToDo motor timing
+  while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay);
 
   motorCommutate();
 
