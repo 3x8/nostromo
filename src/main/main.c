@@ -138,15 +138,17 @@ int main(void) {
 
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
-        // ToDo
+        // ToDo timing
         //motor.CommutationDelay = 0; //timing 30°
+        // autoTiming
         if (ABS(input.PwmValueLast - input.PwmValue) > 200) {
           motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 41, 401); //timing 2.5°
-        }
-        if (ABS(input.PwmValueLast - input.PwmValue) > 100) {
-          motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
-        } else  {
-          motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
+        } else {
+          if (ABS(input.PwmValueLast - input.PwmValue) > 100) {
+            motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
+          } else  {
+            motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
+          }
         }
 
       } // input.Armed
