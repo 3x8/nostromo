@@ -141,10 +141,10 @@ int main(void) {
         // ToDo timing
         //motor.CommutationDelay = 0; //timing 30°
         // autoTiming
-        if (ABS(input.PwmValueLast - input.PwmValue) > 200) {
+        if (ABS(input.PwmValueLast - input.PwmValue) > 83) {
           motor.CommutationDelay = constrain((motor.OneErpmTime >> 5), 41, 401); //timing 2.5°
         } else {
-          if (ABS(input.PwmValueLast - input.PwmValue) > 100) {
+          if (ABS(input.PwmValueLast - input.PwmValue) > 47) {
             motor.CommutationDelay = constrain((motor.OneErpmTime >> 4), 41, 401); //timing 5.5°
           } else  {
             motor.CommutationDelay = constrain((motor.OneErpmTime >> 3), 41, 401); //timing 22.5°
