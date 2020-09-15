@@ -44,7 +44,7 @@ static void telemetryTelegram(telemetryDataStructure *data) {
 void telemetry(void) {
   #if (!defined(DEBUG_DATA_QUALITY))
     //telemetryData.temperature = adcScaled.temperature;
-    telemetryData.temperature = adcScaled.currentFast;
+    telemetryData.temperature = adcScaled.currentFast >> 8;
   #else
     telemetryData.temperature = input.DataErrorCounter;
   #endif
