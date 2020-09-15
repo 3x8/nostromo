@@ -43,8 +43,7 @@ static void telemetryTelegram(telemetryDataStructure *data) {
 
 void telemetry(void) {
   #if (!defined(DEBUG_DATA_QUALITY))
-    //telemetryData.temperature = adcScaled.temperature;
-    telemetryData.temperature = adcScaled.currentFast >> 8;
+    telemetryData.temperature = adcScaled.temperature;
   #else
     telemetryData.temperature = input.DataErrorCounter;
   #endif
@@ -63,7 +62,8 @@ void telemetry(void) {
     telemetryData.consumption =  (int)consumptionMah;
   }
 
-  telemetryData.erpm = (uint32_t)(motorGetErpm() / 100);
+  //telemetryData.erpm = (uint32_t)(motorGetErpm() / 100);
+  telemetryData.erpm = adcScaled.currentFast >> 7;
 
   telemetryTelegram(&telemetryData);
 }
