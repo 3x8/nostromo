@@ -75,6 +75,7 @@ typedef struct {
   uint32_t TimeoutCounter;
   uint32_t PwmValue;
   uint32_t PwmValueLast;
+  uint32_t PwmValueDiff;
   uint32_t DataValidCounter;
   uint32_t DataErrorCounter;
 } inputStructure;

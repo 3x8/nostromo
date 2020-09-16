@@ -527,6 +527,7 @@ INLINE_CODE void motorInputUpdate(void) {
 
       // trapezium rule
       input.PwmValue = (input.PwmValue + input.PwmValueLast) >> 1;
+      input.PwmValueDiff = (input.PwmValueLast - input.PwmValue);
       input.PwmValueLast = input.PwmValue;
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
