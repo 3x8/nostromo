@@ -64,7 +64,7 @@ void telemetry(void) {
 
   //telemetryData.erpm = (uint32_t)(motorGetErpm() / 100);
   // debug timing
-  telemetryData.erpm = adcScaled.currentFast;
+  telemetryData.erpm = (adcScaled.current - adcScaled.currentFast);
   //telemetryData.erpm = input.PwmValueDiff;
 
   telemetryTelegram(&telemetryData);
