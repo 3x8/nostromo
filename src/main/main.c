@@ -38,7 +38,7 @@ int main(void) {
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
-    medianInit(&adcCurrentFastFilterState, 5);
+    medianInit(&adcCurrentFastFilterState, 7);
     #if (defined(USE_ADC_MEDIAN))
       medianInit(&adcVoltageFilterState, 113);
       medianInit(&adcCurrentFilterState, 113);
@@ -140,24 +140,20 @@ int main(void) {
 
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
 
-        motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 6) ,37, 401) ; //30°
-
-        /*
         // ToDo motor timing automatic (input.PwmValue, adcScaled.currentFast) ??? ,30° -> optimal timing ?
         #if (defined(USE_ADC))
-          if (ABS(adcScaled.currentFast) > 3313) {
+          if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
             motor.CommutationDelay = constrain((motor.OneErpmTime >> 6), 37, 401); //5°
           } else {
-            if (ABS(adcScaled.currentFast) > 1303) {
+            if (ABS(adcScaled.currentFast- adcScaled.current) > 501) {
               motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 3), 37, 401); //15°
             } else  {
-              motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 6) ,37, 401) ; //30°
+              motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 6) ,37, 401); //30°
             }
           }
         #else
-          motor.CommutationDelay = 0;
+          motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 3), 37, 401); //15°
         #endif
-        */
 
       } // input.Armed
     } // input.Protocol detected
