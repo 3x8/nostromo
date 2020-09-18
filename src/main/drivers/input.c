@@ -33,7 +33,7 @@ void inputDisarm(void) {
   input.PwmValue = 0;
   input.Armed = false;
   input.ArmingCounter = 0;
-  input.TimeoutCounter = 0;
+  //input.TimeoutCounter = 0;
   input.Protocol = AUTODETECT;
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
