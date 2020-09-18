@@ -260,6 +260,10 @@ int main(void) {
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
 
+        uartPrint("LW[");
+        uartPrintInteger(lowValue[2], 10, 1);
+        uartPrint("] ");
+
         uartPrint("\r\n");
 
 

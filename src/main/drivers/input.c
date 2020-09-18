@@ -274,6 +274,7 @@ void inputDetectProtocol() {
   }
 }
 
+uint32_t lowValue[3];
 void inputProshot() {
   __disable_irq();
   uint8_t pulseValue[4] = {0, 0, 0, 0};
@@ -283,6 +284,12 @@ void inputProshot() {
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
     LED_ON(LED_GREEN);
   #endif
+
+
+  // 194 --> 4,041 us constant
+  for (int i = 0; i < 3; i++) {
+    lowValue[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
+  }
 
   for (int i = 0; i < 4; i++) {
     pulseValue[i] = ((inputDmaBuffer[i*2 + 1] - inputDmaBuffer[i*2]) - 45) / 6;

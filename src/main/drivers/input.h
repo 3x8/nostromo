@@ -105,3 +105,4 @@ void inputServoPwm();
 
 //debug
 extern uint32_t pulseWidthMin;
+extern uint32_t lowValue[3];
