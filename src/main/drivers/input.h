@@ -6,21 +6,33 @@
 #define INPUT_TIMEOUT_COUNTER_THRESHOLD  1000
 #define INPUT_AUTODETECT_PRESCALER 1
 #define INPUT_PROSHOT_PRESCALER 0
-#define INPUT_PROSHOT_WIDTH_MIN_SYSTICKS 22
-#define INPUT_PROSHOT_WIDTH_MAX_SYSTICKS 80
+#define INPUT_PROSHOT_WIDTH_MIN 24
+
+// ToDo
+#define INPUT_DSHOT300_PRESCALER 0
+#define INPUT_DSHOT300_WIDTH_MIN 28
+#define INPUT_DSHOT600_PRESCALER 0
+#define INPUT_DSHOT600_WIDTH_MIN 14
+
 #define INPUT_PWM_PRESCALER 96
+
 #define INPUT_PWM_WIDTH_MIN_US 491
 #define INPUT_PWM_WIDTH_MAX_US 983
+
+
 #define INPUT_VALUE_MIN 0
 #define INPUT_VALUE_MAX 2047
 #define INPUT_NORMED_MIN 0
 #define INPUT_NORMED_MAX 2000
 #define OUTPUT_PWM_MIN 0
 #define OUTPUT_PWM_MAX 1000
-#define INPUT_DMA_BUFFER_SIZE 9
+
 #define INPUT_DMA_BUFFER_SIZE_PWM 3
-#define INPUT_DMA_BUFFER_SIZE_PROSHOT 8
 #define INPUT_DMA_BUFFER_SIZE_AUTODETECT 7
+#define INPUT_DMA_BUFFER_SIZE_PROSHOT 8
+#define INPUT_DMA_BUFFER_SIZE_DSHOT 32
+#define INPUT_DMA_BUFFER_SIZE_MAX 32
+
 
 typedef enum {
   DSHOT_CMD_MOTOR_STOP = 0,
@@ -56,12 +68,10 @@ typedef enum {
 
 typedef enum {
   AUTODETECT = 0,
-  SERVOPWM,
-  ONESHOT42,
-  ONESHOT125,
-  MULTISHOT,
-  DSHOT,
-  PROSHOT
+  PROSHOT,
+  DSHOT600,
+  DSHOT300,
+  SERVOPWM
 } inputProtocolEnum;
 
 typedef struct {
@@ -82,7 +92,7 @@ typedef struct {
 extern TIM_HandleTypeDef  inputTimerHandle;
 extern DMA_HandleTypeDef inputTimerDmaHandle;
 extern inputStructure input;
-extern uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE];
+extern uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE_MAX];
 
 void inputArmCheck(void);
 void inputDisarm(void);
@@ -92,3 +102,6 @@ void inputCallbackDMA();
 void inputDetectProtocol();
 void inputProshot();
 void inputServoPwm();
+
+//debug
+extern uint32_t pulseWidthMin;

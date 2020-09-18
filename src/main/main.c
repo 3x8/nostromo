@@ -35,6 +35,9 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
+  //debug
+  uartInit();
+
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
@@ -214,8 +217,11 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       extern uint32_t motorDebugTime;
-      if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
+      //if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
+      if ((msTimerHandle.Instance->CNT % 2) == 0) {
         // each 1ms
+
+        /*
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
         uartPrintInteger(input.DataNormed, 10, 1);
@@ -236,6 +242,14 @@ int main(void) {
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
+        uartPrint("\r\n");*/
+
+        uartPrint("P[");
+        uartPrintInteger(input.Protocol, 10, 1);
+        uartPrint("] ");
+        uartPrint("W[");
+        uartPrintInteger(pulseWidthMin, 10, 1);
+        uartPrint("] ");
         uartPrint("\r\n");
       }
     #endif

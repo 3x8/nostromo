@@ -3,7 +3,7 @@
 TIM_HandleTypeDef inputTimerHandle;
 DMA_HandleTypeDef inputTimerDmaHandle;
 inputStructure input;
-uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE];
+uint32_t inputDmaBuffer[INPUT_DMA_BUFFER_SIZE_MAX];
 
 void inputArmCheck(void) {
   if (!input.Armed) {
@@ -193,9 +193,13 @@ void inputCallbackDMA() {
   }
 }
 
+//debug
+uint32_t pulseWidthMin;
+
 void inputDetectProtocol() {
   uint32_t pulseWidthBuffer;
-  uint32_t pulseWidthMin = 20000;
+  //uint32_t pulseWidthMin = 20000;
+  pulseWidthMin = 20000;
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
     LED_OFF(LED_GREEN);
@@ -210,11 +214,37 @@ void inputDetectProtocol() {
     }
   }
 
-  if ((pulseWidthMin > INPUT_PROSHOT_WIDTH_MIN_SYSTICKS ) && (pulseWidthMin < INPUT_PROSHOT_WIDTH_MAX_SYSTICKS)) {
+  if ((pulseWidthMin >= (INPUT_PROSHOT_WIDTH_MIN - 1) ) && (pulseWidthMin <= (INPUT_PROSHOT_WIDTH_MIN + 1))) {
     input.Protocol = PROSHOT;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT);
+
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
+      LED_ON(LED_GREEN);
+    #endif
+
+    return;
+  }
+
+  if ((pulseWidthMin >= (INPUT_DSHOT600_WIDTH_MIN - 1) ) && (pulseWidthMin <= (INPUT_DSHOT600_WIDTH_MIN + 1))) {
+    input.Protocol = DSHOT600;
+    inputTimerHandle.Instance->PSC = INPUT_DSHOT600_PRESCALER;
+    inputTimerHandle.Instance->CNT = 0xffff;
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_DSHOT);
+
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
+      LED_ON(LED_GREEN);
+    #endif
+
+    return;
+  }
+
+  if ((pulseWidthMin >= (INPUT_DSHOT300_WIDTH_MIN - 1) ) && (pulseWidthMin <= (INPUT_DSHOT300_WIDTH_MIN + 1))) {
+    input.Protocol = DSHOT300;
+    inputTimerHandle.Instance->PSC = INPUT_DSHOT300_PRESCALER;
+    inputTimerHandle.Instance->CNT = 0xffff;
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_DSHOT);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
