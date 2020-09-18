@@ -302,7 +302,7 @@ void inputDshot() {
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
 
-  if (inputDmaBuffer[[0] < 1000) {
+  if (inputDmaBuffer[0] < 1000) {
     return;
   }
 
