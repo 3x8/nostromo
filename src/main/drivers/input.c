@@ -367,7 +367,7 @@ void inputDshot() {
       if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 46) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 67)) {
         pulseValue[i] = 1;
       } else {
-        //input.DataErrorCounter++;
+        input.DataErrorCounter++;
       }
     }
   }
@@ -390,7 +390,6 @@ void inputDshot() {
 
     // only update if not active
     if (!input.TelemetryRequest) {
-      //ToDo
       input.TelemetryRequest = pulseValue[11];
     }
 
