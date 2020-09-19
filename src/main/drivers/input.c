@@ -286,7 +286,7 @@ void inputProshot() {
     proshotWidth[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
 
     if ((proshotWidth[i] >= ((INPUT_PROSHOT1000_LO_WIDTH_MIN + INPUT_PROSHOT1000_HI_WIDTH_MIN) / (INPUT_PROSHOT1000_PRESCALER + 1))) &&
-        (proshotWidth[i] <= ((INPUT_PROSHOT1000_LO_WIDTH_MAX + INPUT_PROSHOT1000_HI_WIDTH_MAX)/ (INPUT_PROSHOT1000_PRESCALER + 1)))) {
+        (proshotWidth[i] <= ((INPUT_PROSHOT1000_LO_WIDTH_MAX + INPUT_PROSHOT1000_HI_WIDTH_MAX) / (INPUT_PROSHOT1000_PRESCALER + 1)))) {
 
           // proshot signal valid (hi + lo = 4us)
     } else {
@@ -410,11 +410,11 @@ void inputServoPwm() {
 
     for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_PWM - 1); i++) {
       pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
-      if ((pulseWidthBuffer >= (INPUT_PWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuffer <= (INPUT_PWM_WIDTH_MAX_US + 100))) {
+      if ((pulseWidthBuffer >= (INPUT_SERVOPWM_WIDTH_MIN_US - 50 )) && (pulseWidthBuffer <= (INPUT_SERVOPWM_WIDTH_MAX_US + 100))) {
         input.DataValid = true;
         input.DataValidCounter++;
         input.TimeoutCounter = 0;
-        input.Data = (pulseWidthBuffer - INPUT_PWM_WIDTH_MIN_US) << 2;
+        input.Data = (pulseWidthBuffer - INPUT_SERVOPWM_WIDTH_MIN_US) << 2;
         __enable_irq();
         motorInputUpdate();
         return;
