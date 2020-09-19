@@ -179,7 +179,7 @@ void inputCallbackDMA() {
   switch (input.Protocol) {
      case AUTODETECT:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-      inputDetectProtocol();
+      inputAutoDetect();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
       break;
     case PROSHOT1000:
@@ -200,7 +200,7 @@ uint32_t pulseWidthMin;
 uint32_t pulseHiWidth, pulseLoWidth;
 uint32_t d1, d2;
 
-void inputDetectProtocol() {
+void inputAutoDetect() {
   uint32_t pulseWidthBuffer;
   //uint32_t pulseWidthMin = 20000;
   pulseWidthMin = 0xffff;

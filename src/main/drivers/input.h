@@ -113,7 +113,7 @@ void inputDisarm(void);
 void inputDisarmCheck(void);
 void inputDshotCommandRun(void);
 void inputCallbackDMA();
-void inputDetectProtocol();
+void inputAutoDetect();
 void inputProshot();
 void inputServoPwm();
 
