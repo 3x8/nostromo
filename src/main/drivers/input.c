@@ -355,7 +355,7 @@ void inputProshot() {
 }
 
 void inputDshot() {
-  __disable_irq();
+  //__disable_irq();
   uint8_t pulseValue[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
@@ -385,7 +385,7 @@ void inputDshot() {
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
     input.Data = data;
-    __enable_irq();
+    //__enable_irq();
     motorInputUpdate();
 
     // only update if not active
@@ -401,7 +401,7 @@ void inputDshot() {
   } else {
     input.DataValid = false;
     input.DataErrorCounter++;
-    __enable_irq();
+    //__enable_irq();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_DSHOT))
       LED_OFF(LED_GREEN);
