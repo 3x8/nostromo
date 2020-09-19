@@ -291,7 +291,9 @@ void inputProshot() {
     LED_ON(LED_GREEN);
   #endif
 
-  // check 4us constant
+  // ToDo
+  // check 4us constant (1% data error, if CRC ok sound ?!?)
+  /*
   for (int i = 0; i < 3; i++) {
     proshotWidth[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
 
@@ -310,7 +312,7 @@ void inputProshot() {
 
       return;
     }
-  }
+  }*/
 
   for (int i = 0; i < 4; i++) {
     pulseValue[i] = ((inputDmaBuffer[i*2 + 1] - inputDmaBuffer[i*2]) - 45) / 6;
@@ -355,21 +357,25 @@ void inputProshot() {
 }
 
 void inputDshot() {
-  //__disable_irq();
+  __disable_irq();
   uint8_t pulseValue[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
 
   for (int i = 0; i < 31; i++) {
-    if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 18) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 39)) {
+    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 46) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 67)) {
+      pulseValue[i] = 1;
+    }
+    /*
+    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 18) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 39)) {
       pulseValue[i] = 0;
     } else {
-      if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 46) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 67)) {
+      if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 46) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 67)) {
         pulseValue[i] = 1;
       } else {
         input.DataErrorCounter++;
       }
-    }
+    }*/
   }
 
   calculatedCRC = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 | (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
@@ -385,7 +391,7 @@ void inputDshot() {
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
     input.Data = data;
-    //__enable_irq();
+    __enable_irq();
     motorInputUpdate();
 
     // only update if not active
@@ -401,7 +407,7 @@ void inputDshot() {
   } else {
     input.DataValid = false;
     input.DataErrorCounter++;
-    //__enable_irq();
+    __enable_irq();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_DSHOT))
       LED_OFF(LED_GREEN);
