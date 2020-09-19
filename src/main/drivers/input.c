@@ -281,7 +281,7 @@ void inputAutoDetect() {
 
   // default
   //if (input.Protocol == AUTODETECT) {
-    input.Protocol = AUTODETECT
+    input.Protocol = AUTODETECT;
     inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
