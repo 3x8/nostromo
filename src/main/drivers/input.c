@@ -184,7 +184,7 @@ void inputCallbackDMA() {
       break;
     case PROSHOT1000:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-      //inputProshot();
+      inputProshot();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT1000);
       break;
     case SERVOPWM:
@@ -195,37 +195,17 @@ void inputCallbackDMA() {
   }
 }
 
-//debug
-uint32_t pulseWidthMin;
-uint32_t pulseHiWidth, pulseLoWidth;
-uint32_t d1, d2;
-
 void inputAutoDetect() {
-  uint32_t pulseWidthBuffer;
-  //uint32_t pulseWidthMin = 20000;
-  pulseWidthMin = 0xffff;
-
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
     LED_OFF(LED_GREEN);
   #endif
 
-  //HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+  uint32_t  pulseHiWidth = inputDmaBuffer[1] - inputDmaBuffer[0];
+  uint32_t  pulseLoWidth = inputDmaBuffer[2] - inputDmaBuffer[1];
 
-  pulseHiWidth = inputDmaBuffer[1] - inputDmaBuffer[0];
-  pulseLoWidth = inputDmaBuffer[2] - inputDmaBuffer[1];
+  if (((pulseHiWidth >= (INPUT_PROSHOT1000_HI_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_PROSHOT1000_HI_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
+      ((pulseLoWidth >= (INPUT_PROSHOT1000_LO_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_PROSHOT1000_LO_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
 
-  d1 = inputDmaBuffer[3] - inputDmaBuffer[2];
-  d2 = inputDmaBuffer[4] - inputDmaBuffer[3];
-
-  for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_AUTODETECT - 1); i++) {
-    pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
-    if(pulseWidthBuffer < pulseWidthMin) {
-      pulseWidthMin = pulseWidthBuffer;
-    }
-  }
-
-  if ((pulseHiWidth >= INPUT_PROSHOT1000_HI_WIDTH_MIN) && (pulseHiWidth <= INPUT_PROSHOT1000_HI_WIDTH_MAX) &&
-      (pulseLoWidth >= INPUT_PROSHOT1000_LO_WIDTH_MIN) && (pulseLoWidth <= INPUT_PROSHOT1000_LO_WIDTH_MAX)) {
     input.Protocol = PROSHOT1000;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT1000_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -238,8 +218,9 @@ void inputAutoDetect() {
     return;
   }
 
-  if ((pulseHiWidth >= INPUT_DSHOT600_HI_WIDTH_MIN) && (pulseHiWidth <= INPUT_DSHOT600_HI_WIDTH_MAX) &&
-      (pulseLoWidth >= INPUT_DSHOT600_LO_WIDTH_MIN) && (pulseLoWidth <= INPUT_DSHOT600_LO_WIDTH_MAX)) {
+  if (((pulseHiWidth >= (INPUT_DSHOT600_HI_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_DSHOT600_HI_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
+      ((pulseLoWidth >= (INPUT_DSHOT600_LO_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_DSHOT600_LO_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+
     input.Protocol = DSHOT600;
     inputTimerHandle.Instance->PSC = INPUT_DSHOT600_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -252,8 +233,9 @@ void inputAutoDetect() {
     return;
   }
 
-  if ((pulseHiWidth >= INPUT_DSHOT300_HI_WIDTH_MIN) && (pulseHiWidth <= INPUT_DSHOT300_HI_WIDTH_MAX) &&
-      (pulseLoWidth >= INPUT_DSHOT300_LO_WIDTH_MIN) && (pulseLoWidth <= INPUT_DSHOT300_LO_WIDTH_MAX)) {
+  if (((pulseHiWidth >= (INPUT_DSHOT300_HI_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_DSHOT300_HI_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
+      ((pulseLoWidth >= (INPUT_DSHOT300_LO_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_DSHOT300_LO_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+
     input.Protocol = DSHOT300;
     inputTimerHandle.Instance->PSC = INPUT_DSHOT300_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -266,7 +248,9 @@ void inputAutoDetect() {
     return;
   }
 
-  if (pulseWidthMin > 900) {
+  if (((pulseHiWidth >= (INPUT_SERVOPWM_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_SERVOPWM_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) ||
+      ((pulseLoWidth >= (INPUT_SERVOPWM_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_SERVOPWM_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+
     input.Protocol = SERVOPWM;
     inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -280,29 +264,42 @@ void inputAutoDetect() {
   }
 
   // default
-  //if (input.Protocol == AUTODETECT) {
-    input.Protocol = AUTODETECT;
-    inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
-    inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
-  //}
+  input.Protocol = AUTODETECT;
+  inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
+  inputTimerHandle.Instance->CNT = 0xffff;
+  HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
 }
 
-uint32_t lowValue[3];
 void inputProshot() {
   __disable_irq();
   uint8_t pulseValue[4] = {0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
+  uint32_t proshotWidth[3];
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
     LED_ON(LED_GREEN);
   #endif
 
-
-  // 194 --> 4,041 us constant
+  // check 4us constant
   for (int i = 0; i < 3; i++) {
-    lowValue[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
+    proshotWidth[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
+
+    if ((proshotWidth[i] >= ((INPUT_PROSHOT1000_LO_WIDTH_MIN + INPUT_PROSHOT1000_HI_WIDTH_MIN) / (INPUT_PROSHOT1000_PRESCALER + 1))) &&
+        (proshotWidth[i] <= ((INPUT_PROSHOT1000_LO_WIDTH_MAX + INPUT_PROSHOT1000_HI_WIDTH_MAX)/ (INPUT_PROSHOT1000_PRESCALER + 1)))) {
+
+          // proshot signal valid (hi + lo = 4us)
+    } else {
+      input.DataValid = false;
+      input.DataErrorCounter++;
+      __enable_irq();
+
+      #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
+        LED_OFF(LED_GREEN);
+      #endif
+
+      return;
+    }
   }
 
   for (int i = 0; i < 4; i++) {
