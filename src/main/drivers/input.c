@@ -285,7 +285,6 @@ void inputProshot() {
   uint8_t pulseValue[4] = {0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
-  uint32_t proshotWidth[3];
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
     LED_ON(LED_GREEN);
@@ -294,6 +293,7 @@ void inputProshot() {
   // ToDo
   // check 4us constant (1% data error, if CRC ok sound ?!?)
   /*
+  uint32_t proshotWidth[3];
   for (int i = 0; i < 3; i++) {
     proshotWidth[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
 
