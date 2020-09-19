@@ -118,4 +118,5 @@ void inputDshotCommandRun(void);
 void inputCallbackDMA();
 void inputAutoDetect();
 void inputProshot();
+void inputDshot();
 void inputServoPwm();

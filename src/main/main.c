@@ -250,6 +250,21 @@ int main(void) {
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+
+        /*
+        uartPrint("0[");
+        uartPrintInteger(inputDmaBuffer[1] - inputDmaBuffer[0], 10, 1);
+        uartPrint("] ");
+
+        uartPrint("1[");
+        uartPrintInteger(inputDmaBuffer[3] - inputDmaBuffer[2], 10, 1);
+        uartPrint("] ");
+
+        uartPrint("2[");
+        uartPrintInteger(inputDmaBuffer[5] - inputDmaBuffer[4], 10, 1);
+        uartPrint("] ");*/
+
+
         uartPrint("ER[");
         uartPrintInteger((input.DataErrorCounter * 1000/input.DataValidCounter), 10, 1);
         uartPrint("] ");

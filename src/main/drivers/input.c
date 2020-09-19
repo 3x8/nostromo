@@ -187,9 +187,14 @@ void inputCallbackDMA() {
       inputProshot();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT1000);
       break;
+    case DSHOT600:
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+      inputDshot();
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_DSHOT);
+      break;
     case SERVOPWM:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-      //inputServoPwm();
+      inputServoPwm();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PWM);
       break;
   }
@@ -350,13 +355,19 @@ void inputDshot() {
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
 
-  if (inputDmaBuffer[0] < 1000) {
-    return;
+  for (int i = 0; i < 31; i++) {
+    //pulseValue[(i-1)/2] = (inputDmaBuffer[i]  / 10) - 1;
+    if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 23) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 34)) {
+      pulseValue[i] = 0;
+    }
+
+    if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 50) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 63)) {
+      pulseValue[i] = 1;
+    }
+
+
   }
 
-  for (int i = 1; i < 32; i+=2) {
-    pulseValue[(i-1)/2] = (inputDmaBuffer[i]  / 10) - 1;
-  }
 
   calculatedCRC = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 |
                     (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
@@ -375,7 +386,7 @@ void inputDshot() {
     input.TimeoutCounter = 0;
     input.Data = data;
     __enable_irq();
-    motorInputUpdate();
+    //motorInputUpdate();
 
     // only update if not active
     if (!input.TelemetryRequest) {
