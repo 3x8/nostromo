@@ -250,11 +250,11 @@ int main(void) {
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
-        uartPrint("ER[");
-        uartPrintInteger((input.DataErrorCounter /input.DataValidCounter), 10, 1);
+        uartPrint("Ko[");
+        uartPrintInteger((input.DataErrorCounter), 10, 1);
         uartPrint("] ");
-        uartPrint("TO[");
-        uartPrintInteger(input.TimeoutCounter, 10, 1);
+        uartPrint("Ok[");
+        uartPrintInteger((input.DataValidCounter), 10, 1);
         uartPrint("] ");
 
         /*
