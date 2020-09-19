@@ -175,6 +175,8 @@ void inputDshotCommandRun(void) {
   }
 }
 
+#pragma GCC push_options
+#pragma GCC optimize("O3")
 void inputCallbackDMA() {
   switch (input.Protocol) {
      case AUTODETECT:
@@ -204,6 +206,7 @@ void inputCallbackDMA() {
       break;
   }
 }
+#pragma GCC pop_options
 
 void inputAutoDetect() {
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
@@ -280,6 +283,8 @@ void inputAutoDetect() {
   HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
 }
 
+#pragma GCC push_options
+#pragma GCC optimize("O3")
 void inputProshot() {
   __disable_irq();
   uint8_t pulseValue[4] = {0, 0, 0, 0};
@@ -357,13 +362,14 @@ void inputProshot() {
 }
 
 void inputDshot() {
-  __disable_irq();
+  //__disable_irq();
   uint8_t pulseValue[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
 
   for (int i = 0; i < 31; i++) {
-    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 45) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 68)) {
+    uint32_t tmp = (inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]);
+    if (( tmp > 45) && (tmp < 68)) {
       pulseValue[i] = 1;
     }
     // ToDo
@@ -393,7 +399,7 @@ void inputDshot() {
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
     input.Data = data;
-    __enable_irq();
+    //__enable_irq();
     motorInputUpdate();
 
     // only update if not active
@@ -409,7 +415,7 @@ void inputDshot() {
   } else {
     input.DataValid = false;
     input.DataErrorCounter++;
-    __enable_irq();
+    //__enable_irq();
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_DSHOT))
       LED_OFF(LED_GREEN);
@@ -443,3 +449,4 @@ void inputServoPwm() {
     }
   #endif
 }
+#pragma GCC pop_options
