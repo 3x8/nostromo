@@ -386,7 +386,7 @@ void inputDshot() {
     input.TimeoutCounter = 0;
     input.Data = data;
     __enable_irq();
-    //motorInputUpdate();
+    motorInputUpdate();
 
     // only update if not active
     if (!input.TelemetryRequest) {
