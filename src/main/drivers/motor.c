@@ -484,7 +484,7 @@ INLINE_CODE void motorInputUpdate(void) {
     } else {
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
-      if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT)) {
+      if ((escConfig()->motor3Dmode) && (input.Protocol == PROSHOT1000)) {
         // 3D
         if (input.DataNormed >= escConfig()->input3DdeadbandHigh) {
           // up

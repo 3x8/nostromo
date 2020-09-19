@@ -33,7 +33,7 @@ void inputDisarm(void) {
   input.PwmValue = 0;
   input.Armed = false;
   input.ArmingCounter = 0;
-  //input.TimeoutCounter = 0;
+  input.TimeoutCounter = 0;
   input.Protocol = AUTODETECT;
 
   HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
@@ -52,7 +52,7 @@ void inputDisarmCheck(void) {
 }
 
 void inputDshotCommandRun(void) {
-  if (input.Protocol == PROSHOT) {
+  if (input.Protocol == PROSHOT1000) {
     switch (input.Data) {
     case DSHOT_CMD_MOTOR_STOP:
       break;
@@ -178,16 +178,18 @@ void inputDshotCommandRun(void) {
 void inputCallbackDMA() {
   switch (input.Protocol) {
      case AUTODETECT:
-      inputDetectProtocol();
-      break;
-    case PROSHOT:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-      inputProshot();
-      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT);
+      inputDetectProtocol();
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
+      break;
+    case PROSHOT1000:
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+      //inputProshot();
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT1000);
       break;
     case SERVOPWM:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-      inputServoPwm();
+      //inputServoPwm();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PWM);
       break;
   }
@@ -195,17 +197,25 @@ void inputCallbackDMA() {
 
 //debug
 uint32_t pulseWidthMin;
+uint32_t pulseHiWidth, pulseLoWidth;
+uint32_t d1, d2;
 
 void inputDetectProtocol() {
   uint32_t pulseWidthBuffer;
   //uint32_t pulseWidthMin = 20000;
-  pulseWidthMin = 20000;
+  pulseWidthMin = 0xffff;
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
     LED_OFF(LED_GREEN);
   #endif
 
-  HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+  //HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+
+  pulseHiWidth = inputDmaBuffer[1] - inputDmaBuffer[0];
+  pulseLoWidth = inputDmaBuffer[2] - inputDmaBuffer[1];
+
+  d1 = inputDmaBuffer[3] - inputDmaBuffer[2];
+  d2 = inputDmaBuffer[4] - inputDmaBuffer[3];
 
   for (int i = 0; i < (INPUT_DMA_BUFFER_SIZE_AUTODETECT - 1); i++) {
     pulseWidthBuffer = inputDmaBuffer[i + 1] - inputDmaBuffer[i];
@@ -214,11 +224,12 @@ void inputDetectProtocol() {
     }
   }
 
-  if ((pulseWidthMin >= (INPUT_PROSHOT_WIDTH_MIN - 1) ) && (pulseWidthMin <= (INPUT_PROSHOT_WIDTH_MIN + 1))) {
-    input.Protocol = PROSHOT;
-    inputTimerHandle.Instance->PSC = INPUT_PROSHOT_PRESCALER;
+  if ((pulseHiWidth >= INPUT_PROSHOT1000_HI_WIDTH_MIN) && (pulseHiWidth <= INPUT_PROSHOT1000_HI_WIDTH_MAX) &&
+      (pulseLoWidth >= INPUT_PROSHOT1000_LO_WIDTH_MIN) && (pulseLoWidth <= INPUT_PROSHOT1000_LO_WIDTH_MAX)) {
+    input.Protocol = PROSHOT1000;
+    inputTimerHandle.Instance->PSC = INPUT_PROSHOT1000_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
-    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT);
+    HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PROSHOT1000);
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_AUTODETECT))
       LED_ON(LED_GREEN);
@@ -227,7 +238,8 @@ void inputDetectProtocol() {
     return;
   }
 
-  if ((pulseWidthMin >= (INPUT_DSHOT600_WIDTH_MIN - 1) ) && (pulseWidthMin <= (INPUT_DSHOT600_WIDTH_MIN + 1))) {
+  if ((pulseHiWidth >= INPUT_DSHOT600_HI_WIDTH_MIN) && (pulseHiWidth <= INPUT_DSHOT600_HI_WIDTH_MAX) &&
+      (pulseLoWidth >= INPUT_DSHOT600_LO_WIDTH_MIN) && (pulseLoWidth <= INPUT_DSHOT600_LO_WIDTH_MAX)) {
     input.Protocol = DSHOT600;
     inputTimerHandle.Instance->PSC = INPUT_DSHOT600_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -240,7 +252,8 @@ void inputDetectProtocol() {
     return;
   }
 
-  if ((pulseWidthMin >= (INPUT_DSHOT300_WIDTH_MIN - 1) ) && (pulseWidthMin <= (INPUT_DSHOT300_WIDTH_MIN + 1))) {
+  if ((pulseHiWidth >= INPUT_DSHOT300_HI_WIDTH_MIN) && (pulseHiWidth <= INPUT_DSHOT300_HI_WIDTH_MAX) &&
+      (pulseLoWidth >= INPUT_DSHOT300_LO_WIDTH_MIN) && (pulseLoWidth <= INPUT_DSHOT300_LO_WIDTH_MAX)) {
     input.Protocol = DSHOT300;
     inputTimerHandle.Instance->PSC = INPUT_DSHOT300_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
@@ -267,11 +280,12 @@ void inputDetectProtocol() {
   }
 
   // default
-  if (input.Protocol == AUTODETECT) {
+  //if (input.Protocol == AUTODETECT) {
+    input.Protocol = AUTODETECT
     inputTimerHandle.Instance->PSC = INPUT_AUTODETECT_PRESCALER;
     inputTimerHandle.Instance->CNT = 0xffff;
     HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
-  }
+  //}
 }
 
 uint32_t lowValue[3];
@@ -281,7 +295,7 @@ void inputProshot() {
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
 
-  #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
+  #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
     LED_ON(LED_GREEN);
   #endif
 
@@ -315,7 +329,7 @@ void inputProshot() {
       input.TelemetryRequest = (pulseValue[2] & BIT(0));
     }
 
-    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
       LED_OFF(LED_GREEN);
     #endif
 
@@ -325,7 +339,7 @@ void inputProshot() {
     input.DataErrorCounter++;
     __enable_irq();
 
-    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
       LED_OFF(LED_GREEN);
     #endif
 
@@ -372,7 +386,7 @@ void inputDshot() {
       //input.TelemetryRequest = (pulseValue[2] & BIT(0));
     }
 
-    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT))
+    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
       LED_OFF(LED_GREEN);
     #endif
 

@@ -247,22 +247,30 @@ int main(void) {
         uartPrint("PR[");
         uartPrintInteger(input.Protocol, 10, 1);
         uartPrint("] ");
-        uartPrint("PW[");
-        uartPrintInteger(pulseWidthMin, 10, 1);
-        uartPrint("] ");
-        uartPrint("ER[");
-        uartPrintInteger(input.DataErrorCounter, 10, 1);
-        uartPrint("] ");
-        uartPrint("TO[");
-        uartPrintInteger(input.TimeoutCounter, 10, 1);
-        uartPrint("] ");
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+        uartPrint("d1[");
+        uartPrintInteger(pulseHiWidth, 10, 1);
+        uartPrint("] ");
+        uartPrint("d2[");
+        uartPrintInteger(pulseLoWidth, 10, 1);
+        uartPrint("] ");
+        uartPrint("d3[");
+        uartPrintInteger(d1, 10, 1);
+        uartPrint("] ");
+        uartPrint("d4[");
+        uartPrintInteger(d2, 10, 1);
+        uartPrint("] ");
+        /*
+        uartPrint("TO[");
+        uartPrintInteger(input.TimeoutCounter, 10, 1);
+        uartPrint("] ");
+
 
         uartPrint("LW[");
         uartPrintInteger(lowValue[2], 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         uartPrint("\r\n");
 
