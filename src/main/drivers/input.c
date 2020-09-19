@@ -192,6 +192,11 @@ void inputCallbackDMA() {
       inputDshot();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_DSHOT);
       break;
+    case DSHOT300:
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+      inputDshot();
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_DSHOT);
+      break;
     case SERVOPWM:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputServoPwm();
@@ -356,30 +361,25 @@ void inputDshot() {
   uint16_t data = 0;
 
   for (int i = 0; i < 31; i++) {
-    //pulseValue[(i-1)/2] = (inputDmaBuffer[i]  / 10) - 1;
-    if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 23) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 34)) {
+    if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 18) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 39)) {
       pulseValue[i] = 0;
+    } else {
+      if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 46) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 67)) {
+        pulseValue[i] = 1;
+      } else {
+        //input.DataErrorCounter++;
+      }
     }
-
-    if (((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) > 50) && ((inputDmaBuffer[2*i + 1] - inputDmaBuffer[2*i]) < 63)) {
-      pulseValue[i] = 1;
-    }
-
-
   }
 
-
-  calculatedCRC = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 |
-                    (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
-                    (pulseValue[2] ^ pulseValue[6] ^ pulseValue[10]) << 1  |
-                    (pulseValue[3] ^ pulseValue[7] ^ pulseValue[11]));
+  calculatedCRC = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 | (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
+                    (pulseValue[2] ^ pulseValue[6] ^ pulseValue[10]) << 1  | (pulseValue[3] ^ pulseValue[7] ^ pulseValue[11]));
 
   receivedCRC = (pulseValue[12] << 3 | pulseValue[13] << 2 | pulseValue[14] << 1 | pulseValue[15]);
 
   if(calculatedCRC == receivedCRC) {
-    data = (pulseValue[0] << 10 | pulseValue[1] << 9 | pulseValue[2] << 8 | pulseValue[3] << 7 |
-            pulseValue[4] << 6 | pulseValue[5] << 5 | pulseValue[6] << 4 | pulseValue[7] << 3 |
-            pulseValue[8] << 2 | pulseValue[9] << 1 | pulseValue[10]);
+    data = (pulseValue[0] << 10 | pulseValue[1] << 9 | pulseValue[2] << 8 | pulseValue[3] << 7 | pulseValue[4] << 6 |
+            pulseValue[5] << 5 | pulseValue[6] << 4 | pulseValue[7] << 3 | pulseValue[8] << 2 | pulseValue[9] << 1 | pulseValue[10]);
 
     input.DataValid = true;
     input.DataValidCounter++;
@@ -391,7 +391,7 @@ void inputDshot() {
     // only update if not active
     if (!input.TelemetryRequest) {
       //ToDo
-      //input.TelemetryRequest = (pulseValue[2] & BIT(0));
+      input.TelemetryRequest = pulseValue[11];
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
@@ -410,7 +410,6 @@ void inputDshot() {
 
     return;
   }
-
 }
 
 // SERVOPWM (used only for thrust tests ...)

@@ -266,7 +266,7 @@ int main(void) {
 
 
         uartPrint("ER[");
-        uartPrintInteger((input.DataErrorCounter * 1000/input.DataValidCounter), 10, 1);
+        uartPrintInteger((input.DataErrorCounter /input.DataValidCounter), 10, 1);
         uartPrint("] ");
         uartPrint("TO[");
         uartPrintInteger(input.TimeoutCounter, 10, 1);
