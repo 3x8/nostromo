@@ -369,7 +369,7 @@ void inputDshot() {
 
   for (int i = 0; i < 16; i++) {
     uint32_t tmp = (inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]);
-    if (( tmp > 43) && (tmp < 70)) {
+    if (( tmp > 44) && (tmp < 69)) {
       pulseValue[i] = 1;
     }
     // ToDo
