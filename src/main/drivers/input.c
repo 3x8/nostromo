@@ -52,7 +52,7 @@ void inputDisarmCheck(void) {
 }
 
 void inputDshotCommandRun(void) {
-  if (input.Protocol == PROSHOT1000) {
+  if ((input.Protocol == PROSHOT1000) || (input.Protocol == DSHOT300) || (input.Protocol == DSHOT600)) {
     switch (input.Data) {
     case DSHOT_CMD_MOTOR_STOP:
       break;
