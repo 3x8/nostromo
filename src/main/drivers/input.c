@@ -363,14 +363,16 @@ void inputDshot() {
   uint16_t data = 0;
 
   for (int i = 0; i < 31; i++) {
-    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 46) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 67)) {
+    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 45) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 68)) {
       pulseValue[i] = 1;
     }
+    // ToDo
+    // no plausibility check (if CRC ok sound ?!?)
     /*
-    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 18) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 39)) {
+    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 17) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 40)) {
       pulseValue[i] = 0;
     } else {
-      if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 46) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 67)) {
+      if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 45) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 68)) {
         pulseValue[i] = 1;
       } else {
         input.DataErrorCounter++;
