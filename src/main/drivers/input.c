@@ -295,30 +295,6 @@ void inputProshot() {
     LED_ON(LED_GREEN);
   #endif
 
-  // ToDo
-  // check 4us constant (1% data error, if CRC ok sound ?!?)
-  /*
-  uint32_t proshotWidth[3];
-  for (int i = 0; i < 3; i++) {
-    proshotWidth[i] = (inputDmaBuffer[i*2 + 2] - inputDmaBuffer[i*2]);
-
-    if ((proshotWidth[i] >= ((INPUT_PROSHOT1000_LO_WIDTH_MIN + INPUT_PROSHOT1000_HI_WIDTH_MIN) / (INPUT_PROSHOT1000_PRESCALER + 1))) &&
-        (proshotWidth[i] <= ((INPUT_PROSHOT1000_LO_WIDTH_MAX + INPUT_PROSHOT1000_HI_WIDTH_MAX) / (INPUT_PROSHOT1000_PRESCALER + 1)))) {
-
-          // proshot signal valid (hi + lo = 4us)
-    } else {
-      input.DataValid = false;
-      input.DataErrorCounter++;
-      __enable_irq();
-
-      #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
-        LED_OFF(LED_GREEN);
-      #endif
-
-      return;
-    }
-  }*/
-
   for (int i = 0; i < 4; i++) {
     pulseValue[i] = ((inputDmaBuffer[i*2 + 1] - inputDmaBuffer[i*2]) - 45) / 6;
   }
@@ -369,21 +345,9 @@ void inputDshot() {
 
   for (int i = 0; i < 32; i+=2) {
     uint32_t tmp = (inputDmaBuffer[i + 1] - inputDmaBuffer[i]);
-    if (( tmp > 44) && (tmp < 69)) {
+    if (( tmp > INPUT_DSHOT_HI_WIDTH_MIN) && (tmp < INPUT_DSHOT_HI_WIDTH_MAX)) {
       pulseValue[i >> 1] = 1;
     }
-    // ToDo
-    // no plausibility check (if CRC ok sound ?!?)
-    /*
-    if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 17) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 40)) {
-      pulseValue[i] = 0;
-    } else {
-      if (((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) > 45) && ((inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]) < 68)) {
-        pulseValue[i] = 1;
-      } else {
-        input.DataErrorCounter++;
-      }
-    }*/
   }
 
   calculatedCRC = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 | (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
@@ -391,7 +355,7 @@ void inputDshot() {
 
   receivedCRC = (pulseValue[12] << 3 | pulseValue[13] << 2 | pulseValue[14] << 1 | pulseValue[15]);
 
-  if(calculatedCRC == receivedCRC) {
+  if((calculatedCRC == receivedCRC)  && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
     data = (pulseValue[0] << 10 | pulseValue[1] << 9 | pulseValue[2] << 8 | pulseValue[3] << 7 | pulseValue[4] << 6 |
             pulseValue[5] << 5 | pulseValue[6] << 4 | pulseValue[7] << 3 | pulseValue[8] << 2 | pulseValue[9] << 1 | pulseValue[10]);
 

@@ -15,6 +15,9 @@
   * kalman filter *(voltage, current)*
 
 **new:**
+  * DSHOT600
+  * DSHOT300
+  * autotiming *(current based)*
   * bootloader *(betaflight 4way interface uploader)*
   * 600K ERpm
   * 48KHz, 24KHz
