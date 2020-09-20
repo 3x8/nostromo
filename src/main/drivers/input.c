@@ -367,10 +367,10 @@ void inputDshot() {
   uint8_t calculatedCRC = 0, receivedCRC = 0;
   uint16_t data = 0;
 
-  for (int i = 0; i < 16; i++) {
-    uint32_t tmp = (inputDmaBuffer[(i << 1) + 1] - inputDmaBuffer[i << 1]);
+  for (int i = 0; i < 32; i+=2) {
+    uint32_t tmp = (inputDmaBuffer[i + 1] - inputDmaBuffer[i]);
     if (( tmp > 44) && (tmp < 69)) {
-      pulseValue[i] = 1;
+      pulseValue[i >> 1] = 1;
     }
     // ToDo
     // no plausibility check (if CRC ok sound ?!?)
