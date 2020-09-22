@@ -14,20 +14,16 @@ extern medianStructure motorCommutationIntervalFilterState;
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-  uint32_t motorCommutationTimestamp = motorCommutationTimerHandle.Instance->CNT;
+  motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
 
     __disable_irq();
-
-  #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-    uint32_t motorDebugStart = motorCommutationTimerHandle.Instance->CNT;
-  #endif
 
   if ((!motor.Running) || (!motor.Start)) {
     __enable_irq();
     return;
   }
 
-  while ((motorCommutationTimerHandle.Instance->CNT - motorCommutationTimestamp) < motor.BemfFilterDelay);
+  while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.BemfFilterDelay);
 
   for (int i = 0; i < motor.BemfFilterLevel; i++) {
     if ((motor.BemfRising && HAL_COMP_GetOutputLevel(&motorBemfComparatorHandle) == COMP_OUTPUTLEVEL_HIGH) ||
@@ -43,8 +39,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
-  motor.BemfZeroCrossTimestamp = motorCommutationTimestamp;
-  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimestamp);
+  medianPush(&motorCommutationIntervalFilterState, motor.BemfZeroCrossTimestamp);
 
   // motor timing
   while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay);
@@ -62,7 +57,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-    motorDebugIrqCommutationTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
+    motorDebugIrqCommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
   #endif
 
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
