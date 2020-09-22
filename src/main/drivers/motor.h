@@ -10,7 +10,7 @@
 #define MOTOR_START_POWER 73
 #define MOTOR_PWM_RESOLUTION  1003
 #define MOTOR_AUTOTIMING_DELAY_MIN  3
-#define MOTOR_AUTOTIMING_DELAY_MAX  911
+#define MOTOR_AUTOTIMING_DELAY_MAX  613
 #define MOTOR_ERPM_FACTOR 320000000 // 4kB size reduction
 // MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 2) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
 // (Prescaler + 2) -> 10% tolerance low RPM  (Prescaler + 1) -> 20% tolerance max RPM   (CPU load)
