@@ -35,9 +35,6 @@ int main(void) {
   systemMsTimerInit();
   ledOff();
 
-  //debug
-  uartInit();
-
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
