@@ -251,6 +251,9 @@ int main(void) {
         uartPrint("IT[");
         uartPrintInteger(motorDebugIrqCommutationTime, 10, 1);
         uartPrint("] ");
+        uartPrint("CD[");
+        uartPrintInteger(motor.CommutationDelay, 10, 1);
+        uartPrint("] ");
         uartPrint("Ko[");
         uartPrintInteger((input.DataErrorCounter), 10, 1);
         uartPrint("] ");
