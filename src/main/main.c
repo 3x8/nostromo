@@ -214,7 +214,6 @@ int main(void) {
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      extern uint32_t motorDebugIrqCommutationTime;
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
       //if ((msTimerHandle.Instance->CNT % 2) == 0) {
         // each 1ms
@@ -235,8 +234,6 @@ int main(void) {
           uartPrintInteger(0, 10, 1);
         }
         uartPrint(",");
-        uartPrintInteger(motorDebugIrqCommutationTime, 10, 1);
-        uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
@@ -250,15 +247,17 @@ int main(void) {
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
+
+        /*
         uartPrint("IT[");
-        uartPrintInteger(motorDebugIrqCommutationTime, 10, 1);
+        uartPrintInteger(motor.CommutationTime, 10, 1);
         uartPrint("] ");
         uartPrint("CD[");
         uartPrintInteger(motor.CommutationDelay, 10, 1);
         uartPrint("] ");
         uartPrint("RP[");
         uartPrintInteger(motorGetRpm(), 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         /*
         uartPrint("Ko[");

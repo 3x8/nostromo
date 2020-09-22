@@ -6,10 +6,6 @@ motorStructure motor;
 
 extern medianStructure motorCommutationIntervalFilterState;
 
-#if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-  uint32_t motorDebugIrqCommutationTime;
-#endif
-
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
@@ -56,14 +52,11 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
     #endif
   #endif
 
-  #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-    motorDebugIrqCommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
-  #endif
-
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
     LED_OFF(LED_GREEN);
   #endif
 
+  motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
   motorCommutationTimerHandle.Instance->CNT = 0;
 
   __enable_irq();
