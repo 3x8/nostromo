@@ -42,7 +42,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   medianPush(&motorCommutationIntervalFilterState, motor.BemfZeroCrossTimestamp);
 
   // motor timing
-  while (motorCommutationTimerHandle.Instance->CNT < motor.CommutationDelay);
+  while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
 
   motorCommutate();
 

@@ -144,16 +144,16 @@ int main(void) {
         // motor timing automatic (input.PwmValue, adcScaled.currentFast) ??? ,30° -> optimal timing ?
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
-            motor.CommutationDelay = constrain((motor.OneErpmTime >> 6), 37, 401); //5°
+            motor.CommutationDelay = constrain((motor.OneErpmTime >> 6), 3, 1013); //5°
           } else {
             if (ABS(adcScaled.currentFast- adcScaled.current) > 501) {
-              motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 3), 37, 401); //15°
+              motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 3), 3, 1013); //15°
             } else  {
-              motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 6) ,37, 401); //30°
+              motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 6) ,3, 1013); //30°
             }
           }
         #else
-          motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 3), 37, 401); //15°
+          motor.CommutationDelay = constrain(((motor.OneErpmTime >> 6) * 3), 3, 1013); //15°
         #endif
 
       } // input.Armed
@@ -215,8 +215,8 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       extern uint32_t motorDebugIrqCommutationTime;
-      //if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
-      if ((msTimerHandle.Instance->CNT % 2) == 0) {
+      if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
+      //if ((msTimerHandle.Instance->CNT % 2) == 0) {
         // each 1ms
 
         /*
