@@ -7,7 +7,7 @@ motorStructure motor;
 extern medianStructure motorCommutationIntervalFilterState;
 
 #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-  uint32_t motorDebugTime;
+  uint32_t motorDebugIrqCommutationTime;
 #endif
 
 #pragma GCC push_options
@@ -62,7 +62,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #endif
 
   #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-    motorDebugTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
+    motorDebugIrqCommutationTime = motorCommutationTimerHandle.Instance->CNT - motorDebugStart;
   #endif
 
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
