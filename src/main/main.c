@@ -242,9 +242,11 @@ int main(void) {
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("\r\n");*/
 
+        /*
         uartPrint("PR[");
         uartPrintInteger(input.Protocol, 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
+
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
@@ -254,12 +256,17 @@ int main(void) {
         uartPrint("CD[");
         uartPrintInteger(motor.CommutationDelay, 10, 1);
         uartPrint("] ");
+        uartPrint("RP[");
+        uartPrintInteger(motorGetRpm(), 10, 1);
+        uartPrint("] ");
+
+        /*
         uartPrint("Ko[");
         uartPrintInteger((input.DataErrorCounter), 10, 1);
         uartPrint("] ");
         uartPrint("Ok[");
         uartPrintInteger((input.DataValidCounter), 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         /*
         uartPrint("0[");
