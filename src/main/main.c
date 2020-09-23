@@ -146,16 +146,16 @@ int main(void) {
         // motor timing automatic (dependancy ? input.PwmValue, adcScaled.currentFast), 30° -> optimal timing ?
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
-            motor.CommutationDelay = constrain(motor.oneDegree, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //29°
+            motor.CommutationDelay = constrain(motor.oneDegree, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 29°
           } else {
             if (ABS(adcScaled.currentFast- adcScaled.current) > 501) {
-              motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
+              motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 15°
             } else  {
-              motor.CommutationDelay = constrain((motor.oneDegree * 30) , MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //0°
+              motor.CommutationDelay = constrain((motor.oneDegree * 30) , MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 0°
             }
           }
         #else
-          motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
+          motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
         #endif
 
       } // input.Armed
