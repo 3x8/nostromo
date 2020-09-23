@@ -137,12 +137,13 @@ int main(void) {
           motor.BemfZeroCounterTimeout = 0;
           motorStart();
         }
+
         // one Erpm -> 360°
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
 
         // ToDo find optimal timing
-        // motor timing automatic (input.PwmValue, adcScaled.currentFast) ??? ,30° -> optimal timing ?
+        // motor timing automatic (dependancy ? input.PwmValue, adcScaled.currentFast), 30° -> optimal timing ?
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
             motor.CommutationDelay = constrain(motor.oneDegree, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //29°
@@ -240,11 +241,9 @@ int main(void) {
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("\r\n");*/
 
-        /*
         uartPrint("PR[");
         uartPrintInteger(input.Protocol, 10, 1);
-        uartPrint("] ");*/
-
+        uartPrint("] ");
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
@@ -272,11 +271,9 @@ int main(void) {
         uartPrint("0[");
         uartPrintInteger(inputDmaBuffer[1] - inputDmaBuffer[0], 10, 1);
         uartPrint("] ");
-
         uartPrint("1[");
         uartPrintInteger(inputDmaBuffer[3] - inputDmaBuffer[2], 10, 1);
         uartPrint("] ");
-
         uartPrint("2[");
         uartPrintInteger(inputDmaBuffer[5] - inputDmaBuffer[4], 10, 1);
         uartPrint("] ");*/
