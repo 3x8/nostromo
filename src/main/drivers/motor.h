@@ -44,7 +44,7 @@ typedef struct {
   uint32_t BemfZeroCounterTimeout;
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t OneErpmTime;
-  uint32_t onePointTwoFiveDegrees;
+  uint32_t oneDegree;
   uint32_t CommutationDelay;
   uint32_t CommutationTime;
 } motorStructure;

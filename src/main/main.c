@@ -137,24 +137,24 @@ int main(void) {
           motor.BemfZeroCounterTimeout = 0;
           motorStart();
         }
-
+        // one Erpm -> 360°
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
-        motor.onePointTwoFiveDegrees = (motor.OneErpmTime >> 8);
+        motor.oneDegree = (motor.OneErpmTime / 360);
 
         // ToDo find optimal timing
         // motor timing automatic (input.PwmValue, adcScaled.currentFast) ??? ,30° -> optimal timing ?
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
-            motor.CommutationDelay = constrain(motor.onePointTwoFiveDegrees, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //28,75°
+            motor.CommutationDelay = constrain(motor.oneDegree, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //29°
           } else {
             if (ABS(adcScaled.currentFast- adcScaled.current) > 501) {
-              motor.CommutationDelay = constrain((motor.onePointTwoFiveDegrees * 12), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
+              motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
             } else  {
-              motor.CommutationDelay = constrain((motor.onePointTwoFiveDegrees * 24) , MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //0°
+              motor.CommutationDelay = constrain((motor.oneDegree * 30) , MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //0°
             }
           }
         #else
-          motor.CommutationDelay = constrain((motor.onePointTwoFiveDegrees * 12), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
+          motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
         #endif
 
       } // input.Armed
