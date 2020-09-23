@@ -126,7 +126,7 @@ int main(void) {
 
         // motor stopped
         if (++motor.BemfZeroCounterTimeout > motor.BemfZeroCounterTimeoutThreshold) {
-          //motor.BemfZeroCrossTimestamp = 0;
+          motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
           medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
