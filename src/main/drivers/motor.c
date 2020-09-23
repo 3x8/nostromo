@@ -35,7 +35,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
-  medianPush(&motorCommutationIntervalFilterState, motor.BemfZeroCrossTimestamp);
+  //medianPush(&motorCommutationIntervalFilterState, motor.BemfZeroCrossTimestamp);
 
   // motor timing
   while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
@@ -55,6 +55,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
     LED_OFF(LED_GREEN);
   #endif
+
+  // ToDo test 
+  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
 
   motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
   motorCommutationTimerHandle.Instance->CNT = 0;
