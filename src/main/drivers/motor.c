@@ -11,8 +11,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
-
-    __disable_irq();
+  __disable_irq();
 
   if ((!motor.Running) || (!motor.Start)) {
     __enable_irq();
