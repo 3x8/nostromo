@@ -11,10 +11,8 @@
 #define MOTOR_PWM_RESOLUTION  1003
 #define MOTOR_AUTOTIMING_DELAY_MIN  3
 #define MOTOR_AUTOTIMING_DELAY_MAX  613
-//#define MOTOR_ERPM_FACTOR 228000000 // autotiming ?? highRPM drives ??
-#define MOTOR_ERPM_FACTOR 320000000
-// MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 2) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
-// (Prescaler + 2) -> 10% tolerance low RPM  (Prescaler + 1) -> 20% tolerance max RPM   (CPU load)
+#define MOTOR_ERPM_FACTOR 360000000
+//MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
 
 typedef enum {
   HBRIDGE_PWM = 0,
