@@ -170,6 +170,7 @@ int main(void) {
       #endif
     }
 
+    // adc filtering
     #if (defined(USE_ADC))
       medianPush(&adcCurrentFastFilterState, adcRaw.current);
       adcScaled.currentFast = medianCalculate(&adcCurrentFastFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
@@ -191,6 +192,7 @@ int main(void) {
       }
     #endif
 
+    // integrate consumption
     if (msTimerHandle.Instance->CNT > 200) {
       msTimerHandle.Instance->CNT = 0;
       #if (defined(USE_ADC))
@@ -201,6 +203,7 @@ int main(void) {
       #endif
     }
 
+    // telemetry
     if (input.TelemetryRequest) {
       telemetry();
       input.TelemetryRequest = false;
@@ -215,6 +218,7 @@ int main(void) {
       #endif
     }
 
+    // debug
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
       //if ((msTimerHandle.Instance->CNT % 2) == 0) {
