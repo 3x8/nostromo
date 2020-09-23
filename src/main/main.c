@@ -144,6 +144,8 @@ int main(void) {
         // ToDo find optimal timing
         // motor timing automatic (input.PwmValue, adcScaled.currentFast) ??? ,30° -> optimal timing ?
         #if (defined(USE_ADC))
+          //motor.CommutationDelay = constrain((motor.onePointTwoFiveDegrees * 12), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //15°
+
           if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
             motor.CommutationDelay = constrain(motor.onePointTwoFiveDegrees, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); //28,75°
           } else {
