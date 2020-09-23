@@ -62,10 +62,10 @@ void telemetry(void) {
     telemetryData.consumption =  (int)consumptionMah;
   }
 
-  //telemetryData.erpm = (uint32_t)(motorGetErpm() / 100);
+  telemetryData.erpm = (uint32_t)(motorGetErpm() / 100);
   // debug timing
   //telemetryData.erpm = (adcScaled.currentFast- adcScaled.current);
-  telemetryData.erpm = motor.CommutationTime;
+  //telemetryData.erpm = motor.CommutationTime;
 
   telemetryTelegram(&telemetryData);
 }
