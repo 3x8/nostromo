@@ -251,12 +251,15 @@ int main(void) {
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
-        
-        uartPrint("IT[");
+
+        uartPrint("CT[");
         uartPrintInteger(motor.CommutationTime, 10, 1);
         uartPrint("] ");
         uartPrint("CD[");
         uartPrintInteger(motor.CommutationDelay, 10, 1);
+        uartPrint("] ");
+        uartPrint("BC[");
+        uartPrintInteger(motor.BemfCounter, 10, 1);
         uartPrint("] ");
         uartPrint("RP[");
         uartPrintInteger(motorGetRpm(), 10, 1);
