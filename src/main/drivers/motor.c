@@ -38,8 +38,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   // motor timing
   //while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
-  motorAutotimingTimerHandle.Instance->CNT = 0;
-  motorAutotimingTimerHandle.Instance->ARR = motor.CommutationDelay;
+  __HAL_TIM_SET_AUTORELOAD(&motorAutotimingTimerHandle, motor.CommutationDelay);
   HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
   __enable_irq();
 }
@@ -390,10 +389,12 @@ void motorStart() {
 
     motor.ComplementaryPWM = true;
 
+
     for (uint32_t i = 1; i < MOTOR_BLDC_STEPS; i++) {
       motorCommutate();
       HAL_Delay(2);
     }
+
 
     motorCommutationTimerHandle.Instance->CNT = 0;
     motor.BemfCounter = 0;

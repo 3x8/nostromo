@@ -252,6 +252,18 @@ int main(void) {
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
 
+        uartPrint("CNT[");
+        uartPrintInteger(motorAutotimingTimerHandle.Instance->CNT, 10, 1);
+        uartPrint("] ");
+
+        uartPrint("ARR[");
+        uartPrintInteger(motorAutotimingTimerHandle.Instance->ARR, 10, 1);
+        uartPrint("] ");
+
+        uartPrint("PER[");
+        uartPrintInteger(motorAutotimingTimerHandle.Init.Period, 10, 1);
+        uartPrint("] ");
+
         /*
         uartPrint("IT[");
         uartPrintInteger(motor.CommutationTime, 10, 1);
