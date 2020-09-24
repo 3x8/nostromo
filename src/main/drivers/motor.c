@@ -1,6 +1,6 @@
 #include "motor.h"
 
-TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, motorAutorimingTimerHandle;
+TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, motorAutotimingTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motorStructure motor;
 
@@ -12,6 +12,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   __disable_irq();
+  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
 
   if ((!motor.Running) || (!motor.Start)) {
     __enable_irq();
@@ -36,7 +37,16 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   motor.BemfZeroCounterTimeout = 0;
 
   // motor timing
-  while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
+  //while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
+  motorAutotimingTimerHandle.Instance->CNT = 0;
+  motorAutotimingTimerHandle.Instance->ARR = motor.CommutationDelay;
+  HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
+  __enable_irq();
+}
+
+void motorComutateAutotiming(void){
+  __disable_irq();
+  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
 
   motorCommutate();
 
