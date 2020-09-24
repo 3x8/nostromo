@@ -36,7 +36,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
   motor.BemfZeroCounterTimeout = 0;
 
   // motor timing
+  __enable_irq();
   while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
+  __disable_irq();
 
   motorCommutate();
 
