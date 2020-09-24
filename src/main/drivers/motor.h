@@ -49,9 +49,9 @@ typedef struct {
   uint32_t CommutationTime;
 } motorStructure;
 
-extern TIM_HandleTypeDef motorPwmTimerHandle;
+extern TIM_HandleTypeDef motorPwmTimerHandle, motorAutotimingTimerHandle;
 extern COMP_HandleTypeDef motorBemfComparatorHandle;
-extern TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, inputTimerHandle;
+extern TIM_HandleTypeDef motorCommutationTimerHandle, inputTimerHandle;
 extern motorStructure motor;
 
 void motorPhaseA(uint8_t phaseBuffer);
@@ -61,6 +61,7 @@ void motorPhaseC(uint8_t phaseBuffer);
 void motorCommutationStep(uint8_t stepBuffer);
 void motorComparatorInputChange();
 void motorCommutate();
+void motorComutateAutotiming();
 
 void motorStart();
 

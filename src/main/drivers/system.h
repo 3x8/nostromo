@@ -12,6 +12,7 @@ void systemMotorPwmTimerInit(void);
 void systemMotorCommutationTimerInit(void);
 void systemInputTimerInit(void);
 void systemMsTimerInit(void);
+void systemMotorAutotimingTimerInit(void);
 
 #if (defined(USE_BOOTLOADER))
   #define APPLICATION_ADDRESS (uint32_t)0x08002000

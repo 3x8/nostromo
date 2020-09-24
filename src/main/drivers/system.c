@@ -246,6 +246,30 @@ void systemMsTimerInit(void) {
   while (HAL_TIM_Base_Start(&msTimerHandle) != HAL_OK);
 }
 
+// ToDo
+void systemMotorAutotimingTimerInit(void) {
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  motorAutotimingTimerHandle.Instance = TIM17;
+  motorAutotimingTimerHandle.Init.Prescaler = 7;
+  motorAutotimingTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  motorAutotimingTimerHandle.Init.Period = MOTOR_AUTOTIMING_DELAY_MAX;
+  motorAutotimingTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  motorAutotimingTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+  while (HAL_TIM_Base_Init(&motorAutotimingTimerHandle) != HAL_OK);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  while (HAL_TIM_ConfigClockSource(&motorAutotimingTimerHandle, &sClockSourceConfig) != HAL_OK);
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  while (HAL_TIMEx_MasterConfigSynchronization(&motorAutotimingTimerHandle, &sMasterConfig) != HAL_OK);
+
+  while (HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle) != HAL_OK);
+}
+
 #if (defined(USE_BOOTLOADER))
   void systemInitAfterBootloaderJump() {
     volatile uint32_t *VectorTable = (volatile uint32_t *)0x20000000;

@@ -63,3 +63,13 @@ void ADC1_COMP_IRQHandler(void) {
 void TIM1_CC_IRQHandler(void) {
   HAL_TIM_IRQHandler(&motorPwmTimerHandle);
 }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  if (htim->Instance == motorAutotimingTimerHandle.Instance) {
+    motorComutateAutotiming();
+  }
+}
+
+void TIM17_IRQHandler(void) {
+  HAL_TIM_IRQHandler(&motorAutotimingTimerHandle);
+}

@@ -1,6 +1,6 @@
 #include "motor.h"
 
-TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle;
+TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, motorAutorimingTimerHandle;
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motorStructure motor;
 
