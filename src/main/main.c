@@ -245,11 +245,11 @@ int main(void) {
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint("\r\n");*/
 
-        uartPrint("PR[");
+        uartPrint("IP[");
         uartPrintInteger(input.Protocol, 10, 1);
         uartPrint("] ");
-        uartPrint("DA[");
-        uartPrintInteger(input.Data, 10, 1);
+        uartPrint("IW[");
+        uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
 
         uartPrint("CT[");
