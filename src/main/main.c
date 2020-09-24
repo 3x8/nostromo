@@ -251,8 +251,7 @@ int main(void) {
         uartPrint("DA[");
         uartPrintInteger(input.Data, 10, 1);
         uartPrint("] ");
-
-        /*
+        
         uartPrint("IT[");
         uartPrintInteger(motor.CommutationTime, 10, 1);
         uartPrint("] ");
@@ -261,7 +260,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("RP[");
         uartPrintInteger(motorGetRpm(), 10, 1);
-        uartPrint("] ");*/
+        uartPrint("] ");
 
         /*
         uartPrint("Ko[");
