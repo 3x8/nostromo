@@ -37,7 +37,9 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   // motor timing
   __enable_irq();
-  while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
+  if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
+    while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
+  }
   __disable_irq();
 
   motorCommutate();
@@ -503,7 +505,7 @@ INLINE_CODE void motorInputUpdate(void) {
       }
 
       if (motor.Start) {
-        if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
+        if (motor.BemfCounter < MOTOR_BLDC_STEPS) {
           // stall protection and startup kick
           input.PwmValue = escConfig()->motorStartPower;
         } else {
