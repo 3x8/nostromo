@@ -12,7 +12,6 @@ extern medianStructure motorCommutationIntervalFilterState;
 INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   __disable_irq();
-  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
 
   if ((!motor.Running) || (!motor.Start)) {
     __enable_irq();
@@ -59,15 +58,15 @@ void motorComutateAutotiming(void){
     #endif
   #endif
 
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_OFF(LED_GREEN);
-  #endif
-
   // filter commutation event
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
 
   motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
   motorCommutationTimerHandle.Instance->CNT = 0;
+
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_OFF(LED_GREEN);
+  #endif
 
   __enable_irq();
 }

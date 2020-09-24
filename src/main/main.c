@@ -31,6 +31,7 @@ int main(void) {
   systemAdcInit();
   systemMotorPwmTimerInit();
   systemMotorCommutationTimerInit();
+  systemMotorAutotimingTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();
   ledOff();
@@ -142,8 +143,11 @@ int main(void) {
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
 
+        motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
+
         // ToDo find optimal timing
         // motor timing automatic (dependancy ? input.PwmValue, adcScaled.currentFast), 30° -> optimal timing ?
+        /*
         #if (defined(USE_ADC))
           if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
             motor.CommutationDelay = constrain(motor.oneDegree, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 1°
@@ -156,7 +160,7 @@ int main(void) {
           }
         #else
           motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
-        #endif
+        #endif*/
 
       } // input.Armed
     } // input.Protocol detected
