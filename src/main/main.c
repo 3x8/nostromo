@@ -156,7 +156,7 @@ int main(void) {
           }
         #else*/
         // ToDo
-          if ((input.PwmValue > 800) {
+          if (input.PwmValue > 800) {
             motor.CommutationDelay = constrain((motor.oneDegree * 1), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 1°
           } else {
             motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
