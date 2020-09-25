@@ -238,13 +238,13 @@ int main(void) {
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
         #endif
+        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
+        uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.currentFast), 10, 1);
-        uartPrint(",");
-        uartPrintInteger(motor.CommutationTime, 10, 1);
         uartPrint("\r\n");
 
         /*

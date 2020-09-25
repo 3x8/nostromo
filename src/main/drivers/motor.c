@@ -37,7 +37,7 @@ INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) 
 
   // motor timing
   __enable_irq();
-  if (motor.BemfCounter < MOTOR_ONE_ROTATION) {
+  if (motor.BemfCounter > MOTOR_ONE_ROTATION) {
     while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
   }
   __disable_irq();
