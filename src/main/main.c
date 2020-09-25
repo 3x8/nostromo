@@ -224,27 +224,30 @@ int main(void) {
       //if ((msTimerHandle.Instance->CNT % 2) == 0) {
         // each 1ms
 
-        /*
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
-        uartPrintInteger(input.DataNormed, 10, 1);
+        uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         if (motor.OneErpmTime > 0) {
-          #if (defined(DEBUG_CYCLETIME_MAINLOOP))
-            uartPrintInteger(mainTime * 0.17, 10, 1);
-          #else
-            //uartPrintInteger(motor.OneErpmTime, 10, 1);
-            uartPrintInteger(motorGetRpm(), 10, 1);
-          #endif
+          uartPrintInteger(motorGetRpm(), 10, 1);
         } else {
           uartPrintInteger(0, 10, 1);
         }
         uartPrint(",");
+        #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
+          uartPrintInteger(mainTime * 0.17, 10, 1);
+          uartPrint(",");
+        #endif
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint("\r\n");*/
+        uartPrint(",");
+        uartPrintInteger(ABS(adcScaled.currentFast), 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.CommutationTime, 10, 1);
+        uartPrint("\r\n");
 
+        /*
         uartPrint("IP[");
         uartPrintInteger(input.Protocol, 10, 1);
         uartPrint("] ");
@@ -263,7 +266,7 @@ int main(void) {
         uartPrint("] ");
         uartPrint("RP[");
         uartPrintInteger(motorGetRpm(), 10, 1);
-        uartPrint("] ");
+        uartPrint("] ");*/
 
         /*
         uartPrint("Ko[");
@@ -282,9 +285,8 @@ int main(void) {
         uartPrint("] ");
         uartPrint("2[");
         uartPrintInteger(inputDmaBuffer[5] - inputDmaBuffer[4], 10, 1);
-        uartPrint("] ");*/
-
-        uartPrint("\r\n");
+        uartPrint("] ");
+        uartPrint("\r\n");*/
       }
     #endif
 
