@@ -141,46 +141,32 @@ int main(void) {
         // one Erpm -> 360°
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
-
-        // ToDo find optimal timing
-        // motor timing automatic (dependancy ? input.PwmValue, adcScaled.currentFast), 30° -> optimal timing ?
-        /*#if (defined(USE_ADC))
-          if ((ABS(adcScaled.currentFast - adcScaled.current) > 1001) || (input.PwmValue > 800)) {
-            motor.CommutationDelay = constrain((motor.oneDegree * 1), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+        // autotiming
+        if (input.PwmValue > 900) {
+          motor.CommutationDelay = 0;
+        } else {
+          if (input.PwmValue > 800) {
+            motor.CommutationDelay = constrain((motor.oneDegree * 2), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
           } else {
-            if (ABS(adcScaled.currentFast- adcScaled.current) > 501) {
-              motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-            } else  {
-              motor.CommutationDelay = constrain((motor.oneDegree * 30) , MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-            }
-          }
-        #else*/
-          if (input.PwmValue > 900) {
-            motor.CommutationDelay = 0;
-          } else {
-            if (input.PwmValue > 800) {
-              motor.CommutationDelay = constrain((motor.oneDegree * 2), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+            if (input.PwmValue > 700) {
+              motor.CommutationDelay = constrain((motor.oneDegree * 6), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
             } else {
-              if (input.PwmValue > 700) {
-                motor.CommutationDelay = constrain((motor.oneDegree * 6), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+              if (input.PwmValue > 600) {
+                motor.CommutationDelay = constrain((motor.oneDegree * 10), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
               } else {
-                if (input.PwmValue > 600) {
-                  motor.CommutationDelay = constrain((motor.oneDegree * 10), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                if (input.PwmValue > 500) {
+                  motor.CommutationDelay = constrain((motor.oneDegree * 14), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
                 } else {
-                  if (input.PwmValue > 500) {
-                    motor.CommutationDelay = constrain((motor.oneDegree * 14), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                  if (input.PwmValue > 400) {
+                    motor.CommutationDelay = constrain((motor.oneDegree * 18), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
                   } else {
-                    if (input.PwmValue > 400) {
-                      motor.CommutationDelay = constrain((motor.oneDegree * 18), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                    if (input.PwmValue > 300) {
+                      motor.CommutationDelay = constrain((motor.oneDegree * 22), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
                     } else {
-                      if (input.PwmValue > 300) {
-                        motor.CommutationDelay = constrain((motor.oneDegree * 22), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                      if (input.PwmValue > 200) {
+                        motor.CommutationDelay = constrain((motor.oneDegree * 26), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
                       } else {
-                        if (input.PwmValue > 200) {
-                          motor.CommutationDelay = constrain((motor.oneDegree * 26), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                        } else {
-                          motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                        }
+                        motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
                       }
                     }
                   }
@@ -188,7 +174,7 @@ int main(void) {
               }
             }
           }
-        //#endif
+        }
 
       } // input.Armed
     } // input.Protocol detected
@@ -283,7 +269,7 @@ int main(void) {
         uartPrint("IP[");
         uartPrintInteger(input.Protocol, 10, 1);
         uartPrint("] ");
-        uartPrint("IW[");
+        uartPrint("IV[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
 
