@@ -1,7 +1,6 @@
 #include "main.h"
 
 medianStructure motorCommutationIntervalFilterState;
-medianStructure adcCurrentFastFilterState;
 
 #if (defined(USE_ADC))
   #if (defined(USE_ADC_MEDIAN))
@@ -38,7 +37,6 @@ int main(void) {
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
-    medianInit(&adcCurrentFastFilterState, 7);
     #if (defined(USE_ADC_MEDIAN))
       medianInit(&adcVoltageFilterState, 113);
       medianInit(&adcCurrentFilterState, 113);
@@ -190,8 +188,6 @@ int main(void) {
 
     // adc filtering
     #if (defined(USE_ADC))
-      medianPush(&adcCurrentFastFilterState, adcRaw.current);
-      adcScaled.currentFast = medianCalculate(&adcCurrentFastFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
       #if (defined(USE_ADC_MEDIAN))
         medianPush(&adcCurrentFilterState, adcRaw.current);
         adcScaled.current = medianCalculate(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
@@ -261,9 +257,6 @@ int main(void) {
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint(",");
-        uartPrintInteger(ABS(adcScaled.currentFast), 10, 1);
-        uartPrint("\r\n");
 
         /*
         uartPrint("IP[");
