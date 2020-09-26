@@ -139,7 +139,7 @@ int main(void) {
         // motor timing (one Erpm -> 360°)
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
-        // motor autotiming
+        // motor autotiming (speed based)
         if (input.PwmValue > 900) {
           motor.CommutationDelay = 0;
         } else {
