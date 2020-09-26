@@ -136,10 +136,10 @@ int main(void) {
           motorStart();
         }
 
-        // one Erpm -> 360°
+        // motor timing (one Erpm -> 360°)
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
-        // autotiming
+        // motor autotiming
         if (input.PwmValue > 900) {
           motor.CommutationDelay = 0;
         } else {
@@ -232,12 +232,10 @@ int main(void) {
       #endif
     }
 
-    // debug
+    // debug (each 1ms)
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
-      //if ((msTimerHandle.Instance->CNT % 2) == 0) {
-        // each 1ms
-
+        // csv tests
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
         uartPrintInteger(input.PwmValue, 10, 1);
@@ -265,7 +263,6 @@ int main(void) {
         uartPrint("IV[");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint("] ");
-
         uartPrint("CT[");
         uartPrintInteger(motor.CommutationTime, 10, 1);
         uartPrint("] ");
@@ -286,18 +283,6 @@ int main(void) {
         uartPrint("Ok[");
         uartPrintInteger((input.DataValidCounter), 10, 1);
         uartPrint("] ");*/
-
-        /*
-        uartPrint("0[");
-        uartPrintInteger(inputDmaBuffer[1] - inputDmaBuffer[0], 10, 1);
-        uartPrint("] ");
-        uartPrint("1[");
-        uartPrintInteger(inputDmaBuffer[3] - inputDmaBuffer[2], 10, 1);
-        uartPrint("] ");
-        uartPrint("2[");
-        uartPrintInteger(inputDmaBuffer[5] - inputDmaBuffer[4], 10, 1);
-        uartPrint("] ");
-        uartPrint("\r\n");*/
       }
     #endif
 
