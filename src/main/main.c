@@ -11,10 +11,6 @@ medianStructure motorCommutationIntervalFilterState;
 #endif
 
 int main(void) {
-  #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-    uint32_t mainBegin, mainTime;
-  #endif
-
   #if (defined(USE_BOOTLOADER))
     systemInitAfterBootloaderJump();
   #endif
@@ -69,7 +65,7 @@ int main(void) {
   while (true) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
-      mainBegin = motorCommutationTimerHandle.Instance->CNT;
+      uint32_t mainBegin = motorCommutationTimerHandle.Instance->CNT;
     #endif
 
     watchdogFeed();
@@ -288,7 +284,7 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
-      mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
+      uint32_t mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
       if (mainTime > 100000) {
         mainTime = -mainTime;
       }
