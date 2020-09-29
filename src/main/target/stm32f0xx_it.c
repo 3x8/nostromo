@@ -57,7 +57,7 @@ void DMA1_Channel4_5_IRQHandler(void) {
 
 void ADC1_COMP_IRQHandler(void) {
   HAL_COMP_IRQHandler(&motorBemfComparatorHandle);
-  HAL_ADC_IRQHandler(&adcHandle);
+  //HAL_ADC_IRQHandler(&adcHandle);
 }
 
 void TIM1_CC_IRQHandler(void) {
