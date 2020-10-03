@@ -245,6 +245,7 @@ int main(void) {
         }
         uartPrint(",");
         #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
+          uint32_t mainTime;
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
         #endif
@@ -260,7 +261,7 @@ int main(void) {
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_ON(LED_GREEN);
-      uint32_t mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
+      mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
       if (mainTime > 100000) {
         mainTime = -mainTime;
       }
