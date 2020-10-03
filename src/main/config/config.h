@@ -2,9 +2,9 @@
 
 #include "main.h"
 
-#define escConfig(x) (&masterConfig.escConfig)
-
 #define CONFIG_EEPROM_VERSION 15
+
+#define escConfig(x) (&masterConfig.escConfig)
 
 typedef struct {
   uint8_t motorPoles;

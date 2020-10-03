@@ -12,7 +12,7 @@
 PROJECTNAME  := nostromo
 
 # The target to build, see VALID_TARGETS below
-TARGET    ?= WRAITH32
+TARGET    ?= WRAITH32V2
 
 # Compile-time options
 OPTIONS   ?=

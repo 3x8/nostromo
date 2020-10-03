@@ -3,11 +3,11 @@
 #include "main.h"
 
 #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-  #define SERIAL_TX_BUFSIZE   64
-  #define SERIAL_RX_BUFSIZE   64
+  #define SERIAL_TX_BUFSIZE 64
+  #define SERIAL_RX_BUFSIZE 64
 #else
-  #define SERIAL_TX_BUFSIZE   313
-  #define SERIAL_RX_BUFSIZE   313
+  #define SERIAL_TX_BUFSIZE 313
+  #define SERIAL_RX_BUFSIZE 313
 #endif
 
 typedef struct {

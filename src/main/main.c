@@ -214,19 +214,21 @@ int main(void) {
     }
 
     // telemetry
-    if (input.TelemetryRequest) {
-      telemetry();
-      input.TelemetryRequest = false;
-      #if (!defined(_DEBUG_))
-        if (input.Armed) {
-          LED_ON(LED_BLUE);
-        }
-      #endif
-    } else {
-      #if (!defined(_DEBUG_))
-        LED_OFF(LED_BLUE);
-      #endif
-    }
+    #if !(defined(DEBUG_DATA_UART))
+      if (input.TelemetryRequest) {
+        telemetry();
+        input.TelemetryRequest = false;
+        #if (!defined(_DEBUG_))
+          if (input.Armed) {
+            LED_ON(LED_BLUE);
+          }
+        #endif
+      } else {
+        #if (!defined(_DEBUG_))
+          LED_OFF(LED_BLUE);
+        #endif
+      }
+    #endif
 
     // debug (each 1ms)
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
@@ -251,34 +253,8 @@ int main(void) {
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-
-        /*
-        uartPrint("IP[");
-        uartPrintInteger(input.Protocol, 10, 1);
-        uartPrint("] ");
-        uartPrint("IV[");
-        uartPrintInteger(input.PwmValue, 10, 1);
-        uartPrint("] ");
-        uartPrint("CT[");
-        uartPrintInteger(motor.CommutationTime, 10, 1);
-        uartPrint("] ");
-        uartPrint("CD[");
-        uartPrintInteger(motor.CommutationDelay, 10, 1);
-        uartPrint("] ");
-        uartPrint("BC[");
-        uartPrintInteger(motor.BemfCounter, 10, 1);
-        uartPrint("] ");
-        uartPrint("RP[");
-        uartPrintInteger(motorGetRpm(), 10, 1);
-        uartPrint("] ");*/
-
-        /*
-        uartPrint("Ko[");
-        uartPrintInteger((input.DataErrorCounter), 10, 1);
-        uartPrint("] ");
-        uartPrint("Ok[");
-        uartPrintInteger((input.DataValidCounter), 10, 1);
-        uartPrint("] ");*/
+        
+        uartPrint("\r\n");
       }
     #endif
 
