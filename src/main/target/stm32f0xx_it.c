@@ -56,8 +56,11 @@ void DMA1_Channel4_5_IRQHandler(void) {
 }
 
 void ADC1_COMP_IRQHandler(void) {
-  HAL_ADC_IRQHandler(&adcHandle);
-  HAL_COMP_IRQHandler(&motorBemfComparatorHandle);
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_21) != RESET) {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_21);
+    adc1CompIrqCallback();
+  }
+  //HAL_COMP_IRQHandler(&motorBemfComparatorHandle);
 }
 
 void TIM1_CC_IRQHandler(void) {

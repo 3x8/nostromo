@@ -4,13 +4,13 @@
 
 #define MOTOR_POLES 14
 #define MOTOR_BLDC_STEPS 6
-#define MOTOR_BLDC_MEDIAN  (MOTOR_BLDC_STEPS * 8)
+#define MOTOR_BLDC_MEDIAN (MOTOR_BLDC_STEPS * 8)
 #define MOTOR_ONE_ROTATION  (MOTOR_POLES * MOTOR_BLDC_STEPS)
 #define MOTOR_START_THRESHOLD 27
 #define MOTOR_START_POWER 73
 #define MOTOR_PWM_RESOLUTION  1003
-#define MOTOR_AUTOTIMING_DELAY_MIN  3
-#define MOTOR_AUTOTIMING_DELAY_MAX  613
+#define MOTOR_AUTOTIMING_DELAY_MIN  0
+#define MOTOR_AUTOTIMING_DELAY_MAX  413
 #define MOTOR_ERPM_FACTOR 360000000
 //MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
 
@@ -57,20 +57,18 @@ extern motorStructure motor;
 void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);
 void motorPhaseC(uint8_t phaseBuffer);
-
 void motorCommutationStep(uint8_t stepBuffer);
 void motorComparatorInputChange();
 void motorCommutate();
 void motorComutateAutotiming();
 
 void motorStart();
-
 void motorBrakeOff();
 void motorBrakeFull();
-
 void motorTuneReady();
 void motorTuneInput(uint8_t motorStepDebug);
-
 void motorInputUpdate(void);
 uint32_t motorGetErpm(void);
 uint32_t motorGetRpm(void);
+
+extern void adc1CompIrqCallback(void);

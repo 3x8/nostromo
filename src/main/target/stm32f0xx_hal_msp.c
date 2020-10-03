@@ -32,8 +32,6 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
     while (HAL_DMA_Init(&adcDmaHandle) != HAL_OK);
 
     __HAL_LINKDMA(adcHandle,DMA_Handle,adcDmaHandle);
-    //HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 1, 0);
-    //HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
   }
 }
 

@@ -3,10 +3,9 @@
 #include "main.h"
 
 typedef struct {
-  int32_t voltage;      //0.1 V resolution
-  int32_t current;      //0.01 A resolution
-  int32_t currentFast;  //0.01 A resolution
-  int32_t temperature;  //1 °C resolution
+  int32_t voltage;      // 0.1 V resolution
+  int32_t current;      // 0.01 A resolution
+  int32_t temperature;  // 1 °C resolution
 } adcDataStructure;
 
 extern ADC_HandleTypeDef adcHandle;

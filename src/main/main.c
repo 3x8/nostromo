@@ -1,7 +1,6 @@
 #include "main.h"
 
 medianStructure motorCommutationIntervalFilterState;
-medianStructure adcCurrentFastFilterState;
 
 #if (defined(USE_ADC))
   #if (defined(USE_ADC_MEDIAN))
@@ -12,10 +11,6 @@ medianStructure adcCurrentFastFilterState;
 #endif
 
 int main(void) {
-  #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-    uint32_t mainBegin, mainTime;
-  #endif
-
   #if (defined(USE_BOOTLOADER))
     systemInitAfterBootloaderJump();
   #endif
@@ -39,7 +34,6 @@ int main(void) {
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
-    medianInit(&adcCurrentFastFilterState, 7);
     #if (defined(USE_ADC_MEDIAN))
       medianInit(&adcVoltageFilterState, 113);
       medianInit(&adcCurrentFilterState, 113);
@@ -72,7 +66,7 @@ int main(void) {
   while (true) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
       LED_OFF(LED_GREEN);
-      mainBegin = motorCommutationTimerHandle.Instance->CNT;
+      uint32_t mainBegin = motorCommutationTimerHandle.Instance->CNT;
     #endif
 
     watchdogFeed();
@@ -139,28 +133,43 @@ int main(void) {
           motorStart();
         }
 
-        // one Erpm -> 360°
+        // motor timing (one Erpm -> 360°)
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
-
-        motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
-
-        // ToDo find optimal timing
-        // motor timing automatic (dependancy ? input.PwmValue, adcScaled.currentFast), 30° -> optimal timing ?
-        /*
-        #if (defined(USE_ADC))
-          if (ABS(adcScaled.currentFast- adcScaled.current) > 1001) {
-            motor.CommutationDelay = constrain(motor.oneDegree, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 1°
+        // motor autotiming (speed based)
+        if (input.PwmValue > 900) {
+          motor.CommutationDelay = 0;
+        } else {
+          if (input.PwmValue > 800) {
+            motor.CommutationDelay = constrain((motor.oneDegree * 2), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
           } else {
-            if (ABS(adcScaled.currentFast- adcScaled.current) > 501) {
-              motor.CommutationDelay = constrain((motor.oneDegree * 15), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 15°
-            } else  {
-              motor.CommutationDelay = constrain((motor.oneDegree * 30) , MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
+            if (input.PwmValue > 700) {
+              motor.CommutationDelay = constrain((motor.oneDegree * 6), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+            } else {
+              if (input.PwmValue > 600) {
+                motor.CommutationDelay = constrain((motor.oneDegree * 10), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+              } else {
+                if (input.PwmValue > 500) {
+                  motor.CommutationDelay = constrain((motor.oneDegree * 14), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                } else {
+                  if (input.PwmValue > 400) {
+                    motor.CommutationDelay = constrain((motor.oneDegree * 18), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                  } else {
+                    if (input.PwmValue > 300) {
+                      motor.CommutationDelay = constrain((motor.oneDegree * 22), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                    } else {
+                      if (input.PwmValue > 200) {
+                        motor.CommutationDelay = constrain((motor.oneDegree * 26), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                      } else {
+                        motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
-        #else
-          motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX); // 30°
-        #endif*/
+        }
 
       } // input.Armed
     } // input.Protocol detected
@@ -176,8 +185,6 @@ int main(void) {
 
     // adc filtering
     #if (defined(USE_ADC))
-      medianPush(&adcCurrentFastFilterState, adcRaw.current);
-      adcScaled.currentFast = medianCalculate(&adcCurrentFastFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
       #if (defined(USE_ADC_MEDIAN))
         medianPush(&adcCurrentFilterState, adcRaw.current);
         adcScaled.current = medianCalculate(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
@@ -208,95 +215,46 @@ int main(void) {
     }
 
     // telemetry
-    if (input.TelemetryRequest) {
-      telemetry();
-      input.TelemetryRequest = false;
-      #if (!defined(_DEBUG_))
-        if (input.Armed) {
-          LED_ON(LED_BLUE);
-        }
-      #endif
-    } else {
-      #if (!defined(_DEBUG_))
-        LED_OFF(LED_BLUE);
-      #endif
-    }
+    #if (!defined(DEBUG_DATA_UART))
+      if (input.TelemetryRequest) {
+        telemetry();
+        input.TelemetryRequest = false;
+        #if (!defined(_DEBUG_))
+          if (input.Armed) {
+            LED_ON(LED_BLUE);
+          }
+        #endif
+      } else {
+        #if (!defined(_DEBUG_))
+          LED_OFF(LED_BLUE);
+        #endif
+      }
+    #endif
 
-    // debug
+    // debug (each 1ms)
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+      uint32_t mainTime;
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
-      //if ((msTimerHandle.Instance->CNT % 2) == 0) {
-        // each 1ms
-
-        /*
+        // csv tests
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(",");
-        uartPrintInteger(input.DataNormed, 10, 1);
+        uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
         if (motor.OneErpmTime > 0) {
-          #if (defined(DEBUG_CYCLETIME_MAINLOOP))
-            uartPrintInteger(mainTime * 0.17, 10, 1);
-          #else
-            //uartPrintInteger(motor.OneErpmTime, 10, 1);
-            uartPrintInteger(motorGetRpm(), 10, 1);
-          #endif
+          uartPrintInteger(motorGetRpm(), 10, 1);
         } else {
           uartPrintInteger(0, 10, 1);
         }
         uartPrint(",");
+        #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
+          uartPrintInteger(mainTime * 0.17, 10, 1);
+          uartPrint(",");
+        #endif
+        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
+        uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        uartPrint("\r\n");*/
-
-        uartPrint("PR[");
-        uartPrintInteger(input.Protocol, 10, 1);
-        uartPrint("] ");
-        uartPrint("DA[");
-        uartPrintInteger(input.Data, 10, 1);
-        uartPrint("] ");
-
-        uartPrint("CNT[");
-        uartPrintInteger(motorAutotimingTimerHandle.Instance->CNT, 10, 1);
-        uartPrint("] ");
-
-        uartPrint("ARR[");
-        uartPrintInteger(motorAutotimingTimerHandle.Instance->ARR, 10, 1);
-        uartPrint("] ");
-
-        uartPrint("PER[");
-        uartPrintInteger(motorAutotimingTimerHandle.Init.Period, 10, 1);
-        uartPrint("] ");
-
-        /*
-        uartPrint("IT[");
-        uartPrintInteger(motor.CommutationTime, 10, 1);
-        uartPrint("] ");
-        uartPrint("CD[");
-        uartPrintInteger(motor.CommutationDelay, 10, 1);
-        uartPrint("] ");
-        uartPrint("RP[");
-        uartPrintInteger(motorGetRpm(), 10, 1);
-        uartPrint("] ");*/
-
-        /*
-        uartPrint("Ko[");
-        uartPrintInteger((input.DataErrorCounter), 10, 1);
-        uartPrint("] ");
-        uartPrint("Ok[");
-        uartPrintInteger((input.DataValidCounter), 10, 1);
-        uartPrint("] ");*/
-
-        /*
-        uartPrint("0[");
-        uartPrintInteger(inputDmaBuffer[1] - inputDmaBuffer[0], 10, 1);
-        uartPrint("] ");
-        uartPrint("1[");
-        uartPrintInteger(inputDmaBuffer[3] - inputDmaBuffer[2], 10, 1);
-        uartPrint("] ");
-        uartPrint("2[");
-        uartPrintInteger(inputDmaBuffer[5] - inputDmaBuffer[4], 10, 1);
-        uartPrint("] ");*/
 
         uartPrint("\r\n");
       }
