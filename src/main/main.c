@@ -214,7 +214,7 @@ int main(void) {
     }
 
     // telemetry
-    #if !(defined(DEBUG_DATA_UART))
+    #if (!defined(DEBUG_DATA_UART))
       if (input.TelemetryRequest) {
         telemetry();
         input.TelemetryRequest = false;
