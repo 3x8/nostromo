@@ -177,7 +177,7 @@ void systemMotorCommutationTimerInit(void) {
 
   motorCommutationTimerHandle.Instance = TIM14;
   motorCommutationTimerHandle.Init.Prescaler = 7;
-  motorCommutationTimerHandle.Init.CounterMode = TIM_COUNTERMODE_DOWN;
+  motorCommutationTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   motorCommutationTimerHandle.Init.Period = 0xffff;
   motorCommutationTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorCommutationTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
