@@ -60,7 +60,8 @@ void motorPhaseC(uint8_t phaseBuffer);
 void motorCommutationStep(uint8_t stepBuffer);
 void motorComparatorInputChange();
 void motorCommutate();
-void motorComutateAutotiming();
+void motorBemfZeroCrossCallback(void);
+void motorComutateAutotimingCallback();
 
 void motorStart();
 void motorBrakeOff();
@@ -70,5 +71,3 @@ void motorTuneInput(uint8_t motorStepDebug);
 void motorInputUpdate(void);
 uint32_t motorGetErpm(void);
 uint32_t motorGetRpm(void);
-
-extern void adc1CompIrqCallback(void);

@@ -58,9 +58,8 @@ void DMA1_Channel4_5_IRQHandler(void) {
 void ADC1_COMP_IRQHandler(void) {
   if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_21) != RESET) {
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_21);
-    adc1CompIrqCallback();
+    motorBemfZeroCrossCallback();
   }
-  //HAL_COMP_IRQHandler(&motorBemfComparatorHandle);
 }
 
 void TIM1_CC_IRQHandler(void) {
@@ -68,6 +67,9 @@ void TIM1_CC_IRQHandler(void) {
 }
 
 void TIM17_IRQHandler(void) {
-  LL_TIM_ClearFlag_TRIG(TIM17);
-  motorComutateAutotiming();
+  //if (LL_TIM_IsActiveFlag_TRIG(TIM17)) {
+    //LL_TIM_ClearFlag_TRIG(TIM17);
+    motorComutateAutotimingCallback();
+  //}
+
 }

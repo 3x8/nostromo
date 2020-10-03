@@ -9,8 +9,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
-//INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
-INLINE_CODE void adc1CompIrqCallback(void) {
+INLINE_CODE void motorBemfZeroCrossCallback(void) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   __disable_irq();
 
@@ -37,9 +36,19 @@ INLINE_CODE void adc1CompIrqCallback(void) {
   motor.BemfZeroCounterTimeout = 0;
 
   // motor timing
-  //while ((motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp) < motor.CommutationDelay);
   __HAL_TIM_SET_AUTORELOAD(&motorAutotimingTimerHandle, motor.CommutationDelay);
   HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
+
+
+
+  __enable_irq();
+}
+
+void motorComutateAutotimingCallback(void){
+  __disable_irq();
+  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
+
+  motorCommutate();
 
   #if (!defined(COMPARATOR_OPTIMIZE))
     HAL_COMP_Start_IT(&motorBemfComparatorHandle);
@@ -50,15 +59,6 @@ INLINE_CODE void adc1CompIrqCallback(void) {
       __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
     #endif
   #endif
-
-  __enable_irq();
-}
-
-void motorComutateAutotiming(void){
-  __disable_irq();
-  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
-
-  motorCommutate();
 
   // filter commutation event
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
