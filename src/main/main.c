@@ -232,6 +232,7 @@ int main(void) {
 
     // debug (each 1ms)
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
+      uint32_t mainTime;
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
         // csv tests
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
@@ -245,7 +246,6 @@ int main(void) {
         }
         uartPrint(",");
         #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-          uint32_t mainTime;
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
         #endif
