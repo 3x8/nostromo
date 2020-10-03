@@ -20,7 +20,7 @@
   * autotiming *(speed based)*
   * bootloader *(betaflight 4way interface uploader)*
   * 600K ERpm
-  * 48KHz, 24KHz
+  * 48KHz, 24KHz *(PWM)*
   * median filter *(ERpm)*
 
 **supported hardware:**
