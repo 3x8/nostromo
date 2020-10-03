@@ -253,7 +253,7 @@ int main(void) {
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        
+
         uartPrint("\r\n");
       }
     #endif
