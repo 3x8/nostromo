@@ -57,19 +57,14 @@ extern motorStructure motor;
 void motorPhaseA(uint8_t phaseBuffer);
 void motorPhaseB(uint8_t phaseBuffer);
 void motorPhaseC(uint8_t phaseBuffer);
-
 void motorCommutationStep(uint8_t stepBuffer);
 void motorComparatorInputChange();
 void motorCommutate();
-
 void motorStart();
-
 void motorBrakeOff();
 void motorBrakeFull();
-
 void motorTuneReady();
 void motorTuneInput(uint8_t motorStepDebug);
-
 void motorInputUpdate(void);
 uint32_t motorGetErpm(void);
 uint32_t motorGetRpm(void);
