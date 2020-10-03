@@ -9,7 +9,8 @@ extern medianStructure motorCommutationIntervalFilterState;
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
-INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+//INLINE_CODE void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *comparatorHandle) {
+INLINE_CODE void adc1CompIrqCallback(void) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   __disable_irq();
 
