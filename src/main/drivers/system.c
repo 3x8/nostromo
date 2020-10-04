@@ -266,7 +266,7 @@ void systemMotorAutotimingTimerInit(void) {
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   while (HAL_TIMEx_MasterConfigSynchronization(&motorAutotimingTimerHandle, &sMasterConfig) != HAL_OK);
 
-  //while (HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle) != HAL_OK);
+  while (HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle) != HAL_OK);
 }
 
 #if (defined(USE_BOOTLOADER))

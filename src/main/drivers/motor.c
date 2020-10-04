@@ -37,14 +37,18 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
 
   // motor timing
   __HAL_TIM_SET_AUTORELOAD(&motorAutotimingTimerHandle, motor.CommutationDelay);
-  HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
+  //__HAL_TIM_CLEAR_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+  __HAL_TIM_ENABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+  //HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
 
   __enable_irq();
 }
 
 void motorComutateAutotimingCallback(void){
   __disable_irq();
-  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
+  //HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
+  //__HAL_TIM_CLEAR_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+  __HAL_TIM_DISABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
 
   motorCommutate();
 
