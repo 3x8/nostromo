@@ -250,7 +250,9 @@ int main(void) {
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
         #endif
-        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
+        uartPrintInteger(motor.CommutationTime, 10, 1);
+        //uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
+        //uartPrintInteger(motor.CommutationDelay, 10, 1);
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");

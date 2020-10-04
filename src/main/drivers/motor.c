@@ -39,8 +39,6 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
   __HAL_TIM_SET_AUTORELOAD(&motorAutotimingTimerHandle, motor.CommutationDelay);
   HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
 
-
-
   __enable_irq();
 }
 
