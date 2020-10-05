@@ -11,7 +11,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void motorBemfZeroCrossCallback(void) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
-  __disable_irq();
+  //__disable_irq();
 
   if ((!motor.Running) || (!motor.Start)) {
     __enable_irq();
@@ -42,6 +42,43 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
   HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
 
 
+/*
+  motorCommutate();
+
+  #if (!defined(COMPARATOR_OPTIMIZE))
+    HAL_COMP_Start_IT(&motorBemfComparatorHandle);
+  #else
+    #if defined(KISS24A)
+      __HAL_COMP_COMP2_EXTI_CLEAR_FLAG();
+    #else
+      __HAL_COMP_COMP1_EXTI_CLEAR_FLAG();
+    #endif
+  #endif
+
+  // filter commutation event
+  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
+  motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
+  motorCommutationTimerHandle.Instance->CNT = 0;
+
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_OFF(LED_GREEN);
+  #endif
+*/
+
+  //__enable_irq();
+}
+
+void motorComutateAutotimingCallback(void) {
+  //__disable_irq();
+
+  motor.Debug = motorCommutationTimerHandle.Instance->CNT;
+
+  LED_TOGGLE(LED_GREEN);
+
+  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
+  __HAL_TIM_CLEAR_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+  __HAL_TIM_DISABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+
 ///
   motorCommutate();
 
@@ -65,19 +102,7 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
   #endif
 ///
 
-  __enable_irq();
-}
-
-void motorComutateAutotimingCallback(void) {
-  __disable_irq();
-
-  motor.Debug = motorCommutationTimerHandle.Instance->CNT;
-
-  HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
-  __HAL_TIM_CLEAR_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
-  __HAL_TIM_DISABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
-
-  __enable_irq();
+  //__enable_irq();
 }
 
 #if defined(FD6288)

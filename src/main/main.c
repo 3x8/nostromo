@@ -236,11 +236,15 @@ int main(void) {
       uint32_t mainTime;
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
         // csv tests
-        //uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
-        //uartPrint(",");
+        /*
+        uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
+        uartPrint(","); */
+
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
-        /* if (motor.OneErpmTime > 0) {
+
+        /*
+        if (motor.OneErpmTime > 0) {
           uartPrintInteger(motorGetRpm(), 10, 1);
         } else {
           uartPrintInteger(0, 10, 1);
@@ -249,19 +253,21 @@ int main(void) {
         #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
-        #endif
-        */
-        uartPrintInteger(motor.CommutationTime, 10, 1);
-        uartPrint(",");
-        uartPrintInteger(motor.Debug, 10, 1);
+        #endif */
 
-        //uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
-        //uartPrintInteger(motor.CommutationDelay, 10, 1);
-        /* uartPrint(",");
+        uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.Debug * 0.145, 10, 1);
+
+        /*
+        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
+        uartPrintInteger(motor.CommutationDelay, 10, 1);
+        uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
-        uartPrintInteger(ABS(adcScaled.current), 10, 1);
-        */
+        uartPrintInteger(ABS(adcScaled.current), 10, 1); */
 
         uartPrint("\r\n");
       }
