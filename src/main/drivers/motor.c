@@ -28,15 +28,11 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
     }
   }
 
-  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_ON(LED_GREEN);
-  #endif
-
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
 
   // motor timing
-  if (motor.BemfCounter > MOTOR_ONE_ROTATION) {
+  if (motor.BemfCounter > (MOTOR_ONE_ROTATION << 2)) {
     __HAL_TIM_SET_AUTORELOAD(&motorAutotimingTimerHandle, motor.CommutationDelay);
     __HAL_TIM_SET_COUNTER(&motorAutotimingTimerHandle, 0);
     __HAL_TIM_CLEAR_FLAG(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
@@ -51,14 +47,16 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
 
 INLINE_CODE void motorComutateAutotimingCallback() {
   __disable_irq();
-  // debug
-  LED_TOGGLE(LED_GREEN);
   motor.Debug = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
 
   if (motor.Debug < motor.CommutationDelay) {
     __enable_irq();
     return;
   }
+
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_TOGGLE(LED_GREEN);
+  #endif
 
   //HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
   __HAL_TIM_DISABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
@@ -81,6 +79,7 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
   motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
   motorCommutationTimerHandle.Instance->CNT = 0;
+  motor.BemfZeroCrossTimestamp = 0;
 
   __enable_irq();
 }

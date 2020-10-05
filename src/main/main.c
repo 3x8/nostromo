@@ -258,13 +258,13 @@ int main(void) {
           uartPrint(",");
         #endif */
 
-        uartPrintInteger(motor.oneDegree, 10, 1);
+        //uartPrintInteger(motor.oneDegree, 10, 1);
+        //uartPrint(",");
+        uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.CommutationTime, 10, 1);
+        uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.CommutationDelay, 10, 1);
-        uartPrint(",");
-        uartPrintInteger(motor.Debug, 10, 1);
+        uartPrintInteger(motor.Debug * 0.145, 10, 1);
 
         /*
         uartPrint(",");
