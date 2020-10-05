@@ -138,7 +138,7 @@ int main(void) {
         motor.oneDegree = (motor.OneErpmTime / 360);
         // motor autotiming (speed based)
 
-        motor.CommutationDelay = 50 - (input.PwmValue / 20);
+        motor.CommutationDelay = constrain((50 - (input.PwmValue / 20)), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
         /*
         if (input.PwmValue > 900) {
           motor.CommutationDelay = 0;
