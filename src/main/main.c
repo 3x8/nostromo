@@ -137,42 +137,7 @@ int main(void) {
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
         // motor autotiming (speed based)
-
         motor.CommutationDelay = constrain((50 - (input.PwmValue / 20)), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-        /*
-        if (input.PwmValue > 900) {
-          motor.CommutationDelay = 0;
-        } else {
-          if (input.PwmValue > 800) {
-            motor.CommutationDelay = constrain((motor.oneDegree * 2), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-          } else {
-            if (input.PwmValue > 700) {
-              motor.CommutationDelay = constrain((motor.oneDegree * 6), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-            } else {
-              if (input.PwmValue > 600) {
-                motor.CommutationDelay = constrain((motor.oneDegree * 10), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-              } else {
-                if (input.PwmValue > 500) {
-                  motor.CommutationDelay = constrain((motor.oneDegree * 14), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                } else {
-                  if (input.PwmValue > 400) {
-                    motor.CommutationDelay = constrain((motor.oneDegree * 18), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                  } else {
-                    if (input.PwmValue > 300) {
-                      motor.CommutationDelay = constrain((motor.oneDegree * 22), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                    } else {
-                      if (input.PwmValue > 200) {
-                        motor.CommutationDelay = constrain((motor.oneDegree * 26), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                      } else {
-                        motor.CommutationDelay = constrain((motor.oneDegree * 30), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }*/
 
       } // input.Armed
     } // input.Protocol detected

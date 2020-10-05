@@ -10,7 +10,6 @@ extern medianStructure motorCommutationIntervalFilterState;
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void motorBemfZeroCrossCallback(void) {
-  motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   __disable_irq();
 
   if ((!motor.Running) || (!motor.Start)) {
@@ -28,6 +27,7 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
     }
   }
 
+  motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
 
@@ -62,7 +62,6 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   __HAL_TIM_DISABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
   __HAL_TIM_CLEAR_FLAG(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
 
-
   motorCommutate();
 
   #if (!defined(COMPARATOR_OPTIMIZE))
@@ -79,7 +78,6 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
   motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
   motorCommutationTimerHandle.Instance->CNT = 0;
-  motor.BemfZeroCrossTimestamp = 0;
 
   __enable_irq();
 }
