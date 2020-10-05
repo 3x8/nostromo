@@ -251,7 +251,7 @@ void systemMotorAutotimingTimerInit(void) {
   TIM_MasterConfigTypeDef sMasterConfig;
 
   motorAutotimingTimerHandle.Instance = TIM17;
-  motorAutotimingTimerHandle.Init.Prescaler = 7;
+  motorAutotimingTimerHandle.Init.Prescaler = 1;
   motorAutotimingTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   motorAutotimingTimerHandle.Init.Period = MOTOR_AUTOTIMING_DELAY_MAX;
   motorAutotimingTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

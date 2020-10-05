@@ -62,7 +62,7 @@ void motorCommutationStep(uint8_t stepBuffer);
 void motorComparatorInputChange();
 void motorCommutate();
 void motorBemfZeroCrossCallback(void);
-void motorComutateAutotimingCallback();
+void motorComutateAutotimingCallback(void);
 
 void motorStart();
 void motorBrakeOff();
