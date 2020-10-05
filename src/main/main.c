@@ -236,11 +236,11 @@ int main(void) {
       uint32_t mainTime;
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
         // csv tests
-        uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
-        uartPrint(",");
+        //uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
+        //uartPrint(",");
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
-        if (motor.OneErpmTime > 0) {
+        /* if (motor.OneErpmTime > 0) {
           uartPrintInteger(motorGetRpm(), 10, 1);
         } else {
           uartPrintInteger(0, 10, 1);
@@ -250,13 +250,18 @@ int main(void) {
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
         #endif
+        */
         uartPrintInteger(motor.CommutationTime, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.Debug, 10, 1);
+
         //uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
         //uartPrintInteger(motor.CommutationDelay, 10, 1);
-        uartPrint(",");
+        /* uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
+        */
 
         uartPrint("\r\n");
       }
