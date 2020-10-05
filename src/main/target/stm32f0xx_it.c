@@ -67,12 +67,10 @@ void TIM1_CC_IRQHandler(void) {
 }
 
 void TIM17_IRQHandler(void) {
-  motorComutateAutotimingCallback();
-  /*
   if(__HAL_TIM_GET_IT_SOURCE(&motorAutotimingTimerHandle, TIM_IT_UPDATE) != RESET) {
     __HAL_TIM_CLEAR_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
     motorComutateAutotimingCallback();
-  }*/
+  }
 
   //if (LL_TIM_IsActiveFlag_TRIG(TIM17)) {
     //LL_TIM_ClearFlag_TRIG(TIM17);

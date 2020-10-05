@@ -137,6 +137,9 @@ int main(void) {
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
         // motor autotiming (speed based)
+
+        motor.CommutationDelay = 50 - (input.PwmValue / 20);
+        /*
         if (input.PwmValue > 900) {
           motor.CommutationDelay = 0;
         } else {
@@ -169,7 +172,7 @@ int main(void) {
               }
             }
           }
-        }
+        }*/
 
       } // input.Armed
     } // input.Protocol detected
@@ -255,15 +258,15 @@ int main(void) {
           uartPrint(",");
         #endif */
 
-        uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
+        uartPrintInteger(motor.oneDegree, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
+        uartPrintInteger(motor.CommutationTime, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.Debug * 0.145, 10, 1);
+        uartPrintInteger(motor.CommutationDelay, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(motor.Debug, 10, 1);
 
         /*
-        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
-        uartPrintInteger(motor.CommutationDelay, 10, 1);
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
