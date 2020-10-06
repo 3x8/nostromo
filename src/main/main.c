@@ -201,7 +201,10 @@ int main(void) {
 
     // debug (each 1ms)
     #if (defined(_DEBUG_) && defined(DEBUG_DATA_UART))
-      uint32_t mainTime;
+      #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
+        uint32_t mainTime;
+      #endif
+
       if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
         // csv tests
         /*
