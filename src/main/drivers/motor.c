@@ -37,10 +37,10 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
     __HAL_TIM_SET_COUNTER(&motorAutotimingTimerHandle, 0);
     __HAL_TIM_CLEAR_FLAG(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
     __HAL_TIM_ENABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+    //HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
     #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
       LED_ON(LED_GREEN);
     #endif
-    //HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
   } else {
     motorComutateAutotimingCallback();
   }
