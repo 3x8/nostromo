@@ -126,7 +126,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
   }
   else if (timerHandle->Instance == motorAutotimingTimerHandle.Instance) {
     __HAL_RCC_TIM17_CLK_ENABLE();
-    HAL_NVIC_SetPriority(TIM17_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM17_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(TIM17_IRQn);
   }
 }

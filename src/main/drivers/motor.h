@@ -47,7 +47,6 @@ typedef struct {
   uint32_t oneDegree;
   uint32_t CommutationDelay;
   uint32_t CommutationTime;
-  uint32_t Debug;
 } motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorAutotimingTimerHandle;

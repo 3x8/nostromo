@@ -71,10 +71,4 @@ void TIM17_IRQHandler(void) {
     __HAL_TIM_CLEAR_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
     motorComutateAutotimingCallback();
   }
-
-  //if (LL_TIM_IsActiveFlag_TRIG(TIM17)) {
-    //LL_TIM_ClearFlag_TRIG(TIM17);
-    //motorComutateAutotimingCallback();
-  //}
-
 }

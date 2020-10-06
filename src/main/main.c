@@ -231,8 +231,6 @@ int main(void) {
         uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
-        uartPrint(",");
-        uartPrintInteger(motor.Debug * 0.145, 10, 1);
 
         /*
         uartPrint(",");
