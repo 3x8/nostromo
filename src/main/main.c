@@ -59,17 +59,17 @@ int main(void) {
   input.PwmValue = 0;
   serialPort.InitDone = false;
 
-  watchdogInit(2000);
+  //watchdogInit(2000);
   motorTuneReady();
 
   // main loop
   while (true) {
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-      LED_OFF(LED_GREEN);
+      //LED_OFF(LED_GREEN);
       uint32_t mainBegin = motorCommutationTimerHandle.Instance->CNT;
     #endif
 
-    watchdogFeed();
+    //watchdogFeed();
 
     // brake
     if ((!motor.Start) && (!motor.Running)) {
@@ -205,13 +205,23 @@ int main(void) {
         uint32_t mainTime;
       #endif
 
-      if (((msTimerHandle.Instance->CNT % 2) == 0) && (input.DataNormed > 0)) {
+      if (((msTimerHandle.Instance->CNT % 101) == 0) && (input.DataNormed > 0)) {
+        __disable_irq();
+        LED_ON(LED_GREEN);
+        __HAL_TIM_SET_AUTORELOAD(&motorAutotimingTimerHandle, input.DataNormed);
+        __HAL_TIM_SET_COUNTER(&motorAutotimingTimerHandle, 0);
+        __HAL_TIM_CLEAR_FLAG(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+        __HAL_TIM_ENABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+        //HAL_TIM_Base_Start_IT(&motorAutotimingTimerHandle);
+        __enable_irq();
+
+
         // csv tests
         /*
         uartPrintInteger(msTimerHandle.Instance->CNT, 10, 1);
         uartPrint(","); */
 
-        uartPrintInteger(input.PwmValue, 10, 1);
+        uartPrintInteger(input.DataNormed, 10, 1);
         uartPrint(",");
 
         /*
@@ -220,19 +230,19 @@ int main(void) {
         } else {
           uartPrintInteger(0, 10, 1);
         }
-        uartPrint(",");
+        uartPrint(",");*/
         #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
-        #endif */
-
+        #endif
+        /*
         uartPrintInteger(motor.oneDegree, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.Debug * 0.145, 10, 1);
+        uartPrintInteger(motor.Debug * 0.145, 10, 1);*/
 
         /*
         uartPrint(",");
@@ -245,7 +255,7 @@ int main(void) {
     #endif
 
     #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-      LED_ON(LED_GREEN);
+      //LED_ON(LED_GREEN);
       mainTime = motorCommutationTimerHandle.Instance->CNT - mainBegin;
       if (mainTime > 100000) {
         mainTime = -mainTime;

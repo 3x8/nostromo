@@ -10,6 +10,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 #pragma GCC optimize("O3")
 // ISR takes 7us, 300ns jitter (5us on KISS24A)
 INLINE_CODE void motorBemfZeroCrossCallback(void) {
+  /*
   __disable_irq();
 
   if ((!motor.Running) || (!motor.Start)) {
@@ -47,9 +48,17 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
   }
 
   __enable_irq();
+  */
 }
 
 INLINE_CODE void motorComutateAutotimingCallback() {
+  __disable_irq();
+  LED_OFF(LED_GREEN);
+  __HAL_TIM_DISABLE_IT(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+  __HAL_TIM_CLEAR_FLAG(&motorAutotimingTimerHandle, TIM_IT_UPDATE);
+  //HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
+  __enable_irq();
+  /*
   __disable_irq();
   motor.Debug = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
 
@@ -84,6 +93,7 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   motorCommutationTimerHandle.Instance->CNT = 0;
 
   __enable_irq();
+  */
 }
 
 #if defined(FD6288)
@@ -535,12 +545,13 @@ INLINE_CODE void motorInputUpdate(void) {
       }
 
       // trapezium rule
+      /*
       input.PwmValue = (input.PwmValue + input.PwmValueLast) >> 1;
       input.PwmValueLast = input.PwmValue;
 
       motorPwmTimerHandle.Instance->CCR1 = input.PwmValue;
       motorPwmTimerHandle.Instance->CCR2 = input.PwmValue;
-      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;
+      motorPwmTimerHandle.Instance->CCR3 = input.PwmValue;*/
     }
   } else {
     motor.Start = false;

@@ -253,7 +253,7 @@ void systemMotorAutotimingTimerInit(void) {
   motorAutotimingTimerHandle.Instance = TIM17;
   motorAutotimingTimerHandle.Init.Prescaler = 7;
   motorAutotimingTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  motorAutotimingTimerHandle.Init.Period = MOTOR_AUTOTIMING_DELAY_MAX;
+  motorAutotimingTimerHandle.Init.Period = INPUT_NORMED_MAX;
   motorAutotimingTimerHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   motorAutotimingTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
