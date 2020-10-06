@@ -27,6 +27,10 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
     }
   }
 
+  #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
+    LED_ON(LED_GREEN);
+  #endif
+
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
@@ -55,7 +59,7 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   }
 
   #if (defined(_DEBUG_) && defined(DEBUG_MOTOR_TIMING))
-    LED_TOGGLE(LED_GREEN);
+    LED_OFF(LED_GREEN);
   #endif
 
   //HAL_TIM_Base_Stop_IT(&motorAutotimingTimerHandle);
