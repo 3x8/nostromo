@@ -137,7 +137,7 @@ int main(void) {
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.oneDegree = (motor.OneErpmTime / 360);
         // motor autotiming (speed based)
-        motor.CommutationDelay = constrain((50 - (input.PwmValue / 20)), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+        motor.CommutationDelay = constrain((100 - (input.PwmValue / 10)), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
 
       } // input.Armed
     } // input.Protocol detected
