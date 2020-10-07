@@ -212,7 +212,6 @@ int main(void) {
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
 
-
         // debug cycle
         if (motor.OneErpmTime > 0) {
           uartPrintInteger(motorGetRpm(), 10, 1);
@@ -225,9 +224,7 @@ int main(void) {
           uartPrint(",");
         #endif
 
-
         // debug motor timing
-
         uartPrintInteger(motor.CommutationTime * 0.167, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.167, 10, 1);
