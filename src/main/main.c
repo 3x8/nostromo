@@ -214,6 +214,7 @@ int main(void) {
         uartPrint(",");
 
         /*
+        // debug cycle
         if (motor.OneErpmTime > 0) {
           uartPrintInteger(motorGetRpm(), 10, 1);
         } else {
@@ -225,17 +226,24 @@ int main(void) {
           uartPrint(",");
         #endif */
 
+        /*
+        // debug CommutationTime
         uartPrintInteger(motor.oneDegree, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
+        */
 
-        /*
+
         uartPrint(",");
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
-        uartPrintInteger(ABS(adcScaled.current), 10, 1); */
+        uartPrintInteger(ABS(adcScaled.current), 10, 1);
+        uartPrint(",");
+        uartPrintInteger(adcRaw.voltage, 10, 1);
+        uartPrint(",");
+        uartPrintInteger(adcRaw.current, 10, 1);
 
         uartPrint("\r\n");
       }

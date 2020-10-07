@@ -24,6 +24,7 @@
   * median filter *(ERpm)*
 
 **supported hardware:**
+  * RAZOR32V2  *(new)*
   * WRAITH32V2  *(official)*
   * TYPHOON32V2  *(official)*
   * WRAITH32
