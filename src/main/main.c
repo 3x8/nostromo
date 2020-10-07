@@ -135,7 +135,6 @@ int main(void) {
 
         // motor timing (one Erpm -> 360°)
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
-        motor.oneDegree = (motor.OneErpmTime / 360);
         // motor autotiming (speed based)
         motor.CommutationDelay = constrain((100 - (input.PwmValue / 10)), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
 
@@ -228,8 +227,6 @@ int main(void) {
 
         /*
         // debug motor timing
-        uartPrintInteger(motor.oneDegree * 0.17, 10, 1);
-        uartPrint(",");
         uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.17, 10, 1);

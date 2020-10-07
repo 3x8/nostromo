@@ -37,14 +37,13 @@ typedef struct {
   bool ComplementaryPWM;
   bool BemfRising;
   uint8_t Step;
-  uint32_t BemfCounter;
-  uint32_t BemfZeroCrossTimestamp;
   uint8_t BemfFilterLevel;
   uint8_t BemfFilterDelay;
+  uint32_t BemfCounter;
+  uint32_t BemfZeroCrossTimestamp;
   uint32_t BemfZeroCounterTimeout;
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t OneErpmTime;
-  uint32_t oneDegree;
   uint32_t CommutationDelay;
   uint32_t CommutationTime;
 } motorStructure;
