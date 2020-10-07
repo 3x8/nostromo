@@ -221,16 +221,16 @@ int main(void) {
         }
         uartPrint(",");
         #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
-          uartPrintInteger(mainTime * 0.17, 10, 1);
+          uartPrintInteger(mainTime * 0.167, 10, 1);
           uartPrint(",");
         #endif
 
 
         // debug motor timing
 
-        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
+        uartPrintInteger(motor.CommutationTime * 0.167, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.CommutationDelay * 0.17, 10, 1);
+        uartPrintInteger(motor.CommutationDelay * 0.167, 10, 1);
         uartPrint(",");
 
         // debug adc
