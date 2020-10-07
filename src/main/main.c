@@ -228,12 +228,12 @@ int main(void) {
 
         /*
         // debug motor timing
-        uartPrintInteger(motor.oneDegree, 10, 1);
+        uartPrintInteger(motor.oneDegree * 0.17, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.CommutationTime * 0.145, 10, 1);
+        uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
         uartPrint(",");
-        uartPrintInteger(motor.CommutationDelay * 0.145, 10, 1);
-        */
+        uartPrintInteger(motor.CommutationDelay * 0.17, 10, 1);
+        uartPrint(","); */
 
         // debug adc
         uartPrintInteger(adcRaw.voltage, 10, 1);
