@@ -212,7 +212,7 @@ int main(void) {
         uartPrintInteger(input.PwmValue, 10, 1);
         uartPrint(",");
 
-        /*
+
         // debug cycle
         if (motor.OneErpmTime > 0) {
           uartPrintInteger(motorGetRpm(), 10, 1);
@@ -223,20 +223,22 @@ int main(void) {
         #if (defined(_DEBUG_) && defined(DEBUG_CYCLETIME_MAINLOOP))
           uartPrintInteger(mainTime * 0.17, 10, 1);
           uartPrint(",");
-        #endif */
+        #endif
 
-        /*
+
         // debug motor timing
+
         uartPrintInteger(motor.CommutationTime * 0.17, 10, 1);
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.17, 10, 1);
-        uartPrint(","); */
+        uartPrint(",");
 
         // debug adc
+        /*
         uartPrintInteger(adcRaw.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(adcRaw.current, 10, 1);
-        uartPrint(",");
+        uartPrint(","); */
         uartPrintInteger(adcScaled.voltage, 10, 1);
         uartPrint(",");
         uartPrintInteger(ABS(adcScaled.current), 10, 1);
