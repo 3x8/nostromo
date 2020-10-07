@@ -45,7 +45,6 @@ typedef struct {
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t OneErpmTime;
   uint32_t CommutationDelay;
-  uint32_t CommutationTime;
 } motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorAutotimingTimerHandle;
