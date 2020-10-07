@@ -70,7 +70,7 @@ INLINE_CODE void motorComutateAutotimingCallback() {
 
   // filter commutation event
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
-  motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT - motor.BemfZeroCrossTimestamp;
+  motor.CommutationTime = motorCommutationTimerHandle.Instance->CNT;
   motorCommutationTimerHandle.Instance->CNT = 0;
 
   __enable_irq();
