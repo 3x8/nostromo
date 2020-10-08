@@ -10,7 +10,7 @@
 #define MOTOR_START_POWER 73
 #define MOTOR_PWM_RESOLUTION  1003
 #define MOTOR_AUTOTIMING_DELAY_MIN  1
-#define MOTOR_AUTOTIMING_DELAY_MAX  100
+#define MOTOR_AUTOTIMING_DELAY_MAX  6000
 #define MOTOR_ERPM_FACTOR 360000000
 //MOTOR_ERPM_FACTOR = (60000000 / ((motorCommutationTimerHandle.Init.Prescaler + 1) / (HAL_RCC_GetSysClockFreq() * 0.000001)));
 
@@ -44,7 +44,9 @@ typedef struct {
   uint32_t BemfZeroCounterTimeout;
   uint32_t BemfZeroCounterTimeoutThreshold;
   uint32_t OneErpmTime;
+  uint32_t DelayStep;
   uint32_t CommutationDelay;
+  bool SpinLock;
 } motorStructure;
 
 extern TIM_HandleTypeDef motorPwmTimerHandle, motorAutotimingTimerHandle;

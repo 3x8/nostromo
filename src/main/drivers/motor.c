@@ -12,7 +12,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 INLINE_CODE void motorBemfZeroCrossCallback(void) {
   __disable_irq();
 
-  if ((!motor.Running) || (!motor.Start)) {
+  if ((!motor.Running) || (!motor.Start) | motor.SpinLock) {
     __enable_irq();
     return;
   }
@@ -30,6 +30,7 @@ INLINE_CODE void motorBemfZeroCrossCallback(void) {
   motor.BemfZeroCrossTimestamp = motorCommutationTimerHandle.Instance->CNT;
   motor.BemfCounter++;
   motor.BemfZeroCounterTimeout = 0;
+  motor.SpinLock = true;
 
   // motor timing
   if (motor.BemfCounter > (MOTOR_ONE_ROTATION << 2)) {
@@ -71,6 +72,8 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   // filter commutation event
   medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
   motorCommutationTimerHandle.Instance->CNT = 0;
+
+  motor.SpinLock = false;
 
   __enable_irq();
 }
