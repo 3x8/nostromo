@@ -226,7 +226,7 @@ int main(void) {
         #endif
 
         // debug motor timing (us)
-        uartPrintInteger(motor.OneErpmTime * 0.167, 10, 1);
+        uartPrintInteger(motor.OneErpmTime * 0.028, 10, 1); // commutationTime
         uartPrint(",");
         uartPrintInteger(motor.CommutationDelay * 0.167, 10, 1);
         uartPrint(",");
