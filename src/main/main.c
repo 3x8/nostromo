@@ -138,7 +138,7 @@ int main(void) {
         // 1°
         motor.DelayStep = motor.OneErpmTime / 360;
         // motor autotiming (speed based)
-        motor.CommutationDelay = constrain( (30 - (input.PwmValue) / 30) * motor.DelayStep, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+        motor.CommutationDelay = constrain( (30 - (input.PwmValue) / 34) * motor.DelayStep, MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
 
       } // input.Armed
     } // input.Protocol detected
