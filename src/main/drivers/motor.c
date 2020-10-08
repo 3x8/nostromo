@@ -12,7 +12,7 @@ extern medianStructure motorCommutationIntervalFilterState;
 INLINE_CODE void motorBemfZeroCrossCallback(void) {
   __disable_irq();
 
-  if ((!motor.Running) || (!motor.Start) | motor.SpinLock) {
+  if ((!motor.Running) || (!motor.Start) || motor.SpinLock) {
     __enable_irq();
     return;
   }
