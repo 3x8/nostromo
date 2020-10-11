@@ -213,11 +213,11 @@ void inputAutoDetect() {
     LED_OFF(LED_GREEN);
   #endif
 
-  uint32_t  pulseHiWidth = inputDmaBuffer[1] - inputDmaBuffer[0];
-  uint32_t  pulseLoWidth = inputDmaBuffer[2] - inputDmaBuffer[1];
+  uint32_t  pulseWidthHi = inputDmaBuffer[1] - inputDmaBuffer[0];
+  uint32_t  pulseWidthLo = inputDmaBuffer[2] - inputDmaBuffer[1];
 
-  if (((pulseHiWidth >= (INPUT_PROSHOT1000_HI_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_PROSHOT1000_HI_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
-      ((pulseLoWidth >= (INPUT_PROSHOT1000_LO_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_PROSHOT1000_LO_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+  if (((pulseWidthHi >= (INPUT_PROSHOT1000_WIDTH_HI_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthHi <= (INPUT_PROSHOT1000_WIDTH_HI_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
+      ((pulseWidthLo >= (INPUT_PROSHOT1000_WIDTH_LO_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthLo <= (INPUT_PROSHOT1000_WIDTH_LO_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
 
     input.Protocol = PROSHOT1000;
     inputTimerHandle.Instance->PSC = INPUT_PROSHOT1000_PRESCALER;
@@ -231,8 +231,8 @@ void inputAutoDetect() {
     return;
   }
 
-  if (((pulseHiWidth >= (INPUT_DSHOT600_HI_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_DSHOT600_HI_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
-      ((pulseLoWidth >= (INPUT_DSHOT600_LO_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_DSHOT600_LO_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+  if (((pulseWidthHi >= (INPUT_DSHOT600_WIDTH_HI_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthHi <= (INPUT_DSHOT600_WIDTH_HI_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
+      ((pulseWidthLo >= (INPUT_DSHOT600_WIDTH_LO_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthLo <= (INPUT_DSHOT600_WIDTH_LO_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
 
     input.Protocol = DSHOT600;
     inputTimerHandle.Instance->PSC = INPUT_DSHOT600_PRESCALER;
@@ -246,8 +246,8 @@ void inputAutoDetect() {
     return;
   }
 
-  if (((pulseHiWidth >= (INPUT_DSHOT300_HI_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_DSHOT300_HI_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
-      ((pulseLoWidth >= (INPUT_DSHOT300_LO_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_DSHOT300_LO_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+  if (((pulseWidthHi >= (INPUT_DSHOT300_WIDTH_HI_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthHi <= (INPUT_DSHOT300_WIDTH_HI_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) &&
+      ((pulseWidthLo >= (INPUT_DSHOT300_WIDTH_LO_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthLo <= (INPUT_DSHOT300_WIDTH_LO_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
 
     input.Protocol = DSHOT300;
     inputTimerHandle.Instance->PSC = INPUT_DSHOT300_PRESCALER;
@@ -261,8 +261,8 @@ void inputAutoDetect() {
     return;
   }
 
-  if (((pulseHiWidth >= (INPUT_SERVOPWM_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseHiWidth <= (INPUT_SERVOPWM_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) ||
-      ((pulseLoWidth >= (INPUT_SERVOPWM_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseLoWidth <= (INPUT_SERVOPWM_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
+  if (((pulseWidthHi >= (INPUT_SERVOPWM_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthHi <= (INPUT_SERVOPWM_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1)))) ||
+      ((pulseWidthLo >= (INPUT_SERVOPWM_WIDTH_MIN / (INPUT_AUTODETECT_PRESCALER + 1))) && (pulseWidthLo <= (INPUT_SERVOPWM_WIDTH_MAX / (INPUT_AUTODETECT_PRESCALER + 1))))) {
 
     input.Protocol = SERVOPWM;
     inputTimerHandle.Instance->PSC = INPUT_PWM_PRESCALER;
@@ -345,7 +345,7 @@ void inputDshot() {
 
   for (int i = 0; i < 32; i+=2) {
     uint32_t tmp = (inputDmaBuffer[i + 1] - inputDmaBuffer[i]);
-    if (( tmp > INPUT_DSHOT_HI_WIDTH_MIN) && (tmp < INPUT_DSHOT_HI_WIDTH_MAX)) {
+    if (( tmp > INPUT_DSHOT_WIDTH_HI_MIN) && (tmp < INPUT_DSHOT_WIDTH_HI_MAX)) {
       pulseValue[i >> 1] = 1;
     }
   }
