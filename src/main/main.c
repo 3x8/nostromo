@@ -136,7 +136,6 @@ int main(void) {
         // motor timing (one Erpm -> 360°)
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
         motor.OneDegree = motor.OneErpmTime / 360;
-        // motor autotiming (speed based)
         if ((escConfig()->motorCommutationDelay > 0) &&  (escConfig()->motorCommutationDelay <= 30)) {
           motor.CommutationDelay = constrain((escConfig()->motorCommutationDelay * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
         } else {
