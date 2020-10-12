@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-#define CONFIG_EEPROM_VERSION 15
+#define CONFIG_EEPROM_VERSION 16
 
 #define escConfig(x) (&masterConfig.escConfig)
 
@@ -10,6 +10,7 @@ typedef struct {
   uint8_t motorPoles;
   uint8_t motorDirection;
   uint8_t motorComplementaryPWM;
+  uint8_t motorCommutationDelay;
   uint8_t motorBrake;
   uint8_t motor3Dmode;
   uint16_t motorStartThreshold;
