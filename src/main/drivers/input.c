@@ -115,7 +115,7 @@ void inputDshotCommandRun(void) {
         uartPrint("3D ");
       }
       if ((escConfig()->motorCommutationDelay > 0) &&  (escConfig()->motorCommutationDelay <= 30)) {
-        uartPrint("autotiming ")
+        uartPrint("autotiming ");
       } else {
         uartPrint("[");
         uartPrintInteger(escConfig()->motorCommutationDelay, 10, 1);
