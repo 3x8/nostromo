@@ -115,11 +115,14 @@ void inputDshotCommandRun(void) {
         uartPrint("3D ");
       }
       uartPrint("[");
+      uartPrintInteger(escConfig()->motorCommutationDelay, 10, 1);
+      uartPrint(" deg] ");
+      uartPrint("[");
       if (escConfig()->adcCurrentOffset < 0) {
         uartPrint("-");
       }
       uartPrintInteger(ABS(escConfig()->adcCurrentOffset), 16, 1);
-      uartPrint("]");
+      uartPrint(" cal]");
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
