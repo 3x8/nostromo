@@ -1,5 +1,8 @@
 #include "common.h"
 
+#pragma GCC push_options
+#pragma GCC optimize("O3")
+
 const char *byteToString(uint8_t x) {
   static char b[9];
   b[0] = '\0';
@@ -10,7 +13,7 @@ const char *byteToString(uint8_t x) {
   return (b);
 }
 
-uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
+INLINE_CODE uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
   if (input < valueMin){
     return (valueMin);
   }
@@ -22,9 +25,17 @@ uint32_t constrain(uint32_t input, uint32_t valueMin, uint32_t valueMax) {
   }
 }
 
+INLINE_CODE int32_t scaleLinear(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max) {
+  if (x < in_min) {
+    x = in_min;
+  }
 
-#pragma GCC push_options
-#pragma GCC optimize("O3")
+  if (x > in_max){
+    x = in_max;
+  }
+  return (((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min);
+}
+
 // kalman filter
 void kalmanInit(kalmanStructure *filter, float q, uint32_t w) {
   memset(filter, 0, sizeof(kalmanStructure));

@@ -19,9 +19,6 @@
   #define U_ID_2 (*(uint32_t*)0x1FFFF7B4)
 #endif
 
-const char *byteToString(uint8_t x);
-uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
-
 #define FAST_CODE __attribute__((section(".tcm_code")))
 #define INLINE_CODE __attribute__((always_inline)) inline
 //#define INLINE_CODE inline
@@ -56,6 +53,10 @@ typedef struct {
   uint32_t windowIndex;
   uint32_t meanSum;
 } medianStructure;
+
+const char *byteToString(uint8_t x);
+uint32_t constrain(uint32_t amt, uint32_t low, uint32_t high);
+int32_t scaleLinear(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max);
 
 void medianInit(medianStructure *filter, uint32_t w);
 void medianPush(medianStructure *filter, uint32_t newValue);

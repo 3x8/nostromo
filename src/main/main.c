@@ -135,12 +135,13 @@ int main(void) {
 
         // motor timing (one Erpm -> 360°)
         motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
-        motor.OneDegree = motor.OneErpmTime / 360;
+        motor.OneDegree = motor.OneErpmTime / 3600;
         if ((escConfig()->motorCommutationDelay > 0) &&  (escConfig()->motorCommutationDelay <= 30)) {
           motor.CommutationDelay = constrain((escConfig()->motorCommutationDelay * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
         } else {
           //motor.CommutationDelay = constrain(((30 - (input.PwmValue / 34)) * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
-          motor.CommutationDelay = constrain(((30 - (input.PwmValue >> 6)) * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+          //motor.CommutationDelay = constrain(((30 - (input.PwmValue >> 6)) * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
+          motor.CommutationDelay = constrain(((300 - scaleLinear(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX, MOTOR_AUTOTIMING_DELAY_DECIDEG_MIN, MOTOR_AUTOTIMING_DELAY_DECIDEG_MAX)) * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_MIN, MOTOR_AUTOTIMING_DELAY_MAX);
         }
       } // input.Armed
     } // input.Protocol detected
