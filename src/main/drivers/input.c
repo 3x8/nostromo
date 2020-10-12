@@ -126,7 +126,7 @@ void inputDshotCommandRun(void) {
         uartPrint("-");
       }
       uartPrintInteger(ABS(escConfig()->adcCurrentOffset), 16, 1);
-      uartPrint(" cal]");
+      uartPrint("]");
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
