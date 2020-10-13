@@ -378,19 +378,11 @@ void inputDshot() {
       input.TelemetryRequest = pulseValue[11];
     }
 
-    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
-      LED_OFF(LED_GREEN);
-    #endif
-
     return;
   } else {
     input.DataValid = false;
     input.DataErrorCounter++;
     __enable_irq();
-
-    #if (defined(_DEBUG_) && defined(DEBUG_INPUT_DSHOT))
-      LED_OFF(LED_GREEN);
-    #endif
 
     return;
   }
