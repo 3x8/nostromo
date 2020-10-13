@@ -51,8 +51,8 @@
 #define INPUT_VALUE_MAX 2047
 #define INPUT_NORMED_MIN 0
 #define INPUT_NORMED_MAX 2000
-#define OUTPUT_PWM_MIN 0
-#define OUTPUT_PWM_MAX 1000
+#define INPUT_PWM_MIN 0
+#define INPUT_PWM_MAX 1000
 
 
 typedef enum {

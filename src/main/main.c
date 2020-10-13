@@ -139,7 +139,7 @@ int main(void) {
         if ((escConfig()->motorCommutationDelay > 0) &&  (escConfig()->motorCommutationDelay <= 30)) {
           motor.CommutationDelay = constrain((escConfig()->motorCommutationDelay * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_LIMIT_MIN, MOTOR_AUTOTIMING_DELAY_LIMIT_MAX);
         } else {
-          motor.CommutationDelay = constrain(((30 - scaleLinear(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX, MOTOR_AUTOTIMING_DELAY_DEGREES_MIN, MOTOR_AUTOTIMING_DELAY_DEGREES_MAX)) * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_LIMIT_MIN, MOTOR_AUTOTIMING_DELAY_LIMIT_MAX);
+          motor.CommutationDelay = constrain(((30 - scaleLinear(input.PwmValue, INPUT_PWM_MIN, INPUT_PWM_MAX, MOTOR_AUTOTIMING_DELAY_DEGREES_MIN, MOTOR_AUTOTIMING_DELAY_DEGREES_MAX)) * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_LIMIT_MIN, MOTOR_AUTOTIMING_DELAY_LIMIT_MAX);
         }
       } // input.Armed
     } // input.Protocol detected

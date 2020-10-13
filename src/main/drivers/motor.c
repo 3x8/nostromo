@@ -522,7 +522,7 @@ INLINE_CODE void motorInputUpdate(void) {
           // stall protection and startup kick
           input.PwmValue = escConfig()->motorStartPower;
         } else {
-          input.PwmValue = constrain(input.PwmValue, OUTPUT_PWM_MIN, OUTPUT_PWM_MAX);
+          input.PwmValue = constrain(input.PwmValue, INPUT_PWM_MIN, INPUT_PWM_MAX);
         }
       }
 
