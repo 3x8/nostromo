@@ -46,7 +46,7 @@
 #define INPUT_SERVOPWM_WIDTH_MIN_US 491
 #define INPUT_SERVOPWM_WIDTH_MAX_US 983
 
-// input/output
+// input
 #define INPUT_VALUE_MIN 0
 #define INPUT_VALUE_MAX 2047
 #define INPUT_NORMED_MIN 0
