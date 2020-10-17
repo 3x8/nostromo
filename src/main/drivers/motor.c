@@ -395,12 +395,10 @@ void motorStart() {
 
     motor.ComplementaryPWM = true;
 
-
     for (uint32_t i = 1; i < MOTOR_BLDC_STEPS; i++) {
       motorCommutate();
       HAL_Delay(2);
     }
-
 
     motorCommutationTimerHandle.Instance->CNT = 0;
     motor.BemfCounter = 0;
