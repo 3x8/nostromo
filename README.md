@@ -10,7 +10,7 @@
   * DSHOT300 *(new)*
   * PWM *(debug only)*
   * DSHOT commands support
-  * high input linearity:  *(1000 steps)*
+  * high input linearity  *(1000 steps)*
   * complementary PWM  *(regenerative braking)*
   * autotiming  *(new)* *(speed based, on timer IRQ)*
   * 48KHz, 24KHz *(motor PWM)*
