@@ -94,7 +94,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* timerHandle) {
 
     GPIO_InitStruct.Pin = INPUT_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(INPUT_GPIO, &GPIO_InitStruct);
 
