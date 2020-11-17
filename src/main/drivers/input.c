@@ -119,7 +119,7 @@ void inputDshotCommandRun(void) {
         uartPrintInteger(escConfig()->motorCommutationDelay, 10, 1);
         uartPrint(" deg] ");
       } else {
-        uartPrint("autotiming ");
+        uartPrint("AUTOTIMING ");
       }
       uartPrint("[");
       if (escConfig()->adcCurrentOffset < 0) {
