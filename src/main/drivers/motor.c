@@ -542,17 +542,17 @@ INLINE_CODE void motorInputUpdate(void) {
 
 INLINE_CODE uint32_t motorGetErpm(void) {
   if (motor.OneErpmTime > 0) {
-    return(MOTOR_ERPM_FACTOR / motor.OneErpmTime);
+    return (MOTOR_ERPM_FACTOR / motor.OneErpmTime);
   } else {
-    return(0);
+    return (0);
   }
 }
 
 INLINE_CODE uint32_t motorGetRpm(void) {
   if (motor.OneErpmTime > 0) {
-    return((MOTOR_ERPM_FACTOR / (motor.OneErpmTime * escConfig()->motorPoles >> 1)));
+    return ((MOTOR_ERPM_FACTOR / (motor.OneErpmTime * escConfig()->motorPoles >> 1)));
   } else {
-    return(0);
+    return (0);
   }
 }
 #pragma GCC pop_options

@@ -95,10 +95,10 @@ INLINE_CODE void medianPush(medianStructure *filter, uint32_t newValue) {
 }
 
 INLINE_CODE uint32_t medianCalculate(medianStructure *filter) {
-  return(filter->meanSum / (filter->windowSize - 1));
+  return (filter->meanSum / (filter->windowSize - 1));
 }
 
 INLINE_CODE uint32_t medianSumm(medianStructure *filter) {
-  return(filter->meanSum);
+  return (filter->meanSum);
 }
 #pragma GCC pop_options
