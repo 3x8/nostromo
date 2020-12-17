@@ -117,7 +117,7 @@ void inputDshotCommandRun(void) {
       if ((escConfig()->motorCommutationDelay > 0) &&  (escConfig()->motorCommutationDelay <= 30)) {
         uartPrint("[");
         uartPrintInteger(escConfig()->motorCommutationDelay, 10, 1);
-        uartPrint(" deg] ");
+        uartPrint(" DEG] ");
       } else {
         uartPrint("AUTOTIMING ");
       }
