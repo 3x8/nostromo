@@ -1,0 +1,8 @@
+F0_TARGETS  := $(TARGET)
+
+FLASH_SIZE  := 32
+STM_CHIP    := stm32f358xx
+
+TARGET_SRC  := \
+
+TARGET_FLAGS := -DSTM32F358xx
