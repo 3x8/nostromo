@@ -21,13 +21,13 @@
 #define HBRIDGE_MAX_CURRENT     7717  // (in 10mA steps)
 #define HBRIDGE_MAX_TEMPERATURE 77    // °C
 
-// input ,Ok
+// input ok
 #define INPUT_GPIO      GPIOB
 #define INPUT_PIN       GPIO_PIN_4
 #define INPUT_TIMER     TIM3
 #define INPUT_TIMER_CH  TIM_CHANNEL_1
 
-// LEDs ,no
+// LEDs none
 #define LED_RED_GPIO    GPIOA
 #define LED_RED_PIN     GPIO_PIN_15
 #define LED_GREEN_GPIO  GPIOA
@@ -36,7 +36,7 @@
 #define LED_BLUE_PIN    GPIO_PIN_15
 #define LED_MASK        LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB
 
-// H_BRIDGE ,Ok
+// H_BRIDGE ok
 #define FD6288
 #define A_FET_HI_GPIO   GPIOA
 #define A_FET_HI_PIN    GPIO_PIN_10
@@ -51,7 +51,7 @@
 #define C_FET_LO_GPIO   GPIOA
 #define C_FET_LO_PIN    GPIO_PIN_7
 
-// comparator ,Ok
+// comparator
 #define COMPARATOR_OPTIMIZE
 #define COMPARATOR              COMP1
 #define COMPARATOR_PHASE_A      COMP_INVERTINGINPUT_IO1
@@ -63,14 +63,14 @@
 #define COMPARATOR_COMMON       COMP_NONINVERTINGINPUT_IO1
 #define COMPARATOR_MASK         GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5
 
-// adc ,Ok
+// adc
 //#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_0
 #define ADC_CURRENT             ADC_CHANNEL_1
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
 #define ADC_MASK                GPIO_PIN_0 | GPIO_PIN_1
 
-// adc calibration ,Ok
+// adc calibration
 #define ADC_VOLTAGE_OFFSET      59.5
 #define ADC_VOLTAGE_FACTOR      0.888
 #define ADC_CURRENT_OFFSET      0  // 0 -> auto offset
@@ -79,7 +79,7 @@
 #define ADC_TEMPERATURE_OFFSET  95.05
 #define ADC_TEMPERATURE_FACTOR  -0.04
 
-// telemetry
+// telemetry ok
 #define USART                   USART1
 #define USART_IRQn              USART1_IRQn
 #define USART_IRQHandler        USART1_IRQHandler
