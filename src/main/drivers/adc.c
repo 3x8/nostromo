@@ -14,7 +14,7 @@ void adcRead(void) {
     adcRaw.temperature = adcDmaBuffer[2];
   #endif
 
-  #if (defined(WRAITH32MINI) || defined(SUCCEXMINI40A))
+  #if (defined(WRAITH32MINI) || defined(SUCCEXMINI40A) || defined(TEKKO32MINI45A4X1))
     adcRaw.temperature = adcDmaBuffer[0];
   #endif
 
