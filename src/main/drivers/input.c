@@ -61,19 +61,29 @@ void inputDshotCommandRun(void) {
       input.PwmValueLast = 0;
       break;
     case DSHOT_CMD_BEACON1:
-      motorTuneInput(1);
+      if (!motor.Running) {
+        motorTuneInput(1);
+      }
       break;
     case DSHOT_CMD_BEACON2:
-      motorTuneInput(2);
+      if (!motor.Running) {
+        motorTuneInput(2);
+      }
       break;
     case DSHOT_CMD_BEACON3:
-      motorTuneInput(3);
+      if (!motor.Running) {
+        motorTuneInput(3);
+      }
       break;
     case DSHOT_CMD_BEACON4:
-      motorTuneInput(4);
+      if (!motor.Running) {
+        motorTuneInput(4);
+      }
       break;
     case DSHOT_CMD_BEACON5:
-      motorTuneInput(5);
+      if (!motor.Running) {
+        motorTuneInput(5);
+      }
       break;
     case DSHOT_CMD_ESC_INFO:
       uartPrint("# ");
@@ -134,7 +144,9 @@ void inputDshotCommandRun(void) {
       uartPrint("\r\n");
       break;
     case DSHOT_CMD_SETTING_LED0_ON:
-      motorTuneInput(6);
+      if (!motor.Running) {
+        motorTuneInput(6);
+      }
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
       escConfig()->motorDirection = SPIN_CW;
