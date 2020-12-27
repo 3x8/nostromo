@@ -149,16 +149,18 @@ void inputDshotCommandRun(void) {
       }
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
-      escConfig()->motorDirection = SPIN_CW;
-      uartPrint("# CW");
-      uartPrint("\r\n");
-      inputDisarm();
+      if (!motor.Running) {
+        escConfig()->motorDirection = SPIN_CW;
+        uartPrint("# CW");
+        uartPrint("\r\n");
+      }
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
-      escConfig()->motorDirection = SPIN_CCW;
-      uartPrint("# CCW");
-      uartPrint("\r\n");
-      inputDisarm();
+      if (!motor.Running) {
+        escConfig()->motorDirection = SPIN_CCW;
+        uartPrint("# CCW");
+        uartPrint("\r\n");
+      }
       break;
     case DSHOT_CMD_SPIN_DIRECTION_NORMAL:
       motor.Direction = escConfig()->motorDirection;
@@ -167,31 +169,37 @@ void inputDshotCommandRun(void) {
       motor.Direction = !escConfig()->motorDirection;
       break;
     case DSHOT_CMD_SETTING_3D_MODE_OFF:
-      escConfig()->motor3Dmode = false;
-      uartPrint("# 3D OFF");
-      uartPrint("\r\n");
-      inputDisarm();
+      if (!motor.Running) {
+        escConfig()->motor3Dmode = false;
+        uartPrint("# 3D OFF");
+        uartPrint("\r\n");
+      }
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
-      escConfig()->motor3Dmode = true;
-      uartPrint("# 3D ON");
-      uartPrint("\r\n");
-      inputDisarm();
+      if (!motor.Running) {
+        escConfig()->motor3Dmode = true;
+        uartPrint("# 3D ON");
+        uartPrint("\r\n");
+      }
       break;
     case DSHOT_CMD_SETTING_SAVE:
-      uartPrint("# SAVE");
-      uartPrint("\r\n");
-      HAL_Delay(11);
-      configWrite();
-      // reset esc, iwdg timeout
-      while(true);
+      if (!motor.Running) {
+        uartPrint("# SAVE");
+        uartPrint("\r\n");
+        HAL_Delay(11);
+        configWrite();
+        // reset esc, iwdg timeout
+        while(true);
+      }
     case DSHOT_CMD_SETTING_EEPROM_RESET:
-      uartPrint("# EEPROM RESET");
-      uartPrint("\r\n");
-      HAL_Delay(11);
-      configReset();
-      // reset esc, iwdg timeout
-      while(true);
+      if (!motor.Running) {
+        uartPrint("# EEPROM RESET");
+        uartPrint("\r\n");
+        HAL_Delay(11);
+        configReset();
+        // reset esc, iwdg timeout
+        while(true);
+      }
     default:
       break;
     }
