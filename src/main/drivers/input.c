@@ -120,7 +120,7 @@ void inputDshotCommandRun(void) {
       #else
         uartPrint("48kHz ");
       #endif
-      if (escConfig()->motorDirection == SPIN_CW) {
+      if (motor.Direction == SPIN_CW) {
         uartPrint("CW ");
       } else {
         uartPrint("CCW ");
