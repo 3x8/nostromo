@@ -55,6 +55,10 @@ void inputDshotCommandRun(void) {
   if ((input.Protocol == PROSHOT1000) || (input.Protocol == DSHOT300) || (input.Protocol == DSHOT600)) {
     switch (input.Data) {
     case DSHOT_CMD_MOTOR_STOP:
+      motor.Start = false;
+      input.DataNormed = 0;
+      input.PwmValue = 0;
+      input.PwmValueLast = 0;
       break;
     case DSHOT_CMD_BEACON1:
       motorTuneInput(1);
