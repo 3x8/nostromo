@@ -210,11 +210,6 @@ void inputDshotCommandRun(void) {
 #pragma GCC optimize("O3")
 void inputCallbackDMA() {
   switch (input.Protocol) {
-     case AUTODETECT:
-      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
-      inputAutoDetect();
-      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
-      break;
     case PROSHOT1000:
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputProshot();
@@ -234,6 +229,12 @@ void inputCallbackDMA() {
       HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
       inputServoPwm();
       HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_PWM);
+      break;
+    case AUTODETECT:
+    default:
+      HAL_TIM_IC_Stop_DMA(&inputTimerHandle, INPUT_TIMER_CH);
+      inputAutoDetect();
+      HAL_TIM_IC_Start_DMA(&inputTimerHandle, INPUT_TIMER_CH, inputDmaBuffer, INPUT_DMA_BUFFER_SIZE_AUTODETECT);
       break;
   }
 }
