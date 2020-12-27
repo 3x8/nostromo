@@ -473,13 +473,7 @@ void motorTuneInput(uint8_t motorStepDebug) {
 INLINE_CODE void motorInputUpdate(void) {
   if (input.Armed) {
     if (input.Data <= DSHOT_CMD_MAX) {
-      motor.Start = false;
-      input.DataNormed = 0;
-      input.PwmValue = 0;
-      input.PwmValueLast = 0;
-      if ((!motor.Running) || (!motor.Start)) {
         inputDshotCommandRun();
-      }
     } else {
       input.DataNormed = constrain((input.Data - DSHOT_CMD_MAX), INPUT_NORMED_MIN, INPUT_NORMED_MAX);
 
@@ -509,6 +503,7 @@ INLINE_CODE void motorInputUpdate(void) {
         if ((input.DataNormed < escConfig()->input3DdeadbandLow) || ((input.DataNormed < escConfig()->input3DdeadbandHigh) && ((input.DataNormed > escConfig()->input3Dneutral)))) {
           // deadband
         }*/
+
       } else {
         // 2D
         motor.Start = true;
