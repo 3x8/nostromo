@@ -63,26 +63,41 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_BEACON1:
       if (!motor.Running) {
         motorTuneInput(1);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_BEACON2:
       if (!motor.Running) {
         motorTuneInput(2);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_BEACON3:
       if (!motor.Running) {
         motorTuneInput(3);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_BEACON4:
       if (!motor.Running) {
         motorTuneInput(4);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_BEACON5:
       if (!motor.Running) {
         motorTuneInput(5);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_ESC_INFO:
@@ -146,6 +161,9 @@ void inputDshotCommandRun(void) {
     case DSHOT_CMD_SETTING_LED0_ON:
       if (!motor.Running) {
         motorTuneInput(6);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_NORMAL:
@@ -153,12 +171,18 @@ void inputDshotCommandRun(void) {
         escConfig()->motorDirection = SPIN_CW;
         uartPrint("# CW");
         uartPrint("\r\n");
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_SETTING_SPIN_DIRECTION_REVERSED:
       if (!motor.Running) {
         escConfig()->motorDirection = SPIN_CCW;
         uartPrint("# CCW");
+        uartPrint("\r\n");
+      } else {
+        uartPrint("# Ko->motor.Running");
         uartPrint("\r\n");
       }
       break;
@@ -173,12 +197,18 @@ void inputDshotCommandRun(void) {
         escConfig()->motor3Dmode = false;
         uartPrint("# 3D OFF");
         uartPrint("\r\n");
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
       break;
     case DSHOT_CMD_SETTING_3D_MODE_ON:
       if (!motor.Running) {
         escConfig()->motor3Dmode = true;
         uartPrint("# 3D ON");
+        uartPrint("\r\n");
+      } else {
+        uartPrint("# Ko->motor.Running");
         uartPrint("\r\n");
       }
       break;
@@ -190,7 +220,11 @@ void inputDshotCommandRun(void) {
         configWrite();
         // reset esc, iwdg timeout
         while(true);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
+      break;
     case DSHOT_CMD_SETTING_EEPROM_RESET:
       if (!motor.Running) {
         uartPrint("# EEPROM RESET");
@@ -199,8 +233,10 @@ void inputDshotCommandRun(void) {
         configReset();
         // reset esc, iwdg timeout
         while(true);
+      } else {
+        uartPrint("# Ko->motor.Running");
+        uartPrint("\r\n");
       }
-    default:
       break;
     }
   }
