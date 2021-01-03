@@ -383,8 +383,8 @@ void inputProshot() {
     motorInputUpdate();
 
     // only update if not active
-    if (!input.TelemetryRequest) {
-      input.TelemetryRequest = (pulseValue[2] & BIT(0));
+    if (!input.RequestTelemetry) {
+      input.RequestTelemetry = (pulseValue[2] & BIT(0));
     }
 
     #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
@@ -435,8 +435,8 @@ void inputDshot() {
     motorInputUpdate();
 
     // only update if not active
-    if (!input.TelemetryRequest) {
-      input.TelemetryRequest = pulseValue[11];
+    if (!input.RequestTelemetry) {
+      input.RequestTelemetry = pulseValue[11];
     }
 
     return;

@@ -186,9 +186,9 @@ int main(void) {
 
     // telemetry
     #if (!defined(DEBUG_DATA_UART))
-      if (input.TelemetryRequest) {
+      if (input.RequestTelemetry) {
         telemetry();
-        input.TelemetryRequest = false;
+        input.RequestTelemetry = false;
         #if (!defined(_DEBUG_))
           if (input.Armed) {
             LED_ON(LED_BLUE);

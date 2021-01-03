@@ -98,7 +98,7 @@ typedef enum {
 typedef struct {
   bool Armed;
   bool DataValid;
-  bool TelemetryRequest;
+  bool RequestTelemetry;
   uint8_t Protocol;
   uint32_t Data;
   uint32_t DataNormed;
