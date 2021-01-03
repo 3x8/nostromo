@@ -356,7 +356,7 @@ void inputAutoDetect() {
 void inputProshot() {
   __disable_irq();
   uint8_t pulseValue[4] = {0, 0, 0, 0};
-  uint8_t calculatedCRC = 0, receivedCRC = 0;
+  uint8_t crcComputed = 0, crcReceived = 0;
   uint16_t data = 0;
 
   #if (defined(_DEBUG_) && defined(DEBUG_INPUT_PROSHOT1000))
@@ -368,13 +368,13 @@ void inputProshot() {
   }
 
   for (int i = 0; i < 4; i++) {
-    calculatedCRC = calculatedCRC | ((pulseValue[0]^pulseValue[1]^pulseValue[2]) << i);
-    receivedCRC = receivedCRC | (pulseValue[3] << i);
+    crcComputed = crcComputed | ((pulseValue[0]^pulseValue[1]^pulseValue[2]) << i);
+    crcReceived = crcReceived | (pulseValue[3] << i);
   }
 
   data = ((pulseValue[0] << 7 | pulseValue[1] << 3 | pulseValue[2] >> 1));
 
-  if ((calculatedCRC == receivedCRC) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
+  if ((crcComputed == crcReceived) && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
     input.DataValid = true;
     input.DataValidCounter++;
     input.TimeoutCounter = 0;
@@ -408,7 +408,7 @@ void inputProshot() {
 void inputDshot() {
   __disable_irq();
   uint8_t pulseValue[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  uint8_t calculatedCRC = 0, receivedCRC = 0;
+  uint8_t crcComputed = 0, crcReceived = 0;
   uint16_t data = 0;
 
   for (int i = 0; i < 32; i+=2) {
@@ -418,12 +418,12 @@ void inputDshot() {
     }
   }
 
-  calculatedCRC = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 | (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
+  crcComputed = ( (pulseValue[0] ^ pulseValue[4] ^ pulseValue[8]) << 3 | (pulseValue[1] ^ pulseValue[5] ^ pulseValue[9]) << 2 |
                     (pulseValue[2] ^ pulseValue[6] ^ pulseValue[10]) << 1  | (pulseValue[3] ^ pulseValue[7] ^ pulseValue[11]));
 
-  receivedCRC = (pulseValue[12] << 3 | pulseValue[13] << 2 | pulseValue[14] << 1 | pulseValue[15]);
+  crcReceived = (pulseValue[12] << 3 | pulseValue[13] << 2 | pulseValue[14] << 1 | pulseValue[15]);
 
-  if((calculatedCRC == receivedCRC)  && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
+  if((crcComputed == crcReceived)  && (data >= INPUT_VALUE_MIN) && (data <= INPUT_VALUE_MAX)) {
     data = (pulseValue[0] << 10 | pulseValue[1] << 9 | pulseValue[2] << 8 | pulseValue[3] << 7 | pulseValue[4] << 6 |
             pulseValue[5] << 5 | pulseValue[6] << 4 | pulseValue[7] << 3 | pulseValue[8] << 2 | pulseValue[9] << 1 | pulseValue[10]);
 
