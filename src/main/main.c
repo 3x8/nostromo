@@ -3,11 +3,7 @@
 medianStructure motorCommutationIntervalFilterState;
 
 #if (defined(USE_ADC))
-  #if (defined(USE_ADC_MEDIAN))
-    medianStructure adcVoltageFilterState, adcCurrentFilterState;
-  #else
-    kalmanStructure adcVoltageFilterState, adcCurrentFilterState;
-  #endif
+  kalmanStructure adcVoltageFilterState, adcCurrentFilterState;
 #endif
 
 int main(void) {
@@ -34,24 +30,15 @@ int main(void) {
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
-    #if (defined(USE_ADC_MEDIAN))
-      medianInit(&adcVoltageFilterState, 113);
-      medianInit(&adcCurrentFilterState, 113);
-    #else
-      kalmanInit(&adcVoltageFilterState, 25000.0f, 7);
-      kalmanInit(&adcCurrentFilterState, 25000.0f, 7);
-    #endif
+    kalmanInit(&adcVoltageFilterState, 25000.0f, 7);
+    kalmanInit(&adcCurrentFilterState, 25000.0f, 7);
   #endif
 
   // start with motor off
   motor.Step = 1;
   motor.Direction = escConfig()->motorDirection;
   motor.ComplementaryPWM = escConfig()->motorComplementaryPWM;
-  #if (defined(USE_ADC_MEDIAN))
-    motor.BemfZeroCounterTimeoutThreshold = 71;
-  #else
-    motor.BemfZeroCounterTimeoutThreshold = 13;
-  #endif
+  motor.BemfZeroCounterTimeoutThreshold = 13;
   #if defined(SUCCEXMINI40A)
     motor.BemfZeroCounterTimeoutThreshold = 313;
   #endif
@@ -155,15 +142,8 @@ int main(void) {
 
     // adc filtering
     #if (defined(USE_ADC))
-      #if (defined(USE_ADC_MEDIAN))
-        medianPush(&adcCurrentFilterState, adcRaw.current);
-        adcScaled.current = medianCalculate(&adcCurrentFilterState) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset;
-        medianPush(&adcVoltageFilterState, adcRaw.voltage);
-        adcScaled.voltage = medianCalculate(&adcVoltageFilterState) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET;
-      #else
-        adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
-        adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
-      #endif
+      adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
+      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
 
       if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();
