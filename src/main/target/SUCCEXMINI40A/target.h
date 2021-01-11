@@ -10,7 +10,6 @@
 //#define DEBUG_MS_TIMER
 //#define DEBUG_DATA_QUALITY
 
-// CYCLETIME_MAINLOOP kalman->500us, median->100us
 #define USE_PWM_FREQUENCY_48kHz
 
 // hw constants
