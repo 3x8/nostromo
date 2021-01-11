@@ -61,7 +61,6 @@
 #define COMPARATOR_MASK         GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5
 
 // adc, No
-//#define USE_ADC
 #define ADC_VOLTAGE             ADC_CHANNEL_3
 #define ADC_CURRENT             ADC_CHANNEL_6
 #define ADC_TEMPERATURE         ADC_CHANNEL_TEMPSENSOR
