@@ -14,9 +14,6 @@ int main(void) {
   // basic initialization
   HAL_Init();
   systemClockConfig();
-  configValidateOrReset();
-  configRead();
-  ledInit();
   systemDmaInit();
   systemBemfComparatorInit();
   systemAdcInit();
@@ -25,7 +22,9 @@ int main(void) {
   systemMotorAutotimingTimerInit();
   systemInputTimerInit();
   systemMsTimerInit();
-  ledOff();
+  configValidateOrReset();
+  configRead();
+  ledInit();
 
   medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
 
