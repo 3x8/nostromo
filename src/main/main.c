@@ -1,9 +1,9 @@
 #include "main.h"
 
-medianStructure motorCommutationIntervalFilterState;
+medianStructure motorCommutationIntervalFilter;
 
 #if (defined(USE_ADC))
-  kalmanStructure adcVoltageFilterState, adcCurrentFilterState;
+  kalmanStructure adcVoltageFilter, adcCurrentFilter;
 #endif
 
 int main(void) {
@@ -26,11 +26,11 @@ int main(void) {
   configRead();
   ledInit();
 
-  medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
+  medianInit(&motorCommutationIntervalFilter, MOTOR_BLDC_MEDIAN);
 
   #if (defined(USE_ADC))
-    kalmanInit(&adcVoltageFilterState, 25000.0f, 7);
-    kalmanInit(&adcCurrentFilterState, 25000.0f, 7);
+    kalmanInit(&adcVoltageFilter, 25000.0f, 7);
+    kalmanInit(&adcCurrentFilter, 25000.0f, 7);
   #endif
 
   // start with motor off
@@ -110,7 +110,7 @@ int main(void) {
           motor.BemfZeroCrossTimestamp = 0;
           motor.BemfCounter = 0;
           motor.Running = false;
-          medianInit(&motorCommutationIntervalFilterState, MOTOR_BLDC_MEDIAN);
+          medianInit(&motorCommutationIntervalFilter, MOTOR_BLDC_MEDIAN);
         }
 
         // motor start
@@ -120,7 +120,7 @@ int main(void) {
         }
 
         // motor timing (one Erpm -> 360°)
-        motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilterState) >> 3;
+        motor.OneErpmTime = medianSumm(&motorCommutationIntervalFilter) >> 3;
         motor.OneDegree = motor.OneErpmTime / 360;
         if ((escConfig()->motorCommutationDelay > 0) &&  (escConfig()->motorCommutationDelay <= 30)) {
           motor.CommutationDelay = constrain((escConfig()->motorCommutationDelay * motor.OneDegree), MOTOR_AUTOTIMING_DELAY_LIMIT_MIN, MOTOR_AUTOTIMING_DELAY_LIMIT_MAX);
@@ -141,8 +141,8 @@ int main(void) {
 
     // adc filtering
     #if (defined(USE_ADC))
-      adcScaled.current = ((kalmanUpdate(&adcCurrentFilterState, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
-      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilterState, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
+      adcScaled.current = ((kalmanUpdate(&adcCurrentFilter, (float)adcRaw.current) * ADC_CURRENT_FACTOR + escConfig()->adcCurrentOffset));
+      adcScaled.voltage = ((kalmanUpdate(&adcVoltageFilter, (float)adcRaw.voltage) * ADC_VOLTAGE_FACTOR + ADC_VOLTAGE_OFFSET));
 
       if ((escConfig()->limitCurrent > 0) && (ABS(adcScaled.current) > escConfig()->limitCurrent)) {
         inputDisarm();

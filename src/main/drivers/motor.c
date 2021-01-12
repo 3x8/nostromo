@@ -4,7 +4,7 @@ TIM_HandleTypeDef motorPwmTimerHandle, motorCommutationTimerHandle, motorAutotim
 COMP_HandleTypeDef motorBemfComparatorHandle;
 motorStructure motor;
 
-extern medianStructure motorCommutationIntervalFilterState;
+extern medianStructure motorCommutationIntervalFilter;
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
@@ -70,7 +70,7 @@ INLINE_CODE void motorComutateAutotimingCallback() {
   #endif
 
   // filter commutation event
-  medianPush(&motorCommutationIntervalFilterState, motorCommutationTimerHandle.Instance->CNT);
+  medianPush(&motorCommutationIntervalFilter, motorCommutationTimerHandle.Instance->CNT);
   motorCommutationTimerHandle.Instance->CNT = 0;
 
   motor.SpinLock = false;
